@@ -31,6 +31,12 @@ D = [0.00960977, -0.05017150, 0.00056402, -0.00070902, 0.03192810]
 
 ### 1.2 车头 D435i
 
+> **当前部署注意**：实机目前是 `ext_cam_node`（UVC 彩色，`ext_cam_optical`）+
+> 仅深度 `realsense2_camera`（`camera_depth_optical_frame`）的分离模式。彩色与
+> 深度未对齐、非同源时间戳，不能在同一像素上做度量反投影。本仓库默认配置假设
+> 单一 RealSense 节点发布彩色 + `aligned_depth_to_color`（`camera_color_optical_frame`）。
+> 切换前见 [ADR 0004](adr/0004-camera-device-ownership.md)。
+
 - 安装：车头固定，`base_link ← ext_cam_optical` 为常量。
 - 2026-11-20 标定：
 

@@ -118,6 +118,11 @@ edge。模型加载/热加载在工作线程内完成，节点启动不被模型
 - 增加相机：在 `cameras.yaml` 增加条目、在 `gpu.yaml` 增加模型、启动文件无需改；
   `core` 的环、融合、关联按相机数通用。
 - 增加检测类别：GPU 端每相机独立 `labels`/模型；融合按标签关联。
+- 影子模型：`shadow_gpu.launch.py` 在同一上行上运行候选模型，发布到
+  `/perception/detections_shadow/*`，edge 不消费；生产与影子不能共用检测话题。
+- 相机所有者：外机位的彩色/深度必须来自同一 RealSense 所有者并开启
+  `align_depth_to_color`（见 [ADR 0004](adr/0004-camera-device-ownership.md)）。
+  当前实机的 UVC 彩色 + 仅深度分离模式不满足对齐要求，不能用于度量融合。
 - 多目标：关联门限 + 每相机一对一；同相机重复轨迹用严格 2 cm 门限合并，
   跨相机重复用 6 cm + 3σ 门限合并。
 - 域隔离：目标架构中相机只读镜像由 `jcheng_system` 的 `jcheng_telemetry`

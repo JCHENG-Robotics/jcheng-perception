@@ -72,7 +72,10 @@ safety:
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 43
+  unit_tests: 49
   ros_build: 4 packages on ROS 2 Jazzy (2026-11-23)
   synthetic_end_to_end: passed 2026-11-23 (Pi 5 edge logic on x86, mock detector)
+  gpu_backend_smoke:
+    mock: passed
+    ultralytics: not run (runtime not installed on the current host)
   hardware_end_to_end: not tested

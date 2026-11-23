@@ -52,6 +52,16 @@ def test_gpu_config_real_and_mock():
     assert mock['node']['debug_publish'] is False
 
 
+def test_shadow_config_keeps_outputs_off_production_topics():
+    shadow = load_gpu_config(
+        str(REPO_ROOT / 'config' / 'gpu_shadow.example.yaml'))
+    for camera_id, entry in shadow['cameras'].items():
+        assert entry['detections_topic'].startswith(
+            '/perception/detections_shadow/')
+        assert entry['debug_topic'].startswith('/perception/debug_shadow/')
+        assert camera_id in ('d435i_ext', 'aurora_wrist')
+
+
 def test_synthetic_camera_config_loads():
     from jcheng_perception_core import load_camera_specs
 

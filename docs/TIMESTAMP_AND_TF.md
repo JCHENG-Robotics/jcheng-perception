@@ -29,7 +29,7 @@ Pi5 driver stamp t0
 
 | 相机 | 帧匹配 | 深度匹配 | TF 匹配 | 理由 |
 |---|---|---|---|---|
-| D435i（external） | 50 ms | 80 ms | 60 ms | 30 Hz 彩色/深度；静态安装 |
+| D435i（external） | 50 ms | **200 ms** | 60 ms | 彩色 15 Hz；彩色+对齐深度实测可能只有 4–8 Hz，外机位静止，旧深度仍空间有效 |
 | Aurora（wrist） | 80 ms | **150 ms** | 80 ms | RGB ~12 Hz，深度 ~8 Hz；USB2 带宽限制 |
 | 合成演示 | 60 ms | 80 ms | 80 ms | 10 Hz 同源，无速率差 |
 

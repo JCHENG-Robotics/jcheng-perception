@@ -55,6 +55,17 @@ Detection2D[] detections
 | `keypoints[]` | 扁平 `x,y,confidence` 三元组；可为空 |
 | `track_hint` | 预留，当前为 0 |
 
+### 影子检测
+
+`shadow_gpu.launch.py` 启动的第二个 GPU 节点读取同一上行，但发布到：
+
+- `/perception/detections_shadow/<camera_id>`
+- `/perception/debug_shadow/<camera_id>`
+- `/perception/gpu_status_shadow`
+
+edge 不订阅这些话题，因此影子模型不会影响融合。生产/影子节点不能发布同一个
+检测话题。
+
 ## 4. 单相机 3D 观测（Pi 5 内部/调试）
 
 ### `/perception/observations/<camera_id>`

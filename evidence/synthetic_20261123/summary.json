@@ -16,7 +16,7 @@
   },
   "unit_tests": {
     "command": "python3 -m pytest tests -q",
-    "passed": 43,
+    "passed": 49,
     "failed": 0
   },
   "offline_simulation": {
@@ -28,11 +28,16 @@
     "fused_rmse_m": 0.00057,
     "fused_max_m": 0.00196,
     "occlusion_window_max_m": 0.00196,
-    "phase_counts": {"ACQUIRE": 2, "FINE": 98},
+    "phase_counts": {
+      "ACQUIRE": 2,
+      "FINE": 98
+    },
     "drop_recheck": {
       "phase": "DROP_RECHECK",
       "recheck_required": true,
-      "weights": {"d435i_ext": 1.0}
+      "weights": {
+        "d435i_ext": 1.0
+      }
     }
   },
   "ros_build": {
@@ -43,7 +48,10 @@
   "synthetic_end_to_end": {
     "command": "ROS_DOMAIN_ID=77 ros2 launch jcheng_perception_gpu synthetic_demo.launch.py",
     "status": {
-      "camera_fps": [10.0, 9.999],
+      "camera_fps": [
+        10.0,
+        9.999
+      ],
       "total_frames": 216,
       "total_detections": 210,
       "detections_matched": 208,
@@ -57,19 +65,41 @@
     },
     "target": {
       "target_id": "target-001",
-      "position_base_m": [0.3535, -0.0041, -0.0805],
-      "source_cameras": ["d435i_ext", "aurora_wrist"],
+      "position_base_m": [
+        0.3535,
+        -0.0041,
+        -0.0805
+      ],
+      "source_cameras": [
+        "d435i_ext",
+        "aurora_wrist"
+      ],
       "status": "CONFIRMED",
       "phase": "FINE",
       "weight_external": 0.21,
       "weight_wrist": 0.79
     },
     "edge_callback_ms": {
-      "image": [0.3, 0.4],
-      "depth": [0.1, 0.2],
-      "detections": [0.5, 0.6],
-      "publish": [1.1, 1.3],
-      "tf": [0.2, 0.3]
+      "image": [
+        0.3,
+        0.4
+      ],
+      "depth": [
+        0.1,
+        0.2
+      ],
+      "detections": [
+        0.5,
+        0.6
+      ],
+      "publish": [
+        1.1,
+        1.3
+      ],
+      "tf": [
+        0.2,
+        0.3
+      ]
     }
   },
   "not_verified": [
@@ -81,5 +111,30 @@
     "30-minute stability",
     "jcheng-system domain isolation and telemetry mirror",
     "planner consumption of FusedTargetArray"
-  ]
+  ],
+  "gpu_backend_smoke": {
+    "mock": {
+      "status": "passed",
+      "model_id": "mock-color-red",
+      "detections": 1,
+      "inference_ms": 6.2
+    },
+    "ultralytics": {
+      "status": "not_run",
+      "reason": "ultralytics/torch/openvino not installed on the host; pip index unreachable"
+    }
+  },
+  "camera_topology_note": "Deployed D435i is split UVC colour + depth-only RealSense (not colour-aligned); not used for metric fusion. See docs/adr/0004.",
+  "shadow_isolation_mock": {
+    "status": "passed",
+    "shadow_fps": [
+      9.48,
+      9.48
+    ],
+    "shadow_frames_received": 57,
+    "shadow_frames_dropped": 0,
+    "production_match_success_rate": 1.0,
+    "production_active_tracks": 1,
+    "production_phase": "FINE"
+  }
 }
