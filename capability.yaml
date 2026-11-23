@@ -80,7 +80,8 @@ verification:
     onnxruntime: passed (yolov8s.onnx, CPU, 197.5 ms, 4 detections)
     openvino: passed (yolov8s.xml, CPU, 126.7 ms, 4 detections)
     ultralytics_cpu: passed (yolov8s.pt, 1.04 s first frame, 4 detections; OBB also passed)
-    ultralytics_cuda: not run (CUDA torch not installed; download-limited)
+    ultralytics_cuda: passed (torch 2.9.1+cu128, RTX 3060, 7.7 ms steady, 4 detections)
   ros_onnx_node: passed (venv Python, yolov8s.onnx, 232.8 ms/frame on CPU)
   ros_ultralytics_node: passed (venv Python, yolov8s.pt, 154.3 ms/frame steady on CPU)
+  ros_ultralytics_gpu: passed (venv Python, yolov8s.pt, RTX 3060, 54.3 ms/frame average)
   hardware_end_to_end: not tested

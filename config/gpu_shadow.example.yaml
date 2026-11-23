@@ -29,7 +29,7 @@ cameras:
       conf: 0.30
       iou: 0.45
       device: "0"
-      half: true
+      half: false
       max_detections: 20
       keypoints: false
       labels: []
@@ -47,7 +47,7 @@ cameras:
       conf: 0.30
       iou: 0.45
       device: "0"
-      half: true
+      half: false
       max_detections: 5
       keypoints: true
       labels: []

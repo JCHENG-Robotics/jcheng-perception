@@ -164,16 +164,17 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 | Edge 单回调耗时 | image 0.4 ms、depth 0.1 ms、detections 0.6 ms、publish 1.3 ms、tf 0.3 ms |
 | 输出轨迹 | 1 条 confirmed，双视图融合，权重 0.21 / 0.79，phase FINE |
 | 真实模型 CPU 烟测 | ONNX 197.5 ms / OpenVINO 126.7 ms / Ultralytics 1.04 s（首帧），各 4 个框 |
+| 真实模型 GPU 烟测 | RTX 3060：Ultralytics 稳态 **7.7 ms/帧**（单图）；ROS 节点平均 54.3 ms/帧 |
 | 单元测试 | 53 passed |
 | colcon 构建 | 4 包通过（Jazzy 主机） |
 
-> 以上合成指标不是实机精度或延迟验证。真实模型烟测是**单图 CPU 推理**，不代表
+> 以上合成指标不是实机精度或延迟验证。真实模型烟测是**单图推理**，不代表
 > Pi 5/相机/网络的端到端性能。
 
 > 本机已在独立 venv 安装 **ONNX Runtime 1.32.0**、**OpenVINO 2026.4.1**、
-> **PyTorch 2.6.0+cpu / Ultralytics 8.4.216**，并用厂商 `yolov8s` 完成真实推理；
-> ROS 节点通过 venv Python 验证了 ONNX Runtime 与 Ultralytics。CUDA 版 PyTorch
-> 因约 1.5 GB 依赖下载受限未安装，RTX 3060 加速需在 GPU 主机补装。
+> **PyTorch 2.9.1+cu128 / 2.6.0+cpu、torchvision 0.24.1+cu128 / 0.21.0+cpu、
+> Ultralytics 8.4.216**；CUDA 版使用 RTX 3060，`torch.cuda.is_available()=True`。
+> ROS 节点通过 venv Python 验证了 ONNX Runtime、Ultralytics CPU 与 CUDA。
 
 ## 8. 设计边界
 
