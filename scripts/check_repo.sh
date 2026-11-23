@@ -11,6 +11,10 @@ echo "ok"
 echo "== unit tests =="
 python3 -m pytest tests -q
 
+echo "== detector mock smoke =="
+python3 scripts/check_gpu_backend.py --backend mock --json > /dev/null
+echo "ok"
+
 echo "== simulation =="
 python3 scripts/simulate_pipeline.py
 

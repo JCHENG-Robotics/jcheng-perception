@@ -69,7 +69,8 @@ jcheng-perception/
 │   ├── fusion_demo.yaml
 │   ├── frames.yaml               # 外机位静态外参回退
 │   ├── gpu.yaml                  # 真实 GPU 模型路径
-│   └── gpu_mock.yaml             # 无模型演示
+│   ├── gpu_mock.yaml             # 无模型演示
+│   └── gpu_shadow.example.yaml   # 影子模型模板
 ├── docs/
 │   ├── ARCHITECTURE.md           # 节点职责、进程/线程、数据流
 │   ├── TOPICS.md                 # 话题/QoS/字段语义
@@ -90,7 +91,7 @@ jcheng-perception/
 │   ├── simulate_pipeline.py      # 离线全链路仿真
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 43 项 ROS-free 测试
+├── tests/                        # 49 项 ROS-free 测试
 └── capability.yaml
 ```
 
@@ -160,10 +161,14 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 | 检测采集→边缘回调延迟 | 27–40 ms（同机、mock 检测器） |
 | Edge 单回调耗时 | image 0.4 ms、depth 0.1 ms、detections 0.6 ms、publish 1.3 ms、tf 0.3 ms |
 | 输出轨迹 | 1 条 confirmed，双视图融合，权重 0.21 / 0.79，phase FINE |
-| 单元测试 | 43 passed |
+| 单元测试 | 49 passed |
 | colcon 构建 | 4 包通过（Jazzy 主机） |
 
 > 以上为**合成场景**结果，不是实机精度或延迟验证。真实 YOLO 推理、USB 相机、网络与 Pi 5 CPU 的实测仍需在机器人上完成。详见 [EVIDENCE.md](docs/EVIDENCE.md)。
+
+> 真实 GPU 后端（Ultralytics/OpenVINO）尚未在当前主机安装；`scripts/check_gpu_backend.py`
+> 的 mock 路径已通过，真实路径会明确报告缺少运行时。GPU 主机装好依赖后先跑该烟测，
+> 再用 [影子模型](docs/MODEL_ITERATION.md) 对比。
 
 ## 8. 设计边界
 
@@ -200,7 +205,8 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 - [验证证据](docs/EVIDENCE.md)
 - ADR：[边云切分](docs/adr/0001-edge-gpu-split.md) ·
   [采集时间戳契约](docs/adr/0002-capture-timestamp-contract.md) ·
-  [距离加权融合](docs/adr/0003-distance-weighted-fusion.md)
+  [距离加权融合](docs/adr/0003-distance-weighted-fusion.md) ·
+  [D435i 单一所有者](docs/adr/0004-camera-device-ownership.md)
 
 ## 11. 许可
 

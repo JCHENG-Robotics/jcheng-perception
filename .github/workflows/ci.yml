@@ -20,9 +20,11 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install test dependencies
-        run: python -m pip install --upgrade pip numpy PyYAML pytest
+        run: python -m pip install --upgrade pip numpy PyYAML pytest opencv-python-headless
       - name: Unit tests
         run: python -m pytest tests -q
+      - name: Mock detector smoke
+        run: python scripts/check_gpu_backend.py --backend mock --json > /dev/null
 
   simulation:
     name: offline fusion simulation

@@ -12,18 +12,36 @@
 - 相机驱动：
   - 腕部 Aurora 930：厂商 `deptrum-ros-driver-aurora930` /
     `bringup vision.launch.py`；
-  - 车头 D435i：RealSense 驱动（推荐，含对齐深度）或现有 UVC 路径。
+  - 车头 D435i：**推荐 `realsense2_camera` 单所有者 + 彩色对齐深度**
+    （见 [ADR 0004](adr/0004-camera-device-ownership.md)）。
+- **当前部署的分离模式不适用于度量融合**：`armpi-ext-cam.service` 用 UVC
+  打开 `/dev/video4` 发布 `/ext_cam/color/image_raw`，`armpi-rs-depth.service`
+  用 `realsense2_camera` 只发布 `/camera/camera/depth/image_rect_raw`
+  （`camera_depth_optical_frame`）。彩色与深度未对齐、无同源时间戳，不能在
+  同一像素上做反投影。必须先按 ADR 0004 切换为
+  `realsense2_camera` 彩色 + `aligned_depth_to_color`，再启用本仓库默认配置。
 - Python：`numpy`、`PyYAML`、`opencv-python`/`python3-opencv`、`cv_bridge`、
   `tf2_ros`。
-- **单设备所有者**：现有 Studio 网关可能占用 D435i 的 `/dev/video4`。同一时刻
-  只能有一个进程打开设备。若相机驱动由厂商节点持有，edge 只订阅话题；若走
-  UVC/网关预览，需先决定由谁发布 ROS 图像话题。
+- **单设备所有者**：同一时刻只能有一个进程打开 D435i。推荐 RealSense 节点
+  独占；Studio 网关改为订阅 `/camera/color/image_raw`，不再打开 `/dev/video4`。
 
 ### 笔记本 GPU
 
 - ROS 2 Humble（与机器人一致最稳）或 Jazzy（本仓库构建验证版本）。
 - Ultralytics（含 OpenVINO 导出支持）或 ONNX/OpenVINO 运行时。
 - 模型权重放在仓库外，例如 `/opt/jcheng/models/`。
+- 安装后先做无 ROS 烟测：
+
+  ```bash
+  python3 -c "import ultralytics, torch; print(ultralytics.__version__, torch.__version__)"
+  python3 scripts/check_gpu_backend.py \
+    --backend ultralytics --model /opt/jcheng/models/ext_yolov8n.pt \
+    --image /data/sample.jpg
+  ```
+
+  当前这台主机没有 Ultralytics/torch/OpenVINO，真实后端烟测尚未执行；不要在没有
+  烟测通过的情况下直接启动生产检测节点。
+- 候选模型先在影子节点跑（`shadow_gpu.launch.py`），确认无误再切换生产话题。
 
 ## 2. 构建
 
@@ -42,12 +60,11 @@ source install/setup.bash
 ## 3. 相机检查（不动机械臂）
 
 ```bash
-# RGB / 深度 / 内参
+# RGB / 深度 / 内参（推荐：RealSense 单所有者 + 对齐深度）
 ros2 topic hz /depth_cam/rgb/image_raw
 ros2 topic hz /depth_cam/depth/image_raw
 ros2 topic echo --once /depth_cam/rgb/camera_info | head
 
-# 外机位（RealSense 默认名）
 ros2 topic hz /camera/color/image_raw
 ros2 topic hz /camera/aligned_depth_to_color/image_raw
 
@@ -56,9 +73,10 @@ ros2 run tf2_ros tf2_echo base_link camera_optical_calibrated
 ros2 run tf2_ros tf2_echo base_link camera_color_optical_frame
 ```
 
-若外机位走 UVC/`ext_cam_optical`，把 `config/cameras.yaml` 中
-`d435i_ext` 的 `rgb_topic`、`depth_topic`、`camera_info_topic`、
-`optical_frame` 改成实际值；`config/frames.yaml` 的静态回退仍可用。
+> 若现场仍是分离的 `/ext_cam/color/image_raw` +
+> `/camera/camera/depth/image_rect_raw`，只能用于预览/调试，不能接入本仓库的
+> 度量融合。先按 [ADR 0004](adr/0004-camera-device-ownership.md) 统一所有者并
+> 开启对齐深度。
 
 ## 4. 启动
 

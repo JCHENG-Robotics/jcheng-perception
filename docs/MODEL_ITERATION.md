@@ -40,7 +40,31 @@ cameras:
 支持的路径：Ultralytics `.pt`、`.onnx`、`*_openvino_model/` 目录。厂商
 `yolov8_detect` 的 OpenVINO 导出可直接复用。
 
-## 3. 热加载
+## 3. 运行前置检查
+
+在 GPU 主机上，先用 ROS 无关的烟测确认后端与模型：
+
+```bash
+# 无模型、无 GPU：验证适配器与图像路径
+python3 scripts/check_gpu_backend.py --backend mock
+
+# 真实模型：需要 GPU 主机已安装 ultralytics（含 torch）
+python3 scripts/check_gpu_backend.py \
+  --backend ultralytics \
+  --model /opt/jcheng/models/ext_yolov8n.pt \
+  --image /data/sample.jpg
+
+# 关键点模型
+python3 scripts/check_gpu_backend.py \
+  --backend ultralytics \
+  --model /opt/jcheng/models/wrist_grasp_pose.pt \
+  --task pose --image /data/wrist_sample.jpg
+```
+
+输出包含 `model_id`、加载/推理耗时、检测框与关键点。缺少运行时或模型路径时
+脚本以退出码 2 返回并给出明确原因；它不会自动安装依赖。
+
+## 4. 热加载
 
 - worker 每秒检查模型路径 mtime（文件或目录内最新文件）。
 - 变化后在下一帧前重新构造 `YOLO`；加载失败保留旧模型并打印错误。
@@ -58,13 +82,15 @@ cameras:
    ```
 3. **离线评估**：mAP / 关键点 PCK、单帧推理耗时、漏检/误检；用
    `scripts/simulate_pipeline.py` 回归融合逻辑（不依赖模型）。
-4. **影子运行**：复制一份 `gpu_shadow.yaml`，把 `detections_topic` 改为
-   `/perception/detections_shadow/<cam>`，启动第二个 GPU 节点：
+4. **影子运行**：复制 `config/gpu_shadow.example.yaml` 为本地文件，改权重路径；
+   它已经把检测/调试话题指向 `*_shadow`。启动第二个 GPU 节点：
    ```bash
-   ros2 launch jcheng_perception_gpu laptop_gpu.launch.py \
+   ros2 launch jcheng_perception_gpu shadow_gpu.launch.py \
      gpu_config:=/abs/gpu_shadow.yaml
    ```
-   edge 只订阅生产话题，影子结果不影响融合。用 bag 或订阅脚本对比。
+   edge 只订阅生产 `/perception/detections/*`，影子结果不影响融合。影子节点的
+   健康状态在 `/perception/gpu_status_shadow`（可用 `status_topic` 覆盖）。
+   用 bag 或订阅脚本对比生产/影子检测流。
 5. **切换**：把生产 `gpu.yaml` 的 `path` 指向新权重（或直接替换文件触发
    热加载）；观察 `/perception/status` 的匹配率、延迟、轨迹数。
 6. **回滚**：保留旧权重与旧配置；mtime 变化会立即切回。

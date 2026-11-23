@@ -288,6 +288,7 @@ class PerceptionGpuNode(Node):
             'gpu_config', _default_config_path('gpu.yaml'))
         self.declare_parameter('debug_publish', False)
         self.declare_parameter('queue_size', 0)
+        self.declare_parameter('status_topic', '/perception/gpu_status')
         config_path = str(self.get_parameter('gpu_config').value)
         self.config = load_gpu_config(config_path)
         debug_override = bool(
@@ -313,7 +314,8 @@ class PerceptionGpuNode(Node):
                                                                 message),
                 _sensor_qos())
         self.status_publisher = self.create_publisher(
-            GpuStatus, '/perception/gpu_status', _state_qos(5))
+            GpuStatus, str(self.get_parameter('status_topic').value),
+            _state_qos(5))
         self.create_timer(
             float(node_config.get('stats_interval_s', 2.0)),
             self.publish_status)

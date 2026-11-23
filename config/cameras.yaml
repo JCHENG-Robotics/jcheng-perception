@@ -2,10 +2,13 @@
 #
 # The D435i is the fixed "external" view: coarse localization and drop-point
 # recheck. The wrist Aurora 930 is the "wrist" view: fine grasp keypoints.
-# Topic names follow the RealSense driver for the D435i and the vendor Aurora
-# driver for the wrist camera. If the chassis camera is exposed through the
-# existing UVC / ext_cam_optical path instead, change rgb_topic, depth_topic,
-# camera_info_topic and optical_frame here; no code changes are needed.
+#
+# This profile assumes ONE RealSense owner publishing colour plus aligned depth
+# (align_depth_to_color), as recommended in docs/adr/0004. The currently
+# deployed split mode (ext_cam_node owns /dev/video4 for UVC colour and a
+# depth-only realsense2_camera publishes camera_depth_optical_frame) is NOT
+# colour-aligned and must not be used for metric fusion without software
+# registration. Do not mix /ext_cam/color/* with /camera/camera/depth/* here.
 cameras:
   d435i_ext:
     role: external
@@ -22,7 +25,9 @@ cameras:
     max_uplink_fps: 15.0
     max_detection_age_ms: 400.0
     frame_match_tolerance_ms: 50.0
-    depth_match_tolerance_ms: 80.0
+    # Depth+colour on the D435i can run at 4-8 Hz; the external camera is
+    # static, so a 200 ms-old depth is still spatially valid.
+    depth_match_tolerance_ms: 200.0
     pose_match_tolerance_ms: 60.0
     frame_buffer_seconds: 5.0
     depth_buffer_seconds: 5.0
