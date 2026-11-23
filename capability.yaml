@@ -84,4 +84,9 @@ verification:
   ros_onnx_node: passed (venv Python, yolov8s.onnx, 232.8 ms/frame on CPU)
   ros_ultralytics_node: passed (venv Python, yolov8s.pt, 154.3 ms/frame steady on CPU)
   ros_ultralytics_gpu: passed (venv Python, yolov8s.pt, RTX 3060, 54.3 ms/frame average)
-  hardware_end_to_end: not tested
+  pi5_arm64_build: passed (4 packages, 27.1 s, ROS 2 Humble)
+  pi5_synthetic_end_to_end: passed (6.2/6.3 Hz, match 0.994, 48 ms, one fused track)
+  wrist_camera: passed (driver rebuilt from local SDK; RGB 6.7-6.8 Hz, depth 3.1-6.4 Hz, 640x400)
+  real_wrist_pipeline: partial (target emitted with mock blue detector; metric z invalid, not for motion)
+  external_camera_alignment: blocked (split UVC colour + depth-only RealSense; ADR 0004 proposed)
+  hardware_end_to_end: partial (no motion commands; camera/edge/GPU path exercised)

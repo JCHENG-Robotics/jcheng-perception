@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Pi 5 ARM64 build (4 packages, 27.1 s) and synthetic end-to-end (6.2/6.3 Hz,
+  match 0.994, 48 ms, one fused track).
+- Wrist Aurora driver rebuilt from the local aarch64 SDK; real RGB/depth stream
+  restored (6.7/3.1–6.4 Hz). A real wrist data-path test with a mock blue
+  detector emitted `blue_block-001` (FINE, wrist weight 1.0, GPU 0 failures),
+  but the metric z is invalid: the base->camera_optical composition is wrong at
+  the tested arm pose. Not used for motion.
+- CameraInfo subscription switched to sensor QoS: the vendor Aurora publisher is
+  best-effort/volatile, which was incompatible with the previous latched QoS.
+- External D435i remains the split UVC-colour + depth-only topology; aligned
+  depth is still pending ADR 0004.
 - Shadow detector launch/config: a second GPU node reads the same uplink and
   publishes to `/perception/*_shadow`, with its own status topic. Production
   fusion is unaffected.
