@@ -1,0 +1,20 @@
+# Static base<-camera fallbacks.
+#
+# Only the external D435i is rigidly mounted, so only it has a static fallback.
+# The wrist camera is on link4 and MUST come from live TF; there is deliberately
+# no fallback for it. If the wrist TF is unavailable the observation is dropped.
+#
+# T_base_front is the 2026-11-20 chessboard result from jcheng-manipulation:
+# translation [0.13930, 0.02704, 0.03675] m, pitch 32.62 deg below horizontal,
+# yaw -1.29 deg. It maps ext camera optical coordinates to base_link.
+static_fallbacks:
+  d435i_ext:
+    # Row-major 4x4; the last row is implicit in the ROS transform but kept
+    # here to make the matrix directly usable by numpy.
+    transform:
+      - [-0.04216838436036936, -0.5377799793511505, 0.8420300001600372, 0.1393005143144151]
+      - [-0.9986357296162156, 0.04866561522702682, -0.018929802652546318, 0.027041016800109785]
+      - [-0.030797839117794233, -0.8416794827626792, -0.5390984524203566, 0.03674937694821427]
+      - [0.0, 0.0, 0.0, 1.0]
+    source: evidence/calibration/20261120/front_camera_extrinsic.json
+    note: chassis-front D435i, fixed; remounting invalidates this matrix

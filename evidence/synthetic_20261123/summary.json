@@ -1,0 +1,85 @@
+{
+  "schema": "jcheng-perception-evidence/1",
+  "date": "2026-11-23",
+  "kind": "synthetic_end_to_end",
+  "hardware_claimed": false,
+  "environment": {
+    "host": "Lenovo Legion R9000P, Ubuntu 24.04, x86_64, 16 CPU",
+    "ros_distro": "jazzy",
+    "python": "3.12.3",
+    "rmw": "Fast DDS (default)",
+    "ros_domain_id": 77,
+    "camera_sim": "640x400 @ 10 Hz, two views, depth noise 0.8 mm",
+    "detector": "mock-color-red (not YOLO)",
+    "external_extrinsic": "jcheng-manipulation evidence/calibration/20261120",
+    "table_z_base_link_m": -0.0825
+  },
+  "unit_tests": {
+    "command": "python3 -m pytest tests -q",
+    "passed": 43,
+    "failed": 0
+  },
+  "offline_simulation": {
+    "command": "python3 scripts/simulate_pipeline.py",
+    "frames": 100,
+    "target_presence_rate": 1.0,
+    "external_only_rmse_m": 0.00059,
+    "wrist_only_rmse_m": 0.00054,
+    "fused_rmse_m": 0.00057,
+    "fused_max_m": 0.00196,
+    "occlusion_window_max_m": 0.00196,
+    "phase_counts": {"ACQUIRE": 2, "FINE": 98},
+    "drop_recheck": {
+      "phase": "DROP_RECHECK",
+      "recheck_required": true,
+      "weights": {"d435i_ext": 1.0}
+    }
+  },
+  "ros_build": {
+    "command": "colcon build --packages-select jcheng_perception_msgs jcheng_perception_core jcheng_perception_edge jcheng_perception_gpu",
+    "packages_finished": 4,
+    "failed": 0
+  },
+  "synthetic_end_to_end": {
+    "command": "ROS_DOMAIN_ID=77 ros2 launch jcheng_perception_gpu synthetic_demo.launch.py",
+    "status": {
+      "camera_fps": [10.0, 9.999],
+      "total_frames": 216,
+      "total_detections": 210,
+      "detections_matched": 208,
+      "detections_dropped": 0,
+      "match_success_rate": 0.9905,
+      "mean_detection_latency_ms": 26.6,
+      "phase": "FINE",
+      "gpu_alive": true,
+      "active_tracks": 1,
+      "confirmed_tracks": 1
+    },
+    "target": {
+      "target_id": "target-001",
+      "position_base_m": [0.3535, -0.0041, -0.0805],
+      "source_cameras": ["d435i_ext", "aurora_wrist"],
+      "status": "CONFIRMED",
+      "phase": "FINE",
+      "weight_external": 0.21,
+      "weight_wrist": 0.79
+    },
+    "edge_callback_ms": {
+      "image": [0.3, 0.4],
+      "depth": [0.1, 0.2],
+      "detections": [0.5, 0.6],
+      "publish": [1.1, 1.3],
+      "tf": [0.2, 0.3]
+    }
+  },
+  "not_verified": [
+    "Raspberry Pi 5 ARM64 build and run",
+    "real D435i and Aurora drivers",
+    "real YOLO / OpenVINO inference",
+    "hardware calibration and accuracy",
+    "network latency and packet loss",
+    "30-minute stability",
+    "jcheng-system domain isolation and telemetry mirror",
+    "planner consumption of FusedTargetArray"
+  ]
+}

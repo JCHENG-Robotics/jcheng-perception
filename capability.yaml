@@ -1,0 +1,78 @@
+# Capability manifest for the organization's admission check.
+# The repository is an L3 capability: it consumes camera streams and produces
+# advisory perception state. It never commands motion.
+name: jcheng-perception
+version: 0.1.0
+layer: L3
+status: experimental
+
+runtime_roles:
+  pi5-edge:
+    host: Raspberry Pi 5 (8 GB), ROS 2 Humble
+    responsibilities:
+      - subscribe to the D435i and wrist Aurora camera streams
+      - JPEG-compress and uplink frames with capture timestamps
+      - maintain per-camera depth and TF timestamp rings
+      - time-match GPU detections to depth and TF
+      - back-project, associate, two-view fuse, Kalman-track
+      - publish FusedTargetArray for the planner
+    forbidden:
+      - YOLO or any detector inference
+      - serial, CAN, servo or chassis access
+      - publishing motion commands
+  gpu-detector:
+    host: laptop with GPU, ROS 2 Humble/Jazzy
+    responsibilities:
+      - decode the two compressed streams
+      - run one asynchronous detector per camera
+      - preserve the capture timestamp unchanged
+      - hot-reload model weights and publish latency/health
+    forbidden:
+      - opening cameras
+      - reading depth or TF
+      - writing fused targets or motion
+
+hardware_access:
+  kind: camera_readonly
+  detail: >-
+    The edge subscribes to vendor camera driver topics. It does not open
+    /dev/video*, USB, serial or CAN devices itself. The vendor driver remains
+    the single device owner.
+motion_authority: none
+control_path: advisory_only
+fail_closed: true
+
+topics:
+  subscribes:
+    - sensor_msgs/Image or sensor_msgs/CompressedImage (camera RGB)
+    - sensor_msgs/Image (depth, 16UC1 or 32FC1)
+    - sensor_msgs/CameraInfo
+    - tf2_msgs/TFMessage
+    - jcheng_perception_msgs/Detection2DArray
+  publishes:
+    - sensor_msgs/CompressedImage (uplink)
+    - jcheng_perception_msgs/TargetObservation
+    - jcheng_perception_msgs/FusedTargetArray
+    - jcheng_perception_msgs/PerceptionStatus
+    - jcheng_perception_msgs/GpuStatus
+
+contracts:
+  status: provisional_in_repo
+  promotion_target: JCHENG-Robotics/jcheng-interfaces at M2
+  note: >-
+    The messages are internal to this repository until the interface audit and
+    M2 contract freeze. Names and fields may change before promotion.
+
+safety:
+  - No actuator command is produced or consumed.
+  - A detection without a time-matched depth frame and TF sample is dropped.
+  - The wrist camera has no static TF fallback; missing TF means no observation.
+  - Periodic state streams use best-effort QoS so a slow subscriber cannot
+    block the edge executor.
+  - The planner must treat an empty target array as "no target", not as "hold".
+
+verification:
+  unit_tests: 43
+  ros_build: 4 packages on ROS 2 Jazzy (2026-11-23)
+  synthetic_end_to_end: passed 2026-11-23 (Pi 5 edge logic on x86, mock detector)
+  hardware_end_to_end: not tested

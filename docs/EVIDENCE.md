@@ -1,0 +1,147 @@
+# 验证证据（2026-11-23）
+
+> **范围声明**：以下全部是 **x86 工作站 + ROS 2 Jazzy + 合成场景 + mock 检测器**
+> 的结果。**没有连接机器人、没有使用真实 YOLO 权重、没有 Pi 5 实测。**
+> 合成结果只证明数据流、时间匹配、融合逻辑与并发结构正确，不代表实机精度/延迟。
+
+## 1. 环境
+
+| 项 | 值 |
+|---|---|
+| 主机 | Lenovo Legion R9000P，Ubuntu 24.04，x86_64，16 CPU |
+| ROS | Jazzy（`/opt/ros/jazzy`） |
+| Python | 3.12.3 |
+| RMW | Fast DDS（默认） |
+| 测试域 | `ROS_DOMAIN_ID=77`（隔离旧 DDS 参与者） |
+| 场景 | 640×400 @ 10 Hz，两路合成 RGB+深度，外机位用 2026-11-20 实测 `T_base_front`，桌面 z=-0.0825 m |
+| 检测器 | `mock-color-red`（HSV 阈值，非 YOLO） |
+
+## 2. 命令与结果
+
+### 2.1 核心测试
+
+```bash
+python3 -m pytest tests -q
+# 43 passed
+```
+
+覆盖：时间环/排序/剪枝、四元数/slerp、TF 插值、深度采样/空洞、反投影、
+协方差、关键点轴、遮挡、关联/生命周期、双视图信息加权、相位、DROP_RECHECK、
+重复轨迹合并、配置校验、edge/core 无推理代码。
+
+### 2.2 离线全链路仿真
+
+```bash
+python3 scripts/simulate_pipeline.py
+```
+
+```text
+frames: 100  target presence: 100.0%
+external_only      n=100 rmse=0.59 mm p95=1.04 mm max=1.16 mm
+wrist_only         n=100 rmse=0.54 mm p95=0.50 mm max=1.50 mm
+fused              n= 85 rmse=0.57 mm p95=0.81 mm max=1.96 mm
+occlusion_window   n= 10 rmse=0.76 mm p95=1.31 mm max=1.96 mm
+phases: {'ACQUIRE': 2, 'FINE': 98}
+drop recheck: {'phase': 'DROP_RECHECK', 'recheck_required': True, 'weights': {'d435i_ext': 1.0}}
+```
+
+- 外机位被遮挡 1 s 期间，融合目标仍存在，误差未发散。
+- `DROP_RECHECK` 下腕相机权重被先验置 0，外机位权重 1.0。
+- 这是**注入噪声的合成深度**，不是实机精度。
+
+### 2.3 ROS 2 构建
+
+```bash
+cd ros2_ws
+source /opt/ros/jazzy/setup.bash
+colcon build --packages-select \
+  jcheng_perception_msgs jcheng_perception_core \
+  jcheng_perception_edge jcheng_perception_gpu
+# Summary: 4 packages finished
+```
+
+### 2.4 单机合成端到端
+
+```bash
+export ROS_DOMAIN_ID=77
+ros2 launch jcheng_perception_gpu synthetic_demo.launch.py
+```
+
+`/perception/status`（运行约 20 s）：
+
+```text
+camera_fps: 10.000 / 9.999
+total_frames: 216
+total_detections: 210
+detections_matched: 208
+detections_dropped: 0
+match_success_rate: 0.9905
+mean_detection_latency_ms: 26.6
+phase: 3 (FINE)
+gpu_alive: true
+active_tracks: 1
+confirmed_tracks: 1
+notes: []
+```
+
+`/perception/targets`（最后一条消息）：
+
+```text
+target_id: target-001
+position: (0.3535, -0.0041, -0.0805)
+source_cameras: ['d435i_ext', 'aurora_wrist']
+status: 1 (CONFIRMED)
+phase: 3 (FINE)
+weight_external: 0.21
+weight_wrist: 0.79
+```
+
+edge 回调耗时（`timing_log:=true`）：
+
+```text
+depth=0.1-0.2 ms
+detections=0.5-0.6 ms
+image=0.3-0.4 ms
+publish=1.1-1.3 ms (max ~4 ms)
+tf=0.2-0.3 ms
+pending=0-2
+```
+
+## 3. 本轮发现并修复的问题
+
+| # | 现象 | 根因 | 修复 |
+|---|---|---|---|
+| 1 | 首次运行 `ValueError: could not broadcast` | 6×6 协方差写入用了 `covariance[:3]` | 改为 `[:9]` |
+| 2 | edge 单核 99%，上行仅 1 Hz | 100 Hz × 2 相机 TF 查询占满核 | 外机位 0.5 Hz、腕部 30 Hz |
+| 3 | 上行/检测率约为相机一半 | 严格 `1/fps` 限速遇上 95–104 ms 抖动 | 15% 容差 |
+| 4 | 编码/网络拖慢执行器 | JPEG 在 ROS 回调内 | 独立 uplink worker + depth-2 队列 |
+| 5 | 运行数秒后所有回调卡数秒 | 每帧检测都发布/记录 status；rclpy 日志 `realpath` + reliable 回压 + 多线程执行器 | status 1 Hz；周期状态 best-effort；edge 单线程执行器 |
+| 6 | 同一目标两条轨迹 | 两相机启动瞬态各建一条，之后各自匹配自己 | 重复轨迹合并（跨相机 6 cm/3σ，同相机严格 2 cm） |
+
+## 4. 未验证项
+
+- Pi 5（ARM64、Humble）上的构建与运行；
+- 真实 D435i/Aurora 驱动、USB 带宽、深度/彩色对齐；
+- 真实 YOLO（Ultralytics/OpenVINO）推理延迟、GPU 型号、热加载；
+- 有线/无线网络下的端到端延迟与丢包；
+- 实机标定误差、固定/移动目标精度、遮挡恢复时间；
+- 30 分钟以上稳定性、CPU 温度/降频、内存；
+- 与 `jcheng_system` 的域隔离/遥测镜像集成；
+- 规划器消费 `FusedTargetArray` 的接口与安全校验。
+
+## 5. 复现
+
+```bash
+git clone git@github.com:JCHENG-Robotics/jcheng-perception.git
+cd jcheng-perception
+python3 -m pytest tests -q
+python3 scripts/simulate_pipeline.py
+cd ros2_ws && source /opt/ros/jazzy/setup.bash
+colcon build --packages-select \
+  jcheng_perception_msgs jcheng_perception_core \
+  jcheng_perception_edge jcheng_perception_gpu
+source install/setup.bash
+ROS_DOMAIN_ID=77 ros2 launch jcheng_perception_gpu synthetic_demo.launch.py
+```
+
+配置/代码/结果如与本文件不一致，以仓库提交和重新运行结果为准。

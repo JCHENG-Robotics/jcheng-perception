@@ -1,0 +1,74 @@
+# Camera definitions for the synthetic end-to-end demo.
+cameras:
+  d435i_ext:
+    role: external
+    rgb_topic: /synthetic/ext/image_raw
+    depth_topic: /synthetic/ext/depth
+    camera_info_topic: /synthetic/ext/camera_info
+    optical_frame: synthetic_ext_optical
+    uplink_topic: /perception/uplink/d435i_ext/image_compressed
+    detection_topic: /perception/detections/d435i_ext
+    rgb_compressed: false
+    depth_compressed: false
+    depth_scale: 0.001
+    jpeg_quality: 80
+    max_uplink_fps: 10.0
+    max_detection_age_ms: 500.0
+    frame_match_tolerance_ms: 60.0
+    depth_match_tolerance_ms: 80.0
+    pose_match_tolerance_ms: 80.0
+    frame_buffer_seconds: 5.0
+    depth_buffer_seconds: 5.0
+    pose_buffer_seconds: 5.0
+    max_buffer_items: 256
+    pixel_sigma_px: 1.5
+    depth_noise_quadratic: 0.0025
+    depth_noise_floor_m: 0.0015
+    min_depth_m: 0.10
+    max_depth_m: 3.0
+    min_valid_depth_fraction: 0.10
+    min_range_m: 0.10
+    max_range_m: 2.0
+    range_penalty_width_m: 0.50
+    intrinsics:
+      - [500.0, 0.0, 320.0]
+      - [0.0, 500.0, 200.0]
+      - [0.0, 0.0, 1.0]
+    distortion: [0.0, 0.0, 0.0, 0.0, 0.0]
+    pose_static: true
+
+  aurora_wrist:
+    role: wrist
+    rgb_topic: /synthetic/wrist/image_raw
+    depth_topic: /synthetic/wrist/depth
+    camera_info_topic: /synthetic/wrist/camera_info
+    optical_frame: synthetic_wrist_optical
+    uplink_topic: /perception/uplink/aurora_wrist/image_compressed
+    detection_topic: /perception/detections/aurora_wrist
+    rgb_compressed: false
+    depth_compressed: false
+    depth_scale: 0.001
+    jpeg_quality: 80
+    max_uplink_fps: 10.0
+    max_detection_age_ms: 500.0
+    frame_match_tolerance_ms: 60.0
+    depth_match_tolerance_ms: 80.0
+    pose_match_tolerance_ms: 80.0
+    frame_buffer_seconds: 5.0
+    depth_buffer_seconds: 5.0
+    pose_buffer_seconds: 5.0
+    max_buffer_items: 256
+    pixel_sigma_px: 1.5
+    depth_noise_quadratic: 0.015
+    depth_noise_floor_m: 0.0020
+    min_depth_m: 0.08
+    max_depth_m: 1.20
+    min_valid_depth_fraction: 0.10
+    min_range_m: 0.10
+    max_range_m: 0.90
+    range_penalty_width_m: 0.20
+    intrinsics:
+      - [500.0, 0.0, 320.0]
+      - [0.0, 500.0, 200.0]
+      - [0.0, 0.0, 1.0]
+    distortion: [0.0, 0.0, 0.0, 0.0, 0.0]

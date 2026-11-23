@@ -1,0 +1,8 @@
+# Two-reviewer model, matching the organization baseline.
+* @JerichoCheng @JerichoSwaine
+
+/docs/ARCHITECTURE.md @JerichoCheng @JerichoSwaine
+/docs/TIMESTAMP_AND_TF.md @JerichoCheng @JerichoSwaine
+/docs/FUSION.md @JerichoCheng @JerichoSwaine
+/capability.yaml @JerichoCheng @JerichoSwaine
+/.github/ @JerichoCheng @JerichoSwaine

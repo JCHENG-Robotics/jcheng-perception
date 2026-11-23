@@ -1,0 +1,54 @@
+# GPU host detector configuration.
+#
+# Model weights are NOT stored in this repository. Put them on the GPU host and
+# update the paths below, or mount a model directory. The vendor ArmPi Ultra
+# YOLO packages load Ultralytics models and OpenVINO exports the same way;
+# .pt, .onnx and *_openvino_model directories are accepted by Ultralytics.
+node:
+  stats_interval_s: 2.0
+  # Annotated debug frames are useful during model iteration but cost GPU/CPU
+  # time; keep this off for normal operation.
+  debug_publish: false
+  debug_interval_s: 1.0
+  queue_size: 2
+
+cameras:
+  d435i_ext:
+    input_topic: /perception/uplink/d435i_ext/image_compressed
+    detections_topic: /perception/detections/d435i_ext
+    debug_topic: /perception/debug/d435i_ext
+    hot_reload: true
+    model:
+      backend: ultralytics
+      path: /opt/jcheng/models/ext_yolov8n.pt
+      task: detect
+      imgsz: 640
+      conf: 0.35
+      iou: 0.45
+      device: "0"
+      half: true
+      max_detections: 20
+      keypoints: false
+      # Optional class-name override, indexed by class id. Leave empty to use
+      # the model's own names.
+      labels: []
+
+  aurora_wrist:
+    input_topic: /perception/uplink/aurora_wrist/image_compressed
+    detections_topic: /perception/detections/aurora_wrist
+    debug_topic: /perception/debug/aurora_wrist
+    hot_reload: true
+    model:
+      backend: ultralytics
+      # A wrist keypoint model (Ultralytics pose task) or a detect model.
+      # If the model is detect-only, set task: detect and keypoints: false.
+      path: /opt/jcheng/models/wrist_grasp_pose.pt
+      task: pose
+      imgsz: 416
+      conf: 0.30
+      iou: 0.45
+      device: "0"
+      half: true
+      max_detections: 5
+      keypoints: true
+      labels: []

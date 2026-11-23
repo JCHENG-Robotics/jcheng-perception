@@ -1,0 +1,29 @@
+# GPU host configuration for the offline / synthetic pipeline.
+# No model file and no GPU are required: the mock detector thresholds the red
+# target rendered by the synthetic scene publisher.
+node:
+  stats_interval_s: 2.0
+  debug_publish: false
+  debug_interval_s: 0.5
+  queue_size: 2
+
+cameras:
+  d435i_ext:
+    input_topic: /perception/uplink/d435i_ext/image_compressed
+    detections_topic: /perception/detections/d435i_ext
+    debug_topic: /perception/debug/d435i_ext
+    hot_reload: false
+    model:
+      backend: mock
+      label: target
+      min_area: 60
+
+  aurora_wrist:
+    input_topic: /perception/uplink/aurora_wrist/image_compressed
+    detections_topic: /perception/detections/aurora_wrist
+    debug_topic: /perception/debug/aurora_wrist
+    hot_reload: false
+    model:
+      backend: mock
+      label: target
+      min_area: 60
