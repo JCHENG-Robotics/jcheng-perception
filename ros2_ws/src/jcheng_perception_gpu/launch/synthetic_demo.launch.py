@@ -5,9 +5,12 @@ file. Open the debug topics in rqt_image_view to see the red target.
 """
 
 import os
+import sys
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 
@@ -26,6 +29,9 @@ def _gpu_config(name):
 def generate_launch_description():
     """Build the launch description."""
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'python_executable', default_value=sys.executable,
+            description='Python interpreter for the GPU node.'),
         Node(
             package='jcheng_perception_edge',
             executable='synthetic_scene_publisher',
@@ -55,6 +61,7 @@ def generate_launch_description():
             executable='perception_gpu',
             name='jcheng_perception_gpu',
             output='screen',
+            prefix=[LaunchConfiguration('python_executable'), ' '],
             parameters=[{
                 'gpu_config': _gpu_config('gpu_mock.yaml'),
                 'debug_publish': False,

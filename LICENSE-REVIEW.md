@@ -20,7 +20,11 @@ organization repositories.
 | NumPy | numerics | BSD-3-Clause |
 | PyYAML | configuration | MIT |
 | Ultralytics | optional GPU detector backend | **AGPL-3.0 by default**; commercial licensing may be required |
-| OpenVINO / ONNX Runtime | optional model backends | vendor terms |
+| OpenVINO | optional IR detector backend | Apache-2.0 |
+| ONNX Runtime | optional ONNX detector backend | MIT |
+
+The optional runtimes are installed in a local venv, not vendored into this
+repository. Model weights remain outside the repository.
 
 ## Model weights
 

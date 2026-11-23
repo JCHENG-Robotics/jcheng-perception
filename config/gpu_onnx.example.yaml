@@ -1,0 +1,48 @@
+# ONNX Runtime (CPU) detector example.
+#
+# This is the no-torch fallback for a laptop without CUDA PyTorch. It uses the
+# vendor YOLOv8 ONNX export or any standard YOLOv8 detect ONNX model. Pose/OBB
+# models are not supported by this backend; use Ultralytics on the GPU host.
+#
+# Start with:
+#   ros2 launch jcheng_perception_gpu laptop_gpu.launch.py \
+#     gpu_config:=/abs/path/gpu_onnx.yaml \
+#     python_executable:=$HOME/.venvs/jcheng-perception-gpu/bin/python
+node:
+  stats_interval_s: 2.0
+  debug_publish: false
+  debug_interval_s: 1.0
+  queue_size: 2
+
+cameras:
+  d435i_ext:
+    input_topic: /perception/uplink/d435i_ext/image_compressed
+    detections_topic: /perception/detections/d435i_ext
+    debug_topic: /perception/debug/d435i_ext
+    hot_reload: true
+    model:
+      backend: onnxruntime
+      path: /opt/jcheng/models/yolov8s.onnx
+      task: detect
+      imgsz: 640
+      conf: 0.25
+      iou: 0.45
+      max_detections: 20
+      providers: [CPUExecutionProvider]
+      labels: []
+
+  aurora_wrist:
+    input_topic: /perception/uplink/aurora_wrist/image_compressed
+    detections_topic: /perception/detections/aurora_wrist
+    debug_topic: /perception/debug/aurora_wrist
+    hot_reload: true
+    model:
+      backend: onnxruntime
+      path: /opt/jcheng/models/wrist_yolov8s.onnx
+      task: detect
+      imgsz: 416
+      conf: 0.25
+      iou: 0.45
+      max_detections: 5
+      providers: [CPUExecutionProvider]
+      labels: []

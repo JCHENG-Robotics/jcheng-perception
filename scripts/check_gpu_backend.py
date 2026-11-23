@@ -73,7 +73,8 @@ def main(argv=None):
     """Run one detector smoke check."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--backend', default='mock',
-                        choices=['mock', 'ultralytics'])
+                        choices=['mock', 'ultralytics', 'openvino', 'opencv',
+                                 'onnxruntime'])
     parser.add_argument('--model', default='')
     parser.add_argument('--image', default='')
     parser.add_argument('--imgsz', type=int, default=640)

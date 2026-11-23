@@ -1,0 +1,45 @@
+# OpenVINO IR (CPU / Intel GPU) detector example.
+#
+# Uses the vendor-style .xml/.bin export. Detect models only; pose/OBB need
+# Ultralytics. Start with:
+#   ros2 launch jcheng_perception_gpu laptop_gpu.launch.py \
+#     gpu_config:=/abs/path/gpu_openvino.yaml \
+#     python_executable:=$HOME/.venvs/jcheng-perception-gpu/bin/python
+node:
+  stats_interval_s: 2.0
+  debug_publish: false
+  debug_interval_s: 1.0
+  queue_size: 2
+
+cameras:
+  d435i_ext:
+    input_topic: /perception/uplink/d435i_ext/image_compressed
+    detections_topic: /perception/detections/d435i_ext
+    debug_topic: /perception/debug/d435i_ext
+    hot_reload: true
+    model:
+      backend: openvino
+      path: /opt/jcheng/models/yolov8s.xml
+      task: detect
+      imgsz: 640
+      conf: 0.25
+      iou: 0.45
+      max_detections: 20
+      device: CPU
+      labels: []
+
+  aurora_wrist:
+    input_topic: /perception/uplink/aurora_wrist/image_compressed
+    detections_topic: /perception/detections/aurora_wrist
+    debug_topic: /perception/debug/aurora_wrist
+    hot_reload: true
+    model:
+      backend: openvino
+      path: /opt/jcheng/models/wrist_yolov8s.xml
+      task: detect
+      imgsz: 416
+      conf: 0.25
+      iou: 0.45
+      max_detections: 5
+      device: CPU
+      labels: []
