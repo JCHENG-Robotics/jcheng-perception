@@ -6,6 +6,7 @@ candidate model can be evaluated without touching the fused output.
 """
 
 import os
+import sys
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -30,11 +31,16 @@ def generate_launch_description():
         DeclareLaunchArgument('queue_size', default_value='0'),
         DeclareLaunchArgument(
             'status_topic', default_value='/perception/gpu_status_shadow'),
+        DeclareLaunchArgument(
+            'python_executable', default_value=sys.executable,
+            description='Python interpreter for the shadow detector node; '
+                        'point it at a venv with the candidate runtime.'),
         Node(
             package='jcheng_perception_gpu',
             executable='perception_gpu',
             name='jcheng_perception_gpu_shadow',
             output='screen',
+            prefix=[LaunchConfiguration('python_executable'), ' '],
             parameters=[{
                 'gpu_config': LaunchConfiguration('gpu_config'),
                 'debug_publish': LaunchConfiguration('debug_publish'),

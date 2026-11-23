@@ -68,8 +68,10 @@ jcheng-perception/
 │   ├── fusion.yaml               # 关联/滤波/相位先验
 │   ├── fusion_demo.yaml
 │   ├── frames.yaml               # 外机位静态外参回退
-│   ├── gpu.yaml                  # 真实 GPU 模型路径
+│   ├── gpu.yaml                  # 真实 GPU 模型路径（Ultralytics）
 │   ├── gpu_mock.yaml             # 无模型演示
+│   ├── gpu_onnx.example.yaml     # ONNX Runtime CPU
+│   ├── gpu_openvino.example.yaml # OpenVINO IR CPU
 │   └── gpu_shadow.example.yaml   # 影子模型模板
 ├── docs/
 │   ├── ARCHITECTURE.md           # 节点职责、进程/线程、数据流
@@ -91,7 +93,7 @@ jcheng-perception/
 │   ├── simulate_pipeline.py      # 离线全链路仿真
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 49 项 ROS-free 测试
+├── tests/                        # 53 项 ROS-free 测试
 └── capability.yaml
 ```
 
@@ -161,14 +163,17 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 | 检测采集→边缘回调延迟 | 27–40 ms（同机、mock 检测器） |
 | Edge 单回调耗时 | image 0.4 ms、depth 0.1 ms、detections 0.6 ms、publish 1.3 ms、tf 0.3 ms |
 | 输出轨迹 | 1 条 confirmed，双视图融合，权重 0.21 / 0.79，phase FINE |
-| 单元测试 | 49 passed |
+| 真实模型 CPU 烟测 | `yolov8s.onnx` 197.5 ms / `yolov8s.xml` 126.7 ms，各 4 个框 |
+| 单元测试 | 53 passed |
 | colcon 构建 | 4 包通过（Jazzy 主机） |
 
-> 以上为**合成场景**结果，不是实机精度或延迟验证。真实 YOLO 推理、USB 相机、网络与 Pi 5 CPU 的实测仍需在机器人上完成。详见 [EVIDENCE.md](docs/EVIDENCE.md)。
+> 以上合成指标不是实机精度或延迟验证。真实模型烟测是**单图 CPU 推理**，不代表
+> Pi 5/相机/网络的端到端性能。
 
-> 真实 GPU 后端（Ultralytics/OpenVINO）尚未在当前主机安装；`scripts/check_gpu_backend.py`
-> 的 mock 路径已通过，真实路径会明确报告缺少运行时。GPU 主机装好依赖后先跑该烟测，
-> 再用 [影子模型](docs/MODEL_ITERATION.md) 对比。
+> 本机已在独立 venv 安装 **ONNX Runtime 1.32.0** 与 **OpenVINO 2026.4.1**，
+> 并用厂商 `yolov8s.onnx/.xml` 完成真实推理；ROS 节点也通过 venv Python 跑通了
+> ONNX Runtime（233 ms/帧）。CUDA PyTorch/Ultralytics 因下载限速未安装，GPU 主机
+> 可另行安装后使用 `backend: ultralytics`。
 
 ## 8. 设计边界
 

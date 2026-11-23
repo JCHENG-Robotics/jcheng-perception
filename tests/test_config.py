@@ -52,6 +52,16 @@ def test_gpu_config_real_and_mock():
     assert mock['node']['debug_publish'] is False
 
 
+def test_cpu_backend_examples_load():
+    for name, backend in (
+            ('gpu_onnx.example.yaml', 'onnxruntime'),
+            ('gpu_openvino.example.yaml', 'openvino')):
+        config = load_gpu_config(str(REPO_ROOT / 'config' / name))
+        entry = config['cameras']['d435i_ext']['model']
+        assert entry['backend'] == backend
+        assert entry['task'] == 'detect'
+
+
 def test_shadow_config_keeps_outputs_off_production_topics():
     shadow = load_gpu_config(
         str(REPO_ROOT / 'config' / 'gpu_shadow.example.yaml'))

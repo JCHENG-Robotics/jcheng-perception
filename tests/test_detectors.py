@@ -60,3 +60,33 @@ def test_ultralytics_missing_path_raises_without_import():
             'hot_reload': False,
         })
     assert 'does not exist' in str(error.value)
+
+
+def test_openvino_missing_path_raises_without_import():
+    with pytest.raises(DetectorError) as error:
+        build_detector({
+            'backend': 'openvino',
+            'path': '/no/such/model.xml',
+            'hot_reload': False,
+        })
+    assert 'does not exist' in str(error.value)
+
+
+def test_opencv_missing_path_raises_without_model_load():
+    with pytest.raises(DetectorError) as error:
+        build_detector({
+            'backend': 'opencv',
+            'path': '/no/such/model.onnx',
+            'hot_reload': False,
+        })
+    assert 'does not exist' in str(error.value)
+
+
+def test_onnxruntime_missing_path_raises_without_import():
+    with pytest.raises(DetectorError) as error:
+        build_detector({
+            'backend': 'onnxruntime',
+            'path': '/no/such/model.onnx',
+            'hot_reload': False,
+        })
+    assert 'does not exist' in str(error.value)
