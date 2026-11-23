@@ -6,11 +6,15 @@
   publishes to `/perception/*_shadow`, with its own status topic. Production
   fusion is unaffected.
 - Detector backends: Ultralytics, ONNX Runtime (CPU), OpenVINO IR (CPU), OpenCV
-  DNN (legacy models) and mock. ONNX Runtime and OpenVINO were installed in an
-  isolated venv and verified on the vendor `yolov8s.onnx/.xml`:
-  197.5 ms / 126.7 ms, 4 detections, identical boxes.
+  DNN (legacy models) and mock. ONNX Runtime, OpenVINO and Ultralytics CPU were
+  installed in an isolated venv and verified on the vendor models:
+  `yolov8s.onnx` 197.5 ms, `yolov8s.xml` 126.7 ms, `yolov8s.pt` 1.04 s first
+  frame (4 detections each); OBB `yolov8n-obb.pt` also passed.
 - `python_executable` launch argument and `scripts/setup_gpu_venv.sh` for
-  running the ROS node with a venv runtime; ONNX Runtime verified in-node.
+  running the ROS node with a venv runtime; ONNX Runtime and Ultralytics were
+  verified in-node (232.8 ms and 154.3 ms steady per frame on CPU).
+- CUDA PyTorch is not installed: the ~1.5 GB CUDA dependency set was
+  download-limited; the script supports `RUNTIME=ultralytics` on a GPU host.
 - `scripts/check_gpu_backend.py`: ROS-free detector smoke check for every
   backend; reports missing runtime/model explicitly.
 - Detector adapter tests (mock, unknown backend, missing model) — 53 tests total.

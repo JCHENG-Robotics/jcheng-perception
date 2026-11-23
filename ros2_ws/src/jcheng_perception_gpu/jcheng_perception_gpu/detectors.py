@@ -159,17 +159,20 @@ class UltralyticsDetector(BaseDetector):
 
     def detect(self, image_bgr):
         """Run inference and return boxes plus optional keypoints."""
+        arguments = {
+            'imgsz': self.imgsz,
+            'conf': self.conf,
+            'iou': self.iou,
+            'device': self.device,
+            'verbose': False,
+            'max_det': self.max_detections,
+        }
+        if self.half:
+            # Passing half=False still triggers the deprecation warning in
+            # current Ultralytics; omit the key entirely when unused.
+            arguments['half'] = True
         try:
-            results = self.model.predict(
-                image_bgr,
-                imgsz=self.imgsz,
-                conf=self.conf,
-                iou=self.iou,
-                device=self.device,
-                half=self.half,
-                verbose=False,
-                max_det=self.max_detections,
-            )
+            results = self.model.predict(image_bgr, **arguments)
         except Exception as error:  # noqa: BLE001 - runtime dependent
             raise DetectorError('inference failed: {}'.format(error)) from error
         if not results:

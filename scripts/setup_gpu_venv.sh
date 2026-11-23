@@ -34,8 +34,20 @@ case "${RUNTIME}" in
     "${UV}" pip install --python "${VENV}/bin/python" \
       --index-url "${INDEX}" ultralytics openvino "numpy<2"
     ;;
+  ultralytics-cpu)
+    # Small CPU-only install: PyTorch CPU wheels plus the Ultralytics
+    # dependencies, without letting the resolver pull a CUDA torch build.
+    "${UV}" pip install --python "${VENV}/bin/python" \
+      --index-url https://download.pytorch.org/whl/cpu torch torchvision
+    "${UV}" pip install --python "${VENV}/bin/python" \
+      --index-url "${INDEX}" "numpy<2" matplotlib opencv-python pillow \
+      PyYAML requests scipy tqdm psutil py-cpuinfo pandas seaborn \
+      ultralytics-thop polars
+    "${UV}" pip install --python "${VENV}/bin/python" \
+      --index-url "${INDEX}" --no-deps ultralytics
+    ;;
   *)
-    echo "unknown RUNTIME=${RUNTIME} (expected onnxruntime, openvino or ultralytics)" >&2
+    echo "unknown RUNTIME=${RUNTIME} (expected onnxruntime, openvino, ultralytics or ultralytics-cpu)" >&2
     exit 2
     ;;
 esac
