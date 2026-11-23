@@ -34,6 +34,20 @@ case "${RUNTIME}" in
     "${UV}" pip install --python "${VENV}/bin/python" \
       --index-url "${INDEX}" ultralytics openvino "numpy<2"
     ;;
+  ultralytics-cuda)
+    # Known-good CUDA pair; lets the resolver pick the matching nvidia wheels.
+    "${UV}" pip install --python "${VENV}/bin/python" \
+      --index-url https://download.pytorch.org/whl/cu128 \
+      --extra-index-url https://pypi.org/simple \
+      --index-strategy unsafe-best-match \
+      'torch==2.9.1+cu128' 'torchvision==0.24.1+cu128'
+    "${UV}" pip install --python "${VENV}/bin/python" \
+      --index-url "${INDEX}" "numpy<2" matplotlib opencv-python pillow \
+      PyYAML requests scipy tqdm psutil py-cpuinfo pandas seaborn \
+      ultralytics-thop polars
+    "${UV}" pip install --python "${VENV}/bin/python" \
+      --index-url "${INDEX}" --no-deps ultralytics
+    ;;
   ultralytics-cpu)
     # Small CPU-only install: PyTorch CPU wheels plus the Ultralytics
     # dependencies, without letting the resolver pull a CUDA torch build.
@@ -47,7 +61,7 @@ case "${RUNTIME}" in
       --index-url "${INDEX}" --no-deps ultralytics
     ;;
   *)
-    echo "unknown RUNTIME=${RUNTIME} (expected onnxruntime, openvino, ultralytics or ultralytics-cpu)" >&2
+    echo "unknown RUNTIME=${RUNTIME} (expected onnxruntime, openvino, ultralytics, ultralytics-cpu or ultralytics-cuda)" >&2
     exit 2
     ;;
 esac

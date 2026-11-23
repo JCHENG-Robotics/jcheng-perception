@@ -14,8 +14,8 @@
 | RMW | Fast DDS（默认） |
 | 测试域 | `ROS_DOMAIN_ID=77/78/79`（隔离旧 DDS 参与者） |
 | 场景 | 640×400 @ 10 Hz，两路合成 RGB+深度，外机位用 2026-11-20 实测 `T_base_front`，桌面 z=-0.0825 m |
-| 检测器 | `mock-color-red`；真实烟测用厂商 `yolov8s.onnx/.xml/.pt`、`yolov8n-obb.pt`（CPU） |
-| 推理运行时 | venv `~/.venvs/jcheng-perception-gpu`：ONNX Runtime 1.32.0、OpenVINO 2026.4.1、torch 2.6.0+cpu、torchvision 0.21.0+cpu、Ultralytics 8.4.216、numpy 1.26.4 |
+| 检测器 | `mock-color-red`；真实烟测用厂商 `yolov8s.onnx/.xml/.pt`、`yolov8n-obb.pt`（CPU 与 RTX 3060） |
+| 推理运行时 | venv `~/.venvs/jcheng-perception-gpu`：ONNX Runtime 1.32.0、OpenVINO 2026.4.1、torch 2.9.1+cu128、torchvision 0.24.1+cu128、Ultralytics 8.4.216、numpy 1.26.4 |
 
 ## 2. 命令与结果
 
@@ -125,6 +125,7 @@ RUNTIME=ultralytics-cpu ./scripts/setup_gpu_venv.sh
 | OpenVINO 2026.4.1 | 厂商 `yolov8s.xml` | 297.5 ms | **126.7 ms** | 4 个框，坐标一致 |
 | Ultralytics 8.4.216 (torch 2.6.0+cpu) | 厂商 `yolov8s.pt` | 1244.9 ms | **1039.8 ms** | 4 个框，标签正确 |
 | Ultralytics (OBB) | 厂商 `yolov8n-obb.pt` | 1362.8 ms | **963.2 ms** | 1 个旋转框 |
+| Ultralytics CUDA (torch 2.9.1+cu128) | 厂商 `yolov8s.pt` | 1397.3 ms | **2887.9 ms 首帧，9.0 ms FP32 / 7.4 ms FP16 稳态** | 4 个框，RTX 3060 |
 
 真实模型检测结果（Ultralytics，标签）：`orange 0.941`、`cell phone 0.823`、
 `bottle 0.762`、`person 0.268`。ONNX/OpenVINO 为同一组框的 class id。
@@ -135,7 +136,7 @@ ROS 节点内验证（ONNX Runtime，venv Python 通过 `python_executable`）�
 process: /home/.../.venvs/jcheng-perception-gpu/bin/python .../perception_gpu
 model_ids: yolov8s.onnx:1775123732000000000
 inference_ms: 232.8
-fps: 3.35 / 3.61 (CPU，低于 10 Hz 输入；GPU 主机应使用 Ultralytics/CUDA)
+fps: 3.35 / 3.61 (CPU，低于 10 Hz 输入)
 frames_received: 53 / 57，dropped 0，failed 0
 ```
 
@@ -148,12 +149,24 @@ fps: 5.80 / 7.83
 frames_received: 114 / 123，dropped 30 / 0，failed 0
 ```
 
+ROS 节点内验证（Ultralytics CUDA / RTX 3060）：
+
+```text
+model_ids: yolov8s.pt:1775123732000000000
+inference_ms: 54.27 (average, includes warm-up)
+fps: 6.07 / 7.87
+frames_received: 109 / 108，dropped 34 / 0，failed 0
+nvidia-smi: 15% util, 412 MiB
+```
+
 OpenCV 4.6 DNN 无法解析 YOLOv8 的 `Reshape/DFL` 节点，因此 `opencv` 后端仅保留
 给较老模型；YOLOv8 请用 `onnxruntime`、`openvino` 或 `ultralytics`。
 
-CUDA 版 PyTorch **未安装**：CUDA 依赖约 1.5 GB，当前网络限速；本机安装的是
-`torch 2.6.0+cpu`，`torch.cuda.is_available()` 为 `False`。GPU 主机网络允许时运行
-`RUNTIME=ultralytics ./scripts/setup_gpu_venv.sh` 安装 CUDA 版。
+CUDA 版已安装：`torch 2.9.1+cu128`、`torchvision 0.24.1+cu128`，RTX 3060 上
+`torch.cuda.is_available()=True`，单图稳态 9.0 ms（FP32）/ 7.4 ms（FP16）。此前的失败是因为
+torch 2.11 与按 2.9.1 元数据安装的 NCCL 版本不匹配（`ncclDevCommCreate`
+未定义）；固定 2.9.1 组合后解决。安装脚本见 `RUNTIME=ultralytics-cuda`。
+FP16 默认关闭（当前 Ultralytics 对 `half` 给出弃用警告），可按需开启。
 
 ### 2.6 影子模型隔离（mock）
 
@@ -180,15 +193,16 @@ CUDA 版 PyTorch **未安装**：CUDA 依赖约 1.5 GB，当前网络限速；�
 | 4 | 编码/网络拖慢执行器 | JPEG 在 ROS 回调内 | 独立 uplink worker + depth-2 队列 |
 | 5 | 运行数秒后所有回调卡数秒 | 每帧检测都发布/记录 status；rclpy 日志 `realpath` + reliable 回压 + 多线程执行器 | status 1 Hz；周期状态 best-effort；edge 单线程执行器 |
 | 6 | 同一目标两条轨迹 | 两相机启动瞬态各建一条，之后各自匹配自己 | 重复轨迹合并（跨相机 6 cm/3σ，同相机严格 2 cm） |
-| 7 | 真实后端烟测最初无法运行 | 主机无 torch/Ultralytics，CUDA 依赖下载限速 | 建独立 venv，安装 ONNX Runtime/OpenVINO/Ultralytics CPU 并跑通真实 `yolov8s`/OBB；CUDA 版留待 GPU 主机 |
+| 7 | 真实后端烟测最初无法运行 | 主机无 torch/Ultralytics，CUDA 依赖下载限速 | 建独立 venv，安装 ONNX Runtime/OpenVINO/Ultralytics CPU 并跑通真实 `yolov8s`/OBB；后续 CUDA 版也装好 |
 | 8 | 默认 D435i 配置与实机拓扑不符 | 实机是 UVC 彩色 + 仅深度 RealSense，深度未对齐彩色 | ADR 0004 提议单一 RealSense 所有者 + aligned depth；默认配置已注明 |
+| 9 | `torch 2.11` 导入报 `undefined symbol: ncclDevCommCreate` | 按 2.9.1 元数据安装的 NCCL 与 2.11 不匹配 | 固定 `torch 2.9.1+cu128` / `torchvision 0.24.1+cu128`，RTX 3060 稳态 9.0 ms（FP32）/ 7.4 ms（FP16） |
 
 ## 4. 未验证项
 
 - Pi 5（ARM64、Humble）上的构建与运行；
 - 真实 D435i/Aurora 驱动、USB 带宽、深度/彩色对齐；
-- CUDA/RTX 3060 加速（当前 torch 为 CPU 版）与关键点/pose 模型；
-- 真实模型在 10 Hz 输入下的实时性（CPU 后端约 3.5–6 Hz）；
+- 关键点/pose 模型（仅验证了 detect 与 OBB）；
+- 真实模型在 10 Hz 输入下的端到端实时性（GPU ROS 约 6–8 Hz，需进一步调优）；
 - 外机位单一所有者切换（RealSense 彩色 + aligned depth）与随之而来的深度帧率；
 - 有线/无线网络下的端到端延迟与丢包；
 - 实机标定误差、固定/移动目标精度、遮挡恢复时间；

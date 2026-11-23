@@ -56,20 +56,20 @@
     --backend openvino --model /path/to/yolov8s.xml \
     --image /path/to/sample.jpg --device CPU
 
-  # Ultralytics（CPU 或 GPU；本机实测 CPU：yolov8s.pt，4 框）
+  # Ultralytics（CPU 或 GPU；本机 CPU 与 RTX 3060 均已实测）
   ~/.venvs/jcheng-perception-gpu/bin/python scripts/check_gpu_backend.py \
     --backend ultralytics --model /path/to/yolov8s.pt \
-    --image /path/to/sample.jpg --device cpu
+    --image /path/to/sample.jpg --device 0
   ```
 
-  当前这台主机已安装 ONNX Runtime、OpenVINO、PyTorch 2.6.0+cpu 与
-  Ultralytics 8.4.216（CPU）；CUDA 版 PyTorch 未安装（约 1.5 GB 依赖下载受限）。
-  没有烟测通过不要直接启动生产检测节点。
+  当前这台主机已安装 ONNX Runtime、OpenVINO、Ultralytics 8.4.216、
+  PyTorch 2.9.1+cu128 与 torchvision 0.24.1+cu128；RTX 3060 可用，
+  `yolov8s.pt` 稳态 9.0 ms（FP32）/ 7.4 ms（FP16）。没有烟测通过不要直接启动生产检测节点。
 - 用 venv 解释器启动 ROS 节点（console script 的 shebang 仍指向系统 Python）：
 
   ```bash
   ros2 launch jcheng_perception_gpu laptop_gpu.launch.py \
-    gpu_config:=/abs/path/gpu_onnx.yaml \
+    gpu_config:=/abs/path/gpu.yaml \
     python_executable:=$HOME/.venvs/jcheng-perception-gpu/bin/python
   ```
 

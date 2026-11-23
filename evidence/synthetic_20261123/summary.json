@@ -13,7 +13,8 @@
     "detector": "mock-color-red (not YOLO)",
     "external_extrinsic": "jcheng-manipulation evidence/calibration/20261120",
     "table_z_base_link_m": -0.0825,
-    "detector_runtime_venv": "~/.venvs/jcheng-perception-gpu (ONNX Runtime 1.32.0, OpenVINO 2026.4.1, torch 2.6.0+cpu, torchvision 0.21.0+cpu, Ultralytics 8.4.216, numpy 1.26.4)"
+    "detector_runtime_venv": "~/.venvs/jcheng-perception-gpu (ONNX Runtime 1.32.0, OpenVINO 2026.4.1, torch 2.9.1+cu128, torchvision 0.24.1+cu128, Ultralytics 8.4.216, numpy 1.26.4)",
+    "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU, 6 GB, driver 595.99.02"
   },
   "unit_tests": {
     "command": "python3 -m pytest tests -q",
@@ -111,7 +112,8 @@
     "30-minute stability",
     "jcheng-system domain isolation and telemetry mirror",
     "planner consumption of FusedTargetArray",
-    "CUDA/RTX 3060 acceleration (torch is CPU-only) and pose keypoint models"
+    "pose keypoint models (detect and OBB only)",
+    "real-time 10 Hz ROS end-to-end on GPU (currently ~6-8 Hz)"
   ],
   "gpu_backend_smoke": {
     "mock": {
@@ -157,8 +159,18 @@
       "detections": 1
     },
     "ultralytics_cuda": {
-      "status": "not_run",
-      "reason": "CUDA torch not installed; ~1.5 GB dependency set was download-limited"
+      "status": "passed",
+      "model": "yolov8s.pt",
+      "torch": "2.9.1+cu128",
+      "torchvision": "0.24.1+cu128",
+      "load_ms": 1397.3,
+      "first_inference_ms": 2887.9,
+      "steady_inference_ms": 9.01,
+      "device": "NVIDIA GeForce RTX 3060 Laptop GPU",
+      "detections": 4,
+      "cuda_available": true,
+      "steady_inference_fp16_ms": 7.36,
+      "note": "default FP32; FP16 optional and currently emits an Ultralytics deprecation warning"
     }
   },
   "camera_topology_note": "Deployed D435i is split UVC colour + depth-only RealSense (not colour-aligned); not used for metric fusion. See docs/adr/0004.",
@@ -219,5 +231,29 @@
       0
     ],
     "note": "steady-state CPU inference; CUDA host not used"
+  },
+  "ros_ultralytics_gpu": {
+    "status": "passed",
+    "python": "~/.venvs/jcheng-perception-gpu/bin/python",
+    "model_id": "yolov8s.pt:1775123732000000000",
+    "inference_ms": 54.27,
+    "fps": [
+      6.07,
+      7.87
+    ],
+    "frames_received": [
+      109,
+      108
+    ],
+    "frames_dropped": [
+      34,
+      0
+    ],
+    "frames_failed": [
+      0,
+      0
+    ],
+    "gpu_utilization_pct": 15,
+    "gpu_memory_mib": 412
   }
 }

@@ -13,8 +13,10 @@
 - `python_executable` launch argument and `scripts/setup_gpu_venv.sh` for
   running the ROS node with a venv runtime; ONNX Runtime and Ultralytics were
   verified in-node (232.8 ms and 154.3 ms steady per frame on CPU).
-- CUDA PyTorch is not installed: the ~1.5 GB CUDA dependency set was
-  download-limited; the script supports `RUNTIME=ultralytics` on a GPU host.
+- CUDA PyTorch installed and verified: `torch 2.9.1+cu128`,
+  `torchvision 0.24.1+cu128`, RTX 3060; `yolov8s.pt` 9.0 ms FP32 / 7.4 ms FP16 steady per image,
+  ROS node 54.3 ms/frame average. A torch 2.11/NCCL mismatch was resolved by
+  pinning the 2.9.1 pair; `RUNTIME=ultralytics-cuda` reproduces it.
 - `scripts/check_gpu_backend.py`: ROS-free detector smoke check for every
   backend; reports missing runtime/model explicitly.
 - Detector adapter tests (mock, unknown backend, missing model) — 53 tests total.

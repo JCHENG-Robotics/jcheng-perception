@@ -51,8 +51,9 @@ cameras:
 | `mock` | 无 | 颜色阈值 | CI、无模型演示 |
 
 当前本机 venv：`~/.venvs/jcheng-perception-gpu`，已装 ONNX Runtime 1.32.0、
-OpenVINO 2026.4.1、torch 2.6.0+cpu、torchvision 0.21.0+cpu、Ultralytics
-8.4.216（均 CPU）；CUDA 版未安装。GPU 主机可另行安装。
+OpenVINO 2026.4.1、Ultralytics 8.4.216、torch 2.9.1+cu128、
+torchvision 0.24.1+cu128；RTX 3060 可用，`yolov8s.pt` 稳态 9.0 ms（FP32）/ 7.4 ms（FP16）。
+CPU 版 torch 2.6.0+cpu 曾用于无 GPU 验证，已被 CUDA 版替换。
 
 ## 3. 运行前置检查
 
@@ -70,8 +71,10 @@ python3 scripts/check_gpu_backend.py --backend mock
 RUNTIME=onnxruntime ./scripts/setup_gpu_venv.sh
 # OpenVINO CPU/Intel GPU（本机已验证）
 RUNTIME=openvino ./scripts/setup_gpu_venv.sh
-# Ultralytics + CPU torch（本机已验证；无需 CUDA）
+# Ultralytics + CPU torch（无需 CUDA）
 RUNTIME=ultralytics-cpu ./scripts/setup_gpu_venv.sh
+# Ultralytics + CUDA torch（RTX 3060；固定 2.9.1/cu128 组合）
+RUNTIME=ultralytics-cuda ./scripts/setup_gpu_venv.sh
 # CUDA Ultralytics（GPU 主机；下载量大）
 RUNTIME=ultralytics ./scripts/setup_gpu_venv.sh
 ```
