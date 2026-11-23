@@ -13,7 +13,7 @@
     "detector": "mock-color-red (not YOLO)",
     "external_extrinsic": "jcheng-manipulation evidence/calibration/20261120",
     "table_z_base_link_m": -0.0825,
-    "detector_runtime_venv": "~/.venvs/jcheng-perception-gpu (ONNX Runtime 1.32.0, OpenVINO 2026.4.1, numpy 1.26.4)"
+    "detector_runtime_venv": "~/.venvs/jcheng-perception-gpu (ONNX Runtime 1.32.0, OpenVINO 2026.4.1, torch 2.6.0+cpu, torchvision 0.21.0+cpu, Ultralytics 8.4.216, numpy 1.26.4)"
   },
   "unit_tests": {
     "command": "python3 -m pytest tests -q",
@@ -111,7 +111,7 @@
     "30-minute stability",
     "jcheng-system domain isolation and telemetry mirror",
     "planner consumption of FusedTargetArray",
-    "Ultralytics/CUDA inference and keypoint models on the RTX 3060"
+    "CUDA/RTX 3060 acceleration (torch is CPU-only) and pose keypoint models"
   ],
   "gpu_backend_smoke": {
     "mock": {
@@ -139,6 +139,26 @@
     "ultralytics": {
       "status": "not_run",
       "reason": "CUDA torch/Ultralytics not installed; ~1.5 GB CUDA dependencies were download-limited"
+    },
+    "ultralytics_cpu": {
+      "status": "passed",
+      "model": "yolov8s.pt",
+      "load_ms": 1244.9,
+      "first_inference_ms": 1039.8,
+      "detections": 4,
+      "device": "CPU",
+      "cuda": false
+    },
+    "ultralytics_obb_cpu": {
+      "status": "passed",
+      "model": "yolov8n-obb.pt",
+      "load_ms": 1362.8,
+      "inference_ms": 963.2,
+      "detections": 1
+    },
+    "ultralytics_cuda": {
+      "status": "not_run",
+      "reason": "CUDA torch not installed; ~1.5 GB dependency set was download-limited"
     }
   },
   "camera_topology_note": "Deployed D435i is split UVC colour + depth-only RealSense (not colour-aligned); not used for metric fusion. See docs/adr/0004.",
@@ -176,5 +196,28 @@
       0
     ],
     "note": "CPU inference below the 10 Hz uplink; production GPU host should use Ultralytics/CUDA"
+  },
+  "ros_ultralytics_node": {
+    "status": "passed",
+    "python": "~/.venvs/jcheng-perception-gpu/bin/python",
+    "model_id": "yolov8s.pt:1775123732000000000",
+    "inference_ms": 154.3,
+    "fps": [
+      5.8,
+      7.83
+    ],
+    "frames_received": [
+      114,
+      123
+    ],
+    "frames_dropped": [
+      30,
+      0
+    ],
+    "frames_failed": [
+      0,
+      0
+    ],
+    "note": "steady-state CPU inference; CUDA host not used"
   }
 }

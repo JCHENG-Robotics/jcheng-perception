@@ -56,15 +56,15 @@
     --backend openvino --model /path/to/yolov8s.xml \
     --image /path/to/sample.jpg --device CPU
 
-  # Ultralytics（GPU 主机）
-  python3 -c "import ultralytics, torch; print(ultralytics.__version__, torch.__version__)"
-  python3 scripts/check_gpu_backend.py \
-    --backend ultralytics --model /opt/jcheng/models/ext_yolov8n.pt \
-    --image /data/sample.jpg
+  # Ultralytics（CPU 或 GPU；本机实测 CPU：yolov8s.pt，4 框）
+  ~/.venvs/jcheng-perception-gpu/bin/python scripts/check_gpu_backend.py \
+    --backend ultralytics --model /path/to/yolov8s.pt \
+    --image /path/to/sample.jpg --device cpu
   ```
 
-  当前这台主机已安装 ONNX Runtime 与 OpenVINO；CUDA PyTorch/Ultralytics 未安装
-  （下载限速）。没有烟测通过不要直接启动生产检测节点。
+  当前这台主机已安装 ONNX Runtime、OpenVINO、PyTorch 2.6.0+cpu 与
+  Ultralytics 8.4.216（CPU）；CUDA 版 PyTorch 未安装（约 1.5 GB 依赖下载受限）。
+  没有烟测通过不要直接启动生产检测节点。
 - 用 venv 解释器启动 ROS 节点（console script 的 shebang 仍指向系统 Python）：
 
   ```bash
