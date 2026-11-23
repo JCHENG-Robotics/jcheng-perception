@@ -12,11 +12,12 @@
     "camera_sim": "640x400 @ 10 Hz, two views, depth noise 0.8 mm",
     "detector": "mock-color-red (not YOLO)",
     "external_extrinsic": "jcheng-manipulation evidence/calibration/20261120",
-    "table_z_base_link_m": -0.0825
+    "table_z_base_link_m": -0.0825,
+    "detector_runtime_venv": "~/.venvs/jcheng-perception-gpu (ONNX Runtime 1.32.0, OpenVINO 2026.4.1, numpy 1.26.4)"
   },
   "unit_tests": {
     "command": "python3 -m pytest tests -q",
-    "passed": 49,
+    "passed": 53,
     "failed": 0
   },
   "offline_simulation": {
@@ -105,12 +106,12 @@
   "not_verified": [
     "Raspberry Pi 5 ARM64 build and run",
     "real D435i and Aurora drivers",
-    "real YOLO / OpenVINO inference",
     "hardware calibration and accuracy",
     "network latency and packet loss",
     "30-minute stability",
     "jcheng-system domain isolation and telemetry mirror",
-    "planner consumption of FusedTargetArray"
+    "planner consumption of FusedTargetArray",
+    "Ultralytics/CUDA inference and keypoint models on the RTX 3060"
   ],
   "gpu_backend_smoke": {
     "mock": {
@@ -119,9 +120,25 @@
       "detections": 1,
       "inference_ms": 6.2
     },
+    "onnxruntime": {
+      "status": "passed",
+      "model": "yolov8s.onnx",
+      "load_ms": 171.4,
+      "inference_ms": 197.5,
+      "detections": 4,
+      "device": "CPU"
+    },
+    "openvino": {
+      "status": "passed",
+      "model": "yolov8s.xml",
+      "load_ms": 297.5,
+      "inference_ms": 126.7,
+      "detections": 4,
+      "device": "CPU"
+    },
     "ultralytics": {
       "status": "not_run",
-      "reason": "ultralytics/torch/openvino not installed on the host; pip index unreachable"
+      "reason": "CUDA torch/Ultralytics not installed; ~1.5 GB CUDA dependencies were download-limited"
     }
   },
   "camera_topology_note": "Deployed D435i is split UVC colour + depth-only RealSense (not colour-aligned); not used for metric fusion. See docs/adr/0004.",
@@ -136,5 +153,28 @@
     "production_match_success_rate": 1.0,
     "production_active_tracks": 1,
     "production_phase": "FINE"
+  },
+  "ros_onnx_node": {
+    "status": "passed",
+    "python": "~/.venvs/jcheng-perception-gpu/bin/python",
+    "model_id": "yolov8s.onnx:1775123732000000000",
+    "inference_ms": 232.8,
+    "fps": [
+      3.35,
+      3.61
+    ],
+    "frames_received": [
+      53,
+      57
+    ],
+    "frames_dropped": [
+      0,
+      0
+    ],
+    "frames_failed": [
+      0,
+      0
+    ],
+    "note": "CPU inference below the 10 Hz uplink; production GPU host should use Ultralytics/CUDA"
   }
 }

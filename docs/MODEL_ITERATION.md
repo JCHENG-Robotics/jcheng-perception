@@ -40,21 +40,56 @@ cameras:
 支持的路径：Ultralytics `.pt`、`.onnx`、`*_openvino_model/` 目录。厂商
 `yolov8_detect` 的 OpenVINO 导出可直接复用。
 
+### 后端选择
+
+| `backend` | 运行时 | 支持任务 | 适用场景 |
+|---|---|---|---|
+| `ultralytics` | Ultralytics + torch | detect / pose / obb | GPU 主机首选；关键点模型必须用它 |
+| `onnxruntime` | ONNX Runtime | detect | CPU/ORT-GPU；厂商 `yolov8s.onnx` 可直接用 |
+| `openvino` | OpenVINO Runtime | detect | Intel CPU/GPU；厂商 `.xml/.bin` IR |
+| `opencv` | OpenCV DNN | detect | 较老 YOLO ONNX；**OpenCV 4.6 不能解析 YOLOv8 DFL** |
+| `mock` | 无 | 颜色阈值 | CI、无模型演示 |
+
+当前本机 venv：`~/.venvs/jcheng-perception-gpu`，已装 ONNX Runtime 1.32.0、
+OpenVINO 2026.4.1（CPU）；CUDA/Ultralytics 未安装。GPU 主机可另行安装。
+
 ## 3. 运行前置检查
 
-在 GPU 主机上，先用 ROS 无关的烟测确认后端与模型：
+在 GPU 主机上，先用 ROS 无关的烟测确认后端与模型。没有额外运行时可用 mock：
 
 ```bash
-# 无模型、无 GPU：验证适配器与图像路径
 python3 scripts/check_gpu_backend.py --backend mock
+```
 
-# 真实模型：需要 GPU 主机已安装 ultralytics（含 torch）
-python3 scripts/check_gpu_backend.py \
-  --backend ultralytics \
-  --model /opt/jcheng/models/ext_yolov8n.pt \
-  --image /data/sample.jpg
+安装可选运行时（`~/.venvs/jcheng-perception-gpu`，带 system site-packages，
+不污染 ROS Python）：
 
-# 关键点模型
+```bash
+# ONNX Runtime CPU（本机已验证）
+RUNTIME=onnxruntime ./scripts/setup_gpu_venv.sh
+# OpenVINO CPU/Intel GPU（本机已验证）
+RUNTIME=openvino ./scripts/setup_gpu_venv.sh
+# CUDA Ultralytics（GPU 主机；下载量大）
+RUNTIME=ultralytics ./scripts/setup_gpu_venv.sh
+```
+
+真实模型单图烟测：
+
+```bash
+# ONNX Runtime：厂商 yolov8s.onnx，CPU，4 个框 / 197.5 ms（本机实测）
+~/.venvs/jcheng-perception-gpu/bin/python scripts/check_gpu_backend.py \
+  --backend onnxruntime \
+  --model /path/to/yolov8s.onnx \
+  --image /path/to/sample.jpg
+
+# OpenVINO：厂商 yolov8s.xml，CPU，4 个框 / 126.7 ms（本机实测）
+~/.venvs/jcheng-perception-gpu/bin/python scripts/check_gpu_backend.py \
+  --backend openvino \
+  --model /path/to/yolov8s.xml \
+  --image /path/to/sample.jpg \
+  --device CPU
+
+# 关键点模型（需要 Ultralytics）
 python3 scripts/check_gpu_backend.py \
   --backend ultralytics \
   --model /opt/jcheng/models/wrist_grasp_pose.pt \
@@ -63,6 +98,18 @@ python3 scripts/check_gpu_backend.py \
 
 输出包含 `model_id`、加载/推理耗时、检测框与关键点。缺少运行时或模型路径时
 脚本以退出码 2 返回并给出明确原因；它不会自动安装依赖。
+
+ROS 节点用 venv 解释器启动（console script 的 shebang 仍指向系统 Python，
+`python_executable` 会把脚本作为参数交给 venv Python）：
+
+```bash
+ros2 launch jcheng_perception_gpu laptop_gpu.launch.py \
+  gpu_config:=/abs/path/gpu_onnx.yaml \
+  python_executable:=$HOME/.venvs/jcheng-perception-gpu/bin/python
+```
+
+`config/gpu_onnx.example.yaml` 与 `config/gpu_openvino.example.yaml` 是两种
+CPU 后端的模板。
 
 ## 4. 热加载
 
@@ -73,9 +120,9 @@ python3 scripts/check_gpu_backend.py \
 - 首次启动加载失败不会崩溃：worker 每秒重试，`gpu_status.frames_failed`
   会体现推理失败。
 
-## 4. 标准迭代流程
+## 5. 标准迭代流程
 
-1. **采集**：在机器人上录制短片段（见第 5 节）。
+1. **采集**：在机器人上录制短片段（见第 6 节）。
 2. **训练/导出**：
    ```bash
    yolo export model=runs/pose/train/weights/best.pt format=openvino imgsz=416
@@ -98,7 +145,7 @@ python3 scripts/check_gpu_backend.py \
 **不要**同时让两个 GPU 节点发布同一个 `detections_topic`：边缘会把两个模型的
 框混在一起。
 
-## 5. 数据采集
+## 6. 数据采集
 
 短窗口（10–30 s）足够调试：
 
@@ -121,7 +168,7 @@ ros2 bag record -o /data/perception_meta_$(date +%s) \
 统一；本仓库节点默认使用系统时钟。更简单的做法是回放上行 bag 到 GPU，
 把检测结果录下来离线分析。
 
-## 6. 调试可视化
+## 7. 调试可视化
 
 - GPU：`debug_publish:=true` 发布 `/perception/debug/<cam>`（JPEG 叠加框/键点），
   默认 1 s 一张，避免占用 GPU。
@@ -132,7 +179,7 @@ ros2 bag record -o /data/perception_meta_$(date +%s) \
 - RViz/Foxglove：订阅 `FusedTargetArray` 需要自定义消息包；也可写一个小节点
   转成 `MarkerArray`。
 
-## 7. 评估指标
+## 8. 评估指标
 
 | 维度 | 指标 | 目标（初始） |
 |---|---|---|
@@ -144,7 +191,7 @@ ros2 bag record -o /data/perception_meta_$(date +%s) \
 | 稳定 | 30 min 轨迹 ID 切换次数 | 目标级 0 |
 | 降级 | GPU 断开后 COASTING→LOST 时间 | ≈ 0.6–1.8 s |
 
-## 8. 关键点模型约定
+## 9. 关键点模型约定
 
 - Ultralytics pose 输出 `keypoints.xy` + `conf`；本仓库扁平化为
   `[x,y,conf, ...]`，顺序与模型 keypoint 定义一致。
@@ -156,7 +203,7 @@ ros2 bag record -o /data/perception_meta_$(date +%s) \
 - `keypoints: true` 对 detect-only 模型无害（没有 keypoints 字段就返回空），
   但 `task` 必须与模型类型匹配。
 
-## 9. 不能做的事
+## 10. 不能做的事
 
 - 不要把权重、数据集、厂商 SDK 提交到本仓库。
 - 不要在 Pi 5 edge 上加载检测器；静态测试会失败。

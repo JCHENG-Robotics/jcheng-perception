@@ -28,19 +28,51 @@
 ### 笔记本 GPU
 
 - ROS 2 Humble（与机器人一致最稳）或 Jazzy（本仓库构建验证版本）。
-- Ultralytics（含 OpenVINO 导出支持）或 ONNX/OpenVINO 运行时。
+- 推理运行时，按任务选择：
+  - `ultralytics`（torch）：detect/pose/obb，GPU 主机首选；
+  - `onnxruntime`：detect，CPU 或 ORT-GPU（本机已装 1.32.0）；
+  - `openvino`：detect，Intel CPU/GPU，厂商 IR（本机已装 2026.4.1）；
+  - `mock`：无模型演示/CI。
 - 模型权重放在仓库外，例如 `/opt/jcheng/models/`。
+- 推荐用独立 venv，避免污染 ROS 的 numpy/OpenCV：
+
+  ```bash
+  RUNTIME=onnxruntime ./scripts/setup_gpu_venv.sh
+  RUNTIME=openvino    ./scripts/setup_gpu_venv.sh
+  # GPU 主机、网络允许时：
+  RUNTIME=ultralytics ./scripts/setup_gpu_venv.sh
+  ```
+
 - 安装后先做无 ROS 烟测：
 
   ```bash
+  # ONNX Runtime（本机实测：yolov8s.onnx，4 框，197.5 ms）
+  ~/.venvs/jcheng-perception-gpu/bin/python scripts/check_gpu_backend.py \
+    --backend onnxruntime --model /path/to/yolov8s.onnx \
+    --image /path/to/sample.jpg
+
+  # OpenVINO（本机实测：yolov8s.xml，4 框，126.7 ms）
+  ~/.venvs/jcheng-perception-gpu/bin/python scripts/check_gpu_backend.py \
+    --backend openvino --model /path/to/yolov8s.xml \
+    --image /path/to/sample.jpg --device CPU
+
+  # Ultralytics（GPU 主机）
   python3 -c "import ultralytics, torch; print(ultralytics.__version__, torch.__version__)"
   python3 scripts/check_gpu_backend.py \
     --backend ultralytics --model /opt/jcheng/models/ext_yolov8n.pt \
     --image /data/sample.jpg
   ```
 
-  当前这台主机没有 Ultralytics/torch/OpenVINO，真实后端烟测尚未执行；不要在没有
-  烟测通过的情况下直接启动生产检测节点。
+  当前这台主机已安装 ONNX Runtime 与 OpenVINO；CUDA PyTorch/Ultralytics 未安装
+  （下载限速）。没有烟测通过不要直接启动生产检测节点。
+- 用 venv 解释器启动 ROS 节点（console script 的 shebang 仍指向系统 Python）：
+
+  ```bash
+  ros2 launch jcheng_perception_gpu laptop_gpu.launch.py \
+    gpu_config:=/abs/path/gpu_onnx.yaml \
+    python_executable:=$HOME/.venvs/jcheng-perception-gpu/bin/python
+  ```
+
 - 候选模型先在影子节点跑（`shadow_gpu.launch.py`），确认无误再切换生产话题。
 
 ## 2. 构建

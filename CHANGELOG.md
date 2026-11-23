@@ -5,9 +5,15 @@
 - Shadow detector launch/config: a second GPU node reads the same uplink and
   publishes to `/perception/*_shadow`, with its own status topic. Production
   fusion is unaffected.
-- `scripts/check_gpu_backend.py`: ROS-free detector smoke check for mock and
-  Ultralytics/OpenVINO models; reports missing runtime/model explicitly.
-- Detector adapter tests (mock, unknown backend, missing model) — 49 tests total.
+- Detector backends: Ultralytics, ONNX Runtime (CPU), OpenVINO IR (CPU), OpenCV
+  DNN (legacy models) and mock. ONNX Runtime and OpenVINO were installed in an
+  isolated venv and verified on the vendor `yolov8s.onnx/.xml`:
+  197.5 ms / 126.7 ms, 4 detections, identical boxes.
+- `python_executable` launch argument and `scripts/setup_gpu_venv.sh` for
+  running the ROS node with a venv runtime; ONNX Runtime verified in-node.
+- `scripts/check_gpu_backend.py`: ROS-free detector smoke check for every
+  backend; reports missing runtime/model explicitly.
+- Detector adapter tests (mock, unknown backend, missing model) — 53 tests total.
 - ADR 0004: proposed single RealSense owner with aligned depth; documents why
   the currently deployed split UVC-colour + depth-only topology cannot be used
   for metric fusion.
@@ -25,7 +31,7 @@ Initial distributed-perception implementation.
   hot reload, keypoint support and capture-timestamp preservation.
 - Measured timings on an x86 Jazzy host: edge callbacks < 1 ms, 10 Hz per
   camera, 99% time-match success, one fused track with both views.
-- 49 ROS-free unit tests; four-package colcon build; synthetic end-to-end demo.
+- 53 ROS-free unit tests; four-package colcon build; synthetic end-to-end demo.
 - No hardware deployment and no real YOLO model in this repository.
 
 ## Version policy
