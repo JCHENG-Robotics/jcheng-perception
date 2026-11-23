@@ -14,7 +14,7 @@
   running the ROS node with a venv runtime; ONNX Runtime and Ultralytics were
   verified in-node (232.8 ms and 154.3 ms steady per frame on CPU).
 - CUDA PyTorch installed and verified: `torch 2.9.1+cu128`,
-  `torchvision 0.24.1+cu128`, RTX 3060; `yolov8s.pt` 7.7 ms steady per image,
+  `torchvision 0.24.1+cu128`, RTX 3060; `yolov8s.pt` 9.0 ms FP32 / 7.4 ms FP16 steady per image,
   ROS node 54.3 ms/frame average. A torch 2.11/NCCL mismatch was resolved by
   pinning the 2.9.1 pair; `RUNTIME=ultralytics-cuda` reproduces it.
 - `scripts/check_gpu_backend.py`: ROS-free detector smoke check for every

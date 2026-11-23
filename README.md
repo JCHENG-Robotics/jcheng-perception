@@ -164,7 +164,7 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 | Edge 单回调耗时 | image 0.4 ms、depth 0.1 ms、detections 0.6 ms、publish 1.3 ms、tf 0.3 ms |
 | 输出轨迹 | 1 条 confirmed，双视图融合，权重 0.21 / 0.79，phase FINE |
 | 真实模型 CPU 烟测 | ONNX 197.5 ms / OpenVINO 126.7 ms / Ultralytics 1.04 s（首帧），各 4 个框 |
-| 真实模型 GPU 烟测 | RTX 3060：Ultralytics 稳态 **7.7 ms/帧**（单图）；ROS 节点平均 54.3 ms/帧 |
+| 真实模型 GPU 烟测 | RTX 3060：Ultralytics 稳态 **9.0 ms（FP32）/ 7.4 ms（FP16）** 单图；ROS 节点平均 54.3 ms/帧 |
 | 单元测试 | 53 passed |
 | colcon 构建 | 4 包通过（Jazzy 主机） |
 

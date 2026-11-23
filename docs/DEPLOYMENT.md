@@ -64,7 +64,7 @@
 
   当前这台主机已安装 ONNX Runtime、OpenVINO、Ultralytics 8.4.216、
   PyTorch 2.9.1+cu128 与 torchvision 0.24.1+cu128；RTX 3060 可用，
-  `yolov8s.pt` 稳态 7.7 ms。没有烟测通过不要直接启动生产检测节点。
+  `yolov8s.pt` 稳态 9.0 ms（FP32）/ 7.4 ms（FP16）。没有烟测通过不要直接启动生产检测节点。
 - 用 venv 解释器启动 ROS 节点（console script 的 shebang 仍指向系统 Python）：
 
   ```bash

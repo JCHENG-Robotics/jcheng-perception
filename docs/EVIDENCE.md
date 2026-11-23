@@ -125,7 +125,7 @@ RUNTIME=ultralytics-cpu ./scripts/setup_gpu_venv.sh
 | OpenVINO 2026.4.1 | 厂商 `yolov8s.xml` | 297.5 ms | **126.7 ms** | 4 个框，坐标一致 |
 | Ultralytics 8.4.216 (torch 2.6.0+cpu) | 厂商 `yolov8s.pt` | 1244.9 ms | **1039.8 ms** | 4 个框，标签正确 |
 | Ultralytics (OBB) | 厂商 `yolov8n-obb.pt` | 1362.8 ms | **963.2 ms** | 1 个旋转框 |
-| Ultralytics CUDA (torch 2.9.1+cu128) | 厂商 `yolov8s.pt` | 1397.3 ms | **2887.9 ms 首帧，7.7 ms 稳态** | 4 个框，RTX 3060 |
+| Ultralytics CUDA (torch 2.9.1+cu128) | 厂商 `yolov8s.pt` | 1397.3 ms | **2887.9 ms 首帧，9.0 ms FP32 / 7.4 ms FP16 稳态** | 4 个框，RTX 3060 |
 
 真实模型检测结果（Ultralytics，标签）：`orange 0.941`、`cell phone 0.823`、
 `bottle 0.762`、`person 0.268`。ONNX/OpenVINO 为同一组框的 class id。
@@ -163,7 +163,7 @@ OpenCV 4.6 DNN 无法解析 YOLOv8 的 `Reshape/DFL` 节点，因此 `opencv` �
 给较老模型；YOLOv8 请用 `onnxruntime`、`openvino` 或 `ultralytics`。
 
 CUDA 版已安装：`torch 2.9.1+cu128`、`torchvision 0.24.1+cu128`，RTX 3060 上
-`torch.cuda.is_available()=True`，单图稳态 7.7 ms。此前的失败是因为
+`torch.cuda.is_available()=True`，单图稳态 9.0 ms（FP32）/ 7.4 ms（FP16）。此前的失败是因为
 torch 2.11 与按 2.9.1 元数据安装的 NCCL 版本不匹配（`ncclDevCommCreate`
 未定义）；固定 2.9.1 组合后解决。安装脚本见 `RUNTIME=ultralytics-cuda`。
 FP16 默认关闭（当前 Ultralytics 对 `half` 给出弃用警告），可按需开启。
@@ -195,7 +195,7 @@ FP16 默认关闭（当前 Ultralytics 对 `half` 给出弃用警告），可按
 | 6 | 同一目标两条轨迹 | 两相机启动瞬态各建一条，之后各自匹配自己 | 重复轨迹合并（跨相机 6 cm/3σ，同相机严格 2 cm） |
 | 7 | 真实后端烟测最初无法运行 | 主机无 torch/Ultralytics，CUDA 依赖下载限速 | 建独立 venv，安装 ONNX Runtime/OpenVINO/Ultralytics CPU 并跑通真实 `yolov8s`/OBB；后续 CUDA 版也装好 |
 | 8 | 默认 D435i 配置与实机拓扑不符 | 实机是 UVC 彩色 + 仅深度 RealSense，深度未对齐彩色 | ADR 0004 提议单一 RealSense 所有者 + aligned depth；默认配置已注明 |
-| 9 | `torch 2.11` 导入报 `undefined symbol: ncclDevCommCreate` | 按 2.9.1 元数据安装的 NCCL 与 2.11 不匹配 | 固定 `torch 2.9.1+cu128` / `torchvision 0.24.1+cu128`，RTX 3060 稳态 7.7 ms |
+| 9 | `torch 2.11` 导入报 `undefined symbol: ncclDevCommCreate` | 按 2.9.1 元数据安装的 NCCL 与 2.11 不匹配 | 固定 `torch 2.9.1+cu128` / `torchvision 0.24.1+cu128`，RTX 3060 稳态 9.0 ms（FP32）/ 7.4 ms（FP16） |
 
 ## 4. 未验证项
 

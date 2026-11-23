@@ -52,7 +52,7 @@ cameras:
 
 当前本机 venv：`~/.venvs/jcheng-perception-gpu`，已装 ONNX Runtime 1.32.0、
 OpenVINO 2026.4.1、Ultralytics 8.4.216、torch 2.9.1+cu128、
-torchvision 0.24.1+cu128；RTX 3060 可用，`yolov8s.pt` 稳态 7.7 ms。
+torchvision 0.24.1+cu128；RTX 3060 可用，`yolov8s.pt` 稳态 9.0 ms（FP32）/ 7.4 ms（FP16）。
 CPU 版 torch 2.6.0+cpu 曾用于无 GPU 验证，已被 CUDA 版替换。
 
 ## 3. 运行前置检查
