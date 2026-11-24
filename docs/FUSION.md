@@ -218,7 +218,9 @@ z_i(t) = x(t) + b_i + m_i + n_i(t)
   “换视图的 60 mm 跳变”污染；
 - 速度用**同一相机相邻两帧**的差分作为独立量测，经协方差加权后走
   `update_velocity()`（`H = [0 | I]` 的 Joseph 更新）。每视图的 `b_i + m_i`
-  在差分中抵消；基线超过 `velocity_sample_max_age_s` 则丢弃。
+  在差分中抵消；基线超过 `velocity_sample_max_age_s` 或短于
+  `velocity_min_dt_s = 0.10 s` 则丢弃。后者是实机 tag 数据发现的：同一
+  capture 的重复/近似重复观测 dt 可到 0，1 mm 差除以 0.04 s 会伪造 ~25 mm/s。
 - 初速度先验从 1 m/s 收紧到 `initial_velocity_sigma_mps = 0.25 m/s`；
   发布与关联预测的 `p + v·dt` 中 `dt ≤ max_extrapolation_s = 0.35 s`。
   毫米级测量噪声估出的速度若积分 1 s 就是分米级漂移，这是 run-7 的直接放大器。
@@ -248,7 +250,141 @@ z_i(t) = x(t) + b_i + m_i + n_i(t)
   期间位置可能在两视图参考点之间摆动，但不会再触发速度漂移。
 - 绝对位置以腕相机为参考；不要用该输出去校准外部链的绝对精度。
 
-## 10. 调参顺序
+### 9.6 参考点模式（AprilTag / 键点）
+
+§9.2 的对象级 `m_i` 是 bbox 中心落在物体上的位置，换视图就差几十毫米。要消掉
+它，需要一个**两个视图测的是同一个物理点**的定义点：
+
+- **固定点（当前实现）**：AprilTag 中心。GPU 新增 `aruco` 后端
+  （`config/gpu_tag.yaml`，`DICT_APRILTAG_36h11`、60 mm、id 0），输出标签
+  `reference_tag_<id>`：关键点 0 = 标签中心（置信度 1.0），1–4 = 四角（0.9），
+  框为标签外接框。
+- Edge **不需要改动**：现有 `build_observation` 优先用最高置信度关键点的深度，
+  标签中心就是 3-D 点；关键点深度无效时才回退到框中心。
+- 两个视图的中心是同一物理点，`Track.view_offset` 只剩链级偏差 + 深度/PnP
+  偏置（mm 级），首个跨视图配对的参考点跳变也从 57–67 mm 降到 mm 级
+  （`tests/test_view_bias.py::test_reference_point_keeps_the_first_pair_step_small`）。
+- 限制：打印标签纸会翘曲（实测最大 ~7 mm），做绝对精度前先压平；depth 与
+  RGB-only PnP 之间存在 ~4 mm 的每视图偏差，仍要用
+  `scripts/fixed_point_check.py` 的 PnP/depth 两条路径做绝对参考。
+- **键点模型**是同一机制：一旦有 pose/keypoint 权重，把抓取点作为中心键点输出，
+  融合/偏差层不需要再改；当前厂商树没有可用的关键点权重，所以先用标签。
+
+验证方法：GPU 用 `gpu_tag.yaml`，edge 仍用 `fusion_dual_hardware.yaml` +
+`view_bias.yaml`，静置 60 s；检查两视图 `reference_tag_0` 的位置差、首个配对
+跳变和 FUSED 漂移，再用 `fixed_point_check.py` 给绝对参考。
+
+**实机结果（2026-11-24，唯一一次双视图成功采集）：**
+
+- 两视图标签中心差 **3.77 mm**（external − wrist = +0.2/−2.0/−3.2 mm，
+  每视图 σ ≤ 0.9 mm）；`Track.view_offset` 学到 (+0.03, −1.93, −3.31) mm。
+- 固定点 5 mm gate：未加链级修正 15.92 mm（depth）/12.79 mm（PnP）FAIL；
+  加 `view_bias.yaml` 后 **3.67 / 3.07 mm PASS**。这是同一链级修正下的一致性
+  核验，不是独立绝对真值。每视图 depth-vs-PnP 仍有 4.2 mm（外机位）/7.4 mm
+  （腕部）偏差，来自标签纸翘曲与斜视。
+- 没有 67 mm 首配对跳变：标签轨迹从外机位点起步，只按 3.8 mm 残差切到腕部
+  参考；融合轨迹最大 11.4 mm、p95 6.2 mm、最终 3.7 mm（实机，eed1ca9）。
+- 标签数据暴露了另一个问题：47/191 条腕部观测的 capture 间隔 ≤0，同视图差分
+  除以 0.04 s 会伪造 ~25 mm/s 速度，外推 0.35 s 就是 10 mm 跳变。
+  `velocity_min_dt_s = 0.10` 拒绝这种基线；重放降到 **8.3 mm**（p95 5.4）。
+  该修正尚未部署到 Pi，实机 11.4 mm 是修正前的值。
+- 绝对参考（腕部 PnP）：(335.4, −12.7, −85.7) mm；修正后外机位 PnP
+  (334.7, −14.7, −83.5) mm；两者 3.07 mm。桌面参考 −82.5 mm，标签中心在
+  桌面上方约 3 mm（纸翘曲，不是平面）。
+
+证据：`evidence/hardware_20261124_tag_verify/`。限制：单一静态姿态、单个标签；
+先压平标签纸；GPU 外机位读端仍会 wedge（本次“先 edge、再重启 GPU”才恢复）。
+
+**min-dt 复跑（f90b5d5，部分确认）：** 部署后 60 s 复跑只得到外机位 45 条 tag
+观测（t=0.3–14.3 s），腕部 depth matching 失败 365 次、GPU 外机位流约 14 s 后
+停止；融合轨迹 6 s 后 **0.4 mm**（max 2.42 mm），说明 min-dt 不引入漂移，但
+**没有取得双视图复跑**。第二次复跑（Aurora 驱动重启 + GPU 每 10 s 重启的
+harness）把腕部 depth failures 从 365 降到 **1**，但 edge 在约 6 s 后帧摄入
+停止（88 帧、27 detections、gpu_alive=false），外机位-only 轨迹 1.8 mm；仍未
+取得双视图。两次复跑都指向 **edge 帧摄入 / Pi 负载**这个剩余阻塞，而不是
+min-dt。双视图定义点结果仍以 run 3 为准。
+
+**Humble 同发行版复跑（run 6）：** 发现 laptop 有 Humble 容器后，用
+`armpi-humble-moveit` 新建 `jcheng-humble-tag`（host 网络 + wired CycloneDDS
+配置），装 `python3-opencv` 4.5.4（含 aruco），在 `/workspace/tag_ws` 构建
+msgs/core/gpu；laptop GPU 与 Pi edge 两端同为 **Humble**。同时修了 edge uplink：
+
+- `uplink_allowed()` 在时钟回跳时重置每相机 uplink 基线；否则 `last` 留在
+  未来，该相机 uplink 会被永久跳过。测试：`tests/test_uplink_rate.py`。
+- `UplinkWorker` 捕获任意 encode/publish 异常并继续，不再静默退出；status
+  增加 `encode_failures` / `rate_limited` 计数。
+
+60 s 结果：141 条腕部 tag 观测（0.5–59.8 s），edge 468 帧 / 410 detections /
+234 matched；**腕部-only** 融合轨迹 max **7.30 mm**、p95 4.66、final 3.93 mm
+（另一早期轨迹 10.03 mm）。这达到 ~8 mm 目标，但**外机位仍 0 条 tag 观测**：
+GPU 只收到 42 外机位帧（腕部 376），12 s 检查无外机位 uplink 消息；当前外机位
+画面里标签和 0.225 m 深度都正常，所以仍是外机位 uplink/reader 问题，不是模型
+或发行版。双视图确认仍未完成。
+
+**订阅 watchdog 诊断（已回退）：** 加过“某相机 frames/depth 计数 4 s 不增长就
+销毁并重建其 image/depth/CameraInfo 订阅”的 watchdog。实测外机位 **RGB 卡在
+5 帧**（depth 仍 31→75→117），腕部 **depth 卡在 7**（RGB 40→80→123），重建 3
+次都不恢复。wedge 在 **DDS participant/reader 层**，不是订阅对象；同进程重建
+无效。watchdog 已回退，Pi 只保留 committed 的 `2a33cbb` uplink 钟跳/线程修复。
+下一步应做 reader 隔离（每相机独立 participant/relay）或 CycloneDDS 版本/配置
+修正。
+
+**网关根因与双视图 run 9（2026-11-24）：** 最终定位到两个**网关侧消费者**，
+不是感知代码：
+
+1. `armpi-gateway.service`（8765，aux 预览）没有传 `RMW_IMPLEMENTATION` /
+   `CYCLONEDDS_URI`，默认 Fast DDS，订阅 `/camera/color/image_raw`；大彩色
+   样本跨 RMW，导致 edge 外机位 RGB reader wedge。改启动脚本/`gateway.env`
+   显式 CycloneDDS 后，外机位连续 60 s。
+2. 8766 motion 网关是一个 **PPID=0 的孤儿进程**（service 已 inactive），仍订阅
+   `/depth_cam/depth_registered/points`，阻塞 Aurora 的 depth 发布；kill 后腕部
+   depth reader 恢复。
+
+Run 9（双视图）：external 240 + wrist 195 条，跨视图 **3.37 mm**；融合轨迹
+max **10.03 mm**、p95 **3.78 mm**、final **1.19 mm**（重放 9.9/3.6/1.4，
+学到的 view_offset (+0.48,−1.21,−2.98) mm）。max 来自 t=26.2 s 一次 12.4 mm
+的**视图切换瞬态**；p95/final 均在 ~8 mm 内，且**没有 67 mm 参考切换**。
+注意：motion 网关在 run 9 期间已停，但最终检查时 `armpi-gateway-pose.service`
+又 active 了；若为 Studio 运动恢复，需先处理其点云订阅（QoS/消费者），或
+perception run 时停掉它，否则腕部 depth 会再次被阻塞。
+
+**Run 10 复跑（部分）：** 复跑前已停 motion 网关、fresh edge；外机位 267 条
+连续 60 s，腕部只有 26 条（0.4–7.5 s）后 depth reader 再次 wedge（412 次）。
+融合 max 6.36 / p95 2.53 / final 0.27 mm，跨视图 2.77 mm（配对段）——有腕部
+时达标，但 **不能重复满 60 s**。motion 网关在 20:57:22 停止、腕部 ~20:57:51
+停止、网关 20:58:34 才重启，**不是这次 wedge 的触发者**。剩余问题在 edge 的
+wrist-depth DDS reader；下一步应做 per-camera ingress/participant 隔离。
+
+## 10. Split ingress（DDS reader 隔离）
+
+单进程 edge 同时订阅四路大图像（外机位/腕部 × RGB/depth）时，CycloneDDS 的单个
+reader 会在机器人上间歇性 wedge（watchdog 诊断：外机位 RGB 卡在 5 帧而 depth
+继续；腕部 depth 卡在 7 而 RGB 继续；同进程重建订阅无效）。生产上改为**每相机
+一个 ingress 进程 + 一个 fusion 进程**：
+
+- `perception_ingress_ext` / `perception_ingress_wrist`：`perception_edge` 加
+  `camera_filter:=<camera>`，只拥有该相机的图像/深度/CameraInfo、深度/TF 匹配、
+  反投影、JPEG uplink，并把 `TargetObservation` 发到
+  `/perception/observations/<camera>`；关闭 `publish_targets`/`publish_status`。
+- `perception_fusion`：订阅两路小观测，做关联/KF/融合，发布
+  `/perception/targets` 和 `/perception/status`。split 模式下 status 的
+  `total_frames`/`camera_fps` 是观测计数/观测率，不是原始相机计数。
+- ingress 有 4 s `link_stalled` watchdog：某相机 frames/depth 计数停增就退出，
+  launch `respawn=True` 以 2 s 后重启该进程（新 DDS participant）；另一路和
+  fusion 不受影响。
+- 启动：`ros2 launch jcheng_perception_edge split_edge.launch.py start_tf:=false ...`；
+  TF 由已运行的 `wrist_tf`/`ext_tf` 提供。旧的单进程 `perception_edge` 保留。
+
+实机 run 4（60 s 静置）：external 134 + wrist 226 条连续观测，跨视图 **1.55 mm**；
+fusion 单 track **max 2.14 mm / p95 1.64 mm / final 1.96 mm**。外机位 ingress 在
+25 s 被 watchdog 重启（depth=110），fusion track 靠腕部保持并在 external 恢复后
+继续。还有两个关键修正：部署 archive 后 colcon 会按 mtime **跳过 core 的
+tracking/config 重装**（导致 fusion 用旧 tracker、没有 min-dt，速度爆炸到
+1e8 m/s）；必须 touch 全部 core/edge 源文件并核对安装产物。另外 core 增加
+`max_track_speed_mps=0.5` / `max_target_distance_m=1.0` 安全上限，越界 track
+重锚定、越界 target 不发布。
+
+## 11. 调参顺序
 
 1. 用实机静态目标测 `depth` 噪声 vs 距离，拟合 `q`、`floor`（每相机）。
 2. 用固定基座标定验证 `T_base_camera`，确认外机位与腕相机在同一目标上的偏差。

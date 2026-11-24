@@ -1,0 +1,28 @@
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+[INFO] [1795523387.323925093] [jcheng_perception_edge]: edge ready: cameras=d435i_ext,aurora_wrist target_frame=base_link uplink=True
+[WARN] [1795523387.329256685] [jcheng_perception_edge]: TF unavailable base_link -> camera_color_optical_frame: "camera_color_optical_frame" passed to lookupTransform argument source_frame does not exist. 
+[WARN] [1795523393.295458774] [jcheng_perception_edge]: d435i_ext: sensor link stalled (frames=5, depth=31); recreating subscriptions
+[WARN] [1795523398.294031327] [jcheng_perception_edge]: aurora_wrist: sensor link stalled (frames=40, depth=7); recreating subscriptions
+[WARN] [1795523404.294886657] [jcheng_perception_edge]: d435i_ext: sensor link stalled (frames=5, depth=75); recreating subscriptions
+[WARN] [1795523408.293987358] [jcheng_perception_edge]: aurora_wrist: sensor link stalled (frames=80, depth=7); recreating subscriptions
+[WARN] [1795523415.294475261] [jcheng_perception_edge]: d435i_ext: sensor link stalled (frames=5, depth=117); recreating subscriptions
+[WARN] [1795523418.295560482] [jcheng_perception_edge]: aurora_wrist: sensor link stalled (frames=123, depth=7); recreating subscriptions
+[WARN] [1795523426.294151329] [jcheng_perception_edge]: d435i_ext: sensor link stalled (frames=5, depth=156); recreating subscriptions
+[WARN] [1795523429.293925938] [jcheng_perception_edge]: aurora_wrist: sensor link stalled (frames=167, depth=7); recreating subscriptions
+[WARN] [1795523436.294635212] [jcheng_perception_edge]: d435i_ext: sensor link stalled (frames=5, depth=213); recreating subscriptions
+[WARN] [1795523439.294076969] [jcheng_perception_edge]: aurora_wrist: sensor link stalled (frames=211, depth=7); recreating subscriptions
+[WARN] [1795523446.296243002] [jcheng_perception_edge]: d435i_ext: sensor link stalled (frames=5, depth=260); recreating subscriptions
+[WARN] [1795523449.295847722] [jcheng_perception_edge]: aurora_wrist: sensor link stalled (frames=253, depth=7); recreating subscriptions
+[WARN] [1795523456.303039255] [jcheng_perception_edge]: d435i_ext: sensor link stalled (frames=5, depth=304); recreating subscriptions
+[WARN] [1795523460.297216697] [jcheng_perception_edge]: aurora_wrist: sensor link stalled (frames=297, depth=7); recreating subscriptions

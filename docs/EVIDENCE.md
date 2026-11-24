@@ -301,6 +301,127 @@ python3 scripts/replay_static_drift.py --recorded-targets \
 `kite` 未纳入门限：同一标签在两处物理位置间切换，属于关联/数据问题。
 证据：`evidence/analysis_20261124_drift_bias/`。
 
+### 2.12 偏差模型实机静置验证（2026-11-24）
+
+把 `eed1ca9` 部署到 Pi 5 容器（`colcon build` 3 包 10.3 s），用
+`fusion_dual_hardware.yaml` + `view_bias.yaml` 跑两段有界静置采集
+（`timeout -s INT`，无运动命令；笔记本记录 observations/targets/status）：
+
+```text
+run 1  90 s  edge 窗口，实际有效观测 7.7–23.7 s，125 obs（外 100 / 腕 25），81 帧
+run 2  60 s  完整，306 obs（外 295 / 腕 11），357 帧 / 1060 detections / 306 matched
+```
+
+静置指标（6 s 稳定窗口后的中位数偏差）：
+
+| run | cup | dining table | kite | 最差 required |
+|---|---:|---:|---:|---:|
+| 1 | 2.73 mm | 4.63 mm | 0.16 mm | 4.65 mm |
+| 2 | 0.31 mm | 8.13 mm | 1.61 mm | 8.13 mm |
+
+离线重放与实机发布值最差相差 0.02 mm（run 2 完全一致），说明模型重放可信。
+实机跨视角差（已扣链级修正）：cup (−56.9, +11.6, +34.3) mm、餐桌
+(+29.2, +21.2, −3.9) mm（run 1），与 run-7 记录一致。
+
+发现：
+
+- **首个跨视图配对会产生一次参考点跳变**：run 1 cup 在 t=12.32 s 从外机位
+  参考点 (335.9, −19.5, −29.7) mm 跳到腕部参考点 (392.8, −31.6, −63.6) mm，
+  67.2 mm；这是 `Track.view_offset` 初始化，不是漂移。规划器要么容忍这次
+  参考切换，要么在腕部参考建立前不发布该轨迹（未实现，属策略决定）。
+- **run 1 的 edge 读端在 ~23.7 s 后不再收帧**，但 edge 的 status 继续到超时，
+  相机驱动在跑完后仍以 6.95/4.4 Hz 发布，无 USB/xhci 错误；run 2 完整 60 s，
+  未复现。更像已知的 Humble↔Jazzy CycloneDDS 读端 wedge，需单独处理。
+- **run 2 腕部深度匹配失败 172/357**，只有 11 条腕部观测，稳定窗口内没有
+  跨视图配对；run 2 的轨迹基本是单视图，8.1 mm 是餐桌框的检测抖动，不是 TF。
+- 绝对位置仍是各视图的框中心点：cup 外机位/腕部轨迹相距 57 mm，不能把它
+  当成物体中心精度；<5 mm 绝对精度仍需固定点/键点。
+- 容器内存 1.4/6 GB；dmesg 有一次更早（16:04）的 memcg OOM 和 18:16–18:18
+  的 `__vm_enough_memory`（PID 已退出），本次运行窗口内无新 OOM，未根因。
+
+证据：`evidence/hardware_20261124_drift_verify/`。
+
+### 2.13 固定点（AprilTag）参考点验证（2026-11-24）
+
+GPU 新增 `aruco` 后端（`config/gpu_tag.yaml`，36h11、60 mm、id 0），标签中心
+作为关键点；edge 不改。实机共三次尝试，前两次分别是 edge 在 import 阶段被
+60 s timeout 打断（0 观测）和 laptop GPU 外机位 uplink 读端 wedge（仅腕部
+30 观测）；第三次用“先启动 edge、等 ready，再重启 GPU 节点”的顺序恢复双视图：
+
+```text
+run 3: 40 s, 311 observations (120 external / 191 wrist), 0.2–40.1 s
+per-view tag centre: ext (330.5, -14.3, -82.8) mm, wrist (330.3, -12.3, -79.6) mm
+ext - wrist = (+0.2, -2.0, -3.2) mm -> 3.77 mm
+learned Track.view_offset = (+0.03, -1.93, -3.31) mm
+```
+
+`fixed_point_check.py` 每视图 20 s（36/30 样本，tf=exact，重投影 0.21/0.75 px），
+5 mm gate：
+
+| 比较 | 原始 | 加 `view_bias.yaml`（外机位 +9.9/−1.8/+9.4 mm）|
+|---|---:|---:|
+| depth（wrist − ext） | 15.92 mm FAIL | **3.67 mm PASS** |
+| RGB PnP（wrist − ext） | 12.79 mm FAIL | **3.07 mm PASS** |
+
+- 没有 67 mm 首配对跳变：融合轨迹从外机位点起步，只按 3.8 mm 残差切到腕部
+  参考；实机最大 11.4 mm / p95 6.2 mm / 最终 3.7 mm（eed1ca9）。
+- 标签数据暴露近重复 capture 导致的伪速度：47/191 条腕部观测 dt≤0，1 mm 差
+  除以 0.04 s = 25 mm/s。新增 `velocity_min_dt_s=0.10`；重放降到 8.3 mm /
+  p95 5.4 mm，并让 run1/2 的离线重放与实机录制重新对齐（0.0 / 0.22 mm）。
+  该修正在工作区，尚未部署到 Pi。
+- 绝对参考：腕部 PnP (335.4, −12.7, −85.7) mm；修正后外机位 PnP
+  (334.7, −14.7, −83.5) mm。每视图 depth-vs-PnP 仍差 4.2/7.4 mm（标签纸翘曲、
+  斜视），要 <5 mm 绝对精度需先压平标签。
+- 部署 `f90b5d5`（min-dt）后复跑：只得到外机位 45 条 tag 观测（0.3–14.3 s），
+  腕部 depth failures 365、GPU 外机位流 ~14 s 后停；融合轨迹 6 s 后 0.4 mm
+  （max 2.42 mm），min-dt 无漂移，但**未取得双视图复跑**。
+- 第二次复跑（重启 Aurora 驱动 + GPU 每 10 s 重启）：腕部 depth failures
+  365→**1**，但 edge 约 6 s 后帧摄入停止（88 帧、27 detections、gpu_alive=false），
+  外机位-only 轨迹 1.8 mm；双视图仍未取得。
+- Humble 同发行版复跑（run 6）：新建 `jcheng-humble-tag` 容器（`armpi-humble-moveit`
+  + `python3-opencv` 4.5.4 + msgs/core/gpu 在 `/workspace/tag_ws` 构建），laptop
+  GPU 与 Pi edge 同为 Humble；并修复 edge uplink 时钟回跳基线
+  (`uplink_allowed`) 与 publish 异常导致线程退出。60 s：141 条腕部 tag 观测
+  （0.5–59.8 s）、edge 468 帧/234 matched；**腕部-only** 轨迹 max **7.30 mm**、
+  p95 4.66、final 3.93 mm。外机位仍 0 条 tag 观测（GPU 只收到 42 外机位帧，
+  12 s 检查无外机位 uplink），当前外机位画面和 0.225 m 深度正常，剩余阻塞是
+  外机位 uplink/reader。
+- 订阅 watchdog 诊断（已回退）：外机位 RGB 卡在 5 帧（depth 仍增长），腕部
+  depth 卡在 7（RGB 仍增长）；重建订阅 3 次不恢复，说明 wedge 在 DDS
+  participant/reader 层。watchdog 未提交，Pi 运行 committed `2a33cbb`。
+  双视图结果仍以上述 run 3 为准。
+- **网关根因（run 7–9）：** aux 网关 8765 未传 RMW，默认 Fast DDS 订阅外机位
+  彩色，跨 RMW 导致外机位 RGB reader wedge；改为 CycloneDDS 后外机位连续 60 s。
+  8766 motion 网关是一个 PPID=0 的孤儿进程，仍订阅腕部点云、阻塞 Aurora
+  depth 发布；kill 后腕部 depth 恢复。
+- **Run 9 双视图成功：** external 240 + wrist 195 条（0.1–60.1 s），跨视图
+  **3.37 mm**；融合 max **10.03 mm**、p95 **3.78 mm**、final **1.19 mm**
+  （重放 9.9/3.6/1.4）；max 是 t=26.2 s 一次 12.4 mm 视图切换瞬态，无 67 mm
+  参考切换。
+- **Run 10 复跑不完整：** 停掉 motion 网关、fresh edge 后，external 267 条
+  连续 60 s，但 wrist 仅 26 条（0.4–7.5 s）后 depth reader 再次 wedge；融合
+  max 6.36 / p95 2.53 / final 0.27 mm，跨视图 2.77 mm（配对段）。motion 网关
+  在 20:57:22 停止、腕部 ~20:57:51 停止、网关 20:58:34 才重启，不是触发者。
+  结论：双视图可达成但**不可重复满 60 s**，剩余是 edge wrist-depth DDS
+  reader；下一步做 per-camera ingress/participant 隔离。
+
+证据：`evidence/hardware_20261124_tag_verify/`。
+
+### 2.14 Split ingress（DDS reader 隔离，2026-11-24）
+
+单进程 edge 的 reader wedge 无法在同进程重建订阅恢复，改为每相机 ingress 进程
++ fusion 进程（`split_edge.launch.py`）。ingress 只处理一个相机并发布
+`TargetObservation`，fusion 订阅小观测做关联/KF；ingress 有 4 s watchdog，
+退出后 launch 以 2 s 重启（新 participant）。
+
+实机 60 s 静置：external 134 + wrist 226 条连续，跨视图 **1.55 mm**；fusion
+单 track **max 2.14 / p95 1.64 / final 1.96 mm**；external ingress 在 25 s
+被 watchdog 重启，fusion track 保持。部署时发现 colcon 按 mtime 跳过 core
+`tracking.py`/`config.py` 重装（旧 tracker 无 `velocity_min_dt_s`，fusion 速度
+爆炸到 1e8 m/s）；必须 touch 全部 core/edge 源文件并核对安装产物。core 增加
+`max_track_speed_mps=0.5` / `max_target_distance_m=1.0` 安全上限。证据：
+`evidence/hardware_20261124_split_edge/`。
+
 ## 3. 本轮发现并修复的问题
 
 | # | 现象 | 根因 | 修复 |

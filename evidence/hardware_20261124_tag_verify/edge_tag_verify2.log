@@ -1,0 +1,158 @@
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+[INFO] [1795516673.248002298] [jcheng_perception_edge]: edge ready: cameras=d435i_ext,aurora_wrist target_frame=base_link uplink=True
+[WARN] [1795516673.250662650] [jcheng_perception_edge]: TF unavailable base_link -> camera_color_optical_frame: "base_link" passed to lookupTransform argument target_frame does not exist. 
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<

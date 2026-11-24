@@ -1,0 +1,276 @@
+{
+  "build": "colcon build 3 packages finished [10.3s] on Pi 5",
+  "config": {
+    "bias": "config/view_bias.yaml",
+    "fusion": "config/fusion_dual_hardware.yaml"
+  },
+  "date": "2026-11-24",
+  "deployed_commit": "eed1ca9",
+  "environment": {
+    "armpi_services": {
+      "armpi-ext-cam": "stopped (was in a restart loop; disabled at boot)",
+      "armpi-rs-depth": "active",
+      "armpi-vision": "active"
+    },
+    "container_memory": "1.4/6 GB",
+    "external_optical_m": [
+      0.139,
+      0.027,
+      0.037
+    ],
+    "external_rate_hz": 6.95,
+    "gpu": "RTX 3060 laptop, yolov8s.pt, restarted before the run",
+    "pi_load": "3.6-4.2",
+    "wrist_optical_m": [
+      0.18,
+      0.01,
+      0.192
+    ],
+    "wrist_rate_hz_after_run": 4.4
+  },
+  "hardware_claimed": true,
+  "kind": "real hardware, static scene, no motion commands",
+  "limitations": [
+    "static scene only; no motion",
+    "run 1 had only 16 s of observations (edge-side camera readers stopped at t~23.7 s; cameras still publishing afterwards; not reproduced in run 2)",
+    "run 2 wrist depth matching failed 172/357; only 11 wrist observations, no settled cross-view pair",
+    "absolute positions are per-view bbox-centre points; the cup external/wrist tracks are 57 mm apart; not an object-centre accuracy claim",
+    "view_offset in the run-1 replay is not fully converged (alpha 0.35, few pairs); the live first-pair step uses the full residual",
+    "an older container memcg OOM (16:04) and unexplained __vm_enough_memory messages at 18:16-18:18 exist in dmesg; container memory stayed at 23%"
+  ],
+  "post_run_analysis": {
+    "note": "replay numbers include the min-dt fix; live recorded values were collected before it and remain inside the 20 mm gate",
+    "replay_source_bias": "none (edge observations already carry view_bias.yaml)",
+    "velocity_min_dt_s": 0.1
+  },
+  "reproduce": [
+    "python3 scripts/replay_static_drift.py --source evidence/hardware_20261124_drift_verify/drift_run1.json --settle-s 6 --out evidence/hardware_20261124_drift_verify/replay_run1.json",
+    "python3 scripts/replay_static_drift.py --source evidence/hardware_20261124_drift_verify/drift_run2.json --settle-s 6 --out evidence/hardware_20261124_drift_verify/replay_run2.json",
+    "python3 scripts/replay_static_drift.py --source evidence/hardware_20261124_drift_verify/drift_run1.json --recorded-targets --settle-s 6 --out evidence/hardware_20261124_drift_verify/recorded_run1.json",
+    "python3 scripts/replay_static_drift.py --source evidence/hardware_20261124_drift_verify/drift_run2.json --recorded-targets --settle-s 6 --out evidence/hardware_20261124_drift_verify/recorded_run2.json"
+  ],
+  "result": {
+    "first_pair_step_mm": {
+      "note": "external reference to wrist reference when the first matched pair initialized view_offset; not drift",
+      "run1_cup": 67.2
+    },
+    "pre_fix_reference_mm": {
+      "cup_run7": 696.4,
+      "dining_table_run7": 447.5
+    },
+    "replay_vs_recorded_agreement_mm": {
+      "run1": 0.0,
+      "run2": 0.22
+    },
+    "worst_required_mm": {
+      "run1": 4.63,
+      "run2": 7.91
+    },
+    "worst_required_mm_recorded": {
+      "run1": 4.63,
+      "run2": 8.13
+    }
+  },
+  "runs": {
+    "run1": {
+      "cross_view_offsets": {
+        "cup": {
+          "ext_minus_wrist_mm": [
+            -56.9,
+            11.6,
+            34.3
+          ]
+        },
+        "dining table": {
+          "ext_minus_wrist_mm": [
+            29.2,
+            21.2,
+            -3.9
+          ]
+        },
+        "kite": {
+          "ext_minus_wrist_mm": [
+            -16.0,
+            -74.1,
+            -5.6
+          ]
+        }
+      },
+      "obs_t_first": 7.73,
+      "obs_t_last": 23.65,
+      "observations": 125,
+      "per_view": {
+        "aurora_wrist": {
+          "n": 25,
+          "t_first": 7.72974705696106,
+          "t_last": 12.817893028259277
+        },
+        "d435i_ext": {
+          "n": 100,
+          "t_first": 7.730271577835083,
+          "t_last": 23.653284072875977
+        }
+      },
+      "status_last": {
+        "camera_fps": [
+          3.2686853408813477,
+          2.801997423171997
+        ],
+        "detections_matched": 125,
+        "gpu_alive": false,
+        "notes": [
+          "d435i_ext:depth_failures=11",
+          "aurora_wrist:tf_failures=1",
+          "aurora_wrist:depth_failures=14"
+        ],
+        "t": 93.96232223510742,
+        "total_detections": 211,
+        "total_frames": 81
+      },
+      "status_samples": 88,
+      "target_batches": 2739,
+      "view_offsets_replay": {
+        "cup-006": [
+          -47.15,
+          8.42,
+          43.69
+        ],
+        "dining_table-002": [
+          38.92,
+          18.15,
+          5.69
+        ],
+        "kite-004": [
+          13.32,
+          -2.02,
+          4.53
+        ]
+      },
+      "worst_by_label_recorded": {
+        "cup": {
+          "max_mm": 2.73,
+          "track": "cup-005"
+        },
+        "dining table": {
+          "max_mm": 4.63,
+          "track": "dining_table-002"
+        },
+        "kite": {
+          "max_mm": 0.16,
+          "track": "kite-007"
+        }
+      },
+      "worst_by_label_replay": {
+        "cup": {
+          "max_displacement_mm": 2.69,
+          "target_id": "cup-006",
+          "tracks": 1
+        },
+        "dining table": {
+          "max_displacement_mm": 4.63,
+          "target_id": "dining_table-002",
+          "tracks": 1
+        },
+        "kite": {
+          "max_displacement_mm": 0.16,
+          "target_id": "kite-004",
+          "tracks": 1
+        }
+      },
+      "worst_required_mm_recorded_settle6": 4.63,
+      "worst_required_mm_replay_settle6": 4.63
+    },
+    "run2": {
+      "cross_view_offsets": {
+        "cup": {
+          "ext_minus_wrist_mm": [
+            -56.8,
+            12.3,
+            34.1
+          ]
+        },
+        "dining table": {
+          "ext_minus_wrist_mm": [
+            28.0,
+            21.9,
+            -4.3
+          ]
+        },
+        "kite": {
+          "ext_minus_wrist_mm": [
+            -14.6,
+            -64.3,
+            -5.8
+          ]
+        }
+      },
+      "obs_t_first": 4.85,
+      "obs_t_last": 50.58,
+      "observations": 306,
+      "per_view": {
+        "aurora_wrist": {
+          "n": 11,
+          "t_first": 4.848865509033203,
+          "t_last": 6.02732515335083
+        },
+        "d435i_ext": {
+          "n": 295,
+          "t_first": 5.214921236038208,
+          "t_last": 50.58422780036926
+        }
+      },
+      "status_last": {
+        "camera_fps": [
+          3.7892987728118896,
+          3.6822140216827393
+        ],
+        "detections_matched": 306,
+        "gpu_alive": true,
+        "notes": [
+          "d435i_ext:depth_failures=31",
+          "aurora_wrist:depth_failures=172"
+        ],
+        "t": 62.35583734512329,
+        "total_detections": 1060,
+        "total_frames": 357
+      },
+      "status_samples": 58,
+      "target_batches": 2078,
+      "view_offsets_replay": {},
+      "worst_by_label_recorded": {
+        "cup": {
+          "max_mm": 0.31,
+          "track": "cup-010"
+        },
+        "dining table": {
+          "max_mm": 8.13,
+          "track": "dining_table-002"
+        },
+        "kite": {
+          "max_mm": 1.61,
+          "track": "kite-013"
+        }
+      },
+      "worst_by_label_replay": {
+        "cup": {
+          "max_displacement_mm": 0.44,
+          "target_id": "cup-010",
+          "tracks": 3
+        },
+        "dining table": {
+          "max_displacement_mm": 7.91,
+          "target_id": "dining_table-002",
+          "tracks": 3
+        },
+        "kite": {
+          "max_displacement_mm": 1.59,
+          "target_id": "kite-013",
+          "tracks": 5
+        }
+      },
+      "worst_required_mm_recorded_settle6": 8.13,
+      "worst_required_mm_replay_settle6": 7.91
+    }
+  },
+  "session": "hardware static validation of the per-view bias / drift model"
+}

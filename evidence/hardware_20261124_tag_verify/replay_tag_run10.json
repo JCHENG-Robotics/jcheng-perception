@@ -1,0 +1,43 @@
+{
+  "bias": "",
+  "coalesce_ms": 600.0,
+  "fusion": "/home/jerichocheng/jcheng/jcheng-perception/config/fusion_dual_hardware.yaml",
+  "generated_utc": "2026-11-24T12:59:24+00:00",
+  "limit_mm": 10.0,
+  "mode": "fixed",
+  "publish_hz": 30.0,
+  "required_labels": [
+    "reference_tag_0"
+  ],
+  "settle_s": 6.0,
+  "source": "/home/jerichocheng/jcheng/jcheng-perception/evidence/hardware_20261124_tag_verify/tag_run10.json",
+  "source_bias": "none",
+  "tracks": {
+    "reference_tag_0-001": {
+      "final_offset_mm": 0.29798922194636207,
+      "label": "reference_tag_0",
+      "max_displacement_mm": 6.026265122295725,
+      "max_speed_mm_s": 279.2705721694078,
+      "median_mm": [
+        328.08,
+        -12.8,
+        -82.3
+      ],
+      "p95_displacement_mm": 2.3975786357429048,
+      "samples": 1728,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 0.7333333333333333,
+      "t_last": 60.9999999999991,
+      "view_offset_hits": 59,
+      "view_offset_mm": [
+        2.58,
+        -0.53,
+        -0.44
+      ]
+    }
+  },
+  "violations": [],
+  "worst_required_mm": 6.026265122295725
+}

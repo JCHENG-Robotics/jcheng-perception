@@ -1,0 +1,389 @@
+{
+  "attempts": {
+    "run1": {
+      "observations": 0,
+      "result": "edge did not reach edge ready inside 60 s timeout; Pi load ~9.6, import interrupted"
+    },
+    "run10": {
+      "external": 267,
+      "observations": 293,
+      "result": "repeatability partial; external continuous, wrist stopped at 7.5 s with 412 depth failures; motion gateway was stopped before the wedge and restarted later",
+      "t_first": 0.0,
+      "t_last": 60.0,
+      "wrist": 26
+    },
+    "run2": {
+      "observations": 30,
+      "result": "wrist only; GPU external uplink reader wedged (frames_received 2 external / 246 wrist)"
+    },
+    "run3": {
+      "external": 120,
+      "observations": 311,
+      "result": "both views; GPU restarted while edge publishing",
+      "t_first": 0.2,
+      "t_last": 40.1,
+      "wrist": 191
+    },
+    "run4": {
+      "external": 45,
+      "observations": 45,
+      "result": "partial: external-only; wrist depth failures 365; GPU external tag stream stopped after ~14 s",
+      "t_first": 0.3,
+      "t_last": 14.3,
+      "wrist": 0
+    },
+    "run5": {
+      "external": 18,
+      "observations": 18,
+      "result": "GPU tag node ran in a 10 s restart loop (7 windows) and the Aurora driver was restarted; wrist depth failures fell to 1, but the edge intake stalled after ~6 s (88 frames, 27 detections, gpu_alive false)",
+      "t_first": 0.2,
+      "t_last": 5.6,
+      "wrist": 0
+    },
+    "run6": {
+      "external": 0,
+      "observations": 141,
+      "result": "same-distro Humble GPU in a container + uplink clock-jump/worker fixes; edge ran full 60 s (468 frames), wrist tag observations continuous, external tag observations 0; external uplink/reader still stops",
+      "t_first": 0.5,
+      "t_last": 59.8,
+      "wrist": 141
+    },
+    "run7": {
+      "external": 225,
+      "observations": 225,
+      "result": "aux gateway patched from Fast DDS to CycloneDDS; external RGB continuous, wrist depth still failed",
+      "t_first": 0.4,
+      "t_last": 59.7,
+      "wrist": 0
+    },
+    "run8": {
+      "external": 198,
+      "observations": 198,
+      "result": "fresh edge with motion service marked inactive; the orphan motion gateway process was still running, wrist depth still failed",
+      "t_first": 0.1,
+      "t_last": 59.5,
+      "wrist": 0
+    },
+    "run9": {
+      "external": 240,
+      "observations": 435,
+      "result": "orphan motion gateway killed + fresh edge; dual-view success",
+      "t_first": 0.1,
+      "t_last": 60.1,
+      "wrist": 195
+    }
+  },
+  "caveats": [
+    "one static pose and one tag; no motion",
+    "tag sheet curls up to ~7 mm; flatten before quoting absolute accuracy",
+    "wrist depth failures 200 in run 3; enough tag observations matched",
+    "GPU external uplink reader wedge is a recurring ops issue; edge-first then GPU restart was reliable"
+  ],
+  "date": "2026-11-24",
+  "deployed_commit": "eed1ca9",
+  "fixed_point_check": {
+    "corrected_cross_view_mm": {
+      "depth": 3.67,
+      "gate": "PASS",
+      "pnp": 3.07
+    },
+    "corrected_external_pnp_abs_mm": [
+      334.7,
+      -14.7,
+      -83.5
+    ],
+    "external_correction_mm": [
+      9.9,
+      -1.8,
+      9.4
+    ],
+    "per_view_depth_vs_pnp_mm": {
+      "external": 4.2,
+      "wrist": 7.4
+    },
+    "raw_cross_view_mm": {
+      "depth": 15.92,
+      "gate": "FAIL",
+      "pnp": 12.79
+    },
+    "reprojection_px": {
+      "external": 0.75,
+      "wrist": 0.21
+    },
+    "samples": {
+      "external": 30,
+      "wrist": 36
+    },
+    "tf": "exact",
+    "wrist_pnp_abs_mm": [
+      335.4,
+      -12.7,
+      -85.7
+    ]
+  },
+  "fused_track": {
+    "first_samples": {
+      "note": "starts on the external point; moves to the wrist reference by only the 3.8 mm residual, no 67 mm step",
+      "position_mm": [
+        330.6,
+        -14.3,
+        -82.9
+      ],
+      "t_s": 0.93
+    },
+    "live_recorded_mm": {
+      "edge": "eed1ca9, pre-min-dt",
+      "final": 3.7,
+      "max": 11.4,
+      "p95": 6.2
+    },
+    "replay_mm": {
+      "final": 3.6,
+      "max": 8.3,
+      "p95": 5.4,
+      "source_bias": "none",
+      "velocity_min_dt_s": 0.1
+    },
+    "residual_cause": "near-duplicate capture stamps: 47/191 wrist observations dt<=0; min-dt rejects the fabricated velocity"
+  },
+  "gateway_root_cause": {
+    "aux_gateway_8765": "armpi-gateway.service did not pass RMW_IMPLEMENTATION/CYCLONEDDS_URI; it defaulted to Fast DDS and subscribed to external colour, wedging the edge external RGB reader. Patched /usr/local/lib/armpi-gateway/armpi-gateway-run.sh (docker exec -e RMW/CYCLONE/DOMAIN) and /etc/armpi-gateway/gateway.env; backups in /home/pi/armpi-gateway-rwm-20261124/.",
+    "motion_gateway_8766": "an orphan PPID-0 process (service inactive) was still subscribed to /depth_cam/depth_registered/points and blocked the Aurora depth publication; killing PID 427260 recovered wrist depth.",
+    "state_after": "aux gateway active on CycloneDDS; motion gateway was stopped during run 9 but armpi-gateway-pose.service was active again at the final check, so a future perception run can hit the wrist-depth block until its pointcloud subscription/QoS is changed or it is stopped for the run."
+  },
+  "gpu_mode": {
+    "backend": "aruco",
+    "config": "config/gpu_tag.yaml",
+    "dictionary": "DICT_APRILTAG_36h11",
+    "marker_id": 0,
+    "marker_size_m": 0.06
+  },
+  "hardware_claimed": true,
+  "humble_gpu_container": {
+    "container": "jcheng-humble-tag",
+    "cyclonedds": "/workspace/cyclonedds-wired.xml",
+    "image": "armpi-humble-moveit:latest",
+    "network": "host",
+    "opencv": "4.5.4 with aruco (apt python3-opencv)",
+    "workspace": "/workspace/tag_ws (msgs/core/gpu, symlink-install)"
+  },
+  "kind": "real hardware, static scene, no motion commands",
+  "learned_view_offset_mm": [
+    0.03,
+    -1.93,
+    -3.31
+  ],
+  "per_view_mm": {
+    "distance_mm": 3.77,
+    "external": {
+      "mean": [
+        330.5,
+        -14.3,
+        -82.8
+      ],
+      "n": 120,
+      "sigma": [
+        0.1,
+        0.0,
+        0.1
+      ]
+    },
+    "external_minus_wrist": [
+      0.2,
+      -2.0,
+      -3.2
+    ],
+    "wrist": {
+      "mean": [
+        330.3,
+        -12.3,
+        -79.6
+      ],
+      "n": 191,
+      "sigma": [
+        0.4,
+        0.9,
+        0.6
+      ]
+    }
+  },
+  "post_run_fix": {
+    "gateway_fixes": [
+      "aux gateway 8765 switched to CycloneDDS",
+      "orphan motion gateway 8766 killed"
+    ],
+    "status": "run9 full dual-view (3.37 mm cross-view, p95 3.78/final 1.19/max 10.03) but run10 only 7.5 s of wrist; external path stable after the aux gateway CycloneDDS fix; remaining blocker is the edge wrist-depth DDS reader. Next: per-camera ingress/participant isolation.",
+    "uplink_fixes": [
+      "uplink_allowed clock-jump reset",
+      "UplinkWorker catches publish exceptions",
+      "status notes encode_failures/rate_limited"
+    ],
+    "velocity_min_dt_s": 0.1
+  },
+  "reproduce": [
+    "python3 scripts/fixed_point_report.py --wrist evidence/hardware_20261124_tag_verify/tag_wrist_fixed.csv --ext evidence/hardware_20261124_tag_verify/tag_ext_fixed.csv --ext-offset 0.0099 -0.0018 0.0094 --limit 0.005 --out evidence/hardware_20261124_tag_verify/tag_report_corrected.json",
+    "python3 scripts/replay_static_drift.py --source evidence/hardware_20261124_tag_verify/tag_run3.json --source-bias none --settle-s 6 --require reference_tag_0 --limit-mm 15 --out evidence/hardware_20261124_tag_verify/replay_tag_run3.json"
+  ],
+  "run10_repeat": {
+    "cross_view_mm": 2.77,
+    "external": 267,
+    "note": "run9 dual-view not repeatable; the wrist-depth reader wedges at the DDS participant level. The motion gateway stopped at 20:57:22, wrist stopped ~20:57:51, gateway restarted 20:58:34, so it was not the trigger.",
+    "recorded": {
+      "final_mm": 0.27,
+      "max_mm": 6.36,
+      "p95_mm": 2.53
+    },
+    "replay": {
+      "final_mm": 0.3,
+      "max_mm": 6.0,
+      "p95_mm": 2.4,
+      "view_offset_mm": [
+        2.58,
+        -0.53,
+        -0.44
+      ]
+    },
+    "wrist": 26,
+    "wrist_last_s": 7.5
+  },
+  "run4_external_only": {
+    "biggest_step_mm": 2.6,
+    "biggest_step_s": 4.4,
+    "fused_final_mm": 0.08,
+    "fused_max_mm": 2.42,
+    "fused_settle6_max_mm": 0.38,
+    "note": "min-dt deployed; external tag track stable to 0.4 mm; not a dual-view repeat",
+    "status_last": {
+      "camera_fps": [
+        3.71,
+        3.69
+      ],
+      "detections_matched": 227,
+      "notes": [
+        "d435i_ext:depth_failures=6",
+        "aurora_wrist:tf_failures=1",
+        "aurora_wrist:depth_failures=365"
+      ],
+      "total_frames": 641
+    },
+    "tag_mean_mm": [
+      330.5,
+      -14.2,
+      -82.9
+    ],
+    "tag_sigma_mm": [
+      0.2,
+      0.1,
+      0.1
+    ]
+  },
+  "run5_external_only": {
+    "fused_final_mm": 1.31,
+    "fused_max_mm": 1.79,
+    "fused_settle2_max_mm": 1.7,
+    "note": "edge intake stalled; external-only, not a dual-view repeat",
+    "status_last": {
+      "camera_fps": [
+        3.37,
+        2.87
+      ],
+      "detections_matched": 25,
+      "gpu_alive": false,
+      "notes": [
+        "d435i_ext:depth_failures=1",
+        "aurora_wrist:depth_failures=1"
+      ],
+      "total_frames": 88
+    },
+    "tag_mean_mm": [
+      331.1,
+      -13.4,
+      -83.0
+    ],
+    "tag_sigma_mm": [
+      0.4,
+      0.1,
+      0.3
+    ]
+  },
+  "run6_humble_wrist_only": {
+    "early_track_max_mm": 10.03,
+    "edge_status": {
+      "detections_matched": 234,
+      "gpu_alive": true,
+      "notes": [
+        "d435i_ext:depth_failures=13",
+        "d435i_ext:rate_limited=11",
+        "aurora_wrist:depth_failures=161",
+        "aurora_wrist:rate_limited=27"
+      ],
+      "total_detections": 410,
+      "total_frames": 468
+    },
+    "fused_final_mm": 3.93,
+    "fused_max_mm": 7.3,
+    "fused_p95_mm": 4.66,
+    "gpu_frames_received": {
+      "external": 42,
+      "wrist": 376
+    },
+    "note": "meets the ~8 mm target on the wrist-only track, but not a dual-view confirmation"
+  },
+  "run9_dual_view": {
+    "cross_view_mm": 3.37,
+    "cross_view_vector_mm": [
+      -0.04,
+      -1.73,
+      -2.9
+    ],
+    "edge_status": {
+      "detections_matched": 580,
+      "gpu_alive": true,
+      "total_frames": 1220
+    },
+    "external": 240,
+    "note": "dual-view confirmation; the 10 mm max is a 12.4 mm view-switch transient at t=26.2 s, p95/final are under 8 mm; no 67 mm step",
+    "recorded": {
+      "final_mm": 1.19,
+      "max_mm": 10.03,
+      "p95_mm": 3.78
+    },
+    "replay": {
+      "final_mm": 1.4,
+      "max_mm": 9.9,
+      "p95_mm": 3.6,
+      "view_offset_mm": [
+        0.48,
+        -1.21,
+        -2.98
+      ]
+    },
+    "wrist": 195
+  },
+  "session": "defined reference point (AprilTag) static validation",
+  "watchdog_diagnostic": {
+    "conclusion": "DDS participant/reader-level wedge; recreating subscriptions in the same process does not recover. Host YOLO and Humble tag GPU both published during this diagnostic, so detection counters are not clean.",
+    "counters": {
+      "aurora_wrist": {
+        "depth_stuck": 7,
+        "frames_advanced": [
+          40,
+          80,
+          123
+        ],
+        "recoveries": 3
+      },
+      "d435i_ext": {
+        "depth_advanced": [
+          31,
+          75,
+          117
+        ],
+        "frames_stuck": 5,
+        "recoveries": 3
+      }
+    },
+    "deployed": "uncommitted subscription recreation after 4 s stall (10 s cooldown); reverted",
+    "evidence": "evidence/hardware_20261124_tag_verify/edge_tag_verify9.log"
+  }
+}

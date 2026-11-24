@@ -93,6 +93,99 @@ class MockColorDetector(BaseDetector):
         )]
 
 
+class ArucoTagDetector(BaseDetector):
+    """Detect an ArUco/AprilTag marker and return its centre as a keypoint.
+
+    This is the **defined reference point** mode. The marker centre is the same
+    physical point in every view, so two-view fusion no longer sees the
+    object-dependent bbox-centre offset that produced the 57-67 mm cup
+    difference and the first-pair reference step. The centre keypoint is the
+    primary keypoint; the four marker corners are included with a lower
+    confidence for future pose/keypoint use.
+
+    The 3-D point still comes from the edge's keypoint depth path (or the bbox
+    fallback), not from RGB-only PnP: the edge would need the marker size and
+    camera matrix, and ``scripts/fixed_point_check.py`` already measures the
+    depth-vs-PnP residual for absolute checks.
+    """
+
+    def __init__(self, config):
+        """Parse the dictionary, marker filter and label."""
+        if not hasattr(cv2, 'aruco'):
+            raise DetectorError(
+                'cv2.aruco is missing; install opencv-contrib-python')
+        self.dictionary_name = str(
+            config.get('dictionary', 'DICT_APRILTAG_36h11'))
+        dictionary_id = getattr(cv2.aruco, self.dictionary_name, None)
+        if dictionary_id is None:
+            raise DetectorError(
+                'unknown ArUco dictionary: {}'.format(self.dictionary_name))
+        self.dictionary = cv2.aruco.getPredefinedDictionary(dictionary_id)
+        # OpenCV 4.6's Python binding segfaults when assigning
+        # ``cornerRefinementMethod`` on a DetectorParameters object (verified
+        # in this environment). The default detector parameters find the tag
+        # centre to ~0.5 px, which is enough for the reference-point mode; do
+        # not add the assignment without testing it on the target OpenCV build.
+        self.marker_ids = {
+            int(value) for value in (config.get('marker_ids') or [])
+        }
+        self.label = str(config.get('label', 'reference_tag'))
+        self.include_id = bool(config.get('include_id', True))
+        self.marker_size_m = float(config.get('marker_size_m', 0.06))
+        self.confidence = float(config.get('confidence', 1.0))
+        self.corner_confidence = float(
+            config.get('corner_confidence', 0.9))
+
+    def describe(self):
+        """Return the dictionary, marker filter and physical size."""
+        marker_text = ','.join(
+            str(value) for value in sorted(self.marker_ids)) or 'all'
+        return 'aruco:{}:{}:{:.3f}m'.format(
+            self.dictionary_name, marker_text, self.marker_size_m)
+
+    def detect(self, image_bgr):
+        """Return one detection per matched marker, centre keypoint first."""
+        gray = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2GRAY)
+        if hasattr(cv2.aruco, 'ArucoDetector'):
+            detector = cv2.aruco.ArucoDetector(self.dictionary)
+            corners, identifiers, _ = detector.detectMarkers(gray)
+        else:
+            corners, identifiers, _ = cv2.aruco.detectMarkers(
+                gray, self.dictionary)
+        if identifiers is None:
+            return []
+        detections = []
+        for marker_corners, marker_id in zip(
+                corners, identifiers.reshape(-1)):
+            marker_id = int(marker_id)
+            if self.marker_ids and marker_id not in self.marker_ids:
+                continue
+            points = np.asarray(
+                marker_corners, dtype=np.float64).reshape(4, 2)
+            centre = points.mean(axis=0)
+            label = self.label if not self.include_id \
+                else '{}_{}'.format(self.label, marker_id)
+            keypoints = [
+                Keypoint(float(centre[0]), float(centre[1]),
+                         self.confidence)
+            ]
+            keypoints.extend(
+                Keypoint(float(point[0]), float(point[1]),
+                         self.corner_confidence)
+                for point in points)
+            detections.append(Detection(
+                label=label,
+                score=float(self.confidence),
+                bbox_xyxy=(
+                    float(points[:, 0].min()), float(points[:, 1].min()),
+                    float(points[:, 0].max()), float(points[:, 1].max()),
+                ),
+                class_id=marker_id,
+                keypoints=keypoints,
+            ))
+        return detections
+
+
 class UltralyticsDetector(BaseDetector):
     """Ultralytics YOLO detector (``.pt``, ``.onnx`` or OpenVINO export)."""
 
@@ -599,6 +692,8 @@ class HotReloadingDetector:
         backend = self.backend
         if backend == 'mock':
             return MockColorDetector(self.config)
+        if backend in ('aruco', 'apriltag'):
+            return ArucoTagDetector(self.config)
         if backend == 'ultralytics':
             return UltralyticsDetector(self.config)
         if backend == 'openvino':

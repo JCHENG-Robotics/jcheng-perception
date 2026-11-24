@@ -1,0 +1,9 @@
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-18-28-31-072672-jerichocheng-Lenovo-Legion-R9000P2021H-1027895
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [1027899]
+[python-1] [INFO] [1795516111.874182320] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795516111.874497165] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795516111.874757952] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[INFO] [python-1]: process has finished cleanly [pid 1027899]

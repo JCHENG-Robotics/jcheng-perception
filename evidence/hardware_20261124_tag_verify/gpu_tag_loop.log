@@ -1,0 +1,71 @@
+=== window 1 20:08:51
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-20-08-51-603819-jerichocheng-Lenovo-Legion-R9000P2021H-1047735
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [1047739]
+[python-1] [INFO] [1795522132.422649594] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[python-1] [INFO] [1795522132.423349754] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522132.423832953] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[INFO] [python-1]: process has finished cleanly [pid 1047739]
+=== window 2 20:09:03
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-20-09-03-615977-jerichocheng-Lenovo-Legion-R9000P2021H-1047824
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [1047828]
+[python-1] [INFO] [1795522144.421462545] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522144.421708078] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522144.422585231] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[INFO] [python-1]: process has finished cleanly [pid 1047828]
+=== window 3 20:09:15
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-20-09-15-623733-jerichocheng-Lenovo-Legion-R9000P2021H-1047886
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [1047890]
+[python-1] [INFO] [1795522156.442718882] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522156.443093137] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[python-1] [INFO] [1795522156.443612342] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[INFO] [python-1]: process has finished cleanly [pid 1047890]
+=== window 4 20:09:27
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-20-09-27-438864-jerichocheng-Lenovo-Legion-R9000P2021H-1047943
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [1047947]
+[python-1] [INFO] [1795522168.236608817] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522168.237007585] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522168.237488610] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[INFO] [python-1]: process has finished cleanly [pid 1047947]
+=== window 5 20:09:38
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-20-09-38-760660-jerichocheng-Lenovo-Legion-R9000P2021H-1048005
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [1048009]
+[python-1] [INFO] [1795522179.535040203] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522179.535383331] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[python-1] [INFO] [1795522179.536035064] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[INFO] [python-1]: process has finished cleanly [pid 1048009]
+=== window 6 20:09:49
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-20-09-49-961169-jerichocheng-Lenovo-Legion-R9000P2021H-1048055
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [1048063]
+[python-1] [INFO] [1795522190.762398138] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522190.762644680] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522190.762905478] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[INFO] [python-1]: process has finished cleanly [pid 1048063]
+=== window 7 20:10:01
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-20-10-01-971986-jerichocheng-Lenovo-Legion-R9000P2021H-1048119
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [1048130]
+[python-1] [INFO] [1795522202.748534061] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522202.748733148] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795522202.748908056] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[INFO] [python-1]: process has finished cleanly [pid 1048130]
+LOOP_DONE

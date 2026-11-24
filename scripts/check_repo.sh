@@ -4,6 +4,15 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT}"
 
+echo "== documentation set =="
+for f in README.md README.zh-CN.md ROADMAP.md CHANGELOG.md ACCEPTANCE.md; do
+  if [[ ! -f "$f" ]]; then
+    echo "missing $f" >&2
+    exit 1
+  fi
+done
+echo "ok"
+
 echo "== compile =="
 python3 -m compileall -q ros2_ws/src scripts tests
 echo "ok"

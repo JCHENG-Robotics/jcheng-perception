@@ -1,249 +1,286 @@
 # JCHENG Perception
 
-**分布式机器人视觉感知（D 方案）**：树莓派 5 负责图像采集、深度解码、TF 维护、时间戳环形缓存、3D 反投影、目标关联与卡尔曼融合；笔记本 GPU 异步承担两路 YOLO 检测。图像经压缩跨 ROS 2 传输，检测结果携带**采集时间戳**返回；Pi 5 按时间戳回溯匹配深度与 TF，两路观测按距离动态加权，输出统一目标位姿给机械臂规划。
+**Distributed robot perception (design D).** The Raspberry Pi 5 acquires images,
+decodes depth, maintains TF, keeps timestamp-indexed rings, back-projects 3D
+points, associates targets and runs the Kalman fusion; the laptop GPU runs two
+asynchronous YOLO detectors. Images cross ROS 2 compressed, detections return
+with the **capture timestamp**, the Pi 5 matches depth and TF by that timestamp,
+weights the two views by distance-dependent variance, and publishes one fused
+target pose for the arm planner.
 
-> 状态：**v0.1.0：代码、离线仿真、单机合成、Pi 5 ARM64 合成、腕部真实相机数据链路、
-> 腕部总线实测 TF 与单姿态桌面平面核验、外机位跨机真实 YOLO 检测链路已验证；
-> 多姿态精度、深度对齐与运动集成未验证。**
-> 本仓库不包含模型权重，不包含厂商代码，不发布任何运动命令。
+> Status: **Experimental** — v0.1.0 as of 2026-11-24: code, offline simulation,
+> single-host synthetic, Pi 5 ARM64 synthetic, the wrist real-camera data path,
+> bus-measured wrist TF with a single static-pose table-plane check, and the
+> cross-machine external-camera real-YOLO detection path are verified.
+> Multi-pose accuracy, aligned depth and motion integration are not.
+> This repository contains no model weights, no vendor code and publishes no
+> motion command.
+> English canonical; see [README.zh-CN.md](README.zh-CN.md) for the Chinese translation.
 
 ---
 
-## 1. 为什么这样切分
+## 1. Why this split
 
-| 约束 | 设计回应 |
+| Constraint | Design response |
 |---|---|
-| Pi 5 算力有限，YOLO 会阻塞采集/控制 | YOLO 全部在笔记本 GPU；Pi 5 只做毫秒级几何与滤波 |
-| 两路相机帧率不同（Aurora 12 Hz RGB / 8 Hz 深度） | 每条消息保留采集时间戳；Pi 5 按时间戳检索深度环和 TF 环 |
-| 运动中的腕相机 TF 与图像必须对齐 | 深度帧按其自身时间戳取 TF；采样环内线性 + slerp 插值 |
-| 外机位与腕相机精度互补 | 按测量协方差、作用距离、置信度、遮挡做信息加权 |
-| 抗遮挡 | 单视图失效时另一视图继续跟踪；轨迹短暂滑行后丢失 |
-| 模型迭代不能影响控制链路 | GPU 端热加载、每相机独立模型、异步有界队列、best-effort 状态流 |
-| 启动瞬态产生重复轨迹 | 跨相机重复轨迹合并（同标签、距离门限、严格同相机门限） |
+| Pi 5 compute is limited; YOLO would block acquisition/control | All YOLO runs on the laptop GPU; the Pi 5 does millisecond-scale geometry and filtering |
+| The two cameras run at different rates (Aurora 12 Hz RGB / 8 Hz depth) | Every message keeps its capture timestamp; the Pi 5 looks up the depth and TF rings by timestamp |
+| Wrist-camera TF and image must align while moving | Depth frames use the TF at their own timestamp; the ring interpolates linearly + slerp |
+| External and wrist cameras have complementary accuracy | Information weighting by covariance, range, confidence and occlusion |
+| Occlusion tolerance | The other view keeps tracking when one fails; the track coasts briefly and is then lost |
+| Model iteration must not disturb control | GPU hot reload, one model per camera, bounded async queues, best-effort status streams |
+| Startup transients produce duplicate tracks | Cross-camera duplicate merge (same label, distance gate, strict same-camera gate) |
 
-## 2. 数据流
+## 2. Data flow
 
 ```text
-        D435i (USB3, 外机位)                 Aurora 930 (腕部, USB2)
+        D435i (USB3, external)               Aurora 930 (wrist, USB2)
                │                                      │
                └──────────────┬───────────────────────┘
                               ▼
                  ┌──────────────────────────────┐
                  │  Pi 5 · jcheng_perception_edge│
-                 │  · RGB 采集 / JPEG 压缩        │
-                 │  · 深度环 + TF 环（时间戳索引）  │
-                 │  · 3D 反投影 / 关联 / 加权融合   │
-                 │  · 卡尔曼预测 / 30 Hz 输出       │
+                 │  · RGB acquisition / JPEG     │
+                 │  · depth ring + TF ring       │
+                 │  · 3D back-projection / association / weighted fusion │
+                 │  · Kalman prediction / 30 Hz output │
                  └───────┬───────────────▲───────┘
        CompressedImage   │               │  Detection2DArray
-       + 采集时间戳       ▼               │  + 原采集时间戳
+       + capture stamp   ▼               │  + original capture stamp
                  ┌──────────────────────────────┐
-                 │ 笔记本 GPU · jcheng_perception_gpu│
-                 │  · 每相机独立异步队列/线程       │
-                 │  · YOLO（Ultralytics/OpenVINO）  │
-                 │  · 关键点 / 热加载 / 延迟统计     │
+                 │ Laptop GPU · jcheng_perception_gpu │
+                 │  · per-camera async queue/thread │
+                 │  · YOLO (Ultralytics/OpenVINO) │
+                 │  · keypoints / hot reload / latency stats │
                  └──────────────────────────────┘
                               │
                               ▼
                  /perception/targets  FusedTargetArray
-                 → 机械臂抓取规划 / 落点复检
+                 → grasp planning / drop recheck
 ```
 
-**关键契约：GPU 节点绝不改写 `header.stamp`。** 它只把 Pi 5 的采集时间原样带回。时间匹配失败时观测被丢弃，绝不用“最新帧”冒充。
+**Key contract: the GPU node never rewrites `header.stamp`.** It returns the
+Pi 5 capture time unchanged. When timestamp matching fails the observation is
+dropped; a "latest frame" is never substituted.
 
-## 3. 相机角色
+## 3. Camera roles
 
-| 相机 | 角色 | 主要职责 | 典型量程 |
+| Camera | Role | Main duty | Typical range |
 |---|---|---|---|
-| 车头 RealSense D435i | `external` | 粗定位、目标搜索、落点复检 | 0.15–2.0 m |
-| 腕部 Aurora 930 | `wrist` | 精细抓取关键点、近距离位姿 | 0.10–0.90 m |
+| Chassis-front RealSense D435i | `external` | coarse localisation, target search, drop recheck | 0.15–2.0 m |
+| Wrist Aurora 930 | `wrist` | fine grasp keypoints, close-range pose | 0.10–0.90 m |
 
-任务相位：`SEARCH → COARSE → ACQUIRE → FINE → DROP_RECHECK`。外机位在 `COARSE`/`DROP_RECHECK` 占主导，腕相机在 `FINE` 占主导；相位先验只是相对信息权重，绝对精度仍由距离相关的深度方差决定。
+Task phases: `SEARCH → COARSE → ACQUIRE → FINE → DROP_RECHECK`. The external
+camera dominates in `COARSE`/`DROP_RECHECK`, the wrist camera in `FINE`; the
+phase prior only shifts relative information weight — absolute accuracy is
+still set by the range-dependent depth variance.
 
-## 4. 仓库结构
+## 4. Repository layout
 
 ```text
 jcheng-perception/
 ├── config/
-│   ├── cameras.yaml              # 真实相机/话题/噪声/量程
-│   ├── cameras_synthetic.yaml    # 合成演示
-│   ├── wrist_tf.yaml             # 腕部总线实测 TF/手眼/伺服映射
-│   ├── fusion.yaml               # 关联/滤波/相位先验
+│   ├── cameras.yaml              # real cameras/topics/noise/range
+│   ├── cameras_synthetic.yaml    # synthetic demo
+│   ├── wrist_tf.yaml             # bus-measured wrist TF / hand-eye / servo mapping
+│   ├── fusion.yaml               # association / filtering / phase priors
 │   ├── fusion_demo.yaml
-│   ├── frames.yaml               # 外机位静态外参回退
-│   ├── gpu.yaml                  # 真实 GPU 模型路径（Ultralytics）
-│   ├── gpu_mock.yaml             # 无模型演示
+│   ├── frames.yaml               # external static extrinsic fallback
+│   ├── gpu.yaml                  # real GPU model path (Ultralytics)
+│   ├── gpu_mock.yaml             # model-free demo
 │   ├── gpu_onnx.example.yaml     # ONNX Runtime CPU
 │   ├── gpu_openvino.example.yaml # OpenVINO IR CPU
-│   └── gpu_shadow.example.yaml   # 影子模型模板
+│   ├── gpu_tag.yaml              # AprilTag reference-point mode
+│   └── gpu_shadow.example.yaml   # shadow-model template
 ├── docs/
-│   ├── ARCHITECTURE.md           # 节点职责、进程/线程、数据流
-│   ├── TOPICS.md                 # 话题/QoS/字段语义
-│   ├── TIMESTAMP_AND_TF.md       # 时间戳与 TF 契约
-│   ├── FUSION.md                 # 加权公式、相位、滤波
-│   ├── DEPLOYMENT.md             # Pi5 + 笔记本部署
-│   ├── MODEL_ITERATION.md        # 模型迭代/热加载/调试
-│   ├── CALIBRATION.md            # 复用/更新标定
-│   ├── FAILURE_MODES.md          # 故障与降级
-│   ├── EVIDENCE.md               # 本版本验证记录
+│   ├── ARCHITECTURE.md           # node roles, processes/threads, data flow
+│   ├── TOPICS.md                 # topics/QoS/field semantics
+│   ├── TIMESTAMP_AND_TF.md       # timestamp and TF contract
+│   ├── FUSION.md                 # weighting, phases, filtering
+│   ├── DEPLOYMENT.md             # Pi 5 + laptop deployment
+│   ├── MODEL_ITERATION.md        # model iteration / hot reload / debugging
+│   ├── CALIBRATION.md            # reuse / update calibration
+│   ├── FAILURE_MODES.md          # faults and degradation
+│   ├── EVIDENCE.md               # verification record for this version
 │   └── adr/
 ├── ros2_ws/src/
-│   ├── jcheng_perception_msgs/   # 临时 IDL（M2 提升到 jcheng-interfaces）
-│   ├── jcheng_perception_core/   # 纯 Python，无 ROS 依赖
-│   ├── jcheng_perception_edge/   # Pi5 节点 + 合成场景 + wrist_tf
-│   └── jcheng_perception_gpu/    # 笔记本 GPU 检测节点
+│   ├── jcheng_perception_msgs/   # provisional IDL (M2 promotes to jcheng-interfaces)
+│   ├── jcheng_perception_core/   # pure Python, no ROS dependency
+│   ├── jcheng_perception_edge/   # Pi 5 node + synthetic scene + wrist_tf
+│   └── jcheng_perception_gpu/    # laptop GPU detector node
 ├── scripts/
-│   ├── simulate_pipeline.py      # 离线全链路仿真
+│   ├── simulate_pipeline.py      # offline full-pipeline simulation
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 58 项 ROS-free 测试
+├── tests/                        # 58 ROS-free tests (v0.1.0; the branch adds more)
 └── capability.yaml
 ```
 
-## 5. 快速开始
+## 5. Quick start
 
-### 5.1 只跑核心（无需 ROS / 无需硬件）
+### 5.1 Core only (no ROS, no hardware)
 
 ```bash
 python3 -m pytest tests -q
 python3 scripts/simulate_pipeline.py
 ```
 
-仿真包含：移动目标、外机位遮挡窗口、GPU 延迟、TF 插值、双视融合、`DROP_RECHECK`。
+The simulation covers a moving target, an external occlusion window, GPU
+latency, TF interpolation, two-view fusion and `DROP_RECHECK`.
 
-### 5.2 构建 ROS 2 包
+### 5.2 Build the ROS 2 packages
 
 ```bash
 cd ros2_ws
-source /opt/ros/humble/setup.bash      # 机器人；本机 Jazzy 也可构建
+source /opt/ros/humble/setup.bash      # robot; a Jazzy host also builds
 colcon build --packages-select \
   jcheng_perception_msgs jcheng_perception_core \
   jcheng_perception_edge jcheng_perception_gpu
 source install/setup.bash
 ```
 
-### 5.3 单机合成端到端演示（无模型、无 GPU）
+### 5.3 Single-host synthetic demo (no model, no GPU)
 
 ```bash
-export ROS_DOMAIN_ID=77                # 建议隔离，避免旧 DDS 参与者干扰
+export ROS_DOMAIN_ID=77                # isolate from stale DDS participants
 ros2 launch jcheng_perception_gpu synthetic_demo.launch.py
 ```
 
-应看到：`/perception/targets` 中**一条**双视图轨迹，`phase=3`（FINE），权重约 `external 0.2 / wrist 0.8`，`/perception/status` 中 `match_success_rate≈1.0`。
+Expected: **one** two-view track on `/perception/targets`, `phase=3` (FINE),
+weights around `external 0.2 / wrist 0.8`, and `match_success_rate≈1.0` on
+`/perception/status`.
 
-### 5.4 真实部署
+### 5.4 Real deployment
 
 ```bash
-# Pi 5（机器人容器/主机；先 source 厂商工作区以提供
-# ros_robot_controller_msgs 和总线服务）
+# Pi 5 (robot container/host; source the vendor workspace first for
+# ros_robot_controller_msgs and the bus service)
 ros2 launch jcheng_perception_edge pi5_edge.launch.py
-# 该 launch 默认同时启动 wrist_tf；也可单独启动：
+# this launch also starts wrist_tf by default; it can run alone:
 # ros2 launch jcheng_perception_edge wrist_tf.launch.py
 
-# 笔记本 GPU
+# Laptop GPU
 ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 ```
 
-部署、DDS、相机驱动与单设备所有者冲突见 [DEPLOYMENT.md](docs/DEPLOYMENT.md)。
-实机腕部 TF 必须来自 `wrist_tf` 的总线实测关节，不能用厂商 `/joint_states`
-命令缓存；缺失 `camera_optical_measured` 时腕部观测会被丢弃。
+Deployment, DDS, camera drivers and single-device ownership conflicts are in
+[DEPLOYMENT.md](docs/DEPLOYMENT.md). The real wrist TF must come from
+`wrist_tf`'s bus-measured joints, not the vendor `/joint_states` command cache;
+a wrist observation is dropped when `camera_optical_measured` is missing.
 
-## 6. 输出契约
+## 6. Output contract
 
-| 话题 | 类型 | QoS | 语义 |
+| Topic | Type | QoS | Semantics |
 |---|---|---|---|
-| `/perception/uplink/<cam>/image_compressed` | `sensor_msgs/CompressedImage` | best effort, depth 1 | JPEG；`header.stamp` = 采集时间 |
-| `/perception/detections/<cam>` | `Detection2DArray` | best effort, depth 10 | 原图坐标框/关键点；stamp 原样回传 |
-| `/perception/observations/<cam>` | `TargetObservation` | best effort, depth 10 | 单相机 3D 观测（调试/证据） |
-| `/perception/targets` | `FusedTargetArray` | best effort, depth 10 | 融合目标；30 Hz 预测输出 |
-| `/perception/status` | `PerceptionStatus` | best effort, depth 5 | 匹配率、延迟、相位、轨迹数 |
-| `/perception/gpu_status` | `GpuStatus` | best effort, depth 5 | GPU 队列/推理/模型版本 |
-| `~/drop_recheck`, `~/reset` | `std_srvs/Trigger` | service | 强制落点复检 / 清空轨迹 |
+| `/perception/uplink/<cam>/image_compressed` | `sensor_msgs/CompressedImage` | best effort, depth 1 | JPEG; `header.stamp` = capture time |
+| `/perception/detections/<cam>` | `Detection2DArray` | best effort, depth 10 | image-frame boxes/keypoints; stamp returned unchanged |
+| `/perception/observations/<cam>` | `TargetObservation` | best effort, depth 10 | single-camera 3D observation (debug/evidence) |
+| `/perception/targets` | `FusedTargetArray` | best effort, depth 10 | fused target; 30 Hz predicted output |
+| `/perception/status` | `PerceptionStatus` | best effort, depth 5 | match rate, latency, phase, track count |
+| `/perception/gpu_status` | `GpuStatus` | best effort, depth 5 | GPU queue/inference/model version |
+| `~/drop_recheck`, `~/reset` | `std_srvs/Trigger` | service | force drop recheck / clear tracks |
 
-完整字段见 [TOPICS.md](docs/TOPICS.md)。
+Full fields: [TOPICS.md](docs/TOPICS.md).
 
-## 7. 已测量的行为（合成场景，2026-11-23）
+## 7. Measured behaviour (synthetic, 2026-11-23)
 
-| 指标 | 实测 |
+| Metric | Measured |
 |---|---|
-| 每相机上行/检测/观测 | 10 Hz / 10 Hz / 10 Hz |
-| 时间匹配成功率 | 99.0–100% |
-| 检测采集→边缘回调延迟 | 27–40 ms（同机、mock 检测器） |
-| Edge 单回调耗时 | image 0.4 ms、depth 0.1 ms、detections 0.6 ms、publish 1.3 ms、tf 0.3 ms |
-| 输出轨迹 | 1 条 confirmed，双视图融合，权重 0.21 / 0.79，phase FINE |
-| 真实模型 CPU 烟测 | ONNX 197.5 ms / OpenVINO 126.7 ms / Ultralytics 1.04 s（首帧），各 4 个框 |
-| 真实模型 GPU 烟测 | RTX 3060：Ultralytics 稳态 **9.0 ms（FP32）/ 7.4 ms（FP16）** 单图；ROS 节点平均 54.3 ms/帧 |
-| 单元测试 | 58 passed |
-| colcon 构建 | 4 包通过（Jazzy 主机） |
+| Per-camera uplink/detection/observation | 10 Hz / 10 Hz / 10 Hz |
+| Timestamp match rate | 99.0–100% |
+| Detection capture → edge callback | 27–40 ms (same host, mock detector) |
+| Edge callback cost | image 0.4 ms, depth 0.1 ms, detections 0.6 ms, publish 1.3 ms, tf 0.3 ms |
+| Output track | 1 confirmed, two-view fused, weights 0.21 / 0.79, phase FINE |
+| Real-model CPU smoke | ONNX 197.5 ms / OpenVINO 126.7 ms / Ultralytics 1.04 s (first frame), 4 boxes each |
+| Real-model GPU smoke | RTX 3060: Ultralytics steady **9.0 ms (FP32) / 7.4 ms (FP16)** per image; ROS node 54.3 ms/frame average |
+| Unit tests | 58 passed (v0.1.0) |
+| colcon build | 4 packages (Jazzy host) |
 
-> 以上合成指标不是实机精度或延迟验证。真实模型烟测是**单图推理**，不代表
-> Pi 5/相机/网络的端到端性能。
+> These synthetic numbers are not hardware accuracy or latency validation. The
+> real-model smoke test is **single-image inference**, not Pi 5/camera/network
+> end-to-end performance.
 
-> 本机已在独立 venv 安装 **ONNX Runtime 1.32.0**、**OpenVINO 2026.4.1**、
-> **PyTorch 2.9.1+cu128 / 2.6.0+cpu、torchvision 0.24.1+cu128 / 0.21.0+cpu、
-> Ultralytics 8.4.216**；CUDA 版使用 RTX 3060，`torch.cuda.is_available()=True`。
-> ROS 节点通过 venv Python 验证了 ONNX Runtime、Ultralytics CPU 与 CUDA。
+> An isolated venv has **ONNX Runtime 1.32.0**, **OpenVINO 2026.4.1**,
+> **PyTorch 2.9.1+cu128 / 2.6.0+cpu, torchvision 0.24.1+cu128 / 0.21.0+cpu,
+> Ultralytics 8.4.216**; the CUDA build uses the RTX 3060 and
+> `torch.cuda.is_available()=True`. The ROS node verified ONNX Runtime,
+> Ultralytics CPU and CUDA through the venv Python.
 
-### 7.1 Pi 5 与真实相机（数据链路 + TF + 跨机 YOLO）
+### 7.1 Pi 5 and real cameras (data path + TF + cross-machine YOLO)
 
-| 项 | 结果 |
+| Item | Result |
 |---|---|
-| Pi 5 ARM64 构建 | 4 包通过，27.1 s |
-| Pi 5 合成端到端 | 6.2/6.3 Hz、匹配 99.4%、延迟 48 ms、1 条双视图轨迹 |
-| 腕部 Aurora | 驱动从本地 SDK 重建；RGB 6.7–6.8 Hz、深度 3.1–6.4 Hz、640×400 |
-| 腕部真实链路（mock 蓝色检测） | GPU 4.9 Hz/0 失败；edge 输出 `blue_block-001`，FINE，wrist 权重 1.0 |
-| 腕部度量 TF | `wrist_tf` 总线实测 10 Hz、1000+ 次读取 0 失败；`camera_optical_measured` |
-| 桌面平面核验 | z=-0.0836 m（参考 -0.0825 m，差 1.1 mm）、倾角 1.21°、RMS 0.61 mm；**单静态姿态** |
-| 跨机真实 YOLO（外机位） | 笔记本 RTX 3060 + CycloneDDS；GPU 2.06 fps / 55 ms，edge 收到 16 次检测，深度未对齐故 0 匹配；时间戳原样回传 |
-| 外机位 | UVC 彩色 + 仅深度 RealSense，未对齐；ADR 0004 待执行 |
+| Pi 5 ARM64 build | 4 packages, 27.1 s |
+| Pi 5 synthetic end-to-end | 6.2/6.3 Hz, match 99.4%, 48 ms latency, one two-view track |
+| Wrist Aurora | driver rebuilt from the local SDK; RGB 6.7–6.8 Hz, depth 3.1–6.4 Hz, 640×400 |
+| Wrist real data path (mock blue detector) | GPU 4.9 Hz / 0 failures; edge emitted `blue_block-001`, FINE, wrist weight 1.0 |
+| Wrist metric TF | `wrist_tf` bus-measured at 10 Hz, 1000+ reads / 0 failures; `camera_optical_measured` |
+| Table-plane check | z=-0.0836 m (reference -0.0825 m, difference 1.1 mm), tilt 1.21°, RMS 0.61 mm; **single static pose** |
+| Cross-machine real YOLO (external) | laptop RTX 3060 + CycloneDDS; GPU 2.06 fps / 55 ms, edge received 16 detections, 0 matches because depth was unaligned; capture stamp returned unchanged |
+| External camera | UVC colour + depth-only RealSense, unaligned; ADR 0004 pending |
 
-> 详细记录：[HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md)。测试未发送运动命令；
-> 测试后已停止相机/感知进程，厂商服务保持原状。跨机 YOLO 只验证检测链路，
-> 深度未对齐时不产生度量观测；多姿态/固定目标精度与运动中的 TF 滞后仍未验证，
-> 当前位姿不得直接用于运动。
+> Details: [HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md). The test sent no
+> motion command; camera/perception processes were stopped afterwards and the
+> vendor services were left unchanged. The cross-machine YOLO test verifies the
+> detection path only; unaligned depth produces no metric observation.
+> Multi-pose/fixed-target accuracy and TF lag during motion remain unverified;
+> the current poses must not be used for motion.
 
-## 8. 设计边界
+## 8. Design boundaries
 
-- **不做运动控制**：不发布 `cmd_vel`、关节、夹爪、串口/CAN 命令；输出是建议位姿。
-- **不做安全判定**：规划器/安全层必须自行校验工作空间、限位与目标新鲜度。
-- **不在 Pi 5 跑 YOLO**：`jcheng_perception_edge`/`core` 中没有任何检测器导入（有静态测试）。
-- **不伪造深度/TF**：时间匹配失败即丢弃；腕相机没有静态外参回退。
-- **不信任厂商 `/joint_states` 做腕部几何**：它是命令缓存；`wrist_tf` 用总线
-  实测关节 + URDF FK + 手眼发布 `camera_optical_measured`，读不到就不发布。
-- **模型权重不入库**：见 [MODEL_ITERATION.md](docs/MODEL_ITERATION.md) 与 [LICENSE-REVIEW.md](LICENSE-REVIEW.md)。
+- **No motion control**: publishes no `cmd_vel`, joint, gripper, serial or CAN
+  command; the output is an advisory pose.
+- **No safety decision**: the planner/safety layer must validate workspace,
+  limits and target freshness itself.
+- **No YOLO on the Pi 5**: `jcheng_perception_edge`/`core` import no detector
+  (enforced by a static test).
+- **No fabricated depth/TF**: a failed time match is dropped; the wrist camera
+  has no static extrinsic fallback.
+- **No vendor `/joint_states` for wrist geometry**: it is a command cache;
+  `wrist_tf` publishes `camera_optical_measured` from bus-measured joints +
+  URDF FK + hand-eye, and publishes nothing when the bus read fails.
+- **No model weights in the repository**: see
+  [MODEL_ITERATION.md](docs/MODEL_ITERATION.md) and
+  [LICENSE-REVIEW.md](LICENSE-REVIEW.md).
 
-## 9. 参考与来源
+## 9. References and sources
 
-- **机器人结构与标定**：`jcheng-manipulation` v1.0.0
-  - TF 树与 `camera_optical_calibrated`：[`docs/hardware/tf_tree.md`](https://github.com/JerichoCheng/jcheng-manipulation/blob/main/docs/hardware/tf_tree.md)
-  - 腕相机手眼与光学帧：[`docs/hardware/camera_frames.md`](https://github.com/JerichoCheng/jcheng-manipulation/blob/main/docs/hardware/camera_frames.md)
-  - 车头 D435i 内外参（2026-11-20）：`evidence/calibration/20261120/`
-- **YOLO 构建参考**：厂商 `ArmPiUltra` 的 `yolov8_detect` / `yolo_detect`
-  （Ultralytics + OpenVINO，`ObjectInfo` 发布风格）。本仓库保留“每相机一个模型 +
-  Ultralytics/OpenVINO 导出”的做法，但把输出改成带采集时间戳、与 ROS 解耦的
-  `Detection2DArray`。
-- **`lerobot_piper_local`**：本机副本只包含采集/相机补丁，**没有 YOLO 代码**；
-  本仓库借鉴的是其“配置化、先体检、失败早报”的工程习惯，以及相机按序列号/键名
-  统一管理的做法。YOLO 部分请以厂商 `yolov8_detect` 为准。
+- **Robot structure and calibration**: `jcheng-manipulation` v1.0.0
+  - TF tree and `camera_optical_calibrated`:
+    [`docs/hardware/tf_tree.md`](https://github.com/JerichoCheng/jcheng-manipulation/blob/main/docs/hardware/tf_tree.md)
+  - Wrist hand-eye and optical frame:
+    [`docs/hardware/camera_frames.md`](https://github.com/JerichoCheng/jcheng-manipulation/blob/main/docs/hardware/camera_frames.md)
+  - Chassis D435i intrinsics/extrinsics (2026-11-20):
+    `evidence/calibration/20261120/`
+- **YOLO reference**: the vendor `ArmPiUltra` `yolov8_detect` / `yolo_detect`
+  (Ultralytics + OpenVINO, `ObjectInfo` publishing). This repository keeps
+  "one model per camera + Ultralytics/OpenVINO export" but emits a
+  capture-timestamped, ROS-decoupled `Detection2DArray`.
+- **`lerobot_piper_local`**: the local copy contains acquisition/camera patches
+  and **no YOLO code**; this repository borrows the "configuration-first,
+  health-check-first, fail-early" engineering habit and the serial-number/keyed
+  camera management. Use the vendor `yolov8_detect` as the YOLO reference.
 
-## 10. 文档
+## 10. Documentation
 
-- [架构与线程模型](docs/ARCHITECTURE.md)
-- [话题与 QoS](docs/TOPICS.md)
-- [时间戳与 TF 契约](docs/TIMESTAMP_AND_TF.md)
-- [融合与滤波](docs/FUSION.md)
-- [部署](docs/DEPLOYMENT.md)
-- [模型迭代](docs/MODEL_ITERATION.md)
-- [标定](docs/CALIBRATION.md)
-- [故障模式](docs/FAILURE_MODES.md)
-- [实机接入记录](docs/HARDWARE_BRINGUP.md)
-- [验证证据](docs/EVIDENCE.md)
-- ADR：[边云切分](docs/adr/0001-edge-gpu-split.md) ·
-  [采集时间戳契约](docs/adr/0002-capture-timestamp-contract.md) ·
-  [距离加权融合](docs/adr/0003-distance-weighted-fusion.md) ·
-  [D435i 单一所有者](docs/adr/0004-camera-device-ownership.md)
+- [Architecture and threading](docs/ARCHITECTURE.md)
+- [Topics and QoS](docs/TOPICS.md)
+- [Timestamp and TF contract](docs/TIMESTAMP_AND_TF.md)
+- [Fusion and filtering](docs/FUSION.md)
+- [Deployment](docs/DEPLOYMENT.md)
+- [Model iteration](docs/MODEL_ITERATION.md)
+- [Calibration](docs/CALIBRATION.md)
+- [Failure modes](docs/FAILURE_MODES.md)
+- [Hardware bring-up record](docs/HARDWARE_BRINGUP.md)
+- [Verification evidence](docs/EVIDENCE.md)
+- [Acceptance report](ACCEPTANCE.md)
+- ADR: [edge/GPU split](docs/adr/0001-edge-gpu-split.md) ·
+  [capture-timestamp contract](docs/adr/0002-capture-timestamp-contract.md) ·
+  [distance-weighted fusion](docs/adr/0003-distance-weighted-fusion.md) ·
+  [D435i single owner](docs/adr/0004-camera-device-ownership.md)
 
-## 11. 许可
+## 11. License
 
-许可证审查进行中；本仓库没有 `LICENSE`，默认版权保留。模型权重与第三方
-推理框架的许可由使用者自行遵守，详见 [LICENSE-REVIEW.md](LICENSE-REVIEW.md)。
+The license review is in progress; this repository has no `LICENSE` and all
+rights are reserved. Model weights and third-party inference runtimes remain
+under their own licenses; see [LICENSE-REVIEW.md](LICENSE-REVIEW.md).

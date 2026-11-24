@@ -1,0 +1,68 @@
+# Perception GPU host image (laptop).
+#
+# The tag/ArUco path already runs in `armpi-humble-moveit`; this image adds the
+# YOLO runtime so the production `ultralytics` backend is also ROS 2 Humble and
+# no longer needs the host Jazzy venv. Build it once:
+#
+#   docker build -f deploy/Dockerfile.gpu -t jcheng-perception-gpu:latest deploy
+#
+# Running it with --gpus all requires nvidia-container-toolkit on the host; see
+# deploy/README.md for the one-time host step and the verification commands.
+#
+# The build downloads several GB of CUDA wheels (the verified host venv is
+# 6.8 GB), so it is network-bound.
+ARG ROS_BASE_IMAGE=ros:humble-ros-base@sha256:dfc94c85d8e01f230951b2a85ca5576e08473081c3da5fbbe8f3ab844703b9ba
+FROM ${ROS_BASE_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Domestic mirrors, then the ROS foundations and the apt OpenCV build.
+RUN set -eux; \
+    grep -rlI 'packages.ros.org' /etc/apt 2>/dev/null \
+        | xargs -r sed -i 's|packages.ros.org/ros2/ubuntu|mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu|g'; \
+    grep -rlI 'archive.ubuntu.com' /etc/apt 2>/dev/null \
+        | xargs -r sed -i 's|archive.ubuntu.com/ubuntu|mirrors.tuna.tsinghua.edu.cn/ubuntu|g'; \
+    grep -rlI 'security.ubuntu.com' /etc/apt 2>/dev/null \
+        | xargs -r sed -i 's|security.ubuntu.com/ubuntu|mirrors.tuna.tsinghua.edu.cn/ubuntu|g'; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        python3-colcon-common-extensions \
+        python3-numpy \
+        python3-opencv \
+        python3-pip \
+        python3-setuptools \
+        python3-venv \
+        python3-yaml \
+        ros-humble-ament-cmake \
+        ros-humble-geometry-msgs \
+        ros-humble-rmw-cyclonedds-cpp \
+        ros-humble-rosidl-default-generators \
+        ros-humble-rosidl-default-runtime \
+        ros-humble-sensor-msgs \
+        ros-humble-std-msgs; \
+    rm -rf /var/lib/apt/lists/*
+
+# Python 3.10 venv with system site packages, so rclpy and the message packages
+# remain visible. Versions match the verified host venv
+# (~/.venvs/jcheng-perception-gpu, 2026-11-24): torch 2.9.1+cu128,
+# ultralytics 8.4.216, onnxruntime 1.32.0, openvino 2026.4.1, numpy 1.26.4.
+#
+# `opencv-python` is deliberately NOT installed and `ultralytics` is installed
+# with --no-deps after its dependency list: the PyPI wheel would shadow the apt
+# `python3-opencv` 4.5.4 build, which is the one that carries ArUco. The tag
+# backend and the YOLO backend must share the same cv2.
+RUN python3 -m venv --system-site-packages /opt/jcheng/venv && \
+    /opt/jcheng/venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /opt/jcheng/venv/bin/pip install --no-cache-dir \
+        --index-url https://download.pytorch.org/whl/cu128 \
+        'torch==2.9.1+cu128' 'torchvision==0.24.1+cu128' && \
+    /opt/jcheng/venv/bin/pip install --no-cache-dir \
+        'numpy==1.26.4' 'PyYAML==6.0.1' matplotlib pillow requests scipy \
+        tqdm psutil py-cpuinfo pandas seaborn ultralytics-thop polars \
+        'onnxruntime==1.32.0' 'openvino==2026.4.1' && \
+    /opt/jcheng/venv/bin/pip install --no-cache-dir --no-deps \
+        'ultralytics==8.4.216'
+
+WORKDIR /workspace

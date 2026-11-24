@@ -1,0 +1,2 @@
+[INFO] [1795516867.087166757] [drift_recorder]: drift recorder ready
+[INFO] [1795516907.142917370] [drift_recorder]: wrote /tmp/tag_run3.json (311 observations, 3157 target batches, 79 status)

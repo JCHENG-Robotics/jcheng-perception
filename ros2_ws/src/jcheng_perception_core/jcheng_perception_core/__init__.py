@@ -40,7 +40,12 @@ from .geometry import (
 )
 from .kalman import ConstantVelocityKalman
 from .pipeline import PerceptionPipeline
-from .time_buffer import PoseRingBuffer, TimestampRingBuffer
+from .time_buffer import (
+    PoseRingBuffer,
+    TimestampRingBuffer,
+    link_stalled,
+    uplink_allowed,
+)
 from .tracking import Track, TrackManager
 from .types import (
     CameraHealth,
@@ -93,6 +98,7 @@ __all__ = [
     'fuse_observations',
     'invert_transform',
     'lateral_sigma_m',
+    'link_stalled',
     'load_camera_specs',
     'load_fusion_config',
     'load_gpu_config',
@@ -112,6 +118,7 @@ __all__ = [
     'sample_depth',
     'transform_point',
     'transform_points',
+    'uplink_allowed',
     'view_factor',
     'yaw_quaternion',
 ]
