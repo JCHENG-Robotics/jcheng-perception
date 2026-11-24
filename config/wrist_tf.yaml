@@ -1,0 +1,39 @@
+# Measured wrist-camera TF (2026-11-24).
+#
+# The vendor /joint_states stream is the controller command cache, not encoder
+# feedback.  wrist_tf reads the bus-servo positions instead and rebuilds
+# base_link -> link4 from the live /robot_description, then composes the
+# validated hand-eye below.  It publishes camera_optical_measured as a dynamic
+# child of base_link; the static `camera_optical_calibrated` frame from the
+# manipulation project is only valid when its parent chain is fresh.
+base_frame: base_link
+tip_frame: link4
+camera_frame: camera_optical_measured
+
+# A 5-servo bus read measured 32-39 ms on the Pi 5 (2026-11-24).  10 Hz leaves
+# the service free most of the time and is enough for a slow arm; the edge
+# interpolates TF samples by depth-frame stamp.
+update_rate_hz: 10.0
+servo_service: /ros_robot_controller/bus_servo/get_state
+# Vendor servo_controller.yaml: joint1..joint5 = servo IDs 6,5,4,3,2.
+servo_ids:
+  joint1: 6
+  joint2: 5
+  joint3: 4
+  joint4: 3
+center_pulse: 500
+radians_per_tick: 0.004188790204786391
+# joint3 is mounted reversed: radians = (500 - pulse) * radians_per_tick.
+inverted_joints: [joint3]
+
+# T_link4_camera: camera optical frame in link4, OpenCV convention
+# (x right, y down, z forward).  TSAI chessboard hand-eye, 14 poses with
+# measured bus-servo joints, 2026-11-17; board scatter 2.94 mm / 0.39 deg,
+# held-out 3.29 mm / 0.43 deg.  Source:
+# jcheng-manipulation/evidence/calibration/20261117/calibration_servo_20261117.json
+# Row-major 4x4; translation [-0.034844, -0.009064, 0.058574] m.
+link4_camera:
+  - [0.00368842776439271, 0.9998555260011366, -0.01659284862877692, -0.0348444217248839]
+  - [-0.9999926898175493, 0.0037046418410173754, 0.0009465412259709385, -0.009063734133950539]
+  - [0.0010078750366667687, 0.016589236083088054, 0.9998618811786406, 0.0585736292974927]
+  - [0.0, 0.0, 0.0, 1.0]

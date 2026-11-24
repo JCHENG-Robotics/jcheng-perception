@@ -39,6 +39,7 @@ setup(
                 'synthetic_scene_publisher = '
                 'jcheng_perception_edge.synthetic:main'
             ),
+            'wrist_tf = jcheng_perception_edge.wrist_tf:main',
         ],
     },
 )
