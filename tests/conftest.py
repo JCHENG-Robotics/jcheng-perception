@@ -6,7 +6,8 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CORE = os.path.join(ROOT, 'ros2_ws', 'src', 'jcheng_perception_core')
 GPU = os.path.join(ROOT, 'ros2_ws', 'src', 'jcheng_perception_gpu')
+EDGE = os.path.join(ROOT, 'ros2_ws', 'src', 'jcheng_perception_edge')
 TESTS = os.path.dirname(os.path.abspath(__file__))
-for path in (CORE, GPU, TESTS):
+for path in (CORE, GPU, EDGE, TESTS):
     if path not in sys.path:
         sys.path.insert(0, path)

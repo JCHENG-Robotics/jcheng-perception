@@ -65,10 +65,12 @@ cameras:
     rgb_topic: /depth_cam/rgb/image_raw
     depth_topic: /depth_cam/depth/image_raw
     camera_info_topic: /depth_cam/rgb/camera_info
-    # Measured OpenCV optical frame, published as a static child of
-    # rgb_camera_link. Do not use rgb_camera_link or
-    # depth_cam_color_optical_frame for back-projection.
-    optical_frame: camera_optical_calibrated
+    # Measured OpenCV optical frame.  On hardware this is published by
+    # `wrist_tf` from bus-servo positions + URDF FK + the validated hand-eye;
+    # the stock TF parent chain uses the controller command cache and is not
+    # usable.  Do not use rgb_camera_link or depth_cam_color_optical_frame
+    # for back-projection.
+    optical_frame: camera_optical_measured
     uplink_topic: /perception/uplink/aurora_wrist/image_compressed
     detection_topic: /perception/detections/aurora_wrist
     rgb_compressed: false

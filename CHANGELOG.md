@@ -2,13 +2,24 @@
 
 ## Unreleased
 
+- Measured wrist TF: the invalid z was traced to the vendor `/joint_states`
+  being a command cache (joint1 +0.838, joints 2-5 zero) while the bus servos
+  read joint1 -0.013, joint2 +0.406, joint3 -1.382, joint4 -1.629 rad. New
+  `wrist_tf` polls `/ros_robot_controller/bus_servo/get_state` at 10 Hz,
+  parses the live `/robot_description`, composes the validated hand-eye and
+  publishes `base_link -> camera_optical_measured`; `cameras.yaml` now uses
+  that frame. Pi 5 validation: 1000+ reads, 0 failures; table-plane fit
+  z=-0.0836 m vs the -0.0825 m reference (1.1 mm), tilt 1.21 deg, RMS 0.61 mm.
+  Single static pose only; not cleared for motion.
+- Wrist kinematics (URDF chain/FK, pulse conversion) and config tests — 58
+  tests total.
 - Pi 5 ARM64 build (4 packages, 27.1 s) and synthetic end-to-end (6.2/6.3 Hz,
   match 0.994, 48 ms, one fused track).
 - Wrist Aurora driver rebuilt from the local aarch64 SDK; real RGB/depth stream
   restored (6.7/3.1–6.4 Hz). A real wrist data-path test with a mock blue
-  detector emitted `blue_block-001` (FINE, wrist weight 1.0, GPU 0 failures),
-  but the metric z is invalid: the base->camera_optical composition is wrong at
-  the tested arm pose. Not used for motion.
+  detector emitted `blue_block-001` (FINE, wrist weight 1.0, GPU 0 failures);
+  the metric z was invalid at the time (root cause fixed by the measured wrist
+  TF entry above), so the result was not used for motion.
 - CameraInfo subscription switched to sensor QoS: the vendor Aurora publisher is
   best-effort/volatile, which was incompatible with the previous latched QoS.
 - External D435i remains the split UVC-colour + depth-only topology; aligned
@@ -30,7 +41,7 @@
   pinning the 2.9.1 pair; `RUNTIME=ultralytics-cuda` reproduces it.
 - `scripts/check_gpu_backend.py`: ROS-free detector smoke check for every
   backend; reports missing runtime/model explicitly.
-- Detector adapter tests (mock, unknown backend, missing model) — 53 tests total.
+- Detector adapter tests (mock, unknown backend, missing model) — 58 tests total.
 - ADR 0004: proposed single RealSense owner with aligned depth; documents why
   the currently deployed split UVC-colour + depth-only topology cannot be used
   for metric fusion.

@@ -14,7 +14,7 @@ def test_real_camera_config():
     assert specs['aurora_wrist'].role is Role.WRIST
     assert specs['d435i_ext'].optical_frame == 'camera_color_optical_frame'
     assert specs['aurora_wrist'].optical_frame == \
-        'camera_optical_calibrated'
+        'camera_optical_measured'
     assert specs['d435i_ext'].intrinsics.shape == (3, 3)
     assert specs['aurora_wrist'].distortion.shape == (5,)
     assert specs['d435i_ext'].max_uplink_fps == 15.0

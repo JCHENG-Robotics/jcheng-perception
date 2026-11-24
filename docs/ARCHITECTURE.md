@@ -48,6 +48,18 @@ robot (Pi 5, ROS 2 Humble)                         laptop GPU (ROS 2 Humble/Jazz
 回调只做 `bytes(message.data)` 复制与入队；队列满丢最旧帧，绝不反压网络或
 edge。模型加载/热加载在工作线程内完成，节点启动不被模型加载阻塞。
 
+### 2.3 腕部 TF 发布器（`wrist_tf`）
+
+| 线程 | 数量 | 职责 |
+|---|---|---|
+| ROS executor | 1 | 10 Hz 总线伺服读取、`/robot_description` 解析、TF 发布 |
+
+`wrist_tf` 是独立进程：厂商 `/joint_states` 是命令缓存，不能用于腕部几何；
+它改用 `/ros_robot_controller/bus_servo/get_state` 的总线位置，按 URDF FK
+求 `base_link→link4`，组合已验证手眼后发布 `camera_optical_measured`。
+读取失败时停发，edge 因缺 TF 丢观测（fail closed）。把厂商服务依赖隔离在
+edge 之外，避免总线 I/O 影响采集/融合执行器。
+
 ## 3. 一次检测的完整路径
 
 1. Pi 5 图像回调：`cv_bridge`/`imdecode` → `ingest_frame`（存 `FrameMeta`）→
@@ -62,7 +74,8 @@ edge。模型加载/热加载在工作线程内完成，节点启动不被模型
 6. `flush`：
    - 按检测时间戳找最近 `FrameMeta`（容差 50/80 ms）；
    - 找最近深度帧（容差 80/150 ms）；
-   - 用**深度帧时间戳**在 TF 环中插值 `base_link ← optical`；
+   - 用**深度帧时间戳**在 TF 环中插值 `base_link ← optical`（腕部 TF 由
+     `wrist_tf` 的总线实测关节发布）；
    - 每帧深度采样（关键点优先、框中心、网格回退）→ 3D 反投影 → 协方差；
    - 轨迹关联（标签 + 3D 门限 + 每相机一对一）→ 重复轨迹合并；
    - 双视图信息加权 → 卡尔曼更新 → 轨迹生命周期。

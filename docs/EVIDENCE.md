@@ -1,8 +1,10 @@
-# 验证证据（2026-11-23）
+# 验证证据（2026-11-23 → 2026-11-24）
 
 > **范围声明**：主体是 **x86 工作站 + ROS 2 Jazzy + 合成场景**，外加厂商
-> `yolov8s` 的单图 CPU/GPU 推理；**2026-11-23 另做了 Pi 5 ARM64 合成与腕部真实相机
-> 数据链路测试（无运动命令）**。实机度量位姿仍需修正，不能代表可用于运动的精度。
+> `yolov8s` 的单图 CPU/GPU 推理；**2026-11-23 做了 Pi 5 ARM64 合成与腕部真实相机
+> 数据链路测试；2026-11-24 修正腕部度量 TF 并完成单静态姿态桌面平面核验
+> （无运动命令）**。多姿态/固定目标精度与外机位对齐仍未验证，不能代表可用于
+> 运动的精度。
 
 ## 1. 环境
 
@@ -23,12 +25,12 @@
 
 ```bash
 python3 -m pytest tests -q
-# 53 passed
+# 58 passed
 ```
 
 覆盖：时间环/排序/剪枝、四元数/slerp、TF 插值、深度采样/空洞、反投影、
 协方差、关键点轴、遮挡、关联/生命周期、双视图信息加权、相位、DROP_RECHECK、
-重复轨迹合并、配置校验、edge/core 无推理代码。
+重复轨迹合并、配置校验、腕部 URDF 链/FK/脉冲换算、edge/core 无推理代码。
 
 ### 2.2 离线全链路仿真
 
@@ -209,10 +211,42 @@ Target: blue_block-001, phase FINE, wrist weight 1.0, one confirmed track
 Position: (0.1071, -0.0602, 0.5911) m
 ```
 
-数据路径、时间戳回溯、深度/TF 匹配和融合都实际执行；**但 z=+0.59 m 不是桌面高度
-（约 -0.08 m），当前 `base_link→camera_optical_calibrated` 组合在实机姿态下无效，
-禁止用于运动。** 外机位仍是未对齐的 UVC 彩色 + 仅深度 RealSense。详见
+数据路径、时间戳回溯、深度/TF 匹配和融合都实际执行；当次 z=+0.59 m 明显高于
+桌面，根因于 2026-11-24 定位为命令缓存 TF（见 2.9），数据路径本身有效。外机位仍是
+未对齐的 UVC 彩色 + 仅深度 RealSense。详见
 [HARDWARE_BRINGUP.md](HARDWARE_BRINGUP.md)。
+
+### 2.9 腕部实测 TF 与桌面平面（2026-11-24）
+
+同一静止姿态下，`/joint_states` 为 joint1=+0.8378、joint2–5=0；总线伺服为
+joint1≈-0.013、joint2≈+0.406、joint3=-1.382、joint4=-1.629。用命令缓存组合
+TF 会把相机 z 轴几乎指向正上方；`wrist_tf` 改用总线实测 + 实时
+`/robot_description` FK + 已验证手眼，发布 `camera_optical_measured`：
+
+```text
+10 Hz, 1000+ reads, failures=0
+5-joint bus read: median 34.3 ms, max 39.1 ms
+base_link -> camera_optical_measured
+translation = (0.1753, 0.0082, 0.1973) m
+view_z      = (0.5124, -0.0073, -0.8587)   # 前下方
+```
+
+用深度相机内参反投影一帧深度，采样 4676 点拟合桌面：
+
+```text
+plane normal          = (-0.0162, -0.0136, 0.9998)
+plane z at base origin = -0.0836 m
+plane tilt             = 1.21 deg
+plane RMS              = 0.61 mm
+inlier fraction        = 1.000
+camera above plane     = 0.2809 m
+reference table z      = -0.0825 m
+difference             = 1.1 mm
+```
+
+这是**单静态姿态**的平面一致性检查；深度用 RGB 光学位姿（IR-RGB 约 9.9 mm
+基线未建模）。多姿态、固定目标 x/y/z 与运动中的 TF 滞后仍需验证。测试期间未发送
+运动命令。
 
 ## 3. 本轮发现并修复的问题
 
@@ -230,13 +264,14 @@ Position: (0.1071, -0.0602, 0.5911) m
 | 10 | 腕部相机 `vision.launch.py` 找不到 `deptrum-ros-driver-aurora930` | third_party install 是空壳，且未 source 其工作区 | 从本地 aarch64 SDK 在独立 install 目录重建；RGB/深度恢复 |
 | 11 | edge 收不到 Aurora `CameraInfo` | vendor 发布 best-effort/volatile，edge 用 reliable+transient-local | CameraInfo 订阅改为 sensor QoS；配置内参回退 |
 | 12 | Fast DDS 与 vendor CycloneDDS 混用报 `ParticipantEntitiesInfo` 反序列化错误 | 跨 RMW 发现不稳定 | 实机验证统一使用 CycloneDDS；文档注明 |
-| 13 | 真实腕部目标 z=+0.59 m（桌面约 -0.08 m） | `base_link→camera_optical_calibrated` 组合在实机姿态下无效；可能为命令缓存 TF | **未解决**；需总线实测关节 + 手眼重建 TF，禁止用于运动 |
+| 13 | 真实腕部目标 z=+0.59 m（桌面约 -0.08 m） | 厂商 `/joint_states` 是命令缓存（joint1=+0.838、joint2–5=0），不是总线实测 | **已修正**：`wrist_tf` 用总线实测 + URDF FK + 手眼发布 `camera_optical_measured`；单姿态桌面平面 z=-0.0836 m（差 1.1 mm） |
 
 ## 4. 未验证项
 
 - Pi 5 同时跑两路真实相机（外机位对齐 + 腕部）与真实 YOLO；
 - 真实 D435i 单所有者/深度对齐（ADR 0004）；Aurora 驱动需持久化部署；
-- 腕部/外机位的**度量位姿与 TF 标定**（当前 z 不正确）；
+- 腕部**多姿态/固定目标**的 x/y/z 精度与运动中的 TF 滞后（单姿态桌面平面已通过）；
+- 外机位的度量位姿与深度对齐；
 - 关键点/pose 模型（仅验证了 detect 与 OBB）；
 - 真实模型在 10 Hz 输入下的端到端实时性（GPU ROS 约 6–8 Hz，需进一步调优）；
 - 实机运动集成（必须在 `jcheng_safety`/`jcheng_motion` 之下）；
@@ -259,6 +294,10 @@ colcon build --packages-select \
   jcheng_perception_edge jcheng_perception_gpu
 source install/setup.bash
 ROS_DOMAIN_ID=77 ros2 launch jcheng_perception_gpu synthetic_demo.launch.py
+
+# 实机腕部 TF（需先 source 厂商工作区，提供 ros_robot_controller_msgs）
+ros2 launch jcheng_perception_edge wrist_tf.launch.py
+ros2 run tf2_ros tf2_echo base_link camera_optical_measured
 ```
 
 配置/代码/结果如与本文件不一致，以仓库提交和重新运行结果为准。
