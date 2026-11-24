@@ -70,6 +70,103 @@ the tag centre sits ~3 mm above it; the printed sheet is not flat.
   was added **after** the live runs and is covered by tests/replay, not yet by
   a new hardware run.
 
+## Run 4 — min-dt rerun (partial: external only)
+
+After deploying `f90b5d5` (installed `velocity_min_dt_s = 0.1`), a 60 s bounded
+rerun was attempted. It did **not** reproduce the dual-view window:
+
+- 45 external tag observations only (t = 0.3–14.3 s), **0 wrist**; the edge
+  reported `aurora_wrist:depth_failures=365`. The GPU received 117 external /
+  615 wrist frames, but the external tag stream stopped after ~14 s and no
+  wrist observation survived depth matching.
+- External tag mean (330.5, −14.2, −82.9) mm, σ 0.2/0.1/0.1 mm — the same tag
+  point as run 3.
+- Fused external-only track: max **2.42 mm** over the whole span, **0.38 mm**
+  after a 6 s settle (report 0.4 mm), final 0.08 mm; biggest single step
+  2.6 mm at t = 4.4 s. No velocity transients.
+- Ops: the edge external reader had to be recovered by restarting
+  `armpi-rs-depth`; the external fps went 0 → 0.64 → 3.7. The GPU external
+  uplink reader then stopped after ~14 s again. The dual-view rerun is blocked
+  by these two reader/depth-matching issues, not by the min-dt change.
+
+Interpretation: the deployed min-dt code is stable on the external tag track
+(0.4 mm), but this is **not** a dual-view repeat of the 11.4 mm → ~8 mm
+comparison. Run 3 remains the dual-view defined-point result (3.77 mm,
+5 mm gate 3.67/3.07 mm PASS); a wrist-depth/reader fix is needed before the
+dual-view min-dt confirmation can be repeated.
+
+## Run 5 — GPU restart harness + Aurora restart (blocked by edge intake)
+
+To attack both reader issues, the Aurora driver was restarted (stopped the
+service, killed the orphan `aurora930_node` 5529 holding the USB device, started
+the service once) and the GPU tag node was run in a **10 s restart loop** (7
+windows) so its external uplink reader never stayed wedged. A fresh edge ran
+with `f90b5d5`.
+
+- **Wrist depth matching improved:** run 5 reported `aurora_wrist:depth_failures=1`
+  (run 4: 365), so the Aurora restart fixed the depth side.
+- **But the edge intake stalled after ~6 s:** 18 external tag observations
+  (t = 0.2–5.6 s), 0 wrist; edge status at t = 57 s: 88 frames, 27 detections,
+  25 matched, `gpu_alive=false`. All 7 GPU tag windows loaded, so the GPU was
+  not the blocker; the edge stopped receiving/processing frames.
+- External-only fused track: max 1.79 mm, final 1.31 mm (report 1.8 mm).
+- Pi load after the driver restarts rose to 17–23 (D435i node ~87 %, gateway
+  ~23 %, Aurora ~24 %, plus zombie entries from the container's non-reaping
+  PID 1). No further hardware retries were made.
+
+Conclusion: the wrist depth matching problem is fixed; the remaining blocker is
+the edge's camera/detection intake under Pi load / the recurring reader stall.
+The dual-view min-dt confirmation is still not obtained; run 3 remains the
+dual-view defined-point result.
+
+## Run 6 — same-distro Humble GPU (best result so far)
+
+The user pointed out the laptop's Humble Docker image. A dedicated container
+(`jcheng-humble-tag`, image `armpi-humble-moveit:latest`, host network, wired
+CycloneDDS config) was created, `python3-opencv` 4.5.4 (with ArUco) installed,
+and `jcheng_perception_msgs/core/gpu` built in Humble (`/workspace/tag_ws`).
+Both the laptop GPU node and the Pi edge are now **ROS 2 Humble**, removing the
+cross-distro DDS path.
+
+Two edge fixes were deployed first (working tree, not committed):
+
+- `uplink_allowed()` resets the per-camera uplink baseline after a backwards
+  clock jump (the Pi clock can jump after NTP; a future baseline silently
+  skipped that camera's uplinks forever). Tests: `tests/test_uplink_rate.py`.
+- `UplinkWorker` now catches any encode/publish exception, counts it and keeps
+  the thread alive instead of dying silently; the status notes now expose
+  `encode_failures` and `rate_limited`.
+
+Run 6 (60 s, Humble GPU tag node, recorder also in Humble):
+
+- 141 wrist tag observations, continuous t = 0.5–59.8 s; **0 external**.
+- Fused **wrist-only** track: max **7.30 mm**, p95 4.66 mm, final 3.93 mm
+  (another early track 10.03 mm). This meets the ~8 mm target numerically, but
+  it is **not a dual-view** confirmation.
+- Edge status: 468 frames, 410 detections, 234 matched, `gpu_alive=true`;
+  notes `d435i_ext:depth_failures=13, rate_limited=11`,
+  `aurora_wrist:depth_failures=161, rate_limited=27`.
+- External path: GPU received 42 external frames (wrist 376), but no external
+  tag observations. A current external frame still contains the tag
+  (419.5, 273.2) and aligned depth at the centre is 0.225 m; a 12 s check saw
+  no external uplink messages, so the external uplink/reader still stops after
+  the first window. This is not the model or the Humble DDS distro mismatch.
+
+**Humble container recipe (for future runs):**
+
+```bash
+docker run -d --name jcheng-humble-tag --network host \
+  -v /home/jerichocheng/jcheng/humble_ws:/workspace \
+  -v /home/jerichocheng/jcheng/jcheng-perception:/repo:ro \
+  -e ROS_DOMAIN_ID=0 -e RMW_IMPLEMENTATION=rmw_cyclonedds_cpp \
+  -e CYCLONEDDS_URI=file:///workspace/cyclonedds-wired.xml \
+  -e ROS2CLI_NO_DAEMON=1 -e HOME=/tmp \
+  armpi-humble-moveit:latest sleep infinity
+docker exec jcheng-humble-tag bash -lc 'apt-get update -qq && apt-get install -y -qq python3-opencv'
+# ln -s /repo/ros2_ws/src/jcheng_perception_{msgs,core,gpu} /workspace/tag_ws/src/
+docker exec jcheng-humble-tag bash -lc 'source /opt/ros/humble/setup.bash; cd /workspace/tag_ws && colcon build --symlink-install --packages-select jcheng_perception_msgs jcheng_perception_core jcheng_perception_gpu'
+```
+
 ## Ops residue
 
 The ready-gated wrapper's `kill -INT` went to the `ros2 run` parent, not the node

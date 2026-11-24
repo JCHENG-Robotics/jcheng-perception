@@ -15,6 +15,30 @@
       "t_first": 0.2,
       "t_last": 40.1,
       "wrist": 191
+    },
+    "run4": {
+      "external": 45,
+      "observations": 45,
+      "result": "partial: external-only; wrist depth failures 365; GPU external tag stream stopped after ~14 s",
+      "t_first": 0.3,
+      "t_last": 14.3,
+      "wrist": 0
+    },
+    "run5": {
+      "external": 18,
+      "observations": 18,
+      "result": "GPU tag node ran in a 10 s restart loop (7 windows) and the Aurora driver was restarted; wrist depth failures fell to 1, but the edge intake stalled after ~6 s (88 frames, 27 detections, gpu_alive false)",
+      "t_first": 0.2,
+      "t_last": 5.6,
+      "wrist": 0
+    },
+    "run6": {
+      "external": 0,
+      "observations": 141,
+      "result": "same-distro Humble GPU in a container + uplink clock-jump/worker fixes; edge ran full 60 s (468 frames), wrist tag observations continuous, external tag observations 0; external uplink/reader still stops",
+      "t_first": 0.5,
+      "t_last": 59.8,
+      "wrist": 141
     }
   },
   "caveats": [
@@ -98,6 +122,14 @@
     "marker_size_m": 0.06
   },
   "hardware_claimed": true,
+  "humble_gpu_container": {
+    "container": "jcheng-humble-tag",
+    "cyclonedds": "/workspace/cyclonedds-wired.xml",
+    "image": "armpi-humble-moveit:latest",
+    "network": "host",
+    "opencv": "4.5.4 with aruco (apt python3-opencv)",
+    "workspace": "/workspace/tag_ws (msgs/core/gpu, symlink-install)"
+  },
   "kind": "real hardware, static scene, no motion commands",
   "learned_view_offset_mm": [
     0.03,
@@ -139,12 +171,100 @@
     }
   },
   "post_run_fix": {
-    "status": "in working tree + tests/replay; not deployed, not re-run on hardware",
+    "status": "min-dt and uplink fixes deployed to the Pi (tar, not committed); Humble GPU run 6 gave wrist-only 7.3 mm over 60 s; external tag observations still 0 because the external uplink/reader stops; dual-view confirmation pending",
+    "uplink_fixes": [
+      "uplink_allowed clock-jump reset",
+      "UplinkWorker catches publish exceptions",
+      "status notes encode_failures/rate_limited"
+    ],
     "velocity_min_dt_s": 0.1
   },
   "reproduce": [
     "python3 scripts/fixed_point_report.py --wrist evidence/hardware_20261124_tag_verify/tag_wrist_fixed.csv --ext evidence/hardware_20261124_tag_verify/tag_ext_fixed.csv --ext-offset 0.0099 -0.0018 0.0094 --limit 0.005 --out evidence/hardware_20261124_tag_verify/tag_report_corrected.json",
     "python3 scripts/replay_static_drift.py --source evidence/hardware_20261124_tag_verify/tag_run3.json --source-bias none --settle-s 6 --require reference_tag_0 --limit-mm 15 --out evidence/hardware_20261124_tag_verify/replay_tag_run3.json"
   ],
+  "run4_external_only": {
+    "biggest_step_mm": 2.6,
+    "biggest_step_s": 4.4,
+    "fused_final_mm": 0.08,
+    "fused_max_mm": 2.42,
+    "fused_settle6_max_mm": 0.38,
+    "note": "min-dt deployed; external tag track stable to 0.4 mm; not a dual-view repeat",
+    "status_last": {
+      "camera_fps": [
+        3.71,
+        3.69
+      ],
+      "detections_matched": 227,
+      "notes": [
+        "d435i_ext:depth_failures=6",
+        "aurora_wrist:tf_failures=1",
+        "aurora_wrist:depth_failures=365"
+      ],
+      "total_frames": 641
+    },
+    "tag_mean_mm": [
+      330.5,
+      -14.2,
+      -82.9
+    ],
+    "tag_sigma_mm": [
+      0.2,
+      0.1,
+      0.1
+    ]
+  },
+  "run5_external_only": {
+    "fused_final_mm": 1.31,
+    "fused_max_mm": 1.79,
+    "fused_settle2_max_mm": 1.7,
+    "note": "edge intake stalled; external-only, not a dual-view repeat",
+    "status_last": {
+      "camera_fps": [
+        3.37,
+        2.87
+      ],
+      "detections_matched": 25,
+      "gpu_alive": false,
+      "notes": [
+        "d435i_ext:depth_failures=1",
+        "aurora_wrist:depth_failures=1"
+      ],
+      "total_frames": 88
+    },
+    "tag_mean_mm": [
+      331.1,
+      -13.4,
+      -83.0
+    ],
+    "tag_sigma_mm": [
+      0.4,
+      0.1,
+      0.3
+    ]
+  },
+  "run6_humble_wrist_only": {
+    "early_track_max_mm": 10.03,
+    "edge_status": {
+      "detections_matched": 234,
+      "gpu_alive": true,
+      "notes": [
+        "d435i_ext:depth_failures=13",
+        "d435i_ext:rate_limited=11",
+        "aurora_wrist:depth_failures=161",
+        "aurora_wrist:rate_limited=27"
+      ],
+      "total_detections": 410,
+      "total_frames": 468
+    },
+    "fused_final_mm": 3.93,
+    "fused_max_mm": 7.3,
+    "fused_p95_mm": 4.66,
+    "gpu_frames_received": {
+      "external": 42,
+      "wrist": 376
+    },
+    "note": "meets the ~8 mm target on the wrist-only track, but not a dual-view confirmation"
+  },
   "session": "defined reference point (AprilTag) static validation"
 }

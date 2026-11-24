@@ -409,6 +409,12 @@ class PerceptionPipeline:
             if health.depth_match_failures:
                 notes.append('{}:depth_failures={}'.format(
                     camera_id, health.depth_match_failures))
+            if health.encode_failures:
+                notes.append('{}:encode_failures={}'.format(
+                    camera_id, health.encode_failures))
+            if health.frames_rate_limited:
+                notes.append('{}:rate_limited={}'.format(
+                    camera_id, health.frames_rate_limited))
         status = PipelineStatus(
             phase=self.last_phase,
             active_tracks=len(self.tracks.tracks),

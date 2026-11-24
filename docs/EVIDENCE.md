@@ -372,6 +372,20 @@ learned Track.view_offset = (+0.03, -1.93, -3.31) mm
 - 绝对参考：腕部 PnP (335.4, −12.7, −85.7) mm；修正后外机位 PnP
   (334.7, −14.7, −83.5) mm。每视图 depth-vs-PnP 仍差 4.2/7.4 mm（标签纸翘曲、
   斜视），要 <5 mm 绝对精度需先压平标签。
+- 部署 `f90b5d5`（min-dt）后复跑：只得到外机位 45 条 tag 观测（0.3–14.3 s），
+  腕部 depth failures 365、GPU 外机位流 ~14 s 后停；融合轨迹 6 s 后 0.4 mm
+  （max 2.42 mm），min-dt 无漂移，但**未取得双视图复跑**。
+- 第二次复跑（重启 Aurora 驱动 + GPU 每 10 s 重启）：腕部 depth failures
+  365→**1**，但 edge 约 6 s 后帧摄入停止（88 帧、27 detections、gpu_alive=false），
+  外机位-only 轨迹 1.8 mm；双视图仍未取得。
+- Humble 同发行版复跑（run 6）：新建 `jcheng-humble-tag` 容器（`armpi-humble-moveit`
+  + `python3-opencv` 4.5.4 + msgs/core/gpu 在 `/workspace/tag_ws` 构建），laptop
+  GPU 与 Pi edge 同为 Humble；并修复 edge uplink 时钟回跳基线
+  (`uplink_allowed`) 与 publish 异常导致线程退出。60 s：141 条腕部 tag 观测
+  （0.5–59.8 s）、edge 468 帧/234 matched；**腕部-only** 轨迹 max **7.30 mm**、
+  p95 4.66、final 3.93 mm。外机位仍 0 条 tag 观测（GPU 只收到 42 外机位帧，
+  12 s 检查无外机位 uplink），当前外机位画面和 0.225 m 深度正常，剩余阻塞是
+  外机位 uplink/reader。双视图结果仍以上述 run 3 为准。
 
 证据：`evidence/hardware_20261124_tag_verify/`。
 

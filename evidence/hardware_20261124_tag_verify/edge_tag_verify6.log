@@ -1,0 +1,212 @@
+[INFO] [1795522125.780983159] [jcheng_perception_edge]: edge ready: cameras=d435i_ext,aurora_wrist target_frame=base_link uplink=True
+[WARN] [1795522125.783168659] [jcheng_perception_edge]: TF unavailable base_link -> camera_color_optical_frame: "base_link" passed to lookupTransform argument target_frame does not exist. 
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+
+>>> [rcutils|error_handling.c:108] rcutils_set_error_state()
+This error state is being overwritten:
+
+  'string data is not null-terminated, at ./src/serdata.cpp:384'
+
+with this new error message:
+
+  'invalid data size, at ./src/serdata.cpp:384'
+
+rcutils_reset_error() should be called after error handling to avoid this.
+<<<
+Traceback (most recent call last):
+  File "/home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/perception_edge", line 33, in <module>
+    sys.exit(load_entry_point('jcheng-perception-edge==0.1.0', 'console_scripts', 'perception_edge')())
+  File "/home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/python3.10/site-packages/jcheng_perception_edge/node.py", line 810, in main
+    executor.spin()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 294, in spin
+    self.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 739, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 736, in _spin_once_impl
+    raise handler.exception()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/task.py", line 239, in __call__
+    self._handler.send(None)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 430, in handler
+    arg = take_from_wait_list(entity)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 355, in _take_subscription
+    msg_info = sub.handle.take_message(sub.msg_type, sub.raw)
+RuntimeError: Unable to convert call argument to Python object (compile in debug mode for details)

@@ -40,7 +40,11 @@ from .geometry import (
 )
 from .kalman import ConstantVelocityKalman
 from .pipeline import PerceptionPipeline
-from .time_buffer import PoseRingBuffer, TimestampRingBuffer
+from .time_buffer import (
+    PoseRingBuffer,
+    TimestampRingBuffer,
+    uplink_allowed,
+)
 from .tracking import Track, TrackManager
 from .types import (
     CameraHealth,
@@ -112,6 +116,7 @@ __all__ = [
     'sample_depth',
     'transform_point',
     'transform_points',
+    'uplink_allowed',
     'view_factor',
     'yaw_quaternion',
 ]

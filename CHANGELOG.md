@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Uplink robustness and a same-distro Humble run. The per-camera uplink rate
+  limiter now resets its baseline after a backwards clock jump
+  (`uplink_allowed`, 3 new tests), and `UplinkWorker` catches encode/publish
+  exceptions so one transient DDS failure cannot silently kill a camera's
+  uplink thread; status notes expose `encode_failures`/`rate_limited`. With the
+  laptop GPU node running inside the existing `armpi-humble-moveit` image
+  (`jcheng-humble-tag`: host network, wired CycloneDDS, `python3-opencv` with
+  ArUco, `/workspace/tag_ws` built in Humble), a 60 s tag run kept the edge at
+  468 frames and produced a **wrist-only** fused track max 7.30 mm / p95
+  4.66 mm — meeting the ~8 mm target numerically, but external tag
+  observations were still 0 (external GPU frames stopped at 42 and a 12 s
+  check saw no external uplink), so the dual-view confirmation is pending.
+  74 tests.
 - Reference-point (AprilTag) mode: new GPU `aruco` backend and
   `config/gpu_tag.yaml`. A tag detection carries its centre as the primary
   keypoint (corners follow at lower confidence), so the existing edge keypoint
@@ -20,7 +33,11 @@
   capture dt <= 0; a 1 mm difference over 0.04 s fabricated ~25 mm/s and a
   10 mm extrapolation. The fix makes the tag fused replay 8.3 mm (was 10.7)
   and restores the offline/live agreement for the earlier hardware runs
-  (4.63/7.91 mm replay vs 4.63/8.13 mm live). 71 tests. Not deployed yet.
+  (4.63/7.91 mm replay vs 4.63/8.13 mm live). 71 tests. Deployed in `f90b5d5`;
+  two external-only tag reruns confirmed 0.4 mm and 1.8 mm after settle, and an
+  Aurora driver restart cut wrist depth failures from 365 to 1, but the edge
+  intake stalled after ~6 s under Pi load (88 frames), so a dual-view rerun is
+  still pending.
 - Cross-view bias model and static-track drift fix. The observation model is
   `z_i = x + b_i + m_i + n_i`: the wrist view is the reference and only the
   external relative offset is observable. New `config/view_bias.yaml` carries

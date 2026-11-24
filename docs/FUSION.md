@@ -295,6 +295,32 @@ z_i(t) = x(t) + b_i + m_i + n_i(t)
 证据：`evidence/hardware_20261124_tag_verify/`。限制：单一静态姿态、单个标签；
 先压平标签纸；GPU 外机位读端仍会 wedge（本次“先 edge、再重启 GPU”才恢复）。
 
+**min-dt 复跑（f90b5d5，部分确认）：** 部署后 60 s 复跑只得到外机位 45 条 tag
+观测（t=0.3–14.3 s），腕部 depth matching 失败 365 次、GPU 外机位流约 14 s 后
+停止；融合轨迹 6 s 后 **0.4 mm**（max 2.42 mm），说明 min-dt 不引入漂移，但
+**没有取得双视图复跑**。第二次复跑（Aurora 驱动重启 + GPU 每 10 s 重启的
+harness）把腕部 depth failures 从 365 降到 **1**，但 edge 在约 6 s 后帧摄入
+停止（88 帧、27 detections、gpu_alive=false），外机位-only 轨迹 1.8 mm；仍未
+取得双视图。两次复跑都指向 **edge 帧摄入 / Pi 负载**这个剩余阻塞，而不是
+min-dt。双视图定义点结果仍以 run 3 为准。
+
+**Humble 同发行版复跑（run 6）：** 发现 laptop 有 Humble 容器后，用
+`armpi-humble-moveit` 新建 `jcheng-humble-tag`（host 网络 + wired CycloneDDS
+配置），装 `python3-opencv` 4.5.4（含 aruco），在 `/workspace/tag_ws` 构建
+msgs/core/gpu；laptop GPU 与 Pi edge 两端同为 **Humble**。同时修了 edge uplink：
+
+- `uplink_allowed()` 在时钟回跳时重置每相机 uplink 基线；否则 `last` 留在
+  未来，该相机 uplink 会被永久跳过。测试：`tests/test_uplink_rate.py`。
+- `UplinkWorker` 捕获任意 encode/publish 异常并继续，不再静默退出；status
+  增加 `encode_failures` / `rate_limited` 计数。
+
+60 s 结果：141 条腕部 tag 观测（0.5–59.8 s），edge 468 帧 / 410 detections /
+234 matched；**腕部-only** 融合轨迹 max **7.30 mm**、p95 4.66、final 3.93 mm
+（另一早期轨迹 10.03 mm）。这达到 ~8 mm 目标，但**外机位仍 0 条 tag 观测**：
+GPU 只收到 42 外机位帧（腕部 376），12 s 检查无外机位 uplink 消息；当前外机位
+画面里标签和 0.225 m 深度都正常，所以仍是外机位 uplink/reader 问题，不是模型
+或发行版。双视图确认仍未完成。
+
 ## 10. 调参顺序
 
 1. 用实机静态目标测 `depth` 噪声 vs 距离，拟合 `q`、`floor`（每相机）。

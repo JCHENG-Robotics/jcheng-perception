@@ -221,3 +221,28 @@ class LatencyWindow:
     def __len__(self):
         """Return the number of samples."""
         return len(self._samples)
+
+
+# A gap longer than this is treated as a clock jump or a long camera pause, not
+# as a normal inter-frame interval.
+UPLINK_CLOCK_JUMP_NS = 10_000_000_000
+
+
+def uplink_allowed(now_ns, last_ns, min_interval_ns):
+    """Return ``(allowed, new_last_ns)`` for the per-camera uplink limiter.
+
+    The Pi clock can jump backwards after an NTP correction. A plain
+    ``now - last < interval`` check then leaves ``last`` in the future and
+    silently skips that camera's uplinks until the clock catches up. A
+    backwards jump (or a gap longer than ``UPLINK_CLOCK_JUMP_NS``) resets the
+    baseline and allows the frame.
+    """
+    now_ns = int(now_ns)
+    last_ns = int(last_ns)
+    interval_ns = max(0, int(min_interval_ns))
+    elapsed_ns = now_ns - last_ns
+    if elapsed_ns < 0 or elapsed_ns > UPLINK_CLOCK_JUMP_NS:
+        return True, now_ns
+    if elapsed_ns < interval_ns:
+        return False, last_ns
+    return True, now_ns

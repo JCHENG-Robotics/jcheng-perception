@@ -50,6 +50,7 @@ from jcheng_perception_core import (
     load_static_frames,
     make_transform,
     matrix_from_quaternion,
+    uplink_allowed,
 )
 from jcheng_perception_msgs.msg import (
     Detection2DArray,
@@ -190,24 +191,24 @@ class UplinkWorker:
                     '.jpg', image,
                     [int(cv2.IMWRITE_JPEG_QUALITY),
                      int(self.spec.jpeg_quality)])
-            except cv2.error as error:
+                if not ok:
+                    raise RuntimeError('cv2.imencode returned False')
+                message = CompressedImage()
+                message.header.stamp = Time(nanoseconds=stamp_ns).to_msg()
+                message.header.frame_id = frame_id
+                message.format = 'jpeg'
+                message.data = encoded.tobytes()
+                self.publisher.publish(message)
+            except Exception as error:  # noqa: BLE001 - never kill the worker
+                # A transient DDS serialization/publish failure must not end
+                # the whole camera's uplink thread. Count it and keep serving.
                 with self.lock:
                     self.pipeline.note_encode_failure(self.camera_id)
                 self.logger.warn(
-                    '{}: JPEG encode failed: {}'.format(
+                    '{}: uplink failed: {}'.format(
                         self.camera_id, error),
                     throttle_duration_sec=5.0)
                 continue
-            if not ok:
-                with self.lock:
-                    self.pipeline.note_encode_failure(self.camera_id)
-                continue
-            message = CompressedImage()
-            message.header.stamp = Time(nanoseconds=stamp_ns).to_msg()
-            message.header.frame_id = frame_id
-            message.format = 'jpeg'
-            message.data = encoded.tobytes()
-            self.publisher.publish(message)
             with self.lock:
                 self.pipeline.note_uplink(self.camera_id)
             elapsed_ms = (time.perf_counter() - started) * 1000.0
@@ -442,11 +443,13 @@ class PerceptionEdgeNode(Node):
         # jitters around its nominal period (e.g. 95-104 ms at 10 Hz). The 15%
         # tolerance keeps the nominal rate while still bounding the bandwidth.
         min_interval_ns = int(1e9 / max(spec.max_uplink_fps, 1e-6) * 0.85)
-        if now_ns - self._last_uplink_ns[camera_id] < min_interval_ns:
+        allowed, new_last_ns = uplink_allowed(
+            now_ns, self._last_uplink_ns[camera_id], min_interval_ns)
+        self._last_uplink_ns[camera_id] = new_last_ns
+        if not allowed:
             with self._lock:
                 self.pipeline.note_rate_limited(camera_id)
             return
-        self._last_uplink_ns[camera_id] = now_ns
         self.uplink_workers[camera_id].submit(image, stamp_ns, frame_id)
 
     def on_depth(self, camera_id, message):
