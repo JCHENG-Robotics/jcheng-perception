@@ -12,6 +12,7 @@ from the 2026-11-20 calibration (table z = -0.0825 m in base_link).
 """
 
 import math
+import signal
 
 import cv2
 import numpy as np
@@ -310,6 +311,8 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
+        # ros2 launch may repeat SIGINT during teardown.
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()

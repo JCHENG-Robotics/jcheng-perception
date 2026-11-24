@@ -11,6 +11,7 @@ lets the Pi 5 find the matching depth frame and TF sample.
 
 import os
 import queue
+import signal
 import threading
 import time
 
@@ -368,6 +369,9 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
+        # ros2 launch sends SIGINT again while the worker threads are joining;
+        # ignore further interrupts so shutdown can complete.
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
         executor.shutdown()
         node.destroy_node()
         if rclpy.ok():
