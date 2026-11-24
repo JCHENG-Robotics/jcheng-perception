@@ -75,11 +75,23 @@ safety:
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 65
+  unit_tests: 71
+  reference_point_backend:
+    passed: 2026-11-24 (unit test + real hardware static run)
+    config: config/gpu_tag.yaml (AprilTag 36h11, 60 mm, id 0)
+    hardware: external-wrist tag centre 3.77 mm; fixed-point 5 mm gate 3.67 mm (depth) / 3.07 mm (PnP) after view_bias.yaml; no 67 mm first-pair step
+    evidence: evidence/hardware_20261124_tag_verify/
+    caveats: one static pose, tag sheet curls ~7 mm; GPU external uplink reader wedge needed an edge-first/GPU-restart order
   drift_regression:
     passed: 2026-11-24 (offline replay of dual-view run-7 observations)
     evidence: evidence/analysis_20261124_drift_bias/
     result: static-target worst drift 696 mm recorded / 478 mm old tracker -> 6.4 mm with the per-view bias model
+  drift_hardware_static:
+    passed: 2026-11-24 (real Pi 5 + D435i + Aurora + laptop GPU; arm stationary, no motion commands)
+    evidence: evidence/hardware_20261124_drift_verify/
+    result: worst required-label drift 4.7 mm (90 s run, 16 s of frames) and 8.1 mm (60 s run); pre-fix reference 448-696 mm
+    caveats: one 67 mm first-pair reference step; run 2 had poor wrist depth matching; absolute positions remain per-view bbox-centre points
+    post_run_fix: velocity_min_dt_s=0.10 rejects near-duplicate capture baselines; replay 4.63/7.91 mm, matching live to 0.0/0.22 mm; not yet deployed
   ros_build: 4 packages on ROS 2 Jazzy (2026-11-24)
   synthetic_end_to_end: passed 2026-11-23 (Pi 5 edge logic on x86, mock detector)
   gpu_backend_smoke:

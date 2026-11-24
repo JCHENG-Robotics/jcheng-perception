@@ -1,0 +1,49 @@
+# GPU host configuration for the defined-reference-point (AprilTag) mode.
+#
+# The tag centre is the same physical point in every view, so the two-view
+# fusion no longer sees the object-dependent bbox-centre offset (57-67 mm on
+# the cup) and the first cross-view pair does not re-reference the track by
+# that amount. The edge code is unchanged: the existing keypoint path samples
+# the depth at the centre keypoint (or falls back to the bbox), so this is a
+# GPU-side mode switch only.
+#
+# Default marker: 60 mm AprilTag 36h11, id 0 -- the same tag used by
+# scripts/fixed_point_check.py. The printed tag sheet curls up to ~7 mm, so
+# flatten it before quoting absolute accuracy; the depth-vs-PnP bias (~4 mm at
+# 0.3 m) remains a separate per-view term.
+node:
+  stats_interval_s: 2.0
+  debug_publish: false
+  debug_interval_s: 0.5
+  queue_size: 2
+
+cameras:
+  d435i_ext:
+    input_topic: /perception/uplink/d435i_ext/image_compressed
+    detections_topic: /perception/detections/d435i_ext
+    debug_topic: /perception/debug/d435i_ext
+    hot_reload: false
+    model:
+      backend: aruco
+      dictionary: DICT_APRILTAG_36h11
+      marker_size_m: 0.06
+      marker_ids: [0]
+      label: reference_tag
+      include_id: true
+      confidence: 1.0
+      corner_confidence: 0.9
+
+  aurora_wrist:
+    input_topic: /perception/uplink/aurora_wrist/image_compressed
+    detections_topic: /perception/detections/aurora_wrist
+    debug_topic: /perception/debug/aurora_wrist
+    hot_reload: false
+    model:
+      backend: aruco
+      dictionary: DICT_APRILTAG_36h11
+      marker_size_m: 0.06
+      marker_ids: [0]
+      label: reference_tag
+      include_id: true
+      confidence: 1.0
+      corner_confidence: 0.9

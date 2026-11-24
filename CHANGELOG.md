@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- Reference-point (AprilTag) mode: new GPU `aruco` backend and
+  `config/gpu_tag.yaml`. A tag detection carries its centre as the primary
+  keypoint (corners follow at lower confidence), so the existing edge keypoint
+  path back-projects one physical point instead of the object-dependent bbox
+  centre. This removes the 57-67 mm cup difference at the source and turns the
+  first cross-view pair step into a millimetre-scale residual (new fusion test
+  with a 3 mm residual stays under 5 mm). `scripts/fixed_point_check.py`
+  remains the absolute depth/PnP reference; the printed tag curl and the ~4 mm
+  depth-vs-PnP bias still bound absolute accuracy. Hardware validation on
+  2026-11-24: two-view tag-centre difference 3.77 mm, fixed-point 5 mm gate
+  3.67 mm (depth) / 3.07 mm (PnP) after `view_bias.yaml` (raw 15.92/12.79 mm
+  FAIL), and no 67 mm first-pair step. The tag run also exposed near-duplicate
+  capture stamps; see the velocity min-baseline entry below.
+- Velocity min-baseline: `velocity_min_dt_s = 0.10` rejects same-camera
+  differences closer than 100 ms. A tag run had 47/191 wrist observations with
+  capture dt <= 0; a 1 mm difference over 0.04 s fabricated ~25 mm/s and a
+  10 mm extrapolation. The fix makes the tag fused replay 8.3 mm (was 10.7)
+  and restores the offline/live agreement for the earlier hardware runs
+  (4.63/7.91 mm replay vs 4.63/8.13 mm live). 71 tests. Not deployed yet.
 - Cross-view bias model and static-track drift fix. The observation model is
   `z_i = x + b_i + m_i + n_i`: the wrist view is the reference and only the
   external relative offset is observable. New `config/view_bias.yaml` carries
@@ -14,9 +33,13 @@
   publishing/association extrapolation is capped at 0.35 s. Offline replay of
   run-7 observations: worst static-target drift 696 mm recorded / 478 mm with
   the old tracker -> 6.4 mm (cup 4.1, table 4.9, chair 6.4, person 4.4). New
-  `scripts/replay_static_drift.py` and 7 tests (65 total). Not deployed or
-  re-run on hardware; absolute position is wrist-referenced until a defined
-  point/keypoint is used.
+  `scripts/replay_static_drift.py` and 7 tests (65 total). Deployed to the Pi 5
+  as `eed1ca9` and statically validated on 2026-11-24: two bounded runs (90 s /
+  60 s, no motion) gave worst required-label drift 4.7 mm / 8.1 mm versus
+  448-696 mm pre-fix; the first cross-view pair causes a one-time 67 mm
+  reference step (documented), run 2 had poor wrist depth matching, and
+  absolute position is still a per-view bbox-centre point until a defined
+  point/keypoint is used. Evidence: `evidence/hardware_20261124_drift_verify/`.
 - Cross-machine real YOLO detection path: installed `rmw_cyclonedds_cpp` on the
   Jazzy laptop and ran the external camera through the Pi 5 edge to a laptop
   RTX 3060 (`yolov8s.pt`). GPU 2.06 fps / 55.2 ms average, 37 frames received,

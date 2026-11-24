@@ -75,6 +75,7 @@ jcheng-perception/
 │   ├── gpu_mock.yaml             # 无模型演示
 │   ├── gpu_onnx.example.yaml     # ONNX Runtime CPU
 │   ├── gpu_openvino.example.yaml # OpenVINO IR CPU
+│   ├── gpu_tag.yaml              # AprilTag 参考点模式（定义点）
 │   └── gpu_shadow.example.yaml   # 影子模型模板
 ├── docs/
 │   ├── ARCHITECTURE.md           # 节点职责、进程/线程、数据流

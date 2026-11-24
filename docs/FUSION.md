@@ -218,7 +218,9 @@ z_i(t) = x(t) + b_i + m_i + n_i(t)
   “换视图的 60 mm 跳变”污染；
 - 速度用**同一相机相邻两帧**的差分作为独立量测，经协方差加权后走
   `update_velocity()`（`H = [0 | I]` 的 Joseph 更新）。每视图的 `b_i + m_i`
-  在差分中抵消；基线超过 `velocity_sample_max_age_s` 则丢弃。
+  在差分中抵消；基线超过 `velocity_sample_max_age_s` 或短于
+  `velocity_min_dt_s = 0.10 s` 则丢弃。后者是实机 tag 数据发现的：同一
+  capture 的重复/近似重复观测 dt 可到 0，1 mm 差除以 0.04 s 会伪造 ~25 mm/s。
 - 初速度先验从 1 m/s 收紧到 `initial_velocity_sigma_mps = 0.25 m/s`；
   发布与关联预测的 `p + v·dt` 中 `dt ≤ max_extrapolation_s = 0.35 s`。
   毫米级测量噪声估出的速度若积分 1 s 就是分米级漂移，这是 run-7 的直接放大器。
@@ -247,6 +249,51 @@ z_i(t) = x(t) + b_i + m_i + n_i(t)
 - `m_i` 与物体形状、姿态有关；换物体后第一对样本会重新初始化残差，
   期间位置可能在两视图参考点之间摆动，但不会再触发速度漂移。
 - 绝对位置以腕相机为参考；不要用该输出去校准外部链的绝对精度。
+
+### 9.6 参考点模式（AprilTag / 键点）
+
+§9.2 的对象级 `m_i` 是 bbox 中心落在物体上的位置，换视图就差几十毫米。要消掉
+它，需要一个**两个视图测的是同一个物理点**的定义点：
+
+- **固定点（当前实现）**：AprilTag 中心。GPU 新增 `aruco` 后端
+  （`config/gpu_tag.yaml`，`DICT_APRILTAG_36h11`、60 mm、id 0），输出标签
+  `reference_tag_<id>`：关键点 0 = 标签中心（置信度 1.0），1–4 = 四角（0.9），
+  框为标签外接框。
+- Edge **不需要改动**：现有 `build_observation` 优先用最高置信度关键点的深度，
+  标签中心就是 3-D 点；关键点深度无效时才回退到框中心。
+- 两个视图的中心是同一物理点，`Track.view_offset` 只剩链级偏差 + 深度/PnP
+  偏置（mm 级），首个跨视图配对的参考点跳变也从 57–67 mm 降到 mm 级
+  （`tests/test_view_bias.py::test_reference_point_keeps_the_first_pair_step_small`）。
+- 限制：打印标签纸会翘曲（实测最大 ~7 mm），做绝对精度前先压平；depth 与
+  RGB-only PnP 之间存在 ~4 mm 的每视图偏差，仍要用
+  `scripts/fixed_point_check.py` 的 PnP/depth 两条路径做绝对参考。
+- **键点模型**是同一机制：一旦有 pose/keypoint 权重，把抓取点作为中心键点输出，
+  融合/偏差层不需要再改；当前厂商树没有可用的关键点权重，所以先用标签。
+
+验证方法：GPU 用 `gpu_tag.yaml`，edge 仍用 `fusion_dual_hardware.yaml` +
+`view_bias.yaml`，静置 60 s；检查两视图 `reference_tag_0` 的位置差、首个配对
+跳变和 FUSED 漂移，再用 `fixed_point_check.py` 给绝对参考。
+
+**实机结果（2026-11-24，唯一一次双视图成功采集）：**
+
+- 两视图标签中心差 **3.77 mm**（external − wrist = +0.2/−2.0/−3.2 mm，
+  每视图 σ ≤ 0.9 mm）；`Track.view_offset` 学到 (+0.03, −1.93, −3.31) mm。
+- 固定点 5 mm gate：未加链级修正 15.92 mm（depth）/12.79 mm（PnP）FAIL；
+  加 `view_bias.yaml` 后 **3.67 / 3.07 mm PASS**。这是同一链级修正下的一致性
+  核验，不是独立绝对真值。每视图 depth-vs-PnP 仍有 4.2 mm（外机位）/7.4 mm
+  （腕部）偏差，来自标签纸翘曲与斜视。
+- 没有 67 mm 首配对跳变：标签轨迹从外机位点起步，只按 3.8 mm 残差切到腕部
+  参考；融合轨迹最大 11.4 mm、p95 6.2 mm、最终 3.7 mm（实机，eed1ca9）。
+- 标签数据暴露了另一个问题：47/191 条腕部观测的 capture 间隔 ≤0，同视图差分
+  除以 0.04 s 会伪造 ~25 mm/s 速度，外推 0.35 s 就是 10 mm 跳变。
+  `velocity_min_dt_s = 0.10` 拒绝这种基线；重放降到 **8.3 mm**（p95 5.4）。
+  该修正尚未部署到 Pi，实机 11.4 mm 是修正前的值。
+- 绝对参考（腕部 PnP）：(335.4, −12.7, −85.7) mm；修正后外机位 PnP
+  (334.7, −14.7, −83.5) mm；两者 3.07 mm。桌面参考 −82.5 mm，标签中心在
+  桌面上方约 3 mm（纸翘曲，不是平面）。
+
+证据：`evidence/hardware_20261124_tag_verify/`。限制：单一静态姿态、单个标签；
+先压平标签纸；GPU 外机位读端仍会 wedge（本次“先 edge、再重启 GPU”才恢复）。
 
 ## 10. 调参顺序
 

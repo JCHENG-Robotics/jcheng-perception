@@ -301,6 +301,80 @@ python3 scripts/replay_static_drift.py --recorded-targets \
 `kite` 未纳入门限：同一标签在两处物理位置间切换，属于关联/数据问题。
 证据：`evidence/analysis_20261124_drift_bias/`。
 
+### 2.12 偏差模型实机静置验证（2026-11-24）
+
+把 `eed1ca9` 部署到 Pi 5 容器（`colcon build` 3 包 10.3 s），用
+`fusion_dual_hardware.yaml` + `view_bias.yaml` 跑两段有界静置采集
+（`timeout -s INT`，无运动命令；笔记本记录 observations/targets/status）：
+
+```text
+run 1  90 s  edge 窗口，实际有效观测 7.7–23.7 s，125 obs（外 100 / 腕 25），81 帧
+run 2  60 s  完整，306 obs（外 295 / 腕 11），357 帧 / 1060 detections / 306 matched
+```
+
+静置指标（6 s 稳定窗口后的中位数偏差）：
+
+| run | cup | dining table | kite | 最差 required |
+|---|---:|---:|---:|---:|
+| 1 | 2.73 mm | 4.63 mm | 0.16 mm | 4.65 mm |
+| 2 | 0.31 mm | 8.13 mm | 1.61 mm | 8.13 mm |
+
+离线重放与实机发布值最差相差 0.02 mm（run 2 完全一致），说明模型重放可信。
+实机跨视角差（已扣链级修正）：cup (−56.9, +11.6, +34.3) mm、餐桌
+(+29.2, +21.2, −3.9) mm（run 1），与 run-7 记录一致。
+
+发现：
+
+- **首个跨视图配对会产生一次参考点跳变**：run 1 cup 在 t=12.32 s 从外机位
+  参考点 (335.9, −19.5, −29.7) mm 跳到腕部参考点 (392.8, −31.6, −63.6) mm，
+  67.2 mm；这是 `Track.view_offset` 初始化，不是漂移。规划器要么容忍这次
+  参考切换，要么在腕部参考建立前不发布该轨迹（未实现，属策略决定）。
+- **run 1 的 edge 读端在 ~23.7 s 后不再收帧**，但 edge 的 status 继续到超时，
+  相机驱动在跑完后仍以 6.95/4.4 Hz 发布，无 USB/xhci 错误；run 2 完整 60 s，
+  未复现。更像已知的 Humble↔Jazzy CycloneDDS 读端 wedge，需单独处理。
+- **run 2 腕部深度匹配失败 172/357**，只有 11 条腕部观测，稳定窗口内没有
+  跨视图配对；run 2 的轨迹基本是单视图，8.1 mm 是餐桌框的检测抖动，不是 TF。
+- 绝对位置仍是各视图的框中心点：cup 外机位/腕部轨迹相距 57 mm，不能把它
+  当成物体中心精度；<5 mm 绝对精度仍需固定点/键点。
+- 容器内存 1.4/6 GB；dmesg 有一次更早（16:04）的 memcg OOM 和 18:16–18:18
+  的 `__vm_enough_memory`（PID 已退出），本次运行窗口内无新 OOM，未根因。
+
+证据：`evidence/hardware_20261124_drift_verify/`。
+
+### 2.13 固定点（AprilTag）参考点验证（2026-11-24）
+
+GPU 新增 `aruco` 后端（`config/gpu_tag.yaml`，36h11、60 mm、id 0），标签中心
+作为关键点；edge 不改。实机共三次尝试，前两次分别是 edge 在 import 阶段被
+60 s timeout 打断（0 观测）和 laptop GPU 外机位 uplink 读端 wedge（仅腕部
+30 观测）；第三次用“先启动 edge、等 ready，再重启 GPU 节点”的顺序恢复双视图：
+
+```text
+run 3: 40 s, 311 observations (120 external / 191 wrist), 0.2–40.1 s
+per-view tag centre: ext (330.5, -14.3, -82.8) mm, wrist (330.3, -12.3, -79.6) mm
+ext - wrist = (+0.2, -2.0, -3.2) mm -> 3.77 mm
+learned Track.view_offset = (+0.03, -1.93, -3.31) mm
+```
+
+`fixed_point_check.py` 每视图 20 s（36/30 样本，tf=exact，重投影 0.21/0.75 px），
+5 mm gate：
+
+| 比较 | 原始 | 加 `view_bias.yaml`（外机位 +9.9/−1.8/+9.4 mm）|
+|---|---:|---:|
+| depth（wrist − ext） | 15.92 mm FAIL | **3.67 mm PASS** |
+| RGB PnP（wrist − ext） | 12.79 mm FAIL | **3.07 mm PASS** |
+
+- 没有 67 mm 首配对跳变：融合轨迹从外机位点起步，只按 3.8 mm 残差切到腕部
+  参考；实机最大 11.4 mm / p95 6.2 mm / 最终 3.7 mm（eed1ca9）。
+- 标签数据暴露近重复 capture 导致的伪速度：47/191 条腕部观测 dt≤0，1 mm 差
+  除以 0.04 s = 25 mm/s。新增 `velocity_min_dt_s=0.10`；重放降到 8.3 mm /
+  p95 5.4 mm，并让 run1/2 的离线重放与实机录制重新对齐（0.0 / 0.22 mm）。
+  该修正在工作区，尚未部署到 Pi。
+- 绝对参考：腕部 PnP (335.4, −12.7, −85.7) mm；修正后外机位 PnP
+  (334.7, −14.7, −83.5) mm。每视图 depth-vs-PnP 仍差 4.2/7.4 mm（标签纸翘曲、
+  斜视），要 <5 mm 绝对精度需先压平标签。
+
+证据：`evidence/hardware_20261124_tag_verify/`。
+
 ## 3. 本轮发现并修复的问题
 
 | # | 现象 | 根因 | 修复 |

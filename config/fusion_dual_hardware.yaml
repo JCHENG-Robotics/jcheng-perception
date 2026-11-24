@@ -46,6 +46,7 @@ max_position_variance_m2: 0.04
 # same reason. The per-track view offset absorbs the bbox-centre difference.
 initial_velocity_sigma_mps: 0.25
 velocity_sample_max_age_s: 1.5
+velocity_min_dt_s: 0.10
 max_extrapolation_s: 0.35
 enable_view_offset: true
 view_offset_alpha: 0.35

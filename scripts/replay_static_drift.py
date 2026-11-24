@@ -10,7 +10,10 @@ with ``camera``, ``label``, ``position`` (base frame), ``depth_m``, ``score``,
 
 The replayed measurement covariance is rebuilt from ``config/cameras.yaml``
 because the log does not carry it; positions, labels and capture times are the
-recorded ones. Two modes:
+recorded ones. Observations from an edge that already applied
+``config/view_bias.yaml`` (current ``/perception/observations``) must be
+replayed with ``--source-bias none``; raw logs (run 7) use the default
+``--source-bias config``. Two modes:
 
   fixed   current tracker: global per-view correction + per-track view offset +
           velocity from same-camera differences + capped extrapolation.
@@ -260,6 +263,11 @@ def main(argv=None):
     parser.add_argument(
         '--bias', default=str(REPO_ROOT / 'config' / 'view_bias.yaml'))
     parser.add_argument(
+        '--source-bias', choices=('config', 'none'), default='config',
+        help='config: the recording carries raw positions, apply '
+             'view_bias.yaml; none: the edge already applied it (current '
+             '/perception/observations)')
+    parser.add_argument(
         '--mode', choices=('fixed', 'legacy'), default='fixed')
     parser.add_argument('--publish-hz', type=float, default=30.0)
     parser.add_argument('--settle-s', type=float, default=1.0)
@@ -303,6 +311,11 @@ def main(argv=None):
         if mode == 'legacy':
             fusion.initial_velocity_sigma_mps = 1.0
             view_bias = ViewBiasModel.empty()
+        elif args.source_bias == 'none':
+            # Current /perception/observations already had view_bias.yaml
+            # applied by the edge; applying it again shifts the external view
+            # by the chain correction and teaches a wrong per-track offset.
+            view_bias = ViewBiasModel.empty()
         else:
             view_bias = ViewBiasModel.from_config(args.bias)
         manager, log = replay(
@@ -334,7 +347,9 @@ def main(argv=None):
             'source': str(Path(args.source).resolve()),
             'mode': mode,
             'fusion': str(Path(args.fusion).resolve()),
-            'bias': str(Path(args.bias).resolve()) if mode == 'fixed' else '',
+            'bias': str(Path(args.bias).resolve())
+            if mode == 'fixed' and args.source_bias == 'config' else '',
+            'source_bias': args.source_bias if mode == 'fixed' else 'n/a',
             'coalesce_ms': float(fusion.coalesce_ms),
             'publish_hz': args.publish_hz,
             'settle_s': args.settle_s,

@@ -1,0 +1,94 @@
+{
+  "bias": "",
+  "coalesce_ms": 600.0,
+  "fusion": "/home/jerichocheng/jcheng/jcheng-perception/config/fusion_dual_hardware.yaml",
+  "generated_utc": "2026-11-24T10:45:54+00:00",
+  "limit_mm": 20.0,
+  "mode": "fixed",
+  "publish_hz": 30.0,
+  "required_labels": [
+    "cup",
+    "dining table",
+    "chair",
+    "person"
+  ],
+  "settle_s": 6.0,
+  "source": "/home/jerichocheng/jcheng/jcheng-perception/evidence/hardware_20261124_drift_verify/drift_run1.json",
+  "source_bias": "none",
+  "tracks": {
+    "cup-006": {
+      "final_offset_mm": 0.09198671420428883,
+      "label": "cup",
+      "max_displacement_mm": 2.6907859998327917,
+      "max_speed_mm_s": 2018.1774968381453,
+      "median_mm": [
+        392.98,
+        -29.58,
+        -64.05
+      ],
+      "p95_displacement_mm": 2.6907859998327917,
+      "samples": 395,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 8.466666666666647,
+      "t_last": 24.633333333333717,
+      "view_offset_hits": 6,
+      "view_offset_mm": [
+        -57.05,
+        10.22,
+        34.29
+      ]
+    },
+    "dining_table-002": {
+      "final_offset_mm": 0.3861903225175073,
+      "label": "dining table",
+      "max_displacement_mm": 4.625231951133383,
+      "max_speed_mm_s": 197.59094724467278,
+      "median_mm": [
+        328.92,
+        2.55,
+        -81.86
+      ],
+      "p95_displacement_mm": 4.625231951133383,
+      "samples": 395,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 8.533333333333314,
+      "t_last": 24.633333333333717,
+      "view_offset_hits": 15,
+      "view_offset_mm": [
+        29.02,
+        19.95,
+        -3.71
+      ]
+    },
+    "kite-004": {
+      "final_offset_mm": 0.010380994819736757,
+      "label": "kite",
+      "max_displacement_mm": 0.16222334542275213,
+      "max_speed_mm_s": 44.47239009677598,
+      "median_mm": [
+        339.19,
+        131.04,
+        -80.93
+      ],
+      "p95_displacement_mm": 0.16222334542275213,
+      "samples": 271,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 8.466666666666647,
+      "t_last": 24.100000000000357,
+      "view_offset_hits": 3,
+      "view_offset_mm": [
+        3.42,
+        -0.22,
+        -4.87
+      ]
+    }
+  },
+  "violations": [],
+  "worst_required_mm": 4.625231951133383
+}

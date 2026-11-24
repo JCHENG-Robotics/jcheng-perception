@@ -113,11 +113,17 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--wrist', required=True)
     parser.add_argument('--ext', default='')
+    parser.add_argument(
+        '--ext-offset', nargs=3, type=float, default=(0.0, 0.0, 0.0),
+        metavar=('DX', 'DY', 'DZ'),
+        help='chain correction added to the external depth/PnP point before '
+             'cross-view comparison (config/view_bias.yaml, metres)')
     parser.add_argument('--limit', type=float, default=0.005)
     parser.add_argument('--min-samples', type=int, default=10)
     parser.add_argument('--min-duration', type=float, default=3.0)
     parser.add_argument('--out', default='')
     args = parser.parse_args(argv)
+    offset = np.asarray(args.ext_offset, dtype=np.float64).reshape(3)
 
     wrist = _segment(
         _load(args.wrist), args.min_samples, args.min_duration)
@@ -153,11 +159,12 @@ def main(argv=None):
                 ext_pose['n'], ext_pose['duration_s'],
                 _fmt(ext_pose['depth_median']),
                 _fmt(ext_pose['pnp_median'])))
-            print('cross-view agreement (limit {:.1f} mm):'.format(
-                args.limit * 1000.0))
+            print('cross-view agreement (limit {:.1f} mm, external offset '
+                  '{})'.format(args.limit * 1000.0, _fmt(offset)))
             for pose in wrist:
                 for name in ('depth', 'pnp'):
-                    delta = pose[name + '_median'] - ext_pose[name + '_median']
+                    delta = pose[name + '_median'] - (
+                        ext_pose[name + '_median'] + offset)
                     norm = float(np.linalg.norm(delta))
                     worst = max(worst, norm)
                     flag = 'PASS' if norm <= args.limit else 'FAIL'
@@ -172,6 +179,7 @@ def main(argv=None):
     if args.out:
         summary = {
             'limit_mm': args.limit * 1000.0,
+            'ext_offset_m': offset.tolist(),
             'worst_mm': worst * 1000.0,
             'pass': passed,
             'wrist_poses': [

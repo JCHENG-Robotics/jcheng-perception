@@ -279,7 +279,8 @@ class TrackManager:
                 continue
             stamp_ns, previous_position, previous_covariance = sample
             dt = (int(observation.capture_ns) - int(stamp_ns)) / 1e9
-            if dt <= 0.0 or dt > self.fusion.velocity_sample_max_age_s:
+            if dt < self.fusion.velocity_min_dt_s or \
+                    dt > self.fusion.velocity_sample_max_age_s:
                 continue
             current_position = np.asarray(
                 observation.position_base, dtype=np.float64)

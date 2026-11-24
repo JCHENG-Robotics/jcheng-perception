@@ -149,6 +149,36 @@ def test_cross_view_bias_never_becomes_velocity():
     assert np.max(np.linalg.norm(track.kf.velocity)) < 0.02
 
 
+def test_reference_point_keeps_the_first_pair_step_small():
+    """A defined point (tag/keypoint) makes the first-pair step millimetres."""
+    truth = np.array([0.30, 0.05, -0.085])
+    residual = np.array([0.003, -0.002, 0.001])
+    manager = _manager()
+    track, targets = _alternating_run(manager, truth, residual)
+    assert track is not None
+    assert track.view_offset_hits > 3
+    assert np.allclose(track.view_offset, residual, atol=0.002)
+    positions = np.asarray([position for _, position in targets])
+    assert np.max(np.linalg.norm(positions - truth, axis=1)) < 0.005
+
+
+def test_velocity_requires_a_minimum_capture_baseline():
+    """Near-duplicate capture stamps must not fabricate velocity."""
+    truth = np.array([0.30, 0.05, -0.085])
+    manager = _manager()
+    track = manager._create_track(_observation('d435i_ext', truth, 0))
+    track.view_samples['d435i_ext'] = (
+        0, truth.copy(), np.eye(3) * 1e-6)
+    almost_same = _observation(
+        'd435i_ext', truth + np.array([0.001, 0.0, 0.0]), 40_000_000)
+    assert manager._same_view_velocity(track, [almost_same]) is None
+    normal = _observation(
+        'd435i_ext', truth + np.array([0.003, 0.0, 0.0]), 300_000_000)
+    measurement = manager._same_view_velocity(track, [normal])
+    assert measurement is not None
+    assert measurement[0][0] == pytest.approx(0.010, abs=1e-3)
+
+
 def test_published_extrapolation_is_capped():
     manager = _manager()
     truth = np.array([0.40, 0.02, -0.08])

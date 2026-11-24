@@ -1,0 +1,150 @@
+{
+  "attempts": {
+    "run1": {
+      "observations": 0,
+      "result": "edge did not reach edge ready inside 60 s timeout; Pi load ~9.6, import interrupted"
+    },
+    "run2": {
+      "observations": 30,
+      "result": "wrist only; GPU external uplink reader wedged (frames_received 2 external / 246 wrist)"
+    },
+    "run3": {
+      "external": 120,
+      "observations": 311,
+      "result": "both views; GPU restarted while edge publishing",
+      "t_first": 0.2,
+      "t_last": 40.1,
+      "wrist": 191
+    }
+  },
+  "caveats": [
+    "one static pose and one tag; no motion",
+    "tag sheet curls up to ~7 mm; flatten before quoting absolute accuracy",
+    "wrist depth failures 200 in run 3; enough tag observations matched",
+    "GPU external uplink reader wedge is a recurring ops issue; edge-first then GPU restart was reliable"
+  ],
+  "date": "2026-11-24",
+  "deployed_commit": "eed1ca9",
+  "fixed_point_check": {
+    "corrected_cross_view_mm": {
+      "depth": 3.67,
+      "gate": "PASS",
+      "pnp": 3.07
+    },
+    "corrected_external_pnp_abs_mm": [
+      334.7,
+      -14.7,
+      -83.5
+    ],
+    "external_correction_mm": [
+      9.9,
+      -1.8,
+      9.4
+    ],
+    "per_view_depth_vs_pnp_mm": {
+      "external": 4.2,
+      "wrist": 7.4
+    },
+    "raw_cross_view_mm": {
+      "depth": 15.92,
+      "gate": "FAIL",
+      "pnp": 12.79
+    },
+    "reprojection_px": {
+      "external": 0.75,
+      "wrist": 0.21
+    },
+    "samples": {
+      "external": 30,
+      "wrist": 36
+    },
+    "tf": "exact",
+    "wrist_pnp_abs_mm": [
+      335.4,
+      -12.7,
+      -85.7
+    ]
+  },
+  "fused_track": {
+    "first_samples": {
+      "note": "starts on the external point; moves to the wrist reference by only the 3.8 mm residual, no 67 mm step",
+      "position_mm": [
+        330.6,
+        -14.3,
+        -82.9
+      ],
+      "t_s": 0.93
+    },
+    "live_recorded_mm": {
+      "edge": "eed1ca9, pre-min-dt",
+      "final": 3.7,
+      "max": 11.4,
+      "p95": 6.2
+    },
+    "replay_mm": {
+      "final": 3.6,
+      "max": 8.3,
+      "p95": 5.4,
+      "source_bias": "none",
+      "velocity_min_dt_s": 0.1
+    },
+    "residual_cause": "near-duplicate capture stamps: 47/191 wrist observations dt<=0; min-dt rejects the fabricated velocity"
+  },
+  "gpu_mode": {
+    "backend": "aruco",
+    "config": "config/gpu_tag.yaml",
+    "dictionary": "DICT_APRILTAG_36h11",
+    "marker_id": 0,
+    "marker_size_m": 0.06
+  },
+  "hardware_claimed": true,
+  "kind": "real hardware, static scene, no motion commands",
+  "learned_view_offset_mm": [
+    0.03,
+    -1.93,
+    -3.31
+  ],
+  "per_view_mm": {
+    "distance_mm": 3.77,
+    "external": {
+      "mean": [
+        330.5,
+        -14.3,
+        -82.8
+      ],
+      "n": 120,
+      "sigma": [
+        0.1,
+        0.0,
+        0.1
+      ]
+    },
+    "external_minus_wrist": [
+      0.2,
+      -2.0,
+      -3.2
+    ],
+    "wrist": {
+      "mean": [
+        330.3,
+        -12.3,
+        -79.6
+      ],
+      "n": 191,
+      "sigma": [
+        0.4,
+        0.9,
+        0.6
+      ]
+    }
+  },
+  "post_run_fix": {
+    "status": "in working tree + tests/replay; not deployed, not re-run on hardware",
+    "velocity_min_dt_s": 0.1
+  },
+  "reproduce": [
+    "python3 scripts/fixed_point_report.py --wrist evidence/hardware_20261124_tag_verify/tag_wrist_fixed.csv --ext evidence/hardware_20261124_tag_verify/tag_ext_fixed.csv --ext-offset 0.0099 -0.0018 0.0094 --limit 0.005 --out evidence/hardware_20261124_tag_verify/tag_report_corrected.json",
+    "python3 scripts/replay_static_drift.py --source evidence/hardware_20261124_tag_verify/tag_run3.json --source-bias none --settle-s 6 --require reference_tag_0 --limit-mm 15 --out evidence/hardware_20261124_tag_verify/replay_tag_run3.json"
+  ],
+  "session": "defined reference point (AprilTag) static validation"
+}

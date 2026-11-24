@@ -1,0 +1,93 @@
+{
+  "bias": "",
+  "coalesce_ms": 600.0,
+  "fusion": "/home/jerichocheng/jcheng/jcheng-perception/config/fusion_dual_hardware.yaml",
+  "generated_utc": "2026-11-24T10:21:34+00:00",
+  "limit_mm": 20.0,
+  "mode": "recorded",
+  "publish_hz": 30.0,
+  "required_labels": [
+    "cup",
+    "dining table",
+    "chair",
+    "person"
+  ],
+  "settle_s": 6.0,
+  "source": "/tmp/drift_run1.json",
+  "tracks": {
+    "cup-005": {
+      "final_offset_mm": 0.07486922922100439,
+      "label": "cup",
+      "max_displacement_mm": 2.734050016490656,
+      "max_speed_mm_s": 1522.2141113426092,
+      "median_mm": [
+        392.98,
+        -29.58,
+        -64.05
+      ],
+      "p95_displacement_mm": 2.734050016490656,
+      "samples": 443,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 7.85738205909729,
+      "t_last": 24.23502278327942,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dining_table-002": {
+      "final_offset_mm": 0.4221997770635366,
+      "label": "dining table",
+      "max_displacement_mm": 4.630491645935673,
+      "max_speed_mm_s": 161.99059941489855,
+      "median_mm": [
+        329.05,
+        2.54,
+        -81.86
+      ],
+      "p95_displacement_mm": 4.630491645935673,
+      "samples": 445,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 7.925762891769409,
+      "t_last": 24.23502278327942,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "kite-007": {
+      "final_offset_mm": 0.010214955956061656,
+      "label": "kite",
+      "max_displacement_mm": 0.16182510642816922,
+      "max_speed_mm_s": 35.746901033328456,
+      "median_mm": [
+        339.19,
+        131.04,
+        -80.93
+      ],
+      "p95_displacement_mm": 0.16182510642816922,
+      "samples": 287,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 8.095597743988037,
+      "t_last": 23.46763777732849,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "violations": [],
+  "worst_required_mm": 4.630491645935673
+}
