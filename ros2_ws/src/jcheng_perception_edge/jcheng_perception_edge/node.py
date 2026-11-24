@@ -315,11 +315,15 @@ class PerceptionEdgeNode(Node):
                 lambda message, camera=camera_id: self.on_depth(
                     camera, message),
                 _sensor_qos(), callback_group=sensor_group)
+            # Vendor camera_info publishers vary in durability (the Aurora
+            # driver is best-effort/volatile). A sensor-QoS subscription is
+            # compatible with both reliable latched and best-effort writers;
+            # configured intrinsics remain the fallback.
             self.create_subscription(
                 CameraInfo, spec.camera_info_topic,
                 lambda message, camera=camera_id: self.on_camera_info(
                     camera, message),
-                _latched_qos(), callback_group=sensor_group)
+                _sensor_qos(), callback_group=sensor_group)
             self.detection_subscriptions[camera_id] = self.create_subscription(
                 Detection2DArray, spec.detection_topic,
                 lambda message, camera=camera_id: self.on_detections(

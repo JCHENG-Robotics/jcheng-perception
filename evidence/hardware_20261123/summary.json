@@ -1,0 +1,89 @@
+{
+  "schema": "jcheng-perception-hardware/1",
+  "date": "2026-11-23",
+  "kind": "pi5_arm64_synthetic_and_wrist_camera_partial",
+  "hardware_claimed": true,
+  "motion_commands_sent": false,
+  "environment": {
+    "robot": "Raspberry Pi 5, 8 GB, Debian 12, aarch64",
+    "container": "ArmPiUltra (ROS 2 Humble, rmw_cyclonedds_cpp, domain 0)",
+    "laptop": "Ubuntu 24.04, ROS 2 Jazzy, RTX 3060",
+    "perception_commit": "7597d0b plus local CameraInfo-QoS patch",
+    "ros_domain": 0,
+    "dds": "CycloneDDS (robot local test); Fast DDS/CycloneDDS cross-RMW was unstable"
+  },
+  "pi5_build": {
+    "packages": 4,
+    "duration_s": 27.1,
+    "result": "passed",
+    "notes": "setup.py deprecation warnings only"
+  },
+  "pi5_synthetic": {
+    "status": "passed",
+    "camera_fps": [6.207, 6.343],
+    "total_frames": 174,
+    "total_detections": 170,
+    "detections_matched": 169,
+    "detections_dropped": 0,
+    "match_success_rate": 0.9941,
+    "mean_detection_latency_ms": 48.09,
+    "phase": "FINE",
+    "active_tracks": 1,
+    "confirmed_tracks": 1,
+    "fused_position_m": [0.3370, 0.0044, -0.0782],
+    "weights": {"external": 0.2203, "wrist": 0.7797},
+    "edge_timing_ms": {
+      "image": [1.4, 1.7],
+      "depth": [0.3, 0.4],
+      "detections": [0.9, 1.0],
+      "publish": [1.6, 3.6],
+      "tf": [0.4, 0.7]
+    }
+  },
+  "wrist_camera": {
+    "status": "driver_rebuilt_and_streaming",
+    "driver_source": "third_party_ros2 deptrum-ros-driver-aurora930 0.2.1001",
+    "driver_build_s": 62,
+    "install_base": "/home/ubuntu/jcheng_aurora_install (separate from vendor install)",
+    "rgb_hz": [6.7, 6.8],
+    "depth_hz": [3.1, 6.4],
+    "resolution": [640, 400],
+    "rgb_frame": "rgb_camera_link",
+    "depth_frame": "depth_camera_link",
+    "optical_frame_published": "camera_optical_calibrated (static child of rgb_camera_link)"
+  },
+  "real_wrist_pipeline": {
+    "status": "partial_metric_invalid",
+    "detector": "mock blue threshold (not YOLO)",
+    "edge_camera_fps": 8.32,
+    "gpu_fps": 4.89,
+    "gpu_frames_received": 39,
+    "gpu_frames_failed": 0,
+    "gpu_inference_ms": 3.22,
+    "edge_detections": 47,
+    "detections_matched": 26,
+    "detections_dropped": 21,
+    "match_success_rate": 0.553,
+    "mean_detection_latency_ms": 71.46,
+    "depth_match_age_ms": 34.5,
+    "phase": "FINE",
+    "active_tracks": 1,
+    "confirmed_tracks": 1,
+    "target_id": "blue_block-001",
+    "target_position_m": [0.1071, -0.0602, 0.5911],
+    "weights": {"external": 0.0, "wrist": 1.0},
+    "caveat": "z=+0.59 m is not the table; the base->camera_optical composition is not valid at this arm pose. Do not use for motion. The data path, timestamp matching, depth lookup and fusion are exercised."
+  },
+  "external_camera": {
+    "mode": "split UVC colour (ext_cam_node) + depth-only RealSense",
+    "color_hz": [7.5, 9.8],
+    "depth_hz": [3.7, 4.9],
+    "aligned": false,
+    "decision": "ADR 0004 proposed single RealSense owner with aligned depth"
+  },
+  "cleanup": {
+    "camera_driver_stopped_after_test": true,
+    "depth_cam_publishers_after_stop": 0,
+    "vendor_services_unchanged": ["start_node", "armpi-ext-cam", "armpi-rs-depth", "armpi-gateway"]
+  }
+}

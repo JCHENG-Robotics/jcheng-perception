@@ -1,8 +1,8 @@
 # 验证证据（2026-11-23）
 
-> **范围声明**：以下全部是 **x86 工作站 + ROS 2 Jazzy + 合成场景** 的结果，外加
-> 厂商 `yolov8s` 权重的**单图 CPU 推理**。**没有连接机器人、没有 Pi 5 实测。**
-> 合成结果只证明数据流、时间匹配、融合逻辑与并发结构正确，不代表实机精度/延迟。
+> **范围声明**：主体是 **x86 工作站 + ROS 2 Jazzy + 合成场景**，外加厂商
+> `yolov8s` 的单图 CPU/GPU 推理；**2026-11-23 另做了 Pi 5 ARM64 合成与腕部真实相机
+> 数据链路测试（无运动命令）**。实机度量位姿仍需修正，不能代表可用于运动的精度。
 
 ## 1. 环境
 
@@ -183,6 +183,37 @@ FP16 默认关闭（当前 Ultralytics 对 `half` 给出弃用警告），可按
 影子话题与生产话题完全分离；生产融合结果没有出现额外轨迹或相位变化。真实模型
 的影子对比仍需 GPU 主机运行时。
 
+### 2.7 Pi 5 ARM64 合成端到端
+
+四个包在机器人容器（ROS 2 Humble）内构建通过（27.1 s），合成场景结果：
+
+```text
+camera_fps: 6.207 / 6.343
+total_frames: 174, detections: 170, matched: 169, dropped: 0
+match_success_rate: 0.9941
+mean_detection_latency_ms: 48.09
+phase: FINE, active_tracks: 1, confirmed_tracks: 1
+weights: external 0.2203 / wrist 0.7797
+```
+
+### 2.8 腕部真实相机数据链路（部分）
+
+Aurora 驱动从本地 SDK 重建后恢复：RGB 6.7–6.8 Hz、深度 3.1–6.4 Hz、640×400。
+用蓝色方块 + mock 蓝色阈值检测器，edge/GPU 在 Pi 5 本地 CycloneDDS 域 0：
+
+```text
+GPU: fps 4.89, frames_received 39, failed 0, inference 3.22 ms
+Edge: camera_fps 8.32, detections 47, matched 26, dropped 21 (depth_failures 20)
+      match_success_rate 0.553, latency 71.46 ms, depth_age 34.5 ms
+Target: blue_block-001, phase FINE, wrist weight 1.0, one confirmed track
+Position: (0.1071, -0.0602, 0.5911) m
+```
+
+数据路径、时间戳回溯、深度/TF 匹配和融合都实际执行；**但 z=+0.59 m 不是桌面高度
+（约 -0.08 m），当前 `base_link→camera_optical_calibrated` 组合在实机姿态下无效，
+禁止用于运动。** 外机位仍是未对齐的 UVC 彩色 + 仅深度 RealSense。详见
+[HARDWARE_BRINGUP.md](HARDWARE_BRINGUP.md)。
+
 ## 3. 本轮发现并修复的问题
 
 | # | 现象 | 根因 | 修复 |
@@ -196,14 +227,19 @@ FP16 默认关闭（当前 Ultralytics 对 `half` 给出弃用警告），可按
 | 7 | 真实后端烟测最初无法运行 | 主机无 torch/Ultralytics，CUDA 依赖下载限速 | 建独立 venv，安装 ONNX Runtime/OpenVINO/Ultralytics CPU 并跑通真实 `yolov8s`/OBB；后续 CUDA 版也装好 |
 | 8 | 默认 D435i 配置与实机拓扑不符 | 实机是 UVC 彩色 + 仅深度 RealSense，深度未对齐彩色 | ADR 0004 提议单一 RealSense 所有者 + aligned depth；默认配置已注明 |
 | 9 | `torch 2.11` 导入报 `undefined symbol: ncclDevCommCreate` | 按 2.9.1 元数据安装的 NCCL 与 2.11 不匹配 | 固定 `torch 2.9.1+cu128` / `torchvision 0.24.1+cu128`，RTX 3060 稳态 9.0 ms（FP32）/ 7.4 ms（FP16） |
+| 10 | 腕部相机 `vision.launch.py` 找不到 `deptrum-ros-driver-aurora930` | third_party install 是空壳，且未 source 其工作区 | 从本地 aarch64 SDK 在独立 install 目录重建；RGB/深度恢复 |
+| 11 | edge 收不到 Aurora `CameraInfo` | vendor 发布 best-effort/volatile，edge 用 reliable+transient-local | CameraInfo 订阅改为 sensor QoS；配置内参回退 |
+| 12 | Fast DDS 与 vendor CycloneDDS 混用报 `ParticipantEntitiesInfo` 反序列化错误 | 跨 RMW 发现不稳定 | 实机验证统一使用 CycloneDDS；文档注明 |
+| 13 | 真实腕部目标 z=+0.59 m（桌面约 -0.08 m） | `base_link→camera_optical_calibrated` 组合在实机姿态下无效；可能为命令缓存 TF | **未解决**；需总线实测关节 + 手眼重建 TF，禁止用于运动 |
 
 ## 4. 未验证项
 
-- Pi 5（ARM64、Humble）上的构建与运行；
-- 真实 D435i/Aurora 驱动、USB 带宽、深度/彩色对齐；
+- Pi 5 同时跑两路真实相机（外机位对齐 + 腕部）与真实 YOLO；
+- 真实 D435i 单所有者/深度对齐（ADR 0004）；Aurora 驱动需持久化部署；
+- 腕部/外机位的**度量位姿与 TF 标定**（当前 z 不正确）；
 - 关键点/pose 模型（仅验证了 detect 与 OBB）；
 - 真实模型在 10 Hz 输入下的端到端实时性（GPU ROS 约 6–8 Hz，需进一步调优）；
-- 外机位单一所有者切换（RealSense 彩色 + aligned depth）与随之而来的深度帧率；
+- 实机运动集成（必须在 `jcheng_safety`/`jcheng_motion` 之下）；
 - 有线/无线网络下的端到端延迟与丢包；
 - 实机标定误差、固定/移动目标精度、遮挡恢复时间；
 - 30 分钟以上稳定性、CPU 温度/降频、内存；

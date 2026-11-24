@@ -2,7 +2,8 @@
 
 **分布式机器人视觉感知（D 方案）**：树莓派 5 负责图像采集、深度解码、TF 维护、时间戳环形缓存、3D 反投影、目标关联与卡尔曼融合；笔记本 GPU 异步承担两路 YOLO 检测。图像经压缩跨 ROS 2 传输，检测结果携带**采集时间戳**返回；Pi 5 按时间戳回溯匹配深度与 TF，两路观测按距离动态加权，输出统一目标位姿给机械臂规划。
 
-> 状态：**v0.1.0，代码 + 离线仿真 + 单机合成端到端已验证；未接入实机。**
+> 状态：**v0.1.0：代码、离线仿真、单机合成、Pi 5 ARM64 合成、腕部真实相机数据链路已验证；
+> 实机度量位姿（z 仍不正确）、外机位深度对齐与运动集成未验证。**
 > 本仓库不包含模型权重，不包含厂商代码，不发布任何运动命令。
 
 ---
@@ -176,6 +177,20 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 > Ultralytics 8.4.216**；CUDA 版使用 RTX 3060，`torch.cuda.is_available()=True`。
 > ROS 节点通过 venv Python 验证了 ONNX Runtime、Ultralytics CPU 与 CUDA。
 
+### 7.1 Pi 5 与腕部真实相机（部分验证）
+
+| 项 | 结果 |
+|---|---|
+| Pi 5 ARM64 构建 | 4 包通过，27.1 s |
+| Pi 5 合成端到端 | 6.2/6.3 Hz、匹配 99.4%、延迟 48 ms、1 条双视图轨迹 |
+| 腕部 Aurora | 驱动从本地 SDK 重建；RGB 6.7–6.8 Hz、深度 3.1–6.4 Hz、640×400 |
+| 腕部真实链路（mock 蓝色检测） | GPU 4.9 Hz/0 失败；edge 输出 `blue_block-001`，FINE，wrist 权重 1.0 |
+| 实机位姿 | **z=+0.59 m 不正确**（桌面约 -0.08 m），TF/标定待修正，禁止用于运动 |
+| 外机位 | UVC 彩色 + 仅深度 RealSense，未对齐；ADR 0004 待执行 |
+
+> 详细记录：[HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md)。本次未发送运动命令；
+> 测试后已停止相机/感知进程，厂商服务保持原状。
+
 ## 8. 设计边界
 
 - **不做运动控制**：不发布 `cmd_vel`、关节、夹爪、串口/CAN 命令；输出是建议位姿。
@@ -208,6 +223,7 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 - [模型迭代](docs/MODEL_ITERATION.md)
 - [标定](docs/CALIBRATION.md)
 - [故障模式](docs/FAILURE_MODES.md)
+- [实机接入记录](docs/HARDWARE_BRINGUP.md)
 - [验证证据](docs/EVIDENCE.md)
 - ADR：[边云切分](docs/adr/0001-edge-gpu-split.md) ·
   [采集时间戳契约](docs/adr/0002-capture-timestamp-contract.md) ·
