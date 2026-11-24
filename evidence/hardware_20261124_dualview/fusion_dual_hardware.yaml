@@ -1,0 +1,73 @@
+# Fusion policy for dual-camera hardware with asynchronous capture.
+#
+# This is config/fusion.yaml with a longer coalesce window.  The Pi uplinks the
+# two cameras at 2/4 fps and the GPU returns their detections with different
+# latency, so the two views of one object arrive at the edge tens to hundreds
+# of milliseconds apart.  A 30 ms window (the synthetic/low-latency default)
+# never groups them: measured on 2026-11-24, both cameras saw the same cup for
+# 42 s and produced zero two-view fused samples.  600 ms covers one external
+# frame period plus the per-camera inference skew and costs up to 0.6 s of
+# target-update latency -- acceptable for the current ~1.4 fps data path, not
+# for a 10 Hz control loop.  The proper long-term fix is capture-time pairing
+# or a per-view bias-aware filter, not a larger hold.
+# Fusion, association and tracking policy.
+#
+# The role priors are relative information multipliers for a task phase. The
+# absolute distance weighting comes from each camera's measurement covariance
+# (sigma_z grows with range squared), so the priors only decide which view wins
+# when both are equally precise. Values are normalised per fusion, so a prior
+# of 3.0 does not shrink the covariance of a single-view update.
+target_frame: base_link
+# Short window that lets the external and wrist detections of one capture round
+# meet before a track is updated. 20-40 ms is below one Aurora frame and keeps
+# the control path responsive.
+coalesce_ms: 600.0
+
+confirm_hits: 3
+tentative_timeout_s: 0.6
+coast_after_s: 0.6
+lost_after_s: 1.8
+
+association_gate_m: 0.08
+association_gate_growth_m: 0.12
+association_gate_per_second: 0.10
+association_label_agnostic: false
+enable_track_merging: true
+merge_gate_m: 0.06
+merge_gate_overlap_m: 0.02
+merge_sigma_scale: 3.0
+
+kalman_accel_noise: 0.05
+measurement_floor_m: 0.0008
+max_position_variance_m2: 0.04
+occlusion_penalty: 0.75
+min_view_weight: 0.02
+
+fine_distance_m: 0.55
+fine_wrist_hits: 2
+orientation_max_tilt_deg: 35.0
+table_clearance_m: 0.008
+orientation_sigma_rad: 0.20
+
+publish_rate_hz: 30.0
+pose_sample_hz: 30.0
+status_rate_hz: 1.0
+recheck_duration_s: 3.0
+stale_gpu_s: 1.0
+
+phase_priors:
+  SEARCH:
+    external: 1.0
+    wrist: 1.0
+  COARSE:
+    external: 1.3
+    wrist: 0.6
+  ACQUIRE:
+    external: 1.0
+    wrist: 1.0
+  FINE:
+    external: 0.35
+    wrist: 3.0
+  DROP_RECHECK:
+    external: 3.0
+    wrist: 0.0

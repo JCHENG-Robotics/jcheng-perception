@@ -56,6 +56,12 @@ from .types import (
     TrackStatus,
 )
 from .weighting import fuse_observations, phase_for_observations, view_factor
+from .view_bias import (
+    ViewBias,
+    ViewBiasModel,
+    offset_statistics,
+    paired_offsets,
+)
 
 __all__ = [
     'CameraHealth',
@@ -77,6 +83,8 @@ __all__ = [
     'Track',
     'TrackManager',
     'TrackStatus',
+    'ViewBias',
+    'ViewBiasModel',
     'border_occlusion_ratio',
     'build_observation',
     'depth_sigma_m',
@@ -92,6 +100,8 @@ __all__ = [
     'make_transform',
     'matrix_from_quaternion',
     'object_yaw_from_points',
+    'offset_statistics',
+    'paired_offsets',
     'phase_for_observations',
     'plane_pose_from_points',
     'project_point',

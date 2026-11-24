@@ -1,0 +1,131 @@
+{
+  "bias": "config/view_bias.yaml",
+  "date": "2026-11-24",
+  "fusion": "config/fusion_dual_hardware.yaml",
+  "hardware_claimed": false,
+  "kind": "offline replay of hardware observations; no new robot run",
+  "learned_offsets": {
+    "cup-005": [
+      -57.18,
+      10.88,
+      34.04
+    ],
+    "dining_table-002": [
+      22.13,
+      21.09,
+      -4.95
+    ]
+  },
+  "limitations": [
+    "absolute position is wrist-referenced; a defined point/keypoint is still required below 5 mm",
+    "external chain offset is provisional (run-3 cross-view + table plane)",
+    "per-track offset assumes a static/slow target",
+    "not deployed to the Pi 5 and not re-run on hardware"
+  ],
+  "modes": {
+    "recorded_targets": {
+      "mode": "recorded",
+      "worst_by_label": {
+        "chair": {
+          "max_displacement_mm": 23.25,
+          "target_id": "chair-028",
+          "tracks": 2
+        },
+        "cup": {
+          "max_displacement_mm": 696.43,
+          "target_id": "cup-005",
+          "tracks": 5
+        },
+        "dining table": {
+          "max_displacement_mm": 447.54,
+          "target_id": "dining_table-035",
+          "tracks": 4
+        },
+        "kite": {
+          "max_displacement_mm": 315.73,
+          "target_id": "kite-036",
+          "tracks": 5
+        },
+        "person": {
+          "max_displacement_mm": 10.45,
+          "target_id": "person-026",
+          "tracks": 2
+        }
+      },
+      "worst_required_mm": 696.43
+    },
+    "replay_fixed": {
+      "mode": "fixed",
+      "worst_by_label": {
+        "chair": {
+          "max_displacement_mm": 6.41,
+          "target_id": "chair-020",
+          "tracks": 2
+        },
+        "cup": {
+          "max_displacement_mm": 4.05,
+          "target_id": "cup-005",
+          "tracks": 1
+        },
+        "dining table": {
+          "max_displacement_mm": 4.9,
+          "target_id": "dining_table-002",
+          "tracks": 1
+        },
+        "kite": {
+          "max_displacement_mm": 103.82,
+          "target_id": "kite-027",
+          "tracks": 5
+        },
+        "person": {
+          "max_displacement_mm": 4.36,
+          "target_id": "person-018",
+          "tracks": 2
+        }
+      },
+      "worst_required_mm": 6.41
+    },
+    "replay_legacy": {
+      "mode": "legacy",
+      "worst_by_label": {
+        "chair": {
+          "max_displacement_mm": 23.27,
+          "target_id": "chair-030",
+          "tracks": 2
+        },
+        "cup": {
+          "max_displacement_mm": 477.76,
+          "target_id": "cup-013",
+          "tracks": 5
+        },
+        "dining table": {
+          "max_displacement_mm": 454.27,
+          "target_id": "dining_table-042",
+          "tracks": 5
+        },
+        "kite": {
+          "max_displacement_mm": 315.38,
+          "target_id": "kite-019",
+          "tracks": 4
+        },
+        "person": {
+          "max_displacement_mm": 10.53,
+          "target_id": "person-028",
+          "tracks": 2
+        }
+      },
+      "worst_required_mm": 477.76
+    }
+  },
+  "reproduce": [
+    "python3 scripts/replay_static_drift.py --out evidence/analysis_20261124_drift_bias/replay_fixed.json",
+    "python3 scripts/replay_static_drift.py --mode legacy --out evidence/analysis_20261124_drift_bias/replay_legacy.json",
+    "python3 scripts/replay_static_drift.py --recorded-targets --out evidence/analysis_20261124_drift_bias/recorded_targets.json"
+  ],
+  "session": "cross-view bias model and static-track drift regression (offline)",
+  "source": "evidence/hardware_20261124_dualview/dual_verify7.json",
+  "tests": {
+    "passed": 65,
+    "suite": "python3 -m pytest tests -q"
+  }
+}

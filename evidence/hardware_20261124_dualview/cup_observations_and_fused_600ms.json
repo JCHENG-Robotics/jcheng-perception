@@ -1,0 +1,1836 @@
+{
+ "cup_observations": [
+  {
+   "t": 5.16579794883728,
+   "stamp": 1795513525.6438365,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.973,
+   "position": [
+    0.32605,
+    -0.01744,
+    -0.03914
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.804,
+   "view_weight": 0.695
+  },
+  {
+   "t": 5.166589736938477,
+   "stamp": 1795513525.924,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.936,
+   "position": [
+    0.39299,
+    -0.03168,
+    -0.06374
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.553,
+   "view_weight": 0.305
+  },
+  {
+   "t": 6.196974039077759,
+   "stamp": 1795513526.711238,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.971,
+   "position": [
+    0.32611,
+    -0.01771,
+    -0.03904
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.802,
+   "view_weight": 1.0
+  },
+  {
+   "t": 6.723398685455322,
+   "stamp": 1795513527.524,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.935,
+   "position": [
+    0.39325,
+    -0.02995,
+    -0.06369
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.551,
+   "view_weight": 1.0
+  },
+  {
+   "t": 7.643170356750488,
+   "stamp": 1795513528.1788864,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.972,
+   "position": [
+    0.32603,
+    -0.01761,
+    -0.03917
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.789,
+   "view_weight": 1.0
+  },
+  {
+   "t": 8.057330131530762,
+   "stamp": 1795513528.662,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.937,
+   "position": [
+    0.39294,
+    -0.03175,
+    -0.06377
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.547,
+   "view_weight": 1.0
+  },
+  {
+   "t": 8.259015798568726,
+   "stamp": 1795513528.979393,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.968,
+   "position": [
+    0.32611,
+    -0.01774,
+    -0.03902
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.79,
+   "view_weight": 1.0
+  },
+  {
+   "t": 8.33013916015625,
+   "stamp": 1795513528.982,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.94,
+   "position": [
+    0.39302,
+    -0.03174,
+    -0.06372
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.549,
+   "view_weight": 1.0
+  },
+  {
+   "t": 8.57263469696045,
+   "stamp": 1795513529.318,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.928,
+   "position": [
+    0.3922,
+    -0.03189,
+    -0.06512
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.549,
+   "view_weight": 1.0
+  },
+  {
+   "t": 8.82554292678833,
+   "stamp": 1795513529.318,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.942,
+   "position": [
+    0.39216,
+    -0.03168,
+    -0.06514
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.549,
+   "view_weight": 1.0
+  },
+  {
+   "t": 8.860796689987183,
+   "stamp": 1795513529.312933,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.966,
+   "position": [
+    0.32603,
+    -0.01758,
+    -0.03916
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.793,
+   "view_weight": 1.0
+  },
+  {
+   "t": 9.439489364624023,
+   "stamp": 1795513529.8466258,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.968,
+   "position": [
+    0.32608,
+    -0.01778,
+    -0.03907
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.788,
+   "view_weight": 1.0
+  },
+  {
+   "t": 9.639364957809448,
+   "stamp": 1795513530.255,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.936,
+   "position": [
+    0.39322,
+    -0.03039,
+    -0.06368
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.553,
+   "view_weight": 1.0
+  },
+  {
+   "t": 10.134779691696167,
+   "stamp": 1795513530.5804713,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.97,
+   "position": [
+    0.326,
+    -0.01765,
+    -0.0392
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.79,
+   "view_weight": 1.0
+  },
+  {
+   "t": 10.665419578552246,
+   "stamp": 1795513531.180874,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.97,
+   "position": [
+    0.326,
+    -0.01762,
+    -0.0392
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.792,
+   "view_weight": 1.0
+  },
+  {
+   "t": 11.027706623077393,
+   "stamp": 1795513531.723,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.938,
+   "position": [
+    0.39277,
+    -0.03014,
+    -0.06438
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.548,
+   "view_weight": 1.0
+  },
+  {
+   "t": 11.309512615203857,
+   "stamp": 1795513531.875,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.936,
+   "position": [
+    0.393,
+    -0.03178,
+    -0.06373
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.549,
+   "view_weight": 1.0
+  },
+  {
+   "t": 11.406198024749756,
+   "stamp": 1795513531.9813895,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.971,
+   "position": [
+    0.32598,
+    -0.0176,
+    -0.03924
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.794,
+   "view_weight": 1.0
+  },
+  {
+   "t": 11.960093021392822,
+   "stamp": 1795513532.5150576,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.972,
+   "position": [
+    0.32609,
+    -0.01776,
+    -0.03907
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.797,
+   "view_weight": 1.0
+  },
+  {
+   "t": 14.252068281173706,
+   "stamp": 1795513534.978,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.923,
+   "position": [
+    0.39297,
+    -0.03181,
+    -0.06376
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.551,
+   "view_weight": 1.0
+  },
+  {
+   "t": 14.659687995910645,
+   "stamp": 1795513535.1833642,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.972,
+   "position": [
+    0.32608,
+    -0.01778,
+    -0.03908
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.784,
+   "view_weight": 1.0
+  },
+  {
+   "t": 15.405891418457031,
+   "stamp": 1795513535.9173772,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.973,
+   "position": [
+    0.32598,
+    -0.01753,
+    -0.03924
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.78,
+   "view_weight": 1.0
+  },
+  {
+   "t": 15.637718439102173,
+   "stamp": 1795513536.247,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.94,
+   "position": [
+    0.39312,
+    -0.03175,
+    -0.06367
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.549,
+   "view_weight": 1.0
+  },
+  {
+   "t": 16.194320678710938,
+   "stamp": 1795513536.718244,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.971,
+   "position": [
+    0.32692,
+    -0.01774,
+    -0.03962
+   ],
+   "depth_m": 0.2,
+   "valid_depth_fraction": 0.785,
+   "view_weight": 1.0
+  },
+  {
+   "t": 16.65410304069519,
+   "stamp": 1795513537.214,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.937,
+   "position": [
+    0.39302,
+    -0.03174,
+    -0.06372
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.556,
+   "view_weight": 1.0
+  },
+  {
+   "t": 16.754714012145996,
+   "stamp": 1795513537.318609,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.972,
+   "position": [
+    0.32604,
+    -0.01757,
+    -0.03915
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.791,
+   "view_weight": 1.0
+  },
+  {
+   "t": 17.564591646194458,
+   "stamp": 1795513538.097,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.932,
+   "position": [
+    0.39307,
+    -0.03177,
+    -0.0637
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.552,
+   "view_weight": 1.0
+  },
+  {
+   "t": 18.091558933258057,
+   "stamp": 1795513538.653,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.937,
+   "position": [
+    0.3931,
+    -0.03175,
+    -0.06368
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.55,
+   "view_weight": 1.0
+  },
+  {
+   "t": 18.408273696899414,
+   "stamp": 1795513538.8546996,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.972,
+   "position": [
+    0.32604,
+    -0.01759,
+    -0.03915
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.789,
+   "view_weight": 1.0
+  },
+  {
+   "t": 18.804112672805786,
+   "stamp": 1795513539.371,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.94,
+   "position": [
+    0.3924,
+    -0.03183,
+    -0.06504
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.548,
+   "view_weight": 1.0
+  },
+  {
+   "t": 18.93186640739441,
+   "stamp": 1795513539.255013,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.973,
+   "position": [
+    0.3261,
+    -0.01777,
+    -0.03905
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.789,
+   "view_weight": 1.0
+  },
+  {
+   "t": 19.463343143463135,
+   "stamp": 1795513540.246,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.931,
+   "position": [
+    0.39307,
+    -0.03181,
+    -0.0637
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.551,
+   "view_weight": 1.0
+  },
+  {
+   "t": 19.712042331695557,
+   "stamp": 1795513540.347,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.931,
+   "position": [
+    0.39296,
+    -0.03183,
+    -0.06376
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.553,
+   "view_weight": 1.0
+  },
+  {
+   "t": 20.000553131103516,
+   "stamp": 1795513540.5224214,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.971,
+   "position": [
+    0.32602,
+    -0.01754,
+    -0.03917
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.802,
+   "view_weight": 1.0
+  },
+  {
+   "t": 20.178337574005127,
+   "stamp": 1795513540.894,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.937,
+   "position": [
+    0.39292,
+    -0.03191,
+    -0.06378
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.552,
+   "view_weight": 1.0
+  },
+  {
+   "t": 20.442697286605835,
+   "stamp": 1795513540.984,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.933,
+   "position": [
+    0.39305,
+    -0.0318,
+    -0.0637
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.551,
+   "view_weight": 1.0
+  },
+  {
+   "t": 21.099303245544434,
+   "stamp": 1795513541.5896363,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.97,
+   "position": [
+    0.3261,
+    -0.01784,
+    -0.03905
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.798,
+   "view_weight": 1.0
+  },
+  {
+   "t": 21.6099591255188,
+   "stamp": 1795513542.0566115,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.969,
+   "position": [
+    0.32608,
+    -0.0179,
+    -0.03908
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.789,
+   "view_weight": 1.0
+  },
+  {
+   "t": 22.06998038291931,
+   "stamp": 1795513542.6570404,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.971,
+   "position": [
+    0.32609,
+    -0.01783,
+    -0.03906
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.783,
+   "view_weight": 1.0
+  },
+  {
+   "t": 22.596306800842285,
+   "stamp": 1795513543.1239884,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.971,
+   "position": [
+    0.326,
+    -0.01756,
+    -0.03921
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.78,
+   "view_weight": 1.0
+  },
+  {
+   "t": 22.642581462860107,
+   "stamp": 1795513543.291,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.927,
+   "position": [
+    0.39339,
+    -0.02926,
+    -0.06364
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.549,
+   "view_weight": 1.0
+  },
+  {
+   "t": 23.154653072357178,
+   "stamp": 1795513543.4575121,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.972,
+   "position": [
+    0.32609,
+    -0.01781,
+    -0.03906
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.788,
+   "view_weight": 1.0
+  },
+  {
+   "t": 24.412265300750732,
+   "stamp": 1795513545.05833,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.97,
+   "position": [
+    0.32609,
+    -0.0178,
+    -0.03907
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.793,
+   "view_weight": 1.0
+  },
+  {
+   "t": 24.97460651397705,
+   "stamp": 1795513545.539,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.937,
+   "position": [
+    0.39303,
+    -0.03199,
+    -0.06372
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.552,
+   "view_weight": 1.0
+  },
+  {
+   "t": 25.168029308319092,
+   "stamp": 1795513545.6585891,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.97,
+   "position": [
+    0.32601,
+    -0.0176,
+    -0.03919
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.787,
+   "view_weight": 1.0
+  },
+  {
+   "t": 25.234360456466675,
+   "stamp": 1795513545.748,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.94,
+   "position": [
+    0.393,
+    -0.03104,
+    -0.06377
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.549,
+   "view_weight": 1.0
+  },
+  {
+   "t": 25.80162000656128,
+   "stamp": 1795513546.1922235,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.969,
+   "position": [
+    0.32608,
+    -0.01793,
+    -0.03908
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.8,
+   "view_weight": 1.0
+  },
+  {
+   "t": 26.134483575820923,
+   "stamp": 1795513546.736,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.932,
+   "position": [
+    0.39229,
+    -0.02923,
+    -0.06517
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.551,
+   "view_weight": 1.0
+  },
+  {
+   "t": 26.312405109405518,
+   "stamp": 1795513546.9926665,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.969,
+   "position": [
+    0.32601,
+    -0.01756,
+    -0.0392
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.796,
+   "view_weight": 1.0
+  },
+  {
+   "t": 26.85267424583435,
+   "stamp": 1795513547.5262692,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.969,
+   "position": [
+    0.32613,
+    -0.01759,
+    -0.03901
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.79,
+   "view_weight": 1.0
+  },
+  {
+   "t": 27.532423496246338,
+   "stamp": 1795513547.7930646,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.971,
+   "position": [
+    0.32609,
+    -0.01769,
+    -0.03906
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.797,
+   "view_weight": 1.0
+  },
+  {
+   "t": 28.19398546218872,
+   "stamp": 1795513548.982,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.931,
+   "position": [
+    0.39286,
+    -0.03202,
+    -0.06382
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.55,
+   "view_weight": 1.0
+  },
+  {
+   "t": 28.76456117630005,
+   "stamp": 1795513549.2604284,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.968,
+   "position": [
+    0.32606,
+    -0.01778,
+    -0.03911
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.784,
+   "view_weight": 1.0
+  },
+  {
+   "t": 29.261586904525757,
+   "stamp": 1795513549.5272331,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.968,
+   "position": [
+    0.32599,
+    -0.01755,
+    -0.03923
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.805,
+   "view_weight": 1.0
+  },
+  {
+   "t": 29.696478843688965,
+   "stamp": 1795513550.482,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.93,
+   "position": [
+    0.39297,
+    -0.03192,
+    -0.06375
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.551,
+   "view_weight": 1.0
+  },
+  {
+   "t": 29.90568518638611,
+   "stamp": 1795513550.394336,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.97,
+   "position": [
+    0.32604,
+    -0.01773,
+    -0.03914
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.794,
+   "view_weight": 1.0
+  },
+  {
+   "t": 30.371659994125366,
+   "stamp": 1795513550.9946237,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.972,
+   "position": [
+    0.326,
+    -0.01761,
+    -0.0392
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.792,
+   "view_weight": 1.0
+  },
+  {
+   "t": 32.057419538497925,
+   "stamp": 1795513552.814,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.94,
+   "position": [
+    0.39392,
+    -0.02886,
+    -0.06311
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.551,
+   "view_weight": 1.0
+  },
+  {
+   "t": 32.653834104537964,
+   "stamp": 1795513553.1292815,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.969,
+   "position": [
+    0.32614,
+    -0.0177,
+    -0.03899
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.806,
+   "view_weight": 1.0
+  },
+  {
+   "t": 32.82998275756836,
+   "stamp": 1795513553.392,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.939,
+   "position": [
+    0.39191,
+    -0.03163,
+    -0.06525
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.552,
+   "view_weight": 1.0
+  },
+  {
+   "t": 33.06977367401123,
+   "stamp": 1795513553.615,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.934,
+   "position": [
+    0.39318,
+    -0.03059,
+    -0.0637
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.55,
+   "view_weight": 1.0
+  },
+  {
+   "t": 33.135584354400635,
+   "stamp": 1795513553.6628869,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.969,
+   "position": [
+    0.32599,
+    -0.01751,
+    -0.03923
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.796,
+   "view_weight": 1.0
+  },
+  {
+   "t": 33.46600365638733,
+   "stamp": 1795513554.264,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.932,
+   "position": [
+    0.39325,
+    -0.02888,
+    -0.06373
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.549,
+   "view_weight": 1.0
+  },
+  {
+   "t": 33.82805395126343,
+   "stamp": 1795513554.2637007,
+   "camera": "d435i_ext",
+   "label": "cup",
+   "score": 0.972,
+   "position": [
+    0.32607,
+    -0.01786,
+    -0.03909
+   ],
+   "depth_m": 0.199,
+   "valid_depth_fraction": 0.803,
+   "view_weight": 0.211
+  },
+  {
+   "t": 33.829177379608154,
+   "stamp": 1795513554.264,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.931,
+   "position": [
+    0.39327,
+    -0.02906,
+    -0.06371
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.551,
+   "view_weight": 0.789
+  },
+  {
+   "t": 34.60355997085571,
+   "stamp": 1795513555.211,
+   "camera": "aurora_wrist",
+   "label": "cup",
+   "score": 0.938,
+   "position": [
+    0.39309,
+    -0.03168,
+    -0.06368
+   ],
+   "depth_m": 0.328,
+   "valid_depth_fraction": 0.55,
+   "view_weight": 1.0
+  }
+ ],
+ "fused_target_samples": [
+  {
+   "t": 33.830480098724365,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.32974,
+    -0.01871,
+    -0.04227
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.927,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 33.830480098724365,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.435,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 33.83457946777344,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.32641,
+    -0.01818,
+    -0.04118
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.927,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 33.83457946777344,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.435,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 33.85157036781311,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.32525,
+    -0.01799,
+    -0.0408
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.927,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 33.85157036781311,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.435,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 33.890382289886475,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.32299,
+    -0.01763,
+    -0.04006
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.927,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 33.890382289886475,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.435,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 33.91745734214783,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.32085,
+    -0.01729,
+    -0.03936
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.927,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 33.91745734214783,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.435,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 33.952516317367554,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.31862,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.927,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 33.952516317367554,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.435,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 33.98374843597412,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.927,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 33.98374843597412,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.435,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 33.98588037490845,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.927,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 33.98588037490845,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.435,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.02042055130005,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.927,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.02042055130005,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.435,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.06550478935242,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.906,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.06550478935242,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.425,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.08542203903198,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.87,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.08542203903198,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.408,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.11764121055603,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.835,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.11764121055603,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.392,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.159615993499756,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.797,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.159615993499756,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.374,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.1854510307312,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.768,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.1854510307312,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.36,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.23587775230408,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.729,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.23587775230408,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.342,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.24135947227478,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.716,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.24135947227478,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.336,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.253252267837524,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.707,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.253252267837524,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.332,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.28575325012207,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.677,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.28575325012207,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.318,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.319722175598145,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.649,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.319722175598145,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.304,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  },
+  {
+   "t": 34.35506582260132,
+   "target_id": "cup-034",
+   "label": "cup",
+   "position": [
+    0.3186,
+    -0.01693,
+    -0.03863
+   ],
+   "weight_external": 0.211,
+   "weight_wrist": 0.789,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.624,
+   "depth_external_m": 0.199,
+   "depth_wrist_m": 0.328
+  },
+  {
+   "t": 34.35506582260132,
+   "target_id": "dining_table-040",
+   "label": "dining table",
+   "position": [
+    0.32956,
+    0.00538,
+    -0.08352
+   ],
+   "weight_external": 0.271,
+   "weight_wrist": 0.729,
+   "source_cameras": [
+    "d435i_ext",
+    "aurora_wrist"
+   ],
+   "status": 1,
+   "phase": 3,
+   "confidence": 0.293,
+   "depth_external_m": 0.242,
+   "depth_wrist_m": 0.311
+  }
+ ]
+}

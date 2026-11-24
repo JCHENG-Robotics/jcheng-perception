@@ -272,6 +272,35 @@ Detection: dining table 0.2297, 1280x720,
 证实。之后用 `timeout -s INT 60` 有界重试成功；测试后进程为 0、四个厂商服务 active、
 负载约 5.8。720p edge 在负载较高的 Pi 上必须限时/监控。
 
+### 2.11 跨视角偏差建模与轨迹漂移回归（离线，2026-11-24）
+
+不新增实机运行：用 `hardware_20261124_dualview/dual_verify7.json` 的 223 条观测
+离线重放（测量协方差按 `cameras.yaml` 重建），复现 run-7 的静态目标漂移并验证
+修复。模型见 `docs/FUSION.md` §9。
+
+```bash
+python3 -m pytest tests -q        # 65 passed（新增 7 条偏差/漂移测试）
+python3 scripts/replay_static_drift.py \
+  --out evidence/analysis_20261124_drift_bias/replay_fixed.json
+python3 scripts/replay_static_drift.py --mode legacy \
+  --out evidence/analysis_20261124_drift_bias/replay_legacy.json
+python3 scripts/replay_static_drift.py --recorded-targets \
+  --out evidence/analysis_20261124_drift_bias/recorded_targets.json
+```
+
+| 数据 | required 标签最大漂移 |
+|---|---:|
+| 实机录制发布值（修复前） | 696.4 mm（cup-005） |
+| 离线重放，旧跟踪逻辑 | 477.8 mm |
+| 离线重放，偏差模型 + 同视图速度 | **6.4 mm**（cup 4.1 / table 4.9 / chair 6.4 / person 4.4） |
+
+机制：两个视图各自的测量很稳（cup 外部 σ 0.2 mm、腕部 0.4–1.1 mm），但框中心
+落点不同造成 67/13/25 mm 的系统差；旧滤波器把它当速度（7–14 m/s），再按
+`now - last_state` 外推最多 1 s，于是 0.5 m 漂移。修复后每 track 学到的残差与
+离线统计吻合（cup −57.2/+10.9/+34.0 mm，table +22.1/+21.1/−5.0 mm）。
+`kite` 未纳入门限：同一标签在两处物理位置间切换，属于关联/数据问题。
+证据：`evidence/analysis_20261124_drift_bias/`。
+
 ## 3. 本轮发现并修复的问题
 
 | # | 现象 | 根因 | 修复 |

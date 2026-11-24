@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-24",
+  "session": "table-plane check, static pose, no motion commands",
+  "robot": {
+    "host": "pi5",
+    "container": "ArmPiUltra",
+    "ros": "ROS 2 Humble",
+    "rmw": "rmw_cyclonedds_cpp",
+    "services": {
+      "armpi-vision": "active",
+      "armpi-rs-depth": "active",
+      "wrist_tf": "publishing at 10 Hz",
+      "ext_tf": "publishing"
+    },
+    "wrist_depth_rate_hz": 1.9
+  },
+  "pose": {
+    "stationary": true,
+    "camera_origin_m": [0.180463, 0.009094, 0.192317],
+    "camera_view_z": [0.498019, -0.002788, -0.867159],
+    "quaternion_xyzw": [-0.679566, 0.686855, -0.182283, 0.182187]
+  },
+  "table_reference_m": -0.0825,
+  "runs": {
+    "roi40_default": {
+      "command": "python3 wrist_plane_check.py --duration 30 --rate 1",
+      "csv": "wrist_plane_roi40_20261124.csv",
+      "valid_samples": 21,
+      "table_z_median_m": -0.0751,
+      "table_z_range_m": [-0.0751, -0.0750],
+      "tilt_deg_range": [0.73, 0.76],
+      "rms_m": 0.0008,
+      "points": [2534, 2536],
+      "verdict": "not a table fit: central ROI is covered by the curled tag sheet"
+    },
+    "table_only": {
+      "command": "python3 wrist_plane_check.py --duration 30 --rate 1 --roi-frac 0.95 --exclude 145,505,80,360",
+      "csv": "wrist_plane_tableonly_20261124.csv",
+      "valid_samples": 26,
+      "table_z_median_m": -0.0828,
+      "table_z_range_m": [-0.0830, -0.0828],
+      "tilt_deg_range": [0.99, 1.01],
+      "rms_m": 0.0007,
+      "points": [6502, 6748],
+      "verdict": "PASS: 0.3 mm from reference"
+    }
+  },
+  "offline_refit_of_saved_frame": {
+    "depth_intrinsics": [423.02349854, 423.82901001, 320.0960083, 199.90400696],
+    "rgb_intrinsics": [418.0541687, 419.1000061, 308.78250122, 187.13417053],
+    "central_40pct_m": -0.0750,
+    "tag_sheet_whole_m": -0.0803,
+    "tag_sheet_rms_m": 0.0011,
+    "table_without_sheet_m": -0.0825,
+    "table_without_sheet_rms_m": 0.0006,
+    "table_strips_m": {"left": -0.0836, "right": -0.0819, "top": -0.0829},
+    "rgb_intrinsics_used_on_depth_image_m": -0.0789,
+    "note": "sheet centre ~7.5 mm above the table; sheet is curled"
+  },
+  "external_chain_check": {
+    "topic": "/camera/aligned_depth_to_color/image_raw",
+    "frame": "camera_color_optical_frame",
+    "intrinsics": [606.500976562, 606.597045898, 325.027130127, 249.189346313],
+    "tf_translation_m": [0.139300514, 0.027041017, 0.036749377],
+    "tf_quaternion_xyzw": [-0.601719298, 0.638344040, -0.337047592, 0.341832846],
+    "fits": {
+      "left45": {"table_z_m": -0.0940, "tilt_deg": 0.23, "rms_m": 0.0007, "points": 11291},
+      "centre": {"table_z_m": -0.0936, "tilt_deg": 0.37, "rms_m": 0.0006, "points": 13455},
+      "right55": {"table_z_m": -0.0916, "tilt_deg": 0.71, "rms_m": 0.0012, "points": 15471}
+    },
+    "wrist_minus_external_z_mm": 11,
+    "run3_cross_view_z_error_mm": [9.4, 10.6],
+    "verdict": "external chain biased ~11 mm in z; wrist chain agrees with reference",
+    "likely_cause": "frames.yaml still carries the UVC-camera T_base_front; the D435i colour lens (mounted in ADR 0004) was never calibrated against the table, so a lens offset would appear as a constant z offset with unchanged tilt"
+  },
+  "script_change": {
+    "file": "scripts/wrist_tf_multipose_check.py",
+    "default_info_topic_before": "/depth_cam/rgb/camera_info",
+    "default_info_topic_after": "/depth_cam/depth/camera_info",
+    "bias_of_old_default_mm": 3.9,
+    "new_options": ["--roi-frac", "--exclude u0,u1,v0,v1"]
+  },
+  "hardware_claimed": "partial",
+  "caveats": [
+    "one static pose, arm not moving",
+    "d435i table plane is measured with the deployed frames.yaml extrinsic; separating a physical mount shift from a config/depth offset needs a fresh external calibration",
+    "historical multipose z values used the old RGB-intrinsics default and are ~4 mm too negative if run without an explicit --info-topic"
+  ]
+}

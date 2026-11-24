@@ -1,0 +1,16 @@
+# 2026-11-24 table-plane check
+
+02bd1bb5162f006b003300a0d67f350f  wrist_plane_roi40_20261124.csv
+39292224c32fc0c42d2ba0fef8274628  wrist_plane_tableonly_20261124.csv
+83e28f4edbc91f9fa42e4f6e2e20db14  wrist_snap_rgb.png
+83b8df4c121c10de245f17f73a69d464  wrist_snap_depth.png
+30103a53d131104889896f28d9173970  ext_aligned_depth.png
+
+# config + script (repo)
+d79040272013f8ba19b2eb67234a3b0a  ../../scripts/wrist_tf_multipose_check.py
+ecc819f3ad3e0c9bfe3939e2f98db236  ../../config/wrist_tf.yaml
+4550385f5a1917e4c7e4976175bfbdb5  ../../config/frames.yaml
+
+# robot-side deployed configs
+ecc819f3ad3e0c9bfe3939e2f98db236  /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/share/jcheng_perception_edge/config/wrist_tf.yaml
+4550385f5a1917e4c7e4976175bfbdb5  /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/share/jcheng_perception_edge/config/frames.yaml

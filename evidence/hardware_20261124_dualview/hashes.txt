@@ -1,0 +1,22 @@
+# 2026-11-24 dual-view fusion run
+
+b83f4cbfcaf31dd128a6bcbcfd790bcf  dual_verify5.json
+c36e4f77fd35ed949e001cede5181ebd  mouse_observations_and_fused.json
+45e069786ea168d4d56cf3cc0c4b423d  cameras_dual_verify.yaml
+6b478c1f13487599132731d8649adda3  fusion_dual_verify.yaml
+11b7ec26ba2d295bd2f2b9782f96e89b  edge_dual_verify5.log
+60766a09c63ee40aedaf31879c0c0f6c  gpu_dual_verify5.log
+
+# repo config (modified this run)
+2a584ef5dc158362551e9f2891c2b959  ../../config/cameras.yaml
+29daa1fd4655e9183cf4628d1e020928  ../../config/fusion.yaml
+
+# run 7: hardware coalesce 600 ms profile
+98dccf270ee7a1054c461012971667eb  evidence/hardware_20261124_dualview/dual_verify7.json
+3fb73a24d90a9d66b0cfaf873c586be5  evidence/hardware_20261124_dualview/cup_observations_and_fused_600ms.json
+7f67afc2682c3d590a947227ade4562c  evidence/hardware_20261124_dualview/fusion_dual_hardware.yaml
+45e069786ea168d4d56cf3cc0c4b423d  evidence/hardware_20261124_dualview/cameras_dual_verify.yaml
+2ab00f404a3607a5b36ec5cf4936daf2  evidence/hardware_20261124_dualview/edge_dual_verify7.log
+23b77cf8cbcba4561bf24e65be917623  evidence/hardware_20261124_dualview/gpu_dual_verify7.log
+
+7f67afc2682c3d590a947227ade4562c  config/fusion_dual_hardware.yaml

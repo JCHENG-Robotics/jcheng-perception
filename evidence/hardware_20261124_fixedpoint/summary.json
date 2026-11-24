@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-24",
+  "robot": "ArmPi Ultra (Pi 5, ROS 2 Humble, container ArmPiUltra)",
+  "hardware_claimed": true,
+  "mode": "fixed_point_lt_5mm_validation",
+  "result": "blocked_by_silent_bus_servo_bus",
+  "validation_executed": false,
+  "no_motion_commands_sent": true,
+  "prepared_protocol": {
+    "target": "printed AprilTag DICT_APRILTAG_36h11 id 0, 60 mm black square",
+    "estimators": [
+      "depth: production path (marker-centre pixel -> depth patch -> RGB K -> base_link TF at depth stamp)",
+      "pnp: RGB-only solvePnP(IPPE_SQUARE) marker centre"
+    ],
+    "poses": "3+ wrist poses, >=10 s each; external static cross-view",
+    "scripts": [
+      "scripts/fixed_point_check.py",
+      "scripts/fixed_point_report.py"
+    ],
+    "self_test": {
+      "opencv": "4.10.0-dev",
+      "cases": [
+        {"distance_m": 0.20, "rotation_deg": 0, "range_error_mm": 0.54, "reprojection_px": 0.11},
+        {"distance_m": 0.35, "rotation_deg": 20, "range_error_mm": 2.05, "reprojection_px": 0.03},
+        {"distance_m": 0.50, "rotation_deg": -35, "range_error_mm": 2.11, "reprojection_px": 0.05}
+      ],
+      "note": "2 mm cases are pixel quantisation of the synthetic marker; tolerance 5 mm catches corner-order/size errors"
+    }
+  },
+  "verified": {
+    "camera_streams": "external 640x480 colour+aligned depth same stamp; wrist 640x400 rgb/depth",
+    "external_tf": "base_link -> camera_color_optical_frame resolves, matches frames.yaml",
+    "wrist_tf_published": false,
+    "detector_self_test": true
+  },
+  "blocker": {
+    "symptom": "vendor /ros_robot_controller/bus_servo/get_state never answers (unicast id 6 and broadcast 254)",
+    "last_successful_bus_read": "2026-11-24 14:12:40 (Pi clock; clock jumped later)",
+    "attempts": [
+      "two start_node.service restarts",
+      "full robot power cycle (Pi rebooted, servo LEDs went dark)",
+      "motion gateway 8766 stopped before controller restart",
+      "single-servo read after each attempt"
+    ],
+    "discriminators": {
+      "buzzer_host_to_mcu": "audible 3 x 1 s beeps, operator confirmed",
+      "battery": "MCU->host only (unsolicited sys_queue); does not prove host->MCU",
+      "servo_power": "servo LEDs lit with robot on, dark when switched off",
+      "serial_owner": "only ros_robot_controller owns /dev/ttyUSB0",
+      "sdk_read": "bus_servo_queue.get(block=True) with no timeout; blocks the single-threaded executor"
+    },
+    "conclusion": "fault is on the MCU->servo-bus side: 3-pin bus cable/connector or the MCU servo UART; not ROS/TF/bridge"
+  },
+  "next_actions": [
+    "power off, reseat the 3-pin bus cable at the expansion board and base servo, inspect signal wire",
+    "swap the bus cable if a spare exists; test the arm on another controller if available",
+    "power on; first check one unicast bus-servo read",
+    "then start wrist_tf + ext_tf, place the tag flat left of the can, run the prepared protocol"
+  ],
+  "state_left": {
+    "robot_power": "off",
+    "gateway_pose_8766": "stopped (manual service)",
+    "armpi_vision": "unit active (exited), Aurora node down after vendor restarts",
+    "tf_nodes": "not running",
+    "script_on_robot": "/tmp/fixed_point_check.py (container /tmp)"
+  },
+  "hashes_file": "hashes.txt"
+}

@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-24",
+  "session": "run 2 - resumed after the operator reseated the bus-servo cable",
+  "mode": "external static cross-view, single camera; wrist half still blocked",
+  "robot": "ArmPi Ultra (Pi 5, ROS 2 Humble, container ArmPiUltra)",
+  "no_motion_commands_sent": true,
+  "motion_test_sent": {
+    "what": "bus-servo write probes: id 4 784 -> 814 -> 784 (2 s each), then id 6 500 -> 560 -> 500 (3 s each)",
+    "why": "read hangs can be caused by a dead reply path only; a visible write distinguishes MCU->servo TX from reply loss",
+    "operator_observation": "id 4 (7 deg) not clearly seen; id 6 base yaw swung ~14 deg and returned - operator confirmed by eye",
+    "result": "write path MCU -> servo confirmed working"
+  },
+  "bus_servo": {
+    "read_after_cable_reseat": "READS WORK; the apparent silence was a client-side RMW mismatch",
+    "root_cause": "this session's later client calls (ros2 service call, a bash-sourced rclpy client) ran on rmw_fastrtps_cpp while the vendor stack runs rmw_cyclonedds_cpp (set by ~/.zshrc). Topic publish crosses the two RMWs (the base-yaw probe really moved the arm), but ROS 2 services do not, so the request never reached ros_robot_controller and the client hung. Same node, same moment: bash client times out, zsh client returns success=True in <10 ms.",
+    "operator_capture": "strace on the node showed a complete 7-byte query AA 55 05 02 05 06 EC and the matching reply AA 55 05 05 06 05 00 F6 01 52 (id 6, cmd 5, position 502) in 7.65 ms; five queries (ids 6,5,4,3,2) returned 502/596/830/113/501, matching the ROS service",
+    "retracted": "'servo -> MCU receive side dead' and 'the node is wedged' were wrong: /ros_robot_controller/describe_parameters also hung only because it was called from the same wrong-RMW shell",
+    "real_traps": [
+      "vendor sdk bus_servo_queue.get(block=True) has no timeout and does not check the returned id/command, so a genuinely lost reply would block the service callback and the single-threaded executor forever - real risk, not observed to trigger in this session",
+      "a ros2 CLI daemon started under one RMW keeps reporting the graph, so `ros2 service list` shows the service while cross-RMW calls still hang",
+      "/controller_manager/servo_states publishes the last commanded pulse at ~10 Hz with voltage=0; the ArmPi Studio position readout is that cache, not bus feedback"
+    ],
+    "rule": "on the robot, every client (CLI, rclpy script, wrist_tf, check scripts) must run under ~/.zshrc / rmw_cyclonedds_cpp; a service that 'hangs' is first a suspected RMW mismatch, not a hardware fault"
+  },
+  "script_fix": {
+    "symptom": "fixed_point_check.py recorded detections=0 on a tag the detector finds in a saved frame",
+    "cause": "one rclpy.spin_once per sample period left the callback queue behind the streams; the colour frame paired with the depth ring aged past --depth-tolerance-ms (250 ms) and every sample was dropped before detection",
+    "fix": "spin continuously (50 ms) between samples and call sample() only when the period is due",
+    "verified": "same live scene: 0/24 samples before, 19/19 after"
+  },
+  "external_run": {
+    "command": "timeout 75 python3 fpcheck_repo.py --camera ext --duration 60 --rate 3 --out /tmp/fixed_point_ext_20261124.csv",
+    "target": "printed AprilTag 36h11 id 0, 60 mm black square, flat on the table 0.217 m in front of the external D435i",
+    "duration_s": 60,
+    "rate_hz": 3,
+    "samples": 175,
+    "detections": 175,
+    "tf_failures": 0,
+    "tf_mode": "exact (175/175)",
+    "depth_age_ms_mean": 7.6,
+    "tf_chain": "base_link -> camera_link (ext_tf, driver camera_link->colour-optical inverted) -> camera_color_optical_frame (driver); base->optical origin equals the frames.yaml static fallback (0.1393, 0.0270, 0.0367) m",
+    "point_base_link_m": {
+      "depth_median": [0.31483, 0.05236, -0.09249],
+      "depth_3d_sd_mm": 0.48,
+      "pnp_median": [0.31887, 0.05228, -0.09298],
+      "pnp_3d_sd_mm": 0.03,
+      "depth_minus_pnp_mm": [-4.04, 0.07, 0.49],
+      "depth_minus_pnp_norm_mm": 4.07,
+      "note": "the 4.07 mm is a depth-vs-PnP bias of one camera (3.7 mm of it along camera z, depth closer), not a cross-view error"
+    },
+    "repeatability": "within-run scatter 0.48 mm (depth) / 0.03 mm (pnp); marker reprojection 0.85 px median, 0.88 px max"
+  },
+  "gate": {
+    "limit_mm": 5,
+    "cross_view_evaluated": false,
+    "reason": "the wrist half of the protocol needs base_link -> camera_optical_measured from bus-servo reads; the reads work (zsh/CycloneDDS client), the wrist run is the next step",
+    "ext_only_conclusion": "repeatability and depth-vs-PnP agreement measured; absolute accuracy across views NOT yet validated"
+  },
+  "next_actions": [
+    "run the wrist 3-pose half with wrist_tf started from a ~/.zshrc (CycloneDDS) shell and the check script under the same env",
+    "keep every client on rmw_cyclonedds_cpp; use the zsh snippet pattern for one-off service calls",
+    "if a read genuinely hangs with the right RMW, stop and preserve the scene (strace the node) before retrying"
+  ],
+  "files": {
+    "csv": "fixed_point_ext_20261124_run2.csv",
+    "hashes": "hashes_run2.txt"
+  }
+}

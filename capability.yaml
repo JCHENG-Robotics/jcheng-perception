@@ -75,7 +75,11 @@ safety:
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 58
+  unit_tests: 65
+  drift_regression:
+    passed: 2026-11-24 (offline replay of dual-view run-7 observations)
+    evidence: evidence/analysis_20261124_drift_bias/
+    result: static-target worst drift 696 mm recorded / 478 mm old tracker -> 6.4 mm with the per-view bias model
   ros_build: 4 packages on ROS 2 Jazzy (2026-11-24)
   synthetic_end_to_end: passed 2026-11-23 (Pi 5 edge logic on x86, mock detector)
   gpu_backend_smoke:

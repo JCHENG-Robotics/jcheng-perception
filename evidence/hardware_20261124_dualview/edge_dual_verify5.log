@@ -1,0 +1,8 @@
+[INFO] [launch]: All log files can be found below /dev/shm/jcheng-roslog/2026-11-24-09-38-09-132171-raspberrypi-231378
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [perception_edge-1]: process started with pid [231391]
+[perception_edge-1] [INFO] [1795513090.289762383] [jcheng_perception_edge]: edge ready: cameras=d435i_ext,aurora_wrist target_frame=base_link uplink=True
+[perception_edge-1] [WARN] [1795513090.296758772] [jcheng_perception_edge]: TF unavailable base_link -> camera_color_optical_frame: "base_link" passed to lookupTransform argument target_frame does not exist. 
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [perception_edge-1]: sending signal 'SIGINT' to process[perception_edge-1]
+[INFO] [perception_edge-1]: process has finished cleanly [pid 231391]
