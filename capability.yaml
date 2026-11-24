@@ -55,6 +55,7 @@ topics:
     - jcheng_perception_msgs/FusedTargetArray
     - jcheng_perception_msgs/PerceptionStatus
     - jcheng_perception_msgs/GpuStatus
+    - tf2_msgs/TFMessage (wrist_tf: base_link -> camera_optical_measured)
 
 contracts:
   status: provisional_in_repo
@@ -67,13 +68,15 @@ safety:
   - No actuator command is produced or consumed.
   - A detection without a time-matched depth frame and TF sample is dropped.
   - The wrist camera has no static TF fallback; missing TF means no observation.
+  - Wrist TF is computed from bus-servo positions, not the vendor
+    `/joint_states` command cache; no fresh bus read means no TF.
   - Periodic state streams use best-effort QoS so a slow subscriber cannot
     block the edge executor.
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 53
-  ros_build: 4 packages on ROS 2 Jazzy (2026-11-23)
+  unit_tests: 58
+  ros_build: 4 packages on ROS 2 Jazzy (2026-11-24)
   synthetic_end_to_end: passed 2026-11-23 (Pi 5 edge logic on x86, mock detector)
   gpu_backend_smoke:
     mock: passed
@@ -87,6 +90,7 @@ verification:
   pi5_arm64_build: passed (4 packages, 27.1 s, ROS 2 Humble)
   pi5_synthetic_end_to_end: passed (6.2/6.3 Hz, match 0.994, 48 ms, one fused track)
   wrist_camera: passed (driver rebuilt from local SDK; RGB 6.7-6.8 Hz, depth 3.1-6.4 Hz, 640x400)
-  real_wrist_pipeline: partial (target emitted with mock blue detector; metric z invalid, not for motion)
+  wrist_tf: passed (bus-servo 10 Hz, live URDF FK, 1000+ reads / 0 failures; table plane z=-0.0836 m vs -0.0825 m reference, tilt 1.21 deg, RMS 0.61 mm; single static pose)
+  real_wrist_pipeline: data_path_passed (target emitted with mock blue detector; metric TF now measured, single-pose table check passed; multi-pose and motion not validated)
   external_camera_alignment: blocked (split UVC colour + depth-only RealSense; ADR 0004 proposed)
-  hardware_end_to_end: partial (no motion commands; camera/edge/GPU path exercised)
+  hardware_end_to_end: partial (no motion commands; camera/edge/GPU/TF path exercised)

@@ -2,8 +2,8 @@
 
 **分布式机器人视觉感知（D 方案）**：树莓派 5 负责图像采集、深度解码、TF 维护、时间戳环形缓存、3D 反投影、目标关联与卡尔曼融合；笔记本 GPU 异步承担两路 YOLO 检测。图像经压缩跨 ROS 2 传输，检测结果携带**采集时间戳**返回；Pi 5 按时间戳回溯匹配深度与 TF，两路观测按距离动态加权，输出统一目标位姿给机械臂规划。
 
-> 状态：**v0.1.0：代码、离线仿真、单机合成、Pi 5 ARM64 合成、腕部真实相机数据链路已验证；
-> 实机度量位姿（z 仍不正确）、外机位深度对齐与运动集成未验证。**
+> 状态：**v0.1.0：代码、离线仿真、单机合成、Pi 5 ARM64 合成、腕部真实相机数据链路、
+> 腕部总线实测 TF 与单姿态桌面平面核验已验证；多姿态精度、外机位深度对齐与运动集成未验证。**
 > 本仓库不包含模型权重，不包含厂商代码，不发布任何运动命令。
 
 ---
@@ -66,6 +66,7 @@ jcheng-perception/
 ├── config/
 │   ├── cameras.yaml              # 真实相机/话题/噪声/量程
 │   ├── cameras_synthetic.yaml    # 合成演示
+│   ├── wrist_tf.yaml             # 腕部总线实测 TF/手眼/伺服映射
 │   ├── fusion.yaml               # 关联/滤波/相位先验
 │   ├── fusion_demo.yaml
 │   ├── frames.yaml               # 外机位静态外参回退
@@ -88,13 +89,13 @@ jcheng-perception/
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # 临时 IDL（M2 提升到 jcheng-interfaces）
 │   ├── jcheng_perception_core/   # 纯 Python，无 ROS 依赖
-│   ├── jcheng_perception_edge/   # Pi5 节点 + 合成场景
+│   ├── jcheng_perception_edge/   # Pi5 节点 + 合成场景 + wrist_tf
 │   └── jcheng_perception_gpu/    # 笔记本 GPU 检测节点
 ├── scripts/
 │   ├── simulate_pipeline.py      # 离线全链路仿真
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 53 项 ROS-free 测试
+├── tests/                        # 58 项 ROS-free 测试
 └── capability.yaml
 ```
 
@@ -132,14 +133,19 @@ ros2 launch jcheng_perception_gpu synthetic_demo.launch.py
 ### 5.4 真实部署
 
 ```bash
-# Pi 5（机器人容器/主机）
+# Pi 5（机器人容器/主机；先 source 厂商工作区以提供
+# ros_robot_controller_msgs 和总线服务）
 ros2 launch jcheng_perception_edge pi5_edge.launch.py
+# 该 launch 默认同时启动 wrist_tf；也可单独启动：
+# ros2 launch jcheng_perception_edge wrist_tf.launch.py
 
 # 笔记本 GPU
 ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 ```
 
 部署、DDS、相机驱动与单设备所有者冲突见 [DEPLOYMENT.md](docs/DEPLOYMENT.md)。
+实机腕部 TF 必须来自 `wrist_tf` 的总线实测关节，不能用厂商 `/joint_states`
+命令缓存；缺失 `camera_optical_measured` 时腕部观测会被丢弃。
 
 ## 6. 输出契约
 
@@ -166,7 +172,7 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 | 输出轨迹 | 1 条 confirmed，双视图融合，权重 0.21 / 0.79，phase FINE |
 | 真实模型 CPU 烟测 | ONNX 197.5 ms / OpenVINO 126.7 ms / Ultralytics 1.04 s（首帧），各 4 个框 |
 | 真实模型 GPU 烟测 | RTX 3060：Ultralytics 稳态 **9.0 ms（FP32）/ 7.4 ms（FP16）** 单图；ROS 节点平均 54.3 ms/帧 |
-| 单元测试 | 53 passed |
+| 单元测试 | 58 passed |
 | colcon 构建 | 4 包通过（Jazzy 主机） |
 
 > 以上合成指标不是实机精度或延迟验证。真实模型烟测是**单图推理**，不代表
@@ -177,7 +183,7 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 > Ultralytics 8.4.216**；CUDA 版使用 RTX 3060，`torch.cuda.is_available()=True`。
 > ROS 节点通过 venv Python 验证了 ONNX Runtime、Ultralytics CPU 与 CUDA。
 
-### 7.1 Pi 5 与腕部真实相机（部分验证）
+### 7.1 Pi 5 与腕部真实相机（数据链路 + 单姿态 TF 验证）
 
 | 项 | 结果 |
 |---|---|
@@ -185,11 +191,13 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 | Pi 5 合成端到端 | 6.2/6.3 Hz、匹配 99.4%、延迟 48 ms、1 条双视图轨迹 |
 | 腕部 Aurora | 驱动从本地 SDK 重建；RGB 6.7–6.8 Hz、深度 3.1–6.4 Hz、640×400 |
 | 腕部真实链路（mock 蓝色检测） | GPU 4.9 Hz/0 失败；edge 输出 `blue_block-001`，FINE，wrist 权重 1.0 |
-| 实机位姿 | **z=+0.59 m 不正确**（桌面约 -0.08 m），TF/标定待修正，禁止用于运动 |
+| 腕部度量 TF | `wrist_tf` 总线实测 10 Hz、1000+ 次读取 0 失败；`camera_optical_measured` |
+| 桌面平面核验 | z=-0.0836 m（参考 -0.0825 m，差 1.1 mm）、倾角 1.21°、RMS 0.61 mm；**单静态姿态** |
 | 外机位 | UVC 彩色 + 仅深度 RealSense，未对齐；ADR 0004 待执行 |
 
-> 详细记录：[HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md)。本次未发送运动命令；
-> 测试后已停止相机/感知进程，厂商服务保持原状。
+> 详细记录：[HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md)。测试未发送运动命令；
+> 测试后已停止相机/感知进程，厂商服务保持原状。多姿态/固定目标精度与运动中的
+> TF 滞后仍未验证，当前位姿不得直接用于运动。
 
 ## 8. 设计边界
 
@@ -197,6 +205,8 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 - **不做安全判定**：规划器/安全层必须自行校验工作空间、限位与目标新鲜度。
 - **不在 Pi 5 跑 YOLO**：`jcheng_perception_edge`/`core` 中没有任何检测器导入（有静态测试）。
 - **不伪造深度/TF**：时间匹配失败即丢弃；腕相机没有静态外参回退。
+- **不信任厂商 `/joint_states` 做腕部几何**：它是命令缓存；`wrist_tf` 用总线
+  实测关节 + URDF FK + 手眼发布 `camera_optical_measured`，读不到就不发布。
 - **模型权重不入库**：见 [MODEL_ITERATION.md](docs/MODEL_ITERATION.md) 与 [LICENSE-REVIEW.md](LICENSE-REVIEW.md)。
 
 ## 9. 参考与来源

@@ -7,9 +7,14 @@
 
 ### 1.1 腕部 Aurora 930
 
-- 光学帧：`camera_optical_calibrated`（OpenCV 光学：x 右、y 下、z 前）。
-- 发布方式：`rgb_camera_link` 的静态子帧（`camera_frame_publisher`）。
-- 手眼（TSAI，14 姿态）：
+- 光学帧：`camera_optical_measured`（OpenCV 光学：x 右、y 下、z 前）。
+- 发布方式：本仓库 `wrist_tf` 读取总线实测关节，做 `base_link→link4` FK，
+  再组合下面的手眼，发布为 `base_link` 的动态子帧（10 Hz）。
+- 为什么不用静态 `camera_optical_calibrated`：厂商 `/joint_states` 是命令缓存，
+  与总线实测可差数百脉冲；静态帧的父链会错。2026-11-24 实测命令缓存
+  joint1=+0.838、joint2–5=0，而总线 joint1≈-0.013、joint2≈+0.406、
+  joint3≈-1.382、joint4≈-1.629。
+- 手眼（TSAI，14 姿态，使用总线实测关节）：
 
 ```text
 T_link4_camera
@@ -27,7 +32,8 @@ D = [0.00960977, -0.05017150, 0.00056402, -0.00070902, 0.03192810]
 ```
 
 - 注意：`rgb_camera_link` 是 **body** 帧；`depth_cam_color_optical_frame`
-  在实机上与它恒等，不是光学帧。反投影必须用 `camera_optical_calibrated`。
+  在实机上与它恒等，不是光学帧。反投影必须用标定光学帧
+  `camera_optical_measured`。
 
 ### 1.2 车头 D435i
 
@@ -76,12 +82,14 @@ D = [0.14971375, -0.44610982, 6.162e-06, -0.00012207, 0.34121030]
 | 内容 | 文件 |
 |---|---|
 | 相机话题、光学帧、内参回退、深度噪声/量程 | `config/cameras.yaml` |
+| 腕部总线实测 TF、手眼矩阵、伺服映射 | `config/wrist_tf.yaml` |
 | 外机位静态回退 `T_base_front` | `config/frames.yaml` |
 | 合成场景内参/话题 | `config/cameras_synthetic.yaml` |
 | 融合/方向/合并参数 | `config/fusion.yaml` |
 
-腕相机**没有**静态外参回退：`T_base_link ← camera_optical_calibrated` 必须由
-`robot_state_publisher`/`camera_frame_publisher` 实时发布。缺失 TF 时观测被丢弃。
+腕相机**没有**静态外参回退：`T_base_link ← camera_optical_measured` 必须由
+`wrist_tf` 实时发布。缺失 TF 时观测被丢弃。启动 `wrist_tf` 前需 source 厂商
+工作区（`ros_robot_controller_msgs`）。
 
 ## 3. 重新标定的触发条件
 
@@ -99,7 +107,8 @@ D = [0.14971375, -0.44610982, 6.162e-06, -0.00012207, 0.34121030]
 ## 4. 验证流程
 
 1. 桌面放一个固定、有纹理/深度的目标（方块或标定板）。
-2. 启动 edge + GPU，静止采集 ≥ 5 s。
+2. 启动 `wrist_tf`，确认 `ros2 run tf2_ros tf2_echo base_link
+   camera_optical_measured` 的 z 轴朝前下方；再启动 edge + GPU，静止采集 ≥ 5 s。
 3. 记录 `/perception/observations/d435i_ext` 与 `.../aurora_wrist` 的位置：
    - 两视图在 base 下的差应接近标定误差量级；
    - 目标在桌面时 z 应接近桌面 + 物体半高。
@@ -114,6 +123,8 @@ D = [0.14971375, -0.44610982, 6.162e-06, -0.00012207, 0.34121030]
 | 来源 | 量级 | 影响 |
 |---|---|---|
 | 腕相机手眼 | 2.9–3.3 mm / 0.4° | 近距离抓取 |
+| 腕部关节读数 | 10 Hz、单次 5 关节读取 34 ms；总线 ±1 pulse | 运动中 TF 的滞后 |
+| 腕部深度/彩色配准 | IR-RGB 约 9.9 mm 未建模 | 近距离像素选择 |
 | 外机位静态外参 | 棋盘 0.8° 平面、深度拟合 30–36° 俯仰 | 粗定位 |
 | 深度噪声 | z² 相关；见 `q/floor` | 融合权重 |
 | 深度/彩色时间差 | 8–12 Hz 下的相机运动 | 像素选择偏差 |

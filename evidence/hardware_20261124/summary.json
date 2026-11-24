@@ -1,0 +1,106 @@
+{
+  "schema": "jcheng-perception-hardware/1",
+  "date": "2026-11-24",
+  "kind": "measured_wrist_tf_validation",
+  "hardware_claimed": true,
+  "motion_commands_sent": false,
+  "environment": {
+    "robot": "Raspberry Pi 5, 8 GB, Debian 12, aarch64",
+    "container": "ArmPiUltra (ROS 2 Humble, rmw_cyclonedds_cpp, domain 0)",
+    "laptop": "Ubuntu 24.04, ROS 2 Jazzy",
+    "perception_commit": "523cb8d (deployed to the robot as a source overlay)",
+    "dds": "CycloneDDS on both ends of the robot-local test"
+  },
+  "root_cause": {
+    "symptom": "wrist target z=+0.5911 m while the table is at about -0.0825 m",
+    "joint_states": {
+      "joint1": 0.8377580409572781,
+      "joint2": 0.0,
+      "joint3": 0.0,
+      "joint4": 0.0,
+      "joint5": 0.0
+    },
+    "bus_servo_pulses": {
+      "joint1_id6": [496, 497],
+      "joint2_id5": [597, 598],
+      "joint3_id4": [830, 830],
+      "joint4_id3": [109, 111],
+      "joint5_id2": [500, 501]
+    },
+    "bus_joint_rad": {
+      "joint1": -0.017,
+      "joint2": 0.411,
+      "joint3": -1.382,
+      "joint4": -1.629,
+      "joint5": 0.004
+    },
+    "note": "Vendor /joint_states is a command cache / default publish; the controller echo is not encoder feedback. Feeding it to robot_state_publisher makes the wrist optical z axis point up and places the table above the camera."
+  },
+  "implementation": {
+    "node": "jcheng_perception_edge/wrist_tf",
+    "frame": "camera_optical_measured",
+    "parent_frame": "base_link",
+    "rate_hz": 10.0,
+    "service": "/ros_robot_controller/bus_servo/get_state",
+    "bus_read_latency_ms": {
+      "median": 34.3,
+      "max": 39.1
+    },
+    "kinematic_chain": "base_link -> link1 -> link2 -> link3 -> link4",
+    "urdf_source": "live /robot_description (transient-local)",
+    "hand_eye": {
+      "source": "jcheng-manipulation evidence/calibration/20261117 TSAI",
+      "translation_m": [-0.0348444217248839, -0.009063734133950539, 0.0585736292974927],
+      "rpy_deg": [0.951, -0.058, -89.789],
+      "board_scatter_mm": 2.94,
+      "heldout_mm": 3.29
+    },
+    "config": "config/wrist_tf.yaml",
+    "launch": "wrist_tf.launch.py; pi5_edge.launch.py starts it by default (start_wrist_tf)"
+  },
+  "tf_check": {
+    "reads_in_log": 1038,
+    "failures": 0,
+    "translation_m": [0.1753, 0.0082, 0.1973],
+    "view_z": [0.5124, -0.0073, -0.8587],
+    "tf2_echo_rpy_deg": [-149.174, 0.143, -91.051]
+  },
+  "table_plane": {
+    "method": "depth back-projection with the depth CameraInfo + RANSAC plane fit in base_link using camera_optical_measured",
+    "samples": 4676,
+    "inlier_fraction": 1.0,
+    "rms_mm": 0.61,
+    "plane_normal": [-0.0162, -0.0136, 0.9998],
+    "z_at_base_origin_m": -0.0836,
+    "tilt_deg": 1.21,
+    "camera_above_plane_m": 0.2809,
+    "reference_table_z_m": -0.0825,
+    "difference_mm": 1.1
+  },
+  "edge_probe": {
+    "note": "edge + mock GPU ran during the TF validation; the blue target was no longer in view, so the mock detector emitted no detections",
+    "status_sample": {
+      "total_frames": 16,
+      "total_detections": 0,
+      "camera_fps": [0.0, 4.911839962005615],
+      "gpu_alive": true,
+      "notes": ["aurora_wrist:depth_failures=3"]
+    }
+  },
+  "cleanup": {
+    "camera_driver_stopped_after_test": true,
+    "perception_processes_stopped": true,
+    "depth_cam_publishers_after_stop": 0,
+    "vendor_services_unchanged": [
+      "start_node",
+      "armpi-ext-cam",
+      "armpi-rs-depth",
+      "armpi-gateway"
+    ]
+  },
+  "caveats": [
+    "One static arm pose only; multi-pose x/y/z accuracy is not measured.",
+    "The depth plane uses the RGB optical transform; the ~9.9 mm IR-RGB baseline is not modeled.",
+    "No motion commands were sent; the pose is not cleared for motion."
+  ]
+}

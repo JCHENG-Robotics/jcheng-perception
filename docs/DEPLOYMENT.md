@@ -22,6 +22,10 @@
   `realsense2_camera` 彩色 + `aligned_depth_to_color`，再启用本仓库默认配置。
 - Python：`numpy`、`PyYAML`、`opencv-python`/`python3-opencv`、`cv_bridge`、
   `tf2_ros`。
+- 腕部 TF：`wrist_tf` 需要厂商 `ros_robot_controller_msgs` 和
+  `/ros_robot_controller/bus_servo/get_state`；启动前 source 厂商工作区
+  （容器内通常 `source ~/.zshrc`）。它用总线实测关节 + `/robot_description`
+  FK + 手眼发布 `camera_optical_measured`；不要用命令缓存 `/joint_states` 的 TF。
 - **单设备所有者**：同一时刻只能有一个进程打开 D435i。推荐 RealSense 节点
   独占；Studio 网关改为订阅 `/camera/color/image_raw`，不再打开 `/dev/video4`。
 
@@ -101,9 +105,12 @@ ros2 topic hz /camera/color/image_raw
 ros2 topic hz /camera/aligned_depth_to_color/image_raw
 
 # TF：两个光学帧都必须存在
-ros2 run tf2_ros tf2_echo base_link camera_optical_calibrated
+ros2 run tf2_ros tf2_echo base_link camera_optical_measured   # wrist_tf
 ros2 run tf2_ros tf2_echo base_link camera_color_optical_frame
 ```
+
+`camera_optical_measured` 缺失时腕部观测会被丢弃（fail closed）。确认
+`wrist_tf` 日志有 `wrist_tf reads=... failures=0`，且 z 轴朝下/前下方（桌面场景）。
 
 > 若现场仍是分离的 `/ext_cam/color/image_raw` +
 > `/camera/camera/depth/image_rect_raw`，只能用于预览/调试，不能接入本仓库的
@@ -118,6 +125,13 @@ ros2 run tf2_ros tf2_echo base_link camera_color_optical_frame
 export ROS_DOMAIN_ID=0                 # 与厂商栈同域；或按系统方案用 42
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp   # 机器人推荐（已装时）
 ros2 launch jcheng_perception_edge pi5_edge.launch.py
+```
+
+`pi5_edge.launch.py` 默认同时启动 `wrist_tf`。若已单独启动，传
+`start_wrist_tf:=false` 避免重复。单独启动：
+
+```bash
+ros2 launch jcheng_perception_edge wrist_tf.launch.py
 ```
 
 可选参数：
@@ -173,6 +187,9 @@ ros2 topic echo --once --qos-reliability best_effort /perception/gpu_status
 # 5) 服务
 ros2 service call /jcheng_perception_edge/drop_recheck std_srvs/srv/Trigger
 ros2 service call /jcheng_perception_edge/reset std_srvs/srv/Trigger
+
+# 6) 腕部实测 TF（应 10 Hz 更新，z 轴朝前下方）
+ros2 run tf2_ros tf2_echo base_link camera_optical_measured
 ```
 
 通过标准（合成/离线）：
@@ -183,8 +200,9 @@ ros2 service call /jcheng_perception_edge/reset std_srvs/srv/Trigger
 - 固定目标时外机位与腕相机位置差在标定误差量级（合成场景 ~毫米）；
 - `drop_recheck` 后权重为 external 1.0、wrist 0.0，`recheck_required=true`。
 
-实机还需要：固定目标静止误差、移动目标跟踪误差、遮挡恢复时间、30 分钟
-长时间稳定性、GPU 断线降级行为。上述均**尚未执行**。
+实机已完成：单静态姿态的腕部 TF 桌面平面核验（z=-0.0836 m，参考 -0.0825 m，
+RMS 0.61 mm）。仍需：多姿态/固定目标 x/y/z、移动目标跟踪误差、遮挡恢复时间、
+30 分钟长时间稳定性、GPU 断线降级行为。
 
 ## 6. 带宽与资源估算
 

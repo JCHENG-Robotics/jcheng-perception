@@ -16,7 +16,8 @@
 | 网络丢包 | 上行/检测率下降；`mean_detection_latency` 波动 | 丢帧；时间匹配仍正确（只要帧/深度还在环内） | 检查有线链路/域/RMW |
 | 检测延迟 > 缓冲 | `stale_detections`、`frame/depth` 失败计数 | 丢弃；不会拿旧帧冒充 | 增大 `*_buffer_seconds` 或降低延迟 |
 | 深度空洞/反光 | `valid_depth_fraction` 低；`occlusion_ratio` 高 | 键点→框中心→网格回退；仍无深度则丢 | 调整光照/相机/量程 |
-| 腕部 TF 缺失 | `tf_failures`；wrist 观测消失 | 腕部观测丢弃（无静态回退）；外机位继续 | 恢复 `camera_frame_publisher`/`robot_state_publisher` |
+| 腕部 TF 缺失 | `tf_failures`；wrist 观测消失 | 腕部观测丢弃（无静态回退）；外机位继续 | 恢复 `wrist_tf`（总线服务/厂商消息/`/robot_description`） |
+| 腕部 `/joint_states` 与总线不一致 | `tf2_echo` 的相机 z 轴朝上；目标 z 明显高于桌面 | **不要使用**该 TF；`wrist_tf` 只读总线 | 启动 `wrist_tf`；不要用 `camera_optical_calibrated` 的命令缓存父链 |
 | 外机位 TF 缺失 | `tf_failures` | 用 `frames.yaml` 静态回退（仅 ext） | 检查驱动/静态 TF |
 | 时钟跳变 | 匹配率突变、年龄异常 | 环仍可用但剪枝异常 | chrony 平滑；跳变后重启 edge |
 | 模型缺失/损坏 | GPU 每秒错误日志；`frames_failed` | 保留旧模型；无旧模型则无检测 | 放回权重/修路径；热加载 |

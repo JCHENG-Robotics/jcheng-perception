@@ -10,7 +10,11 @@
 | `/depth_cam/rgb/image_raw` | `sensor_msgs/Image` | Aurora RGB（640×400，~12 Hz） |
 | `/depth_cam/depth/image_raw` | `sensor_msgs/Image` | Aurora 深度（640×400，~8 Hz，毫米） |
 | `/depth_cam/rgb/camera_info` | `sensor_msgs/CameraInfo` | Aurora RGB 内参 |
-| `/tf`, `/tf_static` | `tf2_msgs/TFMessage` | `base_link ← camera_optical_calibrated` / `← camera_color_optical_frame` |
+| `/tf`, `/tf_static` | `tf2_msgs/TFMessage` | `base_link ← camera_optical_measured`（`wrist_tf`）/ `← camera_color_optical_frame` |
+
+`camera_optical_measured` 由 `wrist_tf` 以 10 Hz 发布：总线实测关节 + URDF FK +
+手眼。厂商 `camera_optical_calibrated` 只有在父链使用实测关节时才有效；实机
+`/joint_states` 是命令缓存，不能用。
 
 上述话题名可在 `config/cameras.yaml` 修改；若相机以压缩话题发布，把
 `rgb_compressed` / `depth_compressed` 设为 `true`。

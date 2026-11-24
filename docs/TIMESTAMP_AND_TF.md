@@ -64,6 +64,11 @@ RGB 框只负责“选哪个像素”；真正的 3D 坐标属于深度帧。若
   `PoseRingBuffer`。
 - 静态外机位只每 2 s 采样一次（0.5 Hz）：实测 100 Hz 双相机采样会占满一个
   edge 核。腕相机 30 Hz。
+- **腕部 TF 的父链必须来自总线实测关节**：厂商 `/joint_states` 是命令缓存
+  （实测 joint1=+0.838 rad、joint2–5=0，而总线为 joint1≈-0.013、
+  joint2≈+0.406、joint3≈-1.382、joint4≈-1.629）。`wrist_tf` 以 10 Hz 读取
+  `/ros_robot_controller/bus_servo/get_state`，用 `/robot_description` 做 FK，
+  发布 `base_link → camera_optical_measured`。不要用命令缓存 TF 做腕部几何。
 - 查询时：先按精确 stamp 找；否则在相邻两帧之间线性插值平移、slerp 插值旋转；
   间隔超过 `max_gap` 则拒绝。
 - 若 pose ring 无可用样本，外机位可回退到 `config/frames.yaml` 的
@@ -75,17 +80,22 @@ RGB 框只负责“选哪个像素”；真正的 3D 坐标属于深度帧。若
 | 相机 | 光学帧 | 说明 |
 |---|---|---|
 | D435i | `camera_color_optical_frame` | RealSense 驱动；若走 UVC/`ext_cam_optical`，改配置 |
-| Aurora | `camera_optical_calibrated` | 手眼标定的 OpenCV 光学帧；**不要**用 `rgb_camera_link` 或 `depth_cam_color_optical_frame` |
+| Aurora | `camera_optical_measured` | `wrist_tf` 用总线实测关节 + URDF FK + 手眼发布的 OpenCV 光学帧；**不要**用命令缓存 TF 或 `camera_optical_calibrated` |
 
-`rgb_camera_link` 是驱动 body 帧；`depth_cam_color_optical_frame` 在实机上与
-`rgb_camera_link` 恒等，并不是光学帧。详见
-`jcheng-manipulation/docs/hardware/camera_frames.md`。
+`camera_optical_calibrated` 仍是 `jcheng-manipulation` 发布的静态子帧，但它只有在
+父链 `base_link→…→rgb_camera_link` 使用实测关节时才有效；实机 `/joint_states`
+是命令缓存，因此本仓库改用 `camera_optical_measured`。`rgb_camera_link` 是驱动
+body 帧；`depth_cam_color_optical_frame` 在实机上与 `rgb_camera_link` 恒等，
+并不是光学帧。详见
+`jcheng-manipulation/docs/hardware/camera_frames.md` 与
+[`HARDWARE_BRINGUP.md`](HARDWARE_BRINGUP.md)。
 
 ## 7. 深度/彩色对齐要求
 
 - D435i：必须启用 `align_depth_to_color`，深度与彩色同分辨率、同光学帧。
-- Aurora：驱动输出的深度与 RGB 已按 `rgb_camera_link` 对齐（TF 视为重合）；
-  使用标定光学帧做反投影。
+- Aurora：驱动 TF 将深度与 RGB 视为重合（`depth_camera_link → rgb_camera_link`
+  identity），但 IR-RGB 约 9.9 mm 基线未建模；逐像素配准精度未验证。反投影
+  使用标定光学帧；单姿态桌面平面核验为 0.61 mm RMS、z 差 1.1 mm。
 - 若深度/彩色分辨率不一致，`synchronize()` 直接丢弃并计
   `depth_match_failures`。
 - 内参：优先使用 `CameraInfo`；消息尺寸不匹配或尚未到达时使用
@@ -104,7 +114,8 @@ RGB 框只负责“选哪个像素”；真正的 3D 坐标属于深度帧。若
 
 1. `ros2 topic hz --qos-reliability best_effort /perception/uplink/<cam>/image_compressed`
 2. `... /perception/detections/<cam>`（应≈上行率）
-3. `ros2 run tf2_ros tf2_echo base_link camera_optical_calibrated`
+3. `ros2 run tf2_ros tf2_echo base_link camera_optical_measured`
+   （需先启动 `wrist_tf`；静态 `camera_optical_calibrated` 不能替代）
 4. `/perception/status` 的匹配率与失败计数
 5. 若延迟高：检查 GPU `GpuStatus.frames_dropped`、队列、模型推理耗时
 
