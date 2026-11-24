@@ -2,9 +2,9 @@
 
 > **范围声明**：主体是 **x86 工作站 + ROS 2 Jazzy + 合成场景**，外加厂商
 > `yolov8s` 的单图 CPU/GPU 推理；**2026-11-23 做了 Pi 5 ARM64 合成与腕部真实相机
-> 数据链路测试；2026-11-24 修正腕部度量 TF 并完成单静态姿态桌面平面核验
-> （无运动命令）**。多姿态/固定目标精度与外机位对齐仍未验证，不能代表可用于
-> 运动的精度。
+> 数据链路测试；2026-11-24 修正腕部度量 TF 并完成单静态姿态桌面平面核验，同时
+> 跑通 Pi 5 edge → 笔记本 GPU 的外机位真实 YOLO 检测链路（无运动命令）**。
+> 多姿态/固定目标精度、深度对齐与运动集成仍未验证，不能代表可用于运动的精度。
 
 ## 1. 环境
 
@@ -248,6 +248,30 @@ difference             = 1.1 mm
 基线未建模）。多姿态、固定目标 x/y/z 与运动中的 TF 滞后仍需验证。测试期间未发送
 运动命令。
 
+### 2.10 跨机真实 YOLO（外机位检测链路，2026-11-24）
+
+笔记本安装 `ros-jazzy-rmw-cyclonedds-cpp` 后，两端统一 CycloneDDS 域 0、有线直连。
+Pi 5 edge 订阅外机位 UVC 彩色（1280×720，uplink 3 fps / q55），笔记本 RTX 3060
+运行厂商 `yolov8s.pt`（imgsz 640，conf 0.20）：
+
+```text
+GPU: fps 2.059, inference 55.2 ms 平均, frames_received 37, dropped 4, failed 0
+Edge: camera_fps 4.387, total_frames 115, total_detections 16,
+      matched 0, dropped 16, depth_failures 25, latency 186.8 ms, gpu_alive true
+Detection: dining table 0.2297, 1280x720,
+           header.stamp = frame_seq = 1795487500703345576 (原采集时间)
+```
+
+跨机发现验证：笔记本 `ros2 topic list` 可见机器人话题，`/joint_states` 可收。
+`matched=0` 是预期：彩色 1280×720 UVC 与深度 640×480 RealSense 未对齐，edge 在
+深度匹配阶段丢弃；本测试只验证真实模型、跨机传输、采集时间戳回传和 GPU 健康，
+不代表度量融合可用。
+
+操作注意：第一次**无界**尝试恰逢 Pi 应用层无响应（ping 正常，SSH banner/网关超时），
+随后断电重启；该命令还包含会匹配自身 shell 的 `pkill`，所以 edge 是否真正启动无法
+证实。之后用 `timeout -s INT 60` 有界重试成功；测试后进程为 0、四个厂商服务 active、
+负载约 5.8。720p edge 在负载较高的 Pi 上必须限时/监控。
+
 ## 3. 本轮发现并修复的问题
 
 | # | 现象 | 根因 | 修复 |
@@ -268,7 +292,8 @@ difference             = 1.1 mm
 
 ## 4. 未验证项
 
-- Pi 5 同时跑两路真实相机（外机位对齐 + 腕部）与真实 YOLO；
+- Pi 5 同时跑两路真实相机（外机位对齐 + 腕部）与腕部真实 YOLO；外机位真实 YOLO
+  检测链路已通，但深度未对齐、无度量观测；
 - 真实 D435i 单所有者/深度对齐（ADR 0004）；Aurora 驱动需持久化部署；
 - 腕部**多姿态/固定目标**的 x/y/z 精度与运动中的 TF 滞后（单姿态桌面平面已通过）；
 - 外机位的度量位姿与深度对齐；

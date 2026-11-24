@@ -91,6 +91,7 @@ verification:
   pi5_synthetic_end_to_end: passed (6.2/6.3 Hz, match 0.994, 48 ms, one fused track)
   wrist_camera: passed (driver rebuilt from local SDK; RGB 6.7-6.8 Hz, depth 3.1-6.4 Hz, 640x400)
   wrist_tf: passed (bus-servo 10 Hz, live URDF FK, 1000+ reads / 0 failures; table plane z=-0.0836 m vs -0.0825 m reference, tilt 1.21 deg, RMS 0.61 mm; single static pose)
+  cross_machine_yolo: partial (Pi 5 edge + laptop RTX 3060, CycloneDDS domain 0; yolov8s.pt 2.06 fps / 55.2 ms average; 16 detections received, 0 matched because the external depth is unaligned)
   real_wrist_pipeline: data_path_passed (target emitted with mock blue detector; metric TF now measured, single-pose table check passed; multi-pose and motion not validated)
   external_camera_alignment: blocked (split UVC colour + depth-only RealSense; ADR 0004 proposed)
-  hardware_end_to_end: partial (no motion commands; camera/edge/GPU/TF path exercised)
+  hardware_end_to_end: partial (no motion commands; camera/edge/GPU/TF and cross-machine detection paths exercised)

@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Cross-machine real YOLO detection path: installed `rmw_cyclonedds_cpp` on the
+  Jazzy laptop and ran the external camera through the Pi 5 edge to a laptop
+  RTX 3060 (`yolov8s.pt`). GPU 2.06 fps / 55.2 ms average, 37 frames received,
+  0 failed; edge saw 16 detections with the original capture stamp. All were
+  dropped at depth matching because the external depth is still the unaligned
+  split stream (1280x720 colour vs 640x480 depth). Detection path only; no
+  metric observations or motion.
+- Clean shutdown: the edge, GPU and synthetic nodes ignore a repeated SIGINT
+  during teardown, so `timeout -s INT` no longer prints a `KeyboardInterrupt`
+  traceback. The synthetic demo exits with all processes reporting cleanly.
 - Measured wrist TF: the invalid z was traced to the vendor `/joint_states`
   being a command cache (joint1 +0.838, joints 2-5 zero) while the bus servos
   read joint1 -0.013, joint2 +0.406, joint3 -1.382, joint4 -1.629 rad. New

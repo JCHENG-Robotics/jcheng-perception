@@ -3,7 +3,8 @@
 **分布式机器人视觉感知（D 方案）**：树莓派 5 负责图像采集、深度解码、TF 维护、时间戳环形缓存、3D 反投影、目标关联与卡尔曼融合；笔记本 GPU 异步承担两路 YOLO 检测。图像经压缩跨 ROS 2 传输，检测结果携带**采集时间戳**返回；Pi 5 按时间戳回溯匹配深度与 TF，两路观测按距离动态加权，输出统一目标位姿给机械臂规划。
 
 > 状态：**v0.1.0：代码、离线仿真、单机合成、Pi 5 ARM64 合成、腕部真实相机数据链路、
-> 腕部总线实测 TF 与单姿态桌面平面核验已验证；多姿态精度、外机位深度对齐与运动集成未验证。**
+> 腕部总线实测 TF 与单姿态桌面平面核验、外机位跨机真实 YOLO 检测链路已验证；
+> 多姿态精度、深度对齐与运动集成未验证。**
 > 本仓库不包含模型权重，不包含厂商代码，不发布任何运动命令。
 
 ---
@@ -183,7 +184,7 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 > Ultralytics 8.4.216**；CUDA 版使用 RTX 3060，`torch.cuda.is_available()=True`。
 > ROS 节点通过 venv Python 验证了 ONNX Runtime、Ultralytics CPU 与 CUDA。
 
-### 7.1 Pi 5 与腕部真实相机（数据链路 + 单姿态 TF 验证）
+### 7.1 Pi 5 与真实相机（数据链路 + TF + 跨机 YOLO）
 
 | 项 | 结果 |
 |---|---|
@@ -193,11 +194,13 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 | 腕部真实链路（mock 蓝色检测） | GPU 4.9 Hz/0 失败；edge 输出 `blue_block-001`，FINE，wrist 权重 1.0 |
 | 腕部度量 TF | `wrist_tf` 总线实测 10 Hz、1000+ 次读取 0 失败；`camera_optical_measured` |
 | 桌面平面核验 | z=-0.0836 m（参考 -0.0825 m，差 1.1 mm）、倾角 1.21°、RMS 0.61 mm；**单静态姿态** |
+| 跨机真实 YOLO（外机位） | 笔记本 RTX 3060 + CycloneDDS；GPU 2.06 fps / 55 ms，edge 收到 16 次检测，深度未对齐故 0 匹配；时间戳原样回传 |
 | 外机位 | UVC 彩色 + 仅深度 RealSense，未对齐；ADR 0004 待执行 |
 
 > 详细记录：[HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md)。测试未发送运动命令；
-> 测试后已停止相机/感知进程，厂商服务保持原状。多姿态/固定目标精度与运动中的
-> TF 滞后仍未验证，当前位姿不得直接用于运动。
+> 测试后已停止相机/感知进程，厂商服务保持原状。跨机 YOLO 只验证检测链路，
+> 深度未对齐时不产生度量观测；多姿态/固定目标精度与运动中的 TF 滞后仍未验证，
+> 当前位姿不得直接用于运动。
 
 ## 8. 设计边界
 

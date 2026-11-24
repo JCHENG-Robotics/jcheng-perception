@@ -166,6 +166,44 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 - 测试/演示建议用独立域（如 `ROS_DOMAIN_ID=77`）隔离旧的 DDS 参与者。
 - 状态流是 best-effort；不要为了“可靠”改回 reliable——慢订阅者会反压 edge。
 
+### 4.4 跨机 CycloneDDS（2026-11-24 已验证）
+
+笔记本安装与机器人相同的 RMW：
+
+```bash
+sudo apt-get install -y ros-jazzy-rmw-cyclonedds-cpp
+# 本次实测 cyclonedds 0.10.5 / rmw_cyclonedds_cpp 2.2.4
+```
+
+两端都绑定有线接口。机器人已有 `/home/ubuntu/cyclonedds.xml`（`eth0`）；
+笔记本用 USB 网卡名，例如：
+
+```xml
+<CycloneDDS>
+  <Domain Id="0">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="enx00e04ca373c7" priority="1" multicast="true"/>
+      </Interfaces>
+    </General>
+  </Domain>
+</CycloneDDS>
+```
+
+```bash
+export ROS_DOMAIN_ID=0
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export CYCLONEDDS_URI=file:///tmp/cyclonedds-laptop.xml
+export ROS2CLI_NO_DAEMON=1
+ros2 topic list          # 应看到机器人话题
+ros2 topic echo /joint_states --once --field name
+```
+
+Humble（机器人）与 Jazzy（笔记本）跨发行版运行时，CycloneDDS 可能记录
+`invalid data size` 序列化告警；本次检测/状态流仍正确，但生产环境应优先统一
+ROS 发行版。跨机真实 YOLO 的实测结果见
+[`EVIDENCE.md`](EVIDENCE.md) 2.10。
+
 ## 5. 验证清单
 
 ```bash
