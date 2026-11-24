@@ -1,0 +1,133 @@
+{
+ "date": "2026-11-24",
+ "session": "dual-camera real YOLO, two-view fusion proof, static pose",
+ "robot": {
+  "host": "pi5 + laptop RTX 3060",
+  "container": "ArmPiUltra",
+  "rmw": "rmw_cyclonedds_cpp",
+  "ros": "Humble (Pi) / Jazzy (laptop)"
+ },
+ "scene": {
+  "object": "wireless computer mouse",
+  "arm_stationary": true,
+  "camera_origin_m": [
+   0.181,
+   0.01,
+   0.192
+  ]
+ },
+ "fused_target": {
+  "t_s": 8.21,
+  "target_id": "mouse-001",
+  "label": "mouse",
+  "position_m": [
+   0.34177,
+   -0.01369,
+   -0.08519
+  ],
+  "weight_external": 0.67,
+  "weight_wrist": 0.33,
+  "source_cameras": [
+   "d435i_ext",
+   "aurora_wrist"
+  ],
+  "depth_external_m": 0.246,
+  "depth_wrist_m": 0.315,
+  "status": "CONFIRMED",
+  "published_samples_with_both_weights": 13
+ },
+ "observations_same_batch": {
+  "external": {
+   "label": "mouse",
+   "score": 0.89,
+   "position_m": [
+    0.36222,
+    -0.01639,
+    -0.06985
+   ],
+   "depth_m": 0.246
+  },
+  "wrist": {
+   "label": "mouse",
+   "score": 0.95,
+   "position_m": [
+    0.38551,
+    -0.02056,
+    -0.0531
+   ],
+   "depth_m": 0.315
+  },
+  "difference_mm": [
+   23.4,
+   4.2,
+   16.8
+  ],
+  "note": "3-D object: external bbox centre on the side/front, wrist on the top; external chain also has its known ~11 mm table offset"
+ },
+ "rates": {
+  "edge_camera_fps": [
+   3.2,
+   2.9
+  ],
+  "edge_frames": 166,
+  "edge_detections": 212,
+  "edge_matched": 134,
+  "gpu_fps_per_camera": 1.4,
+  "gpu_inference_ms_after_warmup": 46,
+  "gpu_frames_received": {
+   "d435i_ext": 42,
+   "aurora_wrist": 51
+  },
+  "gpu_frames_failed": 0,
+  "wrist_depth_failures": 29,
+  "external_depth_failures": 6
+ },
+ "findings": {
+  "coalesce_window": "production 30 ms groups by receive time; asynchronous capture + 46-320 ms GPU latency never pairs the views. This run used 1000 ms. Fix: capture-time proximity or a per-camera short buffer.",
+  "stale_fallback_intrinsics": "cameras_fixed_target.yaml had UVC 1280x720 fx 892/cx 648; before driver CameraInfo arrived the edge back-projected 640x480 pixels with them, first external mouse observation off by (19, 99, 25) mm. Test config now uses D435i 640x480 values; config/cameras.yaml still needs the fix.",
+  "gpu_reader_wedge": "after several edge restarts the GPU node's external subscription stopped delivering (frames_received frozen at 47) while a fresh laptop subscriber received the topic. Restarting the GPU node fixed it.",
+  "two_view_track_drift": "fused target position is outside the two observations and the track drifted to (0.555, -0.056, +0.069) within 1 s for a static object. KF/table logic reacting to the inter-view offset is the next accuracy bug."
+ },
+ "hardware_claimed": "partial",
+ "caveats": [
+  "one static pose, one object, no motion",
+  "fused absolute position not yet trustworthy (track drift)",
+  "cross-view 29 mm is object-surface geometry + known external bias, not a defined-point accuracy result"
+ ],
+ "run7_coalesce_experiment": {
+  "production_default_30ms": {
+   "duration_s": 42,
+   "cup_observations": {
+    "external": 32,
+    "wrist": 26
+   },
+   "fused_samples": 0
+  },
+  "hardware_profile_600ms": {
+   "duration_s": 42,
+   "cup_observations": {
+    "external": 35,
+    "wrist": 31
+   },
+   "fused_samples": 40,
+   "example": {
+    "target_id": "cup-034",
+    "t_s": 33.83,
+    "position_m": [
+     0.32974,
+     -0.01871,
+     -0.04227
+    ],
+    "weight_external": 0.21,
+    "weight_wrist": 0.79,
+    "depths_m": [
+     0.199,
+     0.328
+    ]
+   }
+  },
+  "config": "config/fusion_dual_hardware.yaml (coalesce_ms 600.0); config/fusion.yaml stays 30 ms",
+  "latency_cost": "up to ~0.6 s target-update latency; acceptable at ~1.4 fps, not for 10 Hz"
+ },
+ "open_issue": "static two-view tracks drift (cup-005 ~0.5 m in 5 s); fused absolute positions not trustworthy until a per-view bias model or defined point is used"
+}

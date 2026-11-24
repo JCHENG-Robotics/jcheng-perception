@@ -44,6 +44,7 @@ from jcheng_perception_core import (
     Keypoint,
     PerceptionPipeline,
     Phase,
+    ViewBiasModel,
     load_camera_specs,
     load_fusion_config,
     load_static_frames,
@@ -234,6 +235,8 @@ class PerceptionEdgeNode(Node):
             'fusion_config', _default_share_path('fusion.yaml'))
         self.declare_parameter(
             'frames_config', _default_share_path('frames.yaml'))
+        self.declare_parameter(
+            'view_bias_config', _default_share_path('view_bias.yaml'))
         self.declare_parameter('target_frame', '')
         self.declare_parameter('publish_rate_hz', 0.0)
         self.declare_parameter('status_rate_hz', 0.0)
@@ -245,8 +248,19 @@ class PerceptionEdgeNode(Node):
             self.get_parameter('cameras_config').value)
         fusion_path = str(self.get_parameter('fusion_config').value)
         frames_path = str(self.get_parameter('frames_config').value)
+        view_bias_path = str(
+            self.get_parameter('view_bias_config').value)
         self.specs = load_camera_specs(cameras_path)
         self.fusion = load_fusion_config(fusion_path)
+        if view_bias_path and os.path.isfile(view_bias_path):
+            self.view_bias = ViewBiasModel.from_config(view_bias_path)
+        else:
+            # An older installed tree may predate this file; run without the
+            # chain-level correction rather than failing on startup.
+            self.view_bias = ViewBiasModel.empty()
+            self.get_logger().warn(
+                'view_bias_config not found ({}); running without per-view '
+                'chain correction'.format(view_bias_path))
         target_frame = str(self.get_parameter('target_frame').value).strip()
         if target_frame:
             self.fusion.target_frame = target_frame
@@ -266,7 +280,7 @@ class PerceptionEdgeNode(Node):
                     camera_id, spec.static_extrinsic)
 
         self.pipeline = PerceptionPipeline(
-            self.specs, self.fusion, self.static_fallbacks)
+            self.specs, self.fusion, self.static_fallbacks, self.view_bias)
         self.bridge = CvBridge()
         self._lock = threading.RLock()
         self._camera_info = {}

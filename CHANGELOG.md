@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- Cross-view bias model and static-track drift fix. The observation model is
+  `z_i = x + b_i + m_i + n_i`: the wrist view is the reference and only the
+  external relative offset is observable. New `config/view_bias.yaml` carries
+  the chain-level correction (+9.9, -1.8, +9.4 mm, 6 mm 1 sigma) from the run-3
+  tag and table plane; `Track.view_offset` learns the object-dependent
+  bbox-centre residual online from time-matched pairs, including cross-batch
+  pairs. Velocity is now only formed from two successive samples of the same
+  camera (`update_velocity`, `H = [0|I]`); position updates use
+  `velocity_gain = 0`, the initial velocity sigma is 0.25 m/s (was 1.0) and
+  publishing/association extrapolation is capped at 0.35 s. Offline replay of
+  run-7 observations: worst static-target drift 696 mm recorded / 478 mm with
+  the old tracker -> 6.4 mm (cup 4.1, table 4.9, chair 6.4, person 4.4). New
+  `scripts/replay_static_drift.py` and 7 tests (65 total). Not deployed or
+  re-run on hardware; absolute position is wrist-referenced until a defined
+  point/keypoint is used.
 - Cross-machine real YOLO detection path: installed `rmw_cyclonedds_cpp` on the
   Jazzy laptop and ran the external camera through the Pi 5 edge to a laptop
   RTX 3060 (`yolov8s.pt`). GPU 2.06 fps / 55.2 ms average, 37 frames received,

@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-24",
+  "session": "run 3 - fixed-point cross-view with working bus reads",
+  "mode": "wrist multi-pose + external static cross-view",
+  "result": "cross_view_FAIL",
+  "gate": {
+    "limit_mm": 5,
+    "worst_mm": 14.34,
+    "pass": false,
+    "wrist_internal_worst_mm": {"depth": 4.03, "pnp": 3.77},
+    "cross_view_mm": {
+      "depth": [14.04, 14.34, 13.93, 14.31],
+      "pnp": [10.56, 10.62, 10.53, 10.42]
+    }
+  },
+  "bus_reads": {
+    "state": "working",
+    "note": "the earlier 'silent bus' was a client-side RMW mismatch (bash/Fast DDS vs vendor CycloneDDS); wrist_tf read at 10 Hz with 0 failures over the whole session (~3200 reads)",
+    "client_rule": "every client must run under ~/.zshrc (rmw_cyclonedds_cpp)"
+  },
+  "wrist_run": {
+    "command": "fpcheck_repo.py --camera wrist --duration 130 --rate 2 --depth-tolerance-ms 400",
+    "poses": "4 settled poses, joint1 (id 6) yaw only: 501 / 536 / 466 / back to 501 ticks (+/-8.4 deg), camera y swept +24.2 -> -4.2 mm, x/z constant",
+    "samples": 187,
+    "detections": 187,
+    "tf_failures": 0,
+    "poses_kept": [
+      {"seq": 1, "n": 44, "camera_mm": [177.4, 11.1, 194.0], "depth_mm": [296.4, 8.4, -82.8], "pnp_mm": [300.2, 8.3, -88.3], "sd_mm": [0.65, 0.62]},
+      {"seq": 2, "n": 36, "camera_mm": [175.2, 24.2, 194.1], "depth_mm": [296.1, 8.8, -82.2], "pnp_mm": [300.2, 8.5, -88.4], "sd_mm": [0.88, 0.90]},
+      {"seq": 4, "n": 39, "camera_mm": [177.9, -4.2, 194.0], "depth_mm": [296.5, 4.9, -83.2], "pnp_mm": [300.2, 4.8, -88.3], "sd_mm": [1.36, 1.35]},
+      {"seq": 5, "n": 66, "camera_mm": [177.6, 8.2, 194.0], "depth_mm": [296.0, 7.4, -82.0], "pnp_mm": [300.2, 7.2, -88.3], "sd_mm": [0.94, 0.97]}
+    ],
+    "internal_agreement_mm": "depth 0.76-4.03, pnp 0.28-3.77 (all pairs PASS)",
+    "limitation": "all four poses differ only in joint1, so the test constrains the base yaw + hand-eye rotation, not the full hand-eye translation"
+  },
+  "external_run": {
+    "samples": 51,
+    "tf_failures": 0,
+    "pose_mm": {"depth": [286.4, 6.7, -92.6], "pnp": [291.2, 6.4, -93.5]},
+    "note": "re-measured after the tag was physically moved; wrist and external are comparable (the wrist measures the same tag point at 296.4, 8.4, -82.8)"
+  },
+  "interpretation": {
+    "offset_is_constant": "the wrist-minus-external delta changes by <1 mm in x and ~3.5 mm in y across the 28 mm pose baseline, so it is an extrinsic-level translation, not noise",
+    "prime_suspect": "the external camera chain: it also puts the tag ~7 mm below the table plane that the wrist measures at -85.9..-86.8 mm, while the wrist puts the tag ~3 mm above it (paper thickness + depth bias)",
+    "not_excluded": "the wrist hand-eye translation (the joint1-only baseline does not constrain it); a wrong external CameraInfo K would also shift depth and PnP together and is untested",
+    "wrist_depth_bias": "wrist depth is 5-6 mm closer than its own PnP at 0.30 m (consistent with earlier observations)"
+  },
+  "next_actions": [
+    "extend the wrist pose set to joint2/joint4 changes that keep the tag in frame (verify each pose by snapshot), to constrain the hand-eye translation",
+    "re-run or re-check the external camera extrinsic (2026-11-20 chessboard result) and inspect the mount for a physical shift",
+    "check the external CameraInfo K against the driver's advertised calibration",
+    "do not tune any single number to make the gate pass; fix the identified chain and re-run"
+  ],
+  "files": {
+    "wrist_csv": "fixed_point_wrist_20261124_run3.csv",
+    "ext_csv": "fixed_point_ext_20261124_run3.csv",
+    "report": "report_run3.json"
+  }
+}

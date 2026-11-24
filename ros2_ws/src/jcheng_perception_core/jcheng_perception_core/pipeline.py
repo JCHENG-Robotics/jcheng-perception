@@ -35,6 +35,7 @@ from .types import (
     TrackStatus,
 )
 from .weighting import phase_for_observations
+from .view_bias import ViewBiasModel
 
 
 @dataclasses.dataclass
@@ -64,12 +65,15 @@ class SyncResult:
 class PerceptionPipeline:
     """Time-matched, two-view fusion pipeline (pure Python)."""
 
-    def __init__(self, specs, fusion, static_fallbacks=None):
+    def __init__(self, specs, fusion, static_fallbacks=None, view_bias=None):
         """Create empty rings and a track manager for the given cameras."""
         self.specs: Dict[str, CameraSpec] = dict(specs)
         self.fusion: FusionConfig = fusion
         self.static_fallbacks: Dict[str, np.ndarray] = dict(
             static_fallbacks or {})
+        # Chain-level per-view offsets. The object-dependent part is learned
+        # per track; this model only carries what is constant for the camera.
+        self.view_bias = view_bias or ViewBiasModel.empty()
         self._rings = {}
         for camera_id, spec in self.specs.items():
             self._rings[camera_id] = {
@@ -299,6 +303,7 @@ class PerceptionPipeline:
                 if observation is None:
                     self.total_dropped += 1
                     continue
+                observation = self.view_bias.correct(observation)
                 observation.capture_ns = int(sync.depth.stamp_ns)
                 observations.append(observation)
                 health.detections_matched += 1

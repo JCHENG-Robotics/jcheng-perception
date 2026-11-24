@@ -12,9 +12,19 @@ This is a diagnostic, not a metric estimator: it only needs depth + TF, no
 detector and no motion command. A run is meant to be paced by a human moving
 the arm between poses while the script logs one row per sample.
 
+The plane must be fitted on *table* pixels only.  Use the depth ``CameraInfo``
+(the depth image is not the RGB image; the Aurora's RGB intrinsics differ by
+~1 %, which biases the plane by several mm) and keep raised items out of the
+ROI: a tag sheet lying on the table is enough to pull the fit (2026-11-24: a
+curled tag sheet in the central ROI read 7.5 mm above the table).  Use
+``--roi-frac`` to widen the ROI and ``--exclude`` to cut out one rectangle.
+
 Example (inside the robot container):
 
     python3 wrist_tf_multipose_check.py --duration 180 --out /tmp/multipose.csv
+    # table-only fit when a sheet occupies the centre of the view:
+    python3 wrist_tf_multipose_check.py --roi-frac 0.95 \
+        --exclude 145,505,80,360 --info-topic /depth_cam/depth/camera_info
 """
 
 import argparse
@@ -32,7 +42,8 @@ from sensor_msgs.msg import CameraInfo, Image
 from tf2_ros import Buffer, TransformListener
 
 
-def _depth_to_points(message, intrinsics, max_range):
+def _depth_to_points(message, intrinsics, max_range, roi_frac=0.40,
+                     exclude=None):
     """Return camera-frame XYZ points for the central ROI of a depth image."""
     height, width = message.height, message.width
     step = message.step
@@ -47,15 +58,21 @@ def _depth_to_points(message, intrinsics, max_range):
         image = raw[:rows * height].reshape(height, rows)[:, :width]
 
     fx, fy, cx, cy = intrinsics
-    # Central 40 % keeps the arm and table edges out of the fit.
-    u0, u1 = int(width * 0.30), int(width * 0.70)
-    v0, v1 = int(height * 0.30), int(height * 0.70)
+    # Central ROI; the 40 % default keeps the arm and table edges out of the
+    # fit.  Keep raised objects (tag sheets, parts) out of it as well.
+    margin = 0.5 * (1.0 - roi_frac)
+    u0, u1 = int(width * margin), int(width * (1.0 - margin))
+    v0, v1 = int(height * margin), int(height * (1.0 - margin))
     stride = 4
     us = np.arange(u0, u1, stride)
     vs = np.arange(v0, v1, stride)
     grid_u, grid_v = np.meshgrid(us, vs)
     z = image[grid_v, grid_u]
     valid = np.isfinite(z) & (z > 0.05) & (z < max_range)
+    if exclude is not None:
+        eu0, eu1, ev0, ev1 = exclude
+        valid &= ~((grid_u >= eu0) & (grid_u < eu1)
+                   & (grid_v >= ev0) & (grid_v < ev1))
     if valid.sum() < 50:
         return None
     z = z[valid]
@@ -118,7 +135,8 @@ class MultiposeCheck(Node):
         if self._depth is None or self._intrinsics is None:
             return None
         points = _depth_to_points(
-            self._depth, self._intrinsics, self._args.max_range)
+            self._depth, self._intrinsics, self._args.max_range,
+            self._args.roi_frac, self._args.exclude)
         if points is None:
             return None
         normal, d, rms, count = _fit_plane(points)
@@ -178,14 +196,31 @@ def main(argv=None):
     """Run the sampling loop until the duration expires or SIGINT arrives."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--depth-topic', default='/depth_cam/depth/image_raw')
-    parser.add_argument('--info-topic', default='/depth_cam/rgb/camera_info')
+    parser.add_argument('--info-topic', default='/depth_cam/depth/camera_info',
+                        help='intrinsics of the depth camera (not the RGB one)')
     parser.add_argument('--base-frame', default='base_link')
     parser.add_argument('--camera-frame', default='camera_optical_measured')
     parser.add_argument('--duration', type=float, default=180.0)
     parser.add_argument('--rate', type=float, default=2.0)
     parser.add_argument('--max-range', type=float, default=1.0)
+    parser.add_argument('--roi-frac', type=float, default=0.40,
+                        help='central fraction of the image used for the fit')
+    parser.add_argument('--exclude', default='',
+                        help='u0,u1,v0,v1 pixel rectangle to cut out (e.g. a '
+                             'raised tag sheet)')
     parser.add_argument('--out', default='/tmp/wrist_multipose.csv')
     args = parser.parse_args(argv)
+    if not 0.05 < args.roi_frac <= 1.0:
+        parser.error('--roi-frac must be in (0.05, 1.0]')
+    if args.exclude:
+        try:
+            args.exclude = tuple(int(v) for v in args.exclude.split(','))
+        except ValueError:
+            parser.error('--exclude needs four integers: u0,u1,v0,v1')
+        if len(args.exclude) != 4:
+            parser.error('--exclude needs four integers: u0,u1,v0,v1')
+    else:
+        args.exclude = None
 
     rclpy.init()
     node = MultiposeCheck(args)

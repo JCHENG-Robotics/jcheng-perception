@@ -168,6 +168,26 @@ class FusionConfig:
     kalman_accel_noise: float = 0.35
     measurement_floor_m: float = 0.0008
     max_position_variance_m2: float = 0.04
+    # Velocity is only observable within one view: two views land on different
+    # physical points of a 3-D object, so a view change must not be read as
+    # motion. Only successive samples of the same camera become a velocity
+    # measurement; the age gate rejects a stale baseline.
+    initial_velocity_sigma_mps: float = 0.25
+    velocity_sample_max_age_s: float = 1.5
+    # Publishing and association prediction clamp velocity extrapolation; a
+    # millimetre-velocity estimate integrated for a second is decimetres.
+    max_extrapolation_s: float = 0.35
+    # Per-track residual view offset (external minus wrist, after the global
+    # per-view correction). It absorbs the bbox-centre measurement-point
+    # difference for the tracked object. The prior is deliberately wide (20 mm)
+    # until the first time-matched pair establishes it.
+    enable_view_offset: bool = True
+    view_offset_alpha: float = 0.35
+    view_offset_pair_max_age_s: float = 1.0
+    view_offset_sigma_m: float = 0.020
+    # Prior offset uncertainty decays with the number of learned pairs and
+    # bottoms out at the residual model error (inter-view motion, object shape).
+    view_offset_floor_sigma_m: float = 0.004
     occlusion_penalty: float = 0.75
     min_view_weight: float = 0.02
     fine_distance_m: float = 0.55
@@ -262,6 +282,20 @@ def load_fusion_config(path):
         raise ValueError('lost_after_s must exceed coast_after_s')
     if config.publish_rate_hz <= 0.0:
         raise ValueError('publish_rate_hz must be positive')
+    if config.initial_velocity_sigma_mps < 0.0:
+        raise ValueError('initial_velocity_sigma_mps must not be negative')
+    if config.velocity_sample_max_age_s <= 0.0:
+        raise ValueError('velocity_sample_max_age_s must be positive')
+    if config.max_extrapolation_s < 0.0:
+        raise ValueError('max_extrapolation_s must not be negative')
+    if not 0.0 <= config.view_offset_alpha <= 1.0:
+        raise ValueError('view_offset_alpha must be within 0..1')
+    if config.view_offset_pair_max_age_s < 0.0:
+        raise ValueError('view_offset_pair_max_age_s must not be negative')
+    if config.view_offset_sigma_m < 0.0:
+        raise ValueError('view_offset_sigma_m must not be negative')
+    if config.view_offset_floor_sigma_m < 0.0:
+        raise ValueError('view_offset_floor_sigma_m must not be negative')
     return config
 
 

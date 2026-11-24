@@ -1,0 +1,454 @@
+{
+  "bias": "",
+  "coalesce_ms": 600.0,
+  "fusion": "/home/jerichocheng/jcheng/jcheng-perception/config/fusion_dual_hardware.yaml",
+  "generated_utc": "2026-11-24T09:57:12+00:00",
+  "limit_mm": 20.0,
+  "mode": "legacy",
+  "publish_hz": 30.0,
+  "required_labels": [
+    "cup",
+    "dining table",
+    "chair",
+    "person"
+  ],
+  "settle_s": 1.0,
+  "source": "/home/jerichocheng/jcheng/jcheng-perception/evidence/hardware_20261124_dualview/dual_verify7.json",
+  "tracks": {
+    "chair-010": {
+      "final_offset_mm": 2.5447433365975356,
+      "label": "chair",
+      "max_displacement_mm": 12.93945111354362,
+      "max_speed_mm_s": 563.5236769085403,
+      "median_mm": [
+        797.21,
+        -321.72,
+        -117.64
+      ],
+      "p95_displacement_mm": 12.93945111354362,
+      "samples": 125,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 8.866666666666646,
+      "t_last": 13.16666666666663,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "chair-030": {
+      "final_offset_mm": 5.936474528202312,
+      "label": "chair",
+      "max_displacement_mm": 23.26583174818305,
+      "max_speed_mm_s": 900.8748971630829,
+      "median_mm": [
+        795.2,
+        -320.5,
+        -117.33
+      ],
+      "p95_displacement_mm": 13.364431434860402,
+      "samples": 352,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 17.36666666666669,
+      "t_last": 35.03333333333391,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "cup-005": {
+      "final_offset_mm": 378.28800716300196,
+      "label": "cup",
+      "max_displacement_mm": 378.28800716300196,
+      "max_speed_mm_s": 393.67080198891495,
+      "median_mm": [
+        475.49,
+        -44.94,
+        -93.88
+      ],
+      "p95_displacement_mm": 378.28800716300196,
+      "samples": 37,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 7.333333333333317,
+      "t_last": 9.43333333333331,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "cup-008": {
+      "final_offset_mm": 0.0,
+      "label": "cup",
+      "max_displacement_mm": 269.5069485120858,
+      "max_speed_mm_s": 8085.208455362603,
+      "median_mm": [
+        151.65,
+        19.44,
+        30.29
+      ],
+      "p95_displacement_mm": 269.5069485120858,
+      "samples": 61,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 8.666666666666647,
+      "t_last": 10.66666666666664,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "cup-013": {
+      "final_offset_mm": 477.7566129188425,
+      "label": "cup",
+      "max_displacement_mm": 477.7566129188425,
+      "max_speed_mm_s": 14371.631824114635,
+      "median_mm": [
+        388.45,
+        -29.82,
+        -60.95
+      ],
+      "p95_displacement_mm": 477.7566129188425,
+      "samples": 121,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 10.766666666666639,
+      "t_last": 19.633333333333468,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "cup-027": {
+      "final_offset_mm": 215.54725670912973,
+      "label": "cup",
+      "max_displacement_mm": 248.8677402401707,
+      "max_speed_mm_s": 8002.931834506115,
+      "median_mm": [
+        361.82,
+        -20.29,
+        -57.47
+      ],
+      "p95_displacement_mm": 248.8677402401707,
+      "samples": 201,
+      "sources_last": [
+        "aurora_wrist"
+      ],
+      "t_first": 17.266666666666683,
+      "t_last": 29.40000000000062,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "cup-047": {
+      "final_offset_mm": 0.0,
+      "label": "cup",
+      "max_displacement_mm": 310.2336705154918,
+      "max_speed_mm_s": 5757.591412968587,
+      "median_mm": [
+        296.28,
+        -13.2,
+        -30.24
+      ],
+      "p95_displacement_mm": 310.2336705154918,
+      "samples": 102,
+      "sources_last": [
+        "d435i_ext",
+        "aurora_wrist"
+      ],
+      "t_first": 29.86666666666731,
+      "t_last": 35.03333333333391,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dining_table-002": {
+      "final_offset_mm": 326.33437545315655,
+      "label": "dining table",
+      "max_displacement_mm": 326.33437545315655,
+      "max_speed_mm_s": 8605.09158593934,
+      "median_mm": [
+        333.19,
+        -0.0,
+        -82.5
+      ],
+      "p95_displacement_mm": 326.33437545315655,
+      "samples": 170,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 5.799999999999989,
+      "t_last": 12.633333333333299,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dining_table-018": {
+      "final_offset_mm": 0.0,
+      "label": "dining table",
+      "max_displacement_mm": 452.0086721550182,
+      "max_speed_mm_s": 12194.901328893318,
+      "median_mm": [
+        476.69,
+        267.69,
+        -206.79
+      ],
+      "p95_displacement_mm": 447.3801069076255,
+      "samples": 41,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 15.266666666666623,
+      "t_last": 17.96666666666672,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dining_table-024": {
+      "final_offset_mm": 222.06682382070386,
+      "label": "dining table",
+      "max_displacement_mm": 222.06682382070386,
+      "max_speed_mm_s": 12962.309851681886,
+      "median_mm": [
+        338.85,
+        25.4,
+        -92.98
+      ],
+      "p95_displacement_mm": 222.06682382070386,
+      "samples": 188,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 16.266666666666634,
+      "t_last": 24.366666666667037,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dining_table-032": {
+      "final_offset_mm": 0.0,
+      "label": "dining table",
+      "max_displacement_mm": 235.99462089368757,
+      "max_speed_mm_s": 6550.8841828090535,
+      "median_mm": [
+        406.46,
+        192.68,
+        -176.54
+      ],
+      "p95_displacement_mm": 235.98958119388968,
+      "samples": 52,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 19.533333333333463,
+      "t_last": 21.233333333333547,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dining_table-042": {
+      "final_offset_mm": 454.2731071474275,
+      "label": "dining table",
+      "max_displacement_mm": 454.2731071474275,
+      "max_speed_mm_s": 11413.897317308618,
+      "median_mm": [
+        333.0,
+        -3.05,
+        -91.08
+      ],
+      "p95_displacement_mm": 454.2731071474275,
+      "samples": 196,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 26.766666666667156,
+      "t_last": 34.36666666666728,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "kite-019": {
+      "final_offset_mm": 287.4091280162636,
+      "label": "kite",
+      "max_displacement_mm": 315.37706451967654,
+      "max_speed_mm_s": 653.1422967900368,
+      "median_mm": [
+        329.09,
+        165.13,
+        -89.23
+      ],
+      "p95_displacement_mm": 315.37706451967654,
+      "samples": 133,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 15.266666666666623,
+      "t_last": 23.300000000000317,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "kite-039": {
+      "final_offset_mm": 0.3860891218589205,
+      "label": "kite",
+      "max_displacement_mm": 12.379477637212437,
+      "max_speed_mm_s": 26.398770370416788,
+      "median_mm": [
+        319.26,
+        230.88,
+        -82.46
+      ],
+      "p95_displacement_mm": 12.379477637212437,
+      "samples": 76,
+      "sources_last": [
+        "aurora_wrist"
+      ],
+      "t_first": 25.86666666666711,
+      "t_last": 30.900000000000695,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "kite-043": {
+      "final_offset_mm": 42.24015611364935,
+      "label": "kite",
+      "max_displacement_mm": 315.2700401572116,
+      "max_speed_mm_s": 354.1541089848116,
+      "median_mm": [
+        549.57,
+        357.04,
+        -47.77
+      ],
+      "p95_displacement_mm": 315.2700401572116,
+      "samples": 54,
+      "sources_last": [
+        "aurora_wrist"
+      ],
+      "t_first": 26.93333333333383,
+      "t_last": 29.40000000000062,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "kite-048": {
+      "final_offset_mm": 1.4361315447770773,
+      "label": "kite",
+      "max_displacement_mm": 255.3809341843572,
+      "max_speed_mm_s": 364.0283432726088,
+      "median_mm": [
+        322.1,
+        236.03,
+        -77.57
+      ],
+      "p95_displacement_mm": 255.3809341843572,
+      "samples": 88,
+      "sources_last": [
+        "aurora_wrist"
+      ],
+      "t_first": 29.86666666666731,
+      "t_last": 35.60000000000054,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "person-028": {
+      "final_offset_mm": 8.521103135488946,
+      "label": "person",
+      "max_displacement_mm": 10.526877871393653,
+      "max_speed_mm_s": 497.3111858057368,
+      "median_mm": [
+        371.43,
+        11.44,
+        -12.91
+      ],
+      "p95_displacement_mm": 10.526877871393653,
+      "samples": 143,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 17.36666666666669,
+      "t_last": 24.366666666667037,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "person-029": {
+      "final_offset_mm": 0.16273104332407026,
+      "label": "person",
+      "max_displacement_mm": 5.032238701526661,
+      "max_speed_mm_s": 161.0042060872844,
+      "median_mm": [
+        388.05,
+        -33.02,
+        -20.34
+      ],
+      "p95_displacement_mm": 5.032238701526661,
+      "samples": 128,
+      "sources_last": [
+        "d435i_ext"
+      ],
+      "t_first": 17.36666666666669,
+      "t_last": 24.366666666667037,
+      "view_offset_hits": 0,
+      "view_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "violations": [],
+  "worst_required_mm": 477.7566129188425
+}

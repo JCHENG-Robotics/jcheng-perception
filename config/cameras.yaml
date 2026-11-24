@@ -49,16 +49,16 @@ cameras:
     max_keypoints: 8
     keypoint_axis_pairs: []
     pose_static: true
-    # Measured UVC color intrinsics, 1280x720, RMS 0.51 px
-    # (jcheng-manipulation evidence/calibration/20261120). Used only until the
-    # driver CameraInfo arrives; the message always wins.
+    # D435i colour intrinsics at 640x480 from its driver CameraInfo
+    # (2026-11-24).  The previous UVC 1280x720 values were only valid for the
+    # retired UVC stream: before the driver CameraInfo arrived they
+    # back-projected 640x480 pixels ~1 % wrong in scale and tens of mm in
+    # position (measured 19/99/25 mm on one target).
     intrinsics:
-      - [892.1014568378095, 0.0, 648.0281250804702]
-      - [0.0, 892.1014568378095, 380.1575036209251]
+      - [606.500976562, 0.0, 325.027130127]
+      - [0.0, 606.597045898, 249.189346313]
       - [0.0, 0.0, 1.0]
-    distortion:
-      [0.14971375015723185, -0.44610982176402497, 6.162088294137897e-06,
-       -0.00012207241044489517, 0.34121030114110457]
+    distortion: [0.0, 0.0, 0.0, 0.0, 0.0]
 
   aurora_wrist:
     role: wrist

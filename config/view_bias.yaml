@@ -1,0 +1,41 @@
+# Per-view systematic offset model (see docs/FUSION.md section 9).
+#
+# Measurement model, target frame (base_link):
+#
+#     z_i(t) = x(t) + b_i + m_i + n_i(t)
+#
+#   b_i  chain-level bias (extrinsic / depth bias), constant per camera
+#   m_i  measurement-point offset of the tracked object (bbox centre lands on
+#        a different physical point in each view), constant per object and view
+#   n_i  zero-mean noise with the covariance from backproject.py
+#
+# Only b_i + m_i is observable from two views. The wrist view is the reference
+# (c_wrist = 0); this file carries the chain-level part c_ext, and TrackManager
+# learns the remaining object-dependent residual per track.
+#
+# Sign convention: `offset_m` is ADDED to the raw back-projected position.
+# `sigma_m` is the 1-sigma uncertainty of that correction and is added in
+# quadrature to the measurement covariance, so a provisional correction cannot
+# masquerade as a precise measurement.
+#
+# Provenance of the external entry (2026-11-24, run 3 + table-plane check):
+#   wrist - external at a 60 mm AprilTag: depth (+9.9, -1.8, +9.4) mm,
+#   RGB PnP (+9.0, +-2, +5.2) mm; the D435i aligned-depth table plane reads
+#   10.7 mm below the wrist/reference plane with the same tilt. The external
+#   chain is the prime suspect (frames.yaml still deploys the provisional
+#   2026-11-20 extrinsic, and its extrinsic was solved with a different
+#   hand-eye than the deployed wrist chain). 6 mm sigma is deliberately
+#   conservative because the tag sheet curls up to ~7 mm and depth/PnP
+#   disagree by 4 mm in z.
+#
+# The cup's 67 mm x discrepancy in run 7 is NOT this bias: it is the bbox
+# centre landing on the cup side vs the rim, i.e. m_i, and is learned per
+# track. Do not grow this offset to fit a bbox-centre difference.
+reference_camera: aurora_wrist
+views:
+  aurora_wrist:
+    offset_m: [0.0, 0.0, 0.0]
+    sigma_m: [0.0, 0.0, 0.0]
+  d435i_ext:
+    offset_m: [0.0099, -0.0018, 0.0094]
+    sigma_m: [0.0060, 0.0060, 0.0060]

@@ -45,6 +45,16 @@ class Track:
     last_orientation: Optional[np.ndarray] = None
     last_orientation_sigma: float = 0.0
     last_status_ns: int = 0
+    # Last raw (bias-corrected) sample of each camera for this track:
+    # {camera_id: (capture_ns, position_base, covariance_base)}. Two uses:
+    # pairing the views for the per-track offset, and forming a velocity
+    # measurement only from successive samples of the same camera.
+    view_samples: Dict[str, tuple] = dataclasses.field(default_factory=dict)
+    # Residual external-minus-wrist offset for this object, after the global
+    # per-view correction (metres, target frame).
+    view_offset: np.ndarray = dataclasses.field(
+        default_factory=lambda: np.zeros(3, dtype=np.float64))
+    view_offset_hits: int = 0
 
     def age_s(self, now_ns):
         """Return the time since the last successful update."""
@@ -82,9 +92,15 @@ class TrackManager:
         return '{}-{:03d}'.format(stem, self._counter)
 
     def _predicted_position(self, track, stamp_ns):
-        """Return the constant-velocity prediction at ``stamp_ns``."""
+        """Return the constant-velocity prediction at ``stamp_ns``.
+
+        The extrapolation is capped by ``max_extrapolation_s``: a velocity
+        estimated from millimetre measurements is not meaningful over one
+        second, and the published target must not fly off during a detection
+        gap.
+        """
         dt = max(0.0, (int(stamp_ns) - int(track.last_state_ns)) / 1e9)
-        dt = min(dt, 0.5)
+        dt = min(dt, self.fusion.max_extrapolation_s)
         return track.kf.position + track.kf.velocity * dt
 
     def _gate(self, track, stamp_ns):
@@ -149,6 +165,7 @@ class TrackManager:
             observation.covariance_base,
             accel_noise=self.fusion.kalman_accel_noise,
             measurement_floor_m=self.fusion.measurement_floor_m,
+            initial_velocity_sigma=self.fusion.initial_velocity_sigma_mps,
         )
         track = Track(
             target_id=target_id,
@@ -166,10 +183,182 @@ class TrackManager:
         self.tracks[target_id] = track
         return track
 
+    def _latest_sample(self, track, role):
+        """Return the newest stored sample whose camera has ``role``."""
+        newest = None
+        for camera_id, sample in track.view_samples.items():
+            spec = self.specs.get(camera_id)
+            if spec is None or spec.role is not role:
+                continue
+            if newest is None or sample[0] > newest[1][0]:
+                newest = (camera_id, sample)
+        return newest
+
+    def _pair_residual(self, track, observations):
+        """Return a time-matched external-minus-wrist residual, or None.
+
+        A same-batch pair is preferred. Because the two cameras are captured
+        asynchronously and the coalescing window can miss, the newest stored
+        sample of the opposite view is also accepted when it is close enough in
+        capture time. That is what lets the per-track offset converge from
+        alternating single-view updates.
+        """
+        external = [
+            observation for observation in observations
+            if observation.role is Role.EXTERNAL
+        ]
+        wrist = [
+            observation for observation in observations
+            if observation.role is Role.WRIST
+        ]
+        max_age_ns = int(self.fusion.view_offset_pair_max_age_s * 1e9)
+        if external and wrist:
+            age_ns = abs(
+                int(external[0].capture_ns) - int(wrist[0].capture_ns))
+            if age_ns <= max_age_ns:
+                return (
+                    np.asarray(external[0].position_base, dtype=np.float64)
+                    - np.asarray(wrist[0].position_base, dtype=np.float64),
+                    age_ns,
+                )
+        best = None
+        for observation in observations:
+            other_role = Role.WRIST if observation.role is Role.EXTERNAL \
+                else Role.EXTERNAL
+            sample = self._latest_sample(track, other_role)
+            if sample is None:
+                continue
+            _, (stamp_ns, position, _) = sample
+            age_ns = abs(int(observation.capture_ns) - int(stamp_ns))
+            if age_ns > max_age_ns:
+                continue
+            if observation.role is Role.EXTERNAL:
+                residual = (
+                    np.asarray(observation.position_base, dtype=np.float64)
+                    - np.asarray(position, dtype=np.float64))
+            else:
+                residual = (
+                    np.asarray(position, dtype=np.float64)
+                    - np.asarray(observation.position_base, dtype=np.float64))
+            if best is None or age_ns < best[1]:
+                best = (residual, age_ns)
+        return best
+
+    def _learn_view_offset(self, track, observations):
+        """Update the track's external-minus-wrist offset from a pair.
+
+        The first pair initialises the offset; later pairs follow it with
+        ``view_offset_alpha``. Returns the pair ``(residual, age_ns)`` when the
+        offset was updated, else ``None``.
+        """
+        if not self.fusion.enable_view_offset:
+            return None
+        pair = self._pair_residual(track, observations)
+        if pair is None:
+            return None
+        residual, age_ns = pair
+        alpha = 1.0 if track.view_offset_hits == 0 \
+            else float(self.fusion.view_offset_alpha)
+        track.view_offset = track.view_offset + alpha * (
+            residual - track.view_offset)
+        track.view_offset_hits += 1
+        return pair
+
+    def _same_view_velocity(self, track, observations):
+        """Return ``(velocity, covariance)`` from same-camera differences.
+
+        Velocity is only observable from successive samples of one camera: the
+        per-view offset is constant for a camera, so it cancels in the
+        difference, while a cross-view difference is a measurement-point bias
+        by construction. Returns None until a same-camera baseline exists.
+        """
+        entries = []
+        for observation in observations:
+            sample = track.view_samples.get(observation.camera_id)
+            if sample is None:
+                continue
+            stamp_ns, previous_position, previous_covariance = sample
+            dt = (int(observation.capture_ns) - int(stamp_ns)) / 1e9
+            if dt <= 0.0 or dt > self.fusion.velocity_sample_max_age_s:
+                continue
+            current_position = np.asarray(
+                observation.position_base, dtype=np.float64)
+            previous_position = np.asarray(
+                previous_position, dtype=np.float64)
+            if observation.role is Role.EXTERNAL:
+                current_position = current_position - track.view_offset
+                previous_position = previous_position - track.view_offset
+            velocity = (current_position - previous_position) / dt
+            noise = (
+                np.asarray(observation.covariance_base, dtype=np.float64)
+                + np.asarray(previous_covariance, dtype=np.float64)) / (
+                    dt * dt)
+            entries.append((velocity, noise))
+        if not entries:
+            return None
+        information = np.zeros((3, 3), dtype=np.float64)
+        weighted = np.zeros(3, dtype=np.float64)
+        for velocity, noise in entries:
+            try:
+                precision = np.linalg.inv(
+                    noise + np.eye(3) * 1e-12)
+            except np.linalg.LinAlgError:
+                precision = np.linalg.pinv(noise)
+            information += precision
+            weighted += precision @ velocity
+        try:
+            covariance = np.linalg.inv(information)
+        except np.linalg.LinAlgError:
+            covariance = np.linalg.pinv(information)
+        covariance = 0.5 * (covariance + covariance.T)
+        return covariance @ weighted, covariance
+
+    def _compensated_observations(self, track, observations, has_pair):
+        """Return observations with the track's view offset removed.
+
+        Only the external view is shifted: the wrist view is the reference by
+        construction. The offset is a bias estimate, not white noise, so its
+        uncertainty is added to the covariance instead of pretending the
+        correction is exact. A time-matched pair constrains the offset directly
+        in this same update, so no prior inflation is added there; a
+        single-view update carries the remaining offset uncertainty, which
+        decays with the number of learned pairs and bottoms out at the residual
+        model error.
+        """
+        if not self.fusion.enable_view_offset:
+            return list(observations)
+        if has_pair:
+            variance = 0.0
+        else:
+            hits = max(1, int(track.view_offset_hits))
+            sigma = max(
+                float(self.fusion.view_offset_sigma_m) / math.sqrt(hits),
+                float(self.fusion.view_offset_floor_sigma_m),
+            )
+            variance = sigma ** 2
+        compensated = []
+        for observation in observations:
+            if observation.role is not Role.EXTERNAL:
+                compensated.append(observation)
+                continue
+            compensated.append(dataclasses.replace(
+                observation,
+                position_base=(
+                    np.asarray(observation.position_base, dtype=np.float64)
+                    - track.view_offset),
+                covariance_base=(
+                    np.asarray(observation.covariance_base, dtype=np.float64)
+                    + np.eye(3) * variance),
+            ))
+        return compensated
+
     def apply_group(self, track, observations, phase, now_ns):
         """Fuse a track's fresh observations and update its filter."""
+        pair = self._learn_view_offset(track, observations)
+        velocity = self._same_view_velocity(track, observations)
         fused = fuse_observations(
-            observations, phase, self.specs, self.fusion)
+            self._compensated_observations(track, observations, pair is not None),
+            phase, self.specs, self.fusion)
         if fused is None:
             return None
         for observation in observations:
@@ -178,7 +367,20 @@ class TrackManager:
         dt = max(0.0, (int(fused.stamp_ns) - int(track.last_state_ns)) / 1e9)
         dt = min(dt, 0.5)
         track.kf.predict(dt)
-        track.kf.update(fused.position_base, fused.covariance_base)
+        # The position update never touches the velocity state: across views
+        # the innovation is a measurement-point bias, and within a view it is
+        # position noise. Velocity gets its own measurement below.
+        track.kf.update(
+            fused.position_base, fused.covariance_base, velocity_gain=0.0)
+        if velocity is not None:
+            track.kf.update_velocity(velocity[0], velocity[1])
+        for observation in observations:
+            track.view_samples[str(observation.camera_id)] = (
+                int(observation.capture_ns),
+                np.asarray(observation.position_base, dtype=np.float64).copy(),
+                np.asarray(
+                    observation.covariance_base, dtype=np.float64).copy(),
+            )
         track.last_state_ns = int(fused.stamp_ns)
         track.last_update_ns = int(now_ns)
         track.hits += 1
@@ -306,7 +508,8 @@ class TrackManager:
             primary.kf.predict(dt)
             primary.kf.update(
                 secondary.last_fused.position_base,
-                secondary.last_fused.covariance_base)
+                secondary.last_fused.covariance_base,
+                velocity_gain=0.0)
             primary.last_state_ns = secondary.last_state_ns
         primary.hits = max(primary.hits, secondary.hits)
         primary.wrist_hits = max(
@@ -321,6 +524,14 @@ class TrackManager:
             primary.last_orientation = secondary.last_orientation.copy()
             primary.last_orientation_sigma = \
                 secondary.last_orientation_sigma
+        if primary.view_offset_hits == 0 and secondary.view_offset_hits > 0:
+            primary.view_offset = np.asarray(
+                secondary.view_offset, dtype=np.float64).copy()
+            primary.view_offset_hits = secondary.view_offset_hits
+        for camera_id, sample in secondary.view_samples.items():
+            existing = primary.view_samples.get(camera_id)
+            if existing is None or sample[0] > existing[0]:
+                primary.view_samples[camera_id] = sample
 
     def expire(self, now_ns):
         """Update lifecycle states and remove tracks that are too old."""
@@ -367,7 +578,7 @@ class TrackManager:
                     track.hits < 1:
                 continue
             dt = max(0.0, (int(now_ns) - int(track.last_state_ns)) / 1e9)
-            dt = min(dt, 1.0)
+            dt = min(dt, self.fusion.max_extrapolation_s)
             position = track.kf.position + track.kf.velocity * dt
             covariance = track.kf.covariance[:3, :3].copy()
             covariance = covariance + np.eye(3) * (
