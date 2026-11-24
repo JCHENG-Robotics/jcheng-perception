@@ -13,8 +13,9 @@
   reader. Run 9 then delivered the **dual-view** result: 240 external + 195
   wrist tag observations over 60 s, cross-view **3.37 mm**, fused track p95
   **3.78 mm**, final **1.19 mm**, max 10.03 mm (a 12.4 mm view-switch transient
-  at t=26.2 s), no 67 mm reference step. The motion gateway is currently
-  stopped; restarting it needs its pointcloud subscription changed first.
+  at t=26.2 s), no 67 mm reference step. The motion gateway was stopped for
+  run 9 but its service was active again at the final check; it needs its
+  pointcloud subscription/QoS changed or must be stopped during perception.
 - Deploy image for the GPU node: `deploy/Dockerfile.gpu` builds a ROS 2 Humble
   image with `/opt/jcheng/venv` (torch 2.9.1+cu128, ultralytics 8.4.216,
   onnxruntime 1.32.0, openvino 2026.4.1, numpy 1.26.4) and the apt

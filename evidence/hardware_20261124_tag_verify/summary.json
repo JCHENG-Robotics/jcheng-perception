@@ -141,7 +141,7 @@
   "gateway_root_cause": {
     "aux_gateway_8765": "armpi-gateway.service did not pass RMW_IMPLEMENTATION/CYCLONEDDS_URI; it defaulted to Fast DDS and subscribed to external colour, wedging the edge external RGB reader. Patched /usr/local/lib/armpi-gateway/armpi-gateway-run.sh (docker exec -e RMW/CYCLONE/DOMAIN) and /etc/armpi-gateway/gateway.env; backups in /home/pi/armpi-gateway-rwm-20261124/.",
     "motion_gateway_8766": "an orphan PPID-0 process (service inactive) was still subscribed to /depth_cam/depth_registered/points and blocked the Aurora depth publication; killing PID 427260 recovered wrist depth.",
-    "state_after": "aux gateway active on CycloneDDS; motion gateway stopped. Restarting motion may reintroduce the wrist-depth block unless its pointcloud subscription is changed."
+    "state_after": "aux gateway active on CycloneDDS; motion gateway was stopped during run 9 but armpi-gateway-pose.service was active again at the final check, so a future perception run can hit the wrist-depth block until its pointcloud subscription/QoS is changed or it is stopped for the run."
   },
   "gpu_mode": {
     "backend": "aruco",

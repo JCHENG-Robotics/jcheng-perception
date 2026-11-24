@@ -80,7 +80,7 @@ verification:
     passed: 2026-11-24 (unit test + real hardware static run)
     config: config/gpu_tag.yaml (AprilTag 36h11, 60 mm, id 0)
     hardware: external-wrist tag centre 3.77 mm; fixed-point 5 mm gate 3.67 mm (depth) / 3.07 mm (PnP) after view_bias.yaml; no 67 mm first-pair step
-    dual_view_run9: external 240 + wrist 195 observations over 60 s; cross-view 3.37 mm; fused p95 3.78 / final 1.19 / max 10.03 mm (one 12.4 mm view-switch transient); root causes were the aux gateway running Fast DDS and an orphan motion-gateway pointcloud consumer, both fixed operationally
+    dual_view_run9: external 240 + wrist 195 observations over 60 s; cross-view 3.37 mm; fused p95 3.78 / final 1.19 / max 10.03 mm (one 12.4 mm view-switch transient); root causes were the aux gateway running Fast DDS (fixed) and an orphan motion-gateway pointcloud consumer (killed for run 9; service active again, needs QoS fix or stop during perception)
     rerun_min_dt: deployed f90b5d5; same-distro Humble GPU + uplink clock-jump/worker fixes + aux-gateway CycloneDDS + killing the orphan motion gateway produced the dual-view run9: external+wrist continuous, cross-view 3.37 mm, fused p95 3.78 / final 1.19 / max 10.03 mm
     evidence: evidence/hardware_20261124_tag_verify/
     caveats: one static pose, tag sheet curls ~7 mm; GPU external uplink reader wedge needed an edge-first/GPU-restart order

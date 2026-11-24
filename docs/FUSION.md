@@ -344,8 +344,9 @@ Run 9（双视图）：external 240 + wrist 195 条，跨视图 **3.37 mm**；�
 max **10.03 mm**、p95 **3.78 mm**、final **1.19 mm**（重放 9.9/3.6/1.4，
 学到的 view_offset (+0.48,−1.21,−2.98) mm）。max 来自 t=26.2 s 一次 12.4 mm
 的**视图切换瞬态**；p95/final 均在 ~8 mm 内，且**没有 67 mm 参考切换**。
-注意：motion 网关当前已停；若为 Studio 运动恢复，需先处理其点云订阅
-（QoS/消费者），否则腕部 depth 会再次被阻塞。
+注意：motion 网关在 run 9 期间已停，但最终检查时 `armpi-gateway-pose.service`
+又 active 了；若为 Studio 运动恢复，需先处理其点云订阅（QoS/消费者），或
+perception run 时停掉它，否则腕部 depth 会再次被阻塞。
 
 ## 10. 调参顺序
 

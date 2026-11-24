@@ -397,7 +397,8 @@ learned Track.view_offset = (+0.03, -1.93, -3.31) mm
 - **Run 9 双视图成功：** external 240 + wrist 195 条（0.1–60.1 s），跨视图
   **3.37 mm**；融合 max **10.03 mm**、p95 **3.78 mm**、final **1.19 mm**
   （重放 9.9/3.6/1.4）；max 是 t=26.2 s 一次 12.4 mm 视图切换瞬态，无 67 mm
-  参考切换。motion 网关当前已停，恢复前需处理其点云订阅。
+  参考切换。motion 网关在 run 9 期间已停，但最终检查时 service 又 active；
+  恢复前需处理其点云订阅或在 perception run 时停掉它。
 
 证据：`evidence/hardware_20261124_tag_verify/`。
 

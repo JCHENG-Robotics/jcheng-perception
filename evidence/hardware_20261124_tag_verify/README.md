@@ -227,10 +227,12 @@ sample is a 12.4 mm **view-switch transient** at t = 26.2 s
 (external -> wrist); p95 and final are well inside the ~8 mm target, the max
 is slightly above it. No 67 mm reference step.
 
-Operational state after the test: the aux gateway runs CycloneDDS (patched);
-the 8766 motion gateway is **stopped** (its pointcloud subscription is the
-wrist-depth blocker). Restarting it for Studio motion will reintroduce the
-risk unless its pointcloud QoS/consumer is changed first.
+Operational state after the test: the aux gateway runs CycloneDDS (patched).
+The 8766 motion gateway was stopped during run 9, but at the final check
+`armpi-gateway-pose.service` was **active again** (systemd/ops restarted it).
+Its pointcloud subscription is the wrist-depth blocker, so a future perception
+run can hit the wedge again until that subscription/QoS is changed or the
+gateway is stopped for the run.
 
 ## Ops residue
 
