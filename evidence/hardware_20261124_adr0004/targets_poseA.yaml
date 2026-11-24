@@ -1,0 +1,143 @@
+header:
+  stamp:
+    sec: 1795499245
+    nanosec: 162975142
+  frame_id: base_link
+targets:
+- header:
+    stamp:
+      sec: 1795499245
+      nanosec: 162975142
+    frame_id: base_link
+  target_id: cup-012
+  label: cup
+  class_id: 41
+  pose:
+    pose:
+      position:
+        x: 0.24691521454664858
+        y: -0.016109293014524524
+        z: 0.061010698719042175
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 1.0
+    covariance:
+    - 0.000273013286151841
+    - -1.3710399470788653e-08
+    - -1.6626048346848132e-06
+    - 0.0
+    - 0.0
+    - 0.0
+    - -1.3710399470788653e-08
+    - 0.00027204171240241825
+    - 2.3471674099101083e-08
+    - 0.0
+    - 0.0
+    - 0.0
+    - -1.6626048346848132e-06
+    - 2.3471674099101083e-08
+    - 0.00027488027693309367
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 1.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 1.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 1.0
+  confidence: 0.6703474521636963
+  phase: 3
+  status: 1
+  weight_external: 0.0
+  weight_wrist: 1.0
+  depth_external_m: 0.0
+  depth_wrist_m: 0.15199999511241913
+  occluded: true
+  recheck_required: false
+  source_cameras:
+  - aurora_wrist
+  age_s: 6.21197509765625
+- header:
+    stamp:
+      sec: 1795499245
+      nanosec: 162975142
+    frame_id: base_link
+  target_id: dining_table-002
+  label: dining table
+  class_id: 60
+  pose:
+    pose:
+      position:
+        x: 0.32873493142550986
+        y: 0.0584404490389471
+        z: -0.08088828881188333
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.6965341941365416
+        w: 0.7175235998896193
+    covariance:
+    - 0.00027427041483690513
+    - -1.7624020279557983e-08
+    - -2.1470835102058466e-06
+    - 0.0
+    - 0.0
+    - 0.0
+    - -1.7624020279557983e-08
+    - 0.0002730201662175302
+    - 3.032226773257998e-08
+    - 0.0
+    - 0.0
+    - 0.0
+    - -2.1470835102058466e-06
+    - 3.032226773257998e-08
+    - 0.0002766814400788325
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 1.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 1.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.6400000000000001
+  confidence: 0.2754872441291809
+  phase: 3
+  status: 1
+  weight_external: 0.0
+  weight_wrist: 1.0
+  depth_external_m: 0.0
+  depth_wrist_m: 0.3149999976158142
+  occluded: false
+  recheck_required: false
+  source_cameras:
+  - aurora_wrist
+  age_s: 17.707975387573242
+---

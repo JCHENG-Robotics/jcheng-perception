@@ -1,0 +1,8 @@
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-10-49-29-559251-jerichocheng-Lenovo-Legion-R9000P2021H-917906
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [917914]
+[python-1] [INFO] [1795488570.871949634] [jcheng_perception_gpu]: GPU detector ready: d435i_ext
+[python-1] [INFO] [1795488571.756294288] [jcheng_perception_gpu]: detector loaded: yolov8s.pt:1775123732000000000
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[INFO] [python-1]: process has finished cleanly [pid 917914]

@@ -1,0 +1,24 @@
+node:
+  stats_interval_s: 2.0
+  debug_publish: false
+  debug_interval_s: 1.0
+  queue_size: 2
+
+cameras:
+  d435i_ext:
+    input_topic: /perception/uplink/d435i_ext/image_compressed
+    detections_topic: /perception/detections/d435i_ext
+    debug_topic: /perception/debug/d435i_ext
+    hot_reload: true
+    model:
+      backend: ultralytics
+      path: /home/jerichocheng/ArmPiUltra/ROS2/Armpi_ultra-main/armpi_ultra/ros2_ws/src/yolov8_detect/models/yolov8s.pt
+      task: detect
+      imgsz: 640
+      conf: 0.20
+      iou: 0.45
+      device: "0"
+      half: false
+      max_detections: 20
+      keypoints: false
+      labels: []

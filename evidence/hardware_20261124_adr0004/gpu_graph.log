@@ -1,0 +1,22 @@
+[INFO] [launch]: All log files can be found below /home/jerichocheng/.ros/log/2026-11-24-11-33-23-960209-jerichocheng-Lenovo-Legion-R9000P2021H-930814
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [930818]
+[python-1] [INFO] [1795491205.293993405] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[python-1] [INFO] [1795491206.232109697] [jcheng_perception_gpu]: detector loaded: yolov8s.pt:1775123732000000000
+[python-1] [INFO] [1795491206.258744011] [jcheng_perception_gpu]: detector loaded: yolov8s.pt:1775123732000000000
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python-1]: sending signal 'SIGINT' to process[python-1]
+[python-1] Exception in thread yolo-aurora_wrist:
+[python-1] Traceback (most recent call last):
+[python-1]   File "/usr/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+[python-1]     self.run()
+[python-1]   File "/usr/lib/python3.12/threading.py", line 1010, in run
+[python-1]     self._target(*self._args, **self._kwargs)
+[python-1]   File "/home/jerichocheng/jcheng/jcheng-perception/ros2_ws/install/jcheng_perception_gpu/lib/python3.12/site-packages/jcheng_perception_gpu/node.py", line 189, in _run
+[python-1]     self._publish_detections(
+[python-1]   File "/home/jerichocheng/jcheng/jcheng-perception/ros2_ws/install/jcheng_perception_gpu/lib/python3.12/site-packages/jcheng_perception_gpu/node.py", line 223, in _publish_detections
+[python-1]     self.detection_publisher.publish(message)
+[python-1]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 70, in publish
+[python-1]     self.__publisher.publish(msg)
+[python-1] rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:423
+[INFO] [python-1]: process has finished cleanly [pid 930818]

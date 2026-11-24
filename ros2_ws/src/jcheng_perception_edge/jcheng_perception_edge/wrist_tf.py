@@ -19,6 +19,7 @@ in the robot container.  The import is guarded so the package still builds and
 imports on a plain ROS host.
 """
 
+import signal
 import time
 
 import numpy as np
@@ -294,8 +295,13 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
+        # ros2 launch sends SIGINT again while the service client and TF
+        # listener are torn down; ignore further interrupts so shutdown stays
+        # clean (same guard as the edge node).
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':
