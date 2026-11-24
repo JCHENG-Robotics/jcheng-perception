@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- Gateway root cause and dual-view tag confirmation. The read-only aux gateway
+  (8765) did not pass `RMW_IMPLEMENTATION`/`CYCLONEDDS_URI`, so it subscribed to
+  the external colour topic with Fast DDS while the camera and edge use
+  CycloneDDS; large image samples across RMWs wedged the edge's external RGB
+  reader. The run script and `/etc/armpi-gateway/gateway.env` now force
+  CycloneDDS (backups in `/home/pi/armpi-gateway-rwm-20261124/`). The 8766
+  motion gateway was an orphan PPID-0 process still consuming the wrist
+  pointcloud and blocking Aurora depth; killing it recovered the wrist depth
+  reader. Run 9 then delivered the **dual-view** result: 240 external + 195
+  wrist tag observations over 60 s, cross-view **3.37 mm**, fused track p95
+  **3.78 mm**, final **1.19 mm**, max 10.03 mm (a 12.4 mm view-switch transient
+  at t=26.2 s), no 67 mm reference step. The motion gateway is currently
+  stopped; restarting it needs its pointcloud subscription changed first.
+- Deploy image for the GPU node: `deploy/Dockerfile.gpu` builds a ROS 2 Humble
+  image with `/opt/jcheng/venv` (torch 2.9.1+cu128, ultralytics 8.4.216,
+  onnxruntime 1.32.0, openvino 2026.4.1, numpy 1.26.4) and the apt
+  `python3-opencv` 4.5.4 build that carries ArUco. It deliberately does not
+  install `opencv-python`, whose wheel would shadow the ArUco-capable system
+  cv2. Not built or GPU-verified yet: the host has no nvidia-container
+  runtime, so `--gpus all` and the one-time sudo install are documented in
+  `deploy/README.md`.
 - Diagnostic: recreating a camera's image/depth/CameraInfo subscriptions after
   a 4 s stall did **not** recover the wedged readers. In the test the external
   RGB reader stayed at 5 frames while its depth advanced, and the wrist depth

@@ -390,6 +390,14 @@ learned Track.view_offset = (+0.03, -1.93, -3.31) mm
   depth 卡在 7（RGB 仍增长）；重建订阅 3 次不恢复，说明 wedge 在 DDS
   participant/reader 层。watchdog 未提交，Pi 运行 committed `2a33cbb`。
   双视图结果仍以上述 run 3 为准。
+- **网关根因（run 7–9）：** aux 网关 8765 未传 RMW，默认 Fast DDS 订阅外机位
+  彩色，跨 RMW 导致外机位 RGB reader wedge；改为 CycloneDDS 后外机位连续 60 s。
+  8766 motion 网关是一个 PPID=0 的孤儿进程，仍订阅腕部点云、阻塞 Aurora
+  depth 发布；kill 后腕部 depth 恢复。
+- **Run 9 双视图成功：** external 240 + wrist 195 条（0.1–60.1 s），跨视图
+  **3.37 mm**；融合 max **10.03 mm**、p95 **3.78 mm**、final **1.19 mm**
+  （重放 9.9/3.6/1.4）；max 是 t=26.2 s 一次 12.4 mm 视图切换瞬态，无 67 mm
+  参考切换。motion 网关当前已停，恢复前需处理其点云订阅。
 
 证据：`evidence/hardware_20261124_tag_verify/`。
 

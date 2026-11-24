@@ -60,6 +60,12 @@
   RUNTIME=ultralytics ./scripts/setup_gpu_venv.sh
   ```
 
+- Docker 替代方案：`deploy/Dockerfile.gpu` 把同一套运行时（torch
+  2.9.1+cu128 / ultralytics 8.4.216 / onnxruntime 1.32.0 / openvino 2026.4.1）
+  装进 Humble 镜像，节点与机器人回到同发行版；`--gpus all` 的宿主机前置步骤、
+  构建和验证命令见 [`deploy/README.md`](../deploy/README.md)。镜像已准备，
+  **尚未构建和实机验证**。
+
 - 安装后先做无 ROS 烟测：
 
   ```bash

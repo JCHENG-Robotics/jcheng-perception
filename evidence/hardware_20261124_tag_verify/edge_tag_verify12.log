@@ -1,0 +1,2 @@
+[INFO] [1795524128.917332114] [jcheng_perception_edge]: edge ready: cameras=d435i_ext,aurora_wrist target_frame=base_link uplink=True
+[WARN] [1795524128.919265040] [jcheng_perception_edge]: TF unavailable base_link -> camera_color_optical_frame: "base_link" passed to lookupTransform argument target_frame does not exist. 

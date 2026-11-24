@@ -329,6 +329,24 @@ GPU 只收到 42 外机位帧（腕部 376），12 s 检查无外机位 uplink �
 下一步应做 reader 隔离（每相机独立 participant/relay）或 CycloneDDS 版本/配置
 修正。
 
+**网关根因与双视图 run 9（2026-11-24）：** 最终定位到两个**网关侧消费者**，
+不是感知代码：
+
+1. `armpi-gateway.service`（8765，aux 预览）没有传 `RMW_IMPLEMENTATION` /
+   `CYCLONEDDS_URI`，默认 Fast DDS，订阅 `/camera/color/image_raw`；大彩色
+   样本跨 RMW，导致 edge 外机位 RGB reader wedge。改启动脚本/`gateway.env`
+   显式 CycloneDDS 后，外机位连续 60 s。
+2. 8766 motion 网关是一个 **PPID=0 的孤儿进程**（service 已 inactive），仍订阅
+   `/depth_cam/depth_registered/points`，阻塞 Aurora 的 depth 发布；kill 后腕部
+   depth reader 恢复。
+
+Run 9（双视图）：external 240 + wrist 195 条，跨视图 **3.37 mm**；融合轨迹
+max **10.03 mm**、p95 **3.78 mm**、final **1.19 mm**（重放 9.9/3.6/1.4，
+学到的 view_offset (+0.48,−1.21,−2.98) mm）。max 来自 t=26.2 s 一次 12.4 mm
+的**视图切换瞬态**；p95/final 均在 ~8 mm 内，且**没有 67 mm 参考切换**。
+注意：motion 网关当前已停；若为 Studio 运动恢复，需先处理其点云订阅
+（QoS/消费者），否则腕部 depth 会再次被阻塞。
+
 ## 10. 调参顺序
 
 1. 用实机静态目标测 `depth` 噪声 vs 距离，拟合 `q`、`floor`（每相机）。

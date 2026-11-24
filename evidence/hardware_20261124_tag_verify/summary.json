@@ -39,6 +39,30 @@
       "t_first": 0.5,
       "t_last": 59.8,
       "wrist": 141
+    },
+    "run7": {
+      "external": 225,
+      "observations": 225,
+      "result": "aux gateway patched from Fast DDS to CycloneDDS; external RGB continuous, wrist depth still failed",
+      "t_first": 0.4,
+      "t_last": 59.7,
+      "wrist": 0
+    },
+    "run8": {
+      "external": 198,
+      "observations": 198,
+      "result": "fresh edge with motion service marked inactive; the orphan motion gateway process was still running, wrist depth still failed",
+      "t_first": 0.1,
+      "t_last": 59.5,
+      "wrist": 0
+    },
+    "run9": {
+      "external": 240,
+      "observations": 435,
+      "result": "orphan motion gateway killed + fresh edge; dual-view success",
+      "t_first": 0.1,
+      "t_last": 60.1,
+      "wrist": 195
     }
   },
   "caveats": [
@@ -114,6 +138,11 @@
     },
     "residual_cause": "near-duplicate capture stamps: 47/191 wrist observations dt<=0; min-dt rejects the fabricated velocity"
   },
+  "gateway_root_cause": {
+    "aux_gateway_8765": "armpi-gateway.service did not pass RMW_IMPLEMENTATION/CYCLONEDDS_URI; it defaulted to Fast DDS and subscribed to external colour, wedging the edge external RGB reader. Patched /usr/local/lib/armpi-gateway/armpi-gateway-run.sh (docker exec -e RMW/CYCLONE/DOMAIN) and /etc/armpi-gateway/gateway.env; backups in /home/pi/armpi-gateway-rwm-20261124/.",
+    "motion_gateway_8766": "an orphan PPID-0 process (service inactive) was still subscribed to /depth_cam/depth_registered/points and blocked the Aurora depth publication; killing PID 427260 recovered wrist depth.",
+    "state_after": "aux gateway active on CycloneDDS; motion gateway stopped. Restarting motion may reintroduce the wrist-depth block unless its pointcloud subscription is changed."
+  },
   "gpu_mode": {
     "backend": "aruco",
     "config": "config/gpu_tag.yaml",
@@ -171,14 +200,17 @@
     }
   },
   "post_run_fix": {
-    "status": "min-dt and uplink fixes deployed to the Pi (tar, not committed); Humble GPU run 6 gave wrist-only 7.3 mm over 60 s; external tag observations still 0 because the external uplink/reader stops; dual-view confirmation pending",
+    "gateway_fixes": [
+      "aux gateway 8765 switched to CycloneDDS",
+      "orphan motion gateway 8766 killed"
+    ],
+    "status": "dual-view run 9 succeeded: external+wrist continuous, cross-view 3.37 mm, fused p95 3.78 / final 1.19 / max 10.03 mm; no 67 mm reference step. Motion gateway is stopped; restarting it may reintroduce the wrist-depth block.",
     "uplink_fixes": [
       "uplink_allowed clock-jump reset",
       "UplinkWorker catches publish exceptions",
       "status notes encode_failures/rate_limited"
     ],
-    "velocity_min_dt_s": 0.1,
-    "watchdog": "subscription recreation did not recover the wedged readers; watchdog reverted, Pi runs committed 2a33cbb only"
+    "velocity_min_dt_s": 0.1
   },
   "reproduce": [
     "python3 scripts/fixed_point_report.py --wrist evidence/hardware_20261124_tag_verify/tag_wrist_fixed.csv --ext evidence/hardware_20261124_tag_verify/tag_ext_fixed.csv --ext-offset 0.0099 -0.0018 0.0094 --limit 0.005 --out evidence/hardware_20261124_tag_verify/tag_report_corrected.json",
@@ -266,6 +298,37 @@
       "wrist": 376
     },
     "note": "meets the ~8 mm target on the wrist-only track, but not a dual-view confirmation"
+  },
+  "run9_dual_view": {
+    "cross_view_mm": 3.37,
+    "cross_view_vector_mm": [
+      -0.04,
+      -1.73,
+      -2.9
+    ],
+    "edge_status": {
+      "detections_matched": 580,
+      "gpu_alive": true,
+      "total_frames": 1220
+    },
+    "external": 240,
+    "note": "dual-view confirmation; the 10 mm max is a 12.4 mm view-switch transient at t=26.2 s, p95/final are under 8 mm; no 67 mm step",
+    "recorded": {
+      "final_mm": 1.19,
+      "max_mm": 10.03,
+      "p95_mm": 3.78
+    },
+    "replay": {
+      "final_mm": 1.4,
+      "max_mm": 9.9,
+      "p95_mm": 3.6,
+      "view_offset_mm": [
+        0.48,
+        -1.21,
+        -2.98
+      ]
+    },
+    "wrist": 195
   },
   "session": "defined reference point (AprilTag) static validation",
   "watchdog_diagnostic": {

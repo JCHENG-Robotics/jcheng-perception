@@ -192,6 +192,46 @@ uplink-clock-jump/worker fix only). The next fix should isolate the camera
 readers (separate participants/relay per camera) or address the CycloneDDS
 version/configuration.
 
+## Runs 7-9 — root cause: two gateway consumers, not the perception code
+
+After the Humble and uplink fixes the external reader still stopped while the
+wrist continued. Two independent gateway-side consumers were responsible:
+
+1. **Aux gateway (8765) used Fast DDS.** `armpi-gateway.service` did not pass
+   `RMW_IMPLEMENTATION`/`CYCLONEDDS_URI`, so this gateway subscribed to
+   `/camera/color/image_raw` with Fast DDS while the camera driver and edge use
+   CycloneDDS. Large colour samples across RMWs wedged the external reader.
+   Fixed by patching `/usr/local/lib/armpi-gateway/armpi-gateway-run.sh` to
+   pass `RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`,
+   `CYCLONEDDS_URI=file:///home/ubuntu/cyclonedds.xml` and `ROS_DOMAIN_ID=0`
+   via `docker exec -e`, and adding the same lines to
+   `/etc/armpi-gateway/gateway.env`. Backups:
+   `/home/pi/armpi-gateway-rwm-20261124/`.
+2. **Motion gateway (8766) was an orphan process** (PPID 0, service inactive)
+   subscribed to `/depth_cam/depth_registered/points`. It kept blocking the
+   Aurora node's depth publication; the wrist depth reader stayed wedged even
+   after a fresh edge. Killing PID 427260 recovered wrist depth.
+
+| run | change | observations | cross-view | fused track |
+|---|---|---|---|---|
+| 7 | aux gateway Cyclone | 225 external, 0 wrist | n/a | external-only max 4.82, p95 2.53, final 0.08 mm |
+| 8 | motion service "stopped" but orphan still running | 198 external, 0 wrist | n/a | external-only max 3.58, p95 2.21, final 0.24 mm |
+| 9 | orphan motion gateway killed + fresh edge | **240 external + 195 wrist** | **3.37 mm** | **max 10.03, p95 3.78, final 1.19 mm** |
+
+Run 9 is the **dual-view confirmation**: both tag streams were continuous for
+60 s (0.1-59.9 s / 0.5-60.1 s), edge 1220 frames / 580 matched,
+`gpu_alive=true`. Offline replay (`--source-bias none`) gives max 9.9 mm, p95
+3.6 mm, final 1.4 mm and a learned `view_offset` of (+0.48, -1.21, -2.98) mm,
+consistent with the measured cross-view (-0.04, -1.73, -2.90) mm. The worst
+sample is a 12.4 mm **view-switch transient** at t = 26.2 s
+(external -> wrist); p95 and final are well inside the ~8 mm target, the max
+is slightly above it. No 67 mm reference step.
+
+Operational state after the test: the aux gateway runs CycloneDDS (patched);
+the 8766 motion gateway is **stopped** (its pointcloud subscription is the
+wrist-depth blocker). Restarting it for Studio motion will reintroduce the
+risk unless its pointcloud QoS/consumer is changed first.
+
 ## Ops residue
 
 The ready-gated wrapper's `kill -INT` went to the `ros2 run` parent, not the node
