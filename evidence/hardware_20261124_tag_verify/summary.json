@@ -4,6 +4,14 @@
       "observations": 0,
       "result": "edge did not reach edge ready inside 60 s timeout; Pi load ~9.6, import interrupted"
     },
+    "run10": {
+      "external": 267,
+      "observations": 293,
+      "result": "repeatability partial; external continuous, wrist stopped at 7.5 s with 412 depth failures; motion gateway was stopped before the wedge and restarted later",
+      "t_first": 0.0,
+      "t_last": 60.0,
+      "wrist": 26
+    },
     "run2": {
       "observations": 30,
       "result": "wrist only; GPU external uplink reader wedged (frames_received 2 external / 246 wrist)"
@@ -204,7 +212,7 @@
       "aux gateway 8765 switched to CycloneDDS",
       "orphan motion gateway 8766 killed"
     ],
-    "status": "dual-view run 9 succeeded: external+wrist continuous, cross-view 3.37 mm, fused p95 3.78 / final 1.19 / max 10.03 mm; no 67 mm reference step. Motion gateway is stopped; restarting it may reintroduce the wrist-depth block.",
+    "status": "run9 full dual-view (3.37 mm cross-view, p95 3.78/final 1.19/max 10.03) but run10 only 7.5 s of wrist; external path stable after the aux gateway CycloneDDS fix; remaining blocker is the edge wrist-depth DDS reader. Next: per-camera ingress/participant isolation.",
     "uplink_fixes": [
       "uplink_allowed clock-jump reset",
       "UplinkWorker catches publish exceptions",
@@ -216,6 +224,28 @@
     "python3 scripts/fixed_point_report.py --wrist evidence/hardware_20261124_tag_verify/tag_wrist_fixed.csv --ext evidence/hardware_20261124_tag_verify/tag_ext_fixed.csv --ext-offset 0.0099 -0.0018 0.0094 --limit 0.005 --out evidence/hardware_20261124_tag_verify/tag_report_corrected.json",
     "python3 scripts/replay_static_drift.py --source evidence/hardware_20261124_tag_verify/tag_run3.json --source-bias none --settle-s 6 --require reference_tag_0 --limit-mm 15 --out evidence/hardware_20261124_tag_verify/replay_tag_run3.json"
   ],
+  "run10_repeat": {
+    "cross_view_mm": 2.77,
+    "external": 267,
+    "note": "run9 dual-view not repeatable; the wrist-depth reader wedges at the DDS participant level. The motion gateway stopped at 20:57:22, wrist stopped ~20:57:51, gateway restarted 20:58:34, so it was not the trigger.",
+    "recorded": {
+      "final_mm": 0.27,
+      "max_mm": 6.36,
+      "p95_mm": 2.53
+    },
+    "replay": {
+      "final_mm": 0.3,
+      "max_mm": 6.0,
+      "p95_mm": 2.4,
+      "view_offset_mm": [
+        2.58,
+        -0.53,
+        -0.44
+      ]
+    },
+    "wrist": 26,
+    "wrist_last_s": 7.5
+  },
   "run4_external_only": {
     "biggest_step_mm": 2.6,
     "biggest_step_s": 4.4,

@@ -234,6 +234,27 @@ Its pointcloud subscription is the wrist-depth blocker, so a future perception
 run can hit the wedge again until that subscription/QoS is changed or the
 gateway is stopped for the run.
 
+## Run 10 — repeatability attempt (partial)
+
+`armpi-gateway-pose` was stopped (`inactive`, no 8766 process) before the run;
+a fresh edge and the Humble tag GPU were started.
+
+- External: 267 tag observations, continuous 0.0-60.0 s.
+- Wrist: 26 observations only, 0.4-7.5 s; then `aurora_wrist:depth_failures`
+  reached 412. The wrist depth reader wedged again.
+- Fused: max 6.36 mm, p95 2.53 mm, final 0.27 mm; replay 6.0 / 2.4 / 0.3 mm;
+  cross-view 2.77 mm over the paired interval. The ~8 mm target is met while
+  the wrist view is present.
+- The motion gateway was **not** the trigger here: it was stopped at
+  20:57:22, the wrist stopped around 20:57:51, and the gateway restarted at
+  20:58:34 (later).
+
+Conclusion: run 9 proved a full 60 s dual-view window is possible, but run 10
+shows it is **not repeatable**: the wrist-depth reader still wedges at the DDS
+participant/reader level. The external path (aux gateway switched to
+CycloneDDS) is now stable. The robust next step is per-camera
+ingress/participant isolation, not another gateway QoS tweak.
+
 ## Ops residue
 
 The ready-gated wrapper's `kill -INT` went to the `ros2 run` parent, not the node

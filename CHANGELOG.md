@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Repeatability check: with the motion gateway stopped and a fresh edge, run
+  10 kept the external tag stream continuous for 60 s (267 observations) but
+  the wrist depth reader wedged at 7.5 s (26 observations). The motion gateway
+  was stopped at 20:57:22, the wrist stopped around 20:57:51 and the gateway
+  restarted at 20:58:34, so it was not the trigger. Fused max/p95/final was
+  6.36/2.53/0.27 mm and cross-view 2.77 mm while the wrist was present, but the
+  full dual-view window is **not repeatable** yet. The remaining blocker is the
+  edge wrist-depth DDS reader; the next step is per-camera ingress/participant
+  isolation (the aux-gateway CycloneDDS fix stays).
 - Gateway root cause and dual-view tag confirmation. The read-only aux gateway
   (8765) did not pass `RMW_IMPLEMENTATION`/`CYCLONEDDS_URI`, so it subscribed to
   the external colour topic with Fast DDS while the camera and edge use

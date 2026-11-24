@@ -397,8 +397,13 @@ learned Track.view_offset = (+0.03, -1.93, -3.31) mm
 - **Run 9 双视图成功：** external 240 + wrist 195 条（0.1–60.1 s），跨视图
   **3.37 mm**；融合 max **10.03 mm**、p95 **3.78 mm**、final **1.19 mm**
   （重放 9.9/3.6/1.4）；max 是 t=26.2 s 一次 12.4 mm 视图切换瞬态，无 67 mm
-  参考切换。motion 网关在 run 9 期间已停，但最终检查时 service 又 active；
-  恢复前需处理其点云订阅或在 perception run 时停掉它。
+  参考切换。
+- **Run 10 复跑不完整：** 停掉 motion 网关、fresh edge 后，external 267 条
+  连续 60 s，但 wrist 仅 26 条（0.4–7.5 s）后 depth reader 再次 wedge；融合
+  max 6.36 / p95 2.53 / final 0.27 mm，跨视图 2.77 mm（配对段）。motion 网关
+  在 20:57:22 停止、腕部 ~20:57:51 停止、网关 20:58:34 才重启，不是触发者。
+  结论：双视图可达成但**不可重复满 60 s**，剩余是 edge wrist-depth DDS
+  reader；下一步做 per-camera ingress/participant 隔离。
 
 证据：`evidence/hardware_20261124_tag_verify/`。
 

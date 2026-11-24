@@ -348,6 +348,13 @@ max **10.03 mm**、p95 **3.78 mm**、final **1.19 mm**（重放 9.9/3.6/1.4，
 又 active 了；若为 Studio 运动恢复，需先处理其点云订阅（QoS/消费者），或
 perception run 时停掉它，否则腕部 depth 会再次被阻塞。
 
+**Run 10 复跑（部分）：** 复跑前已停 motion 网关、fresh edge；外机位 267 条
+连续 60 s，腕部只有 26 条（0.4–7.5 s）后 depth reader 再次 wedge（412 次）。
+融合 max 6.36 / p95 2.53 / final 0.27 mm，跨视图 2.77 mm（配对段）——有腕部
+时达标，但 **不能重复满 60 s**。motion 网关在 20:57:22 停止、腕部 ~20:57:51
+停止、网关 20:58:34 才重启，**不是这次 wedge 的触发者**。剩余问题在 edge 的
+wrist-depth DDS reader；下一步应做 per-camera ingress/participant 隔离。
+
 ## 10. 调参顺序
 
 1. 用实机静态目标测 `depth` 噪声 vs 距离，拟合 `q`、`floor`（每相机）。
