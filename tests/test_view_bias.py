@@ -215,3 +215,15 @@ def test_pipeline_applies_the_chain_correction():
     # correction shifts it by the configured offset.
     assert np.allclose(
         observations[0].position_base, [0.0099, -0.0018, 1.0094], atol=1e-6)
+
+
+def test_track_recovers_from_extreme_velocity_and_position():
+    truth = np.array([0.30, 0.05, -0.085])
+    manager = _manager()
+    track = manager._create_track(_observation('d435i_ext', truth, 0))
+    track.kf.state[:3] = np.array([1e6, -1e6, 1e6])
+    track.kf.state[3:] = np.array([1e9, 0.0, 0.0])
+    observation = _observation('d435i_ext', truth, 300_000_000)
+    manager.apply_group(track, [observation], Phase.COARSE, 300_000_000)
+    assert np.linalg.norm(track.kf.position - truth) < 0.01
+    assert np.linalg.norm(track.kf.velocity) < 2.0

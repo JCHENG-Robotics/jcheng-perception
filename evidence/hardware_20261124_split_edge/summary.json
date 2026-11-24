@@ -1,0 +1,54 @@
+{
+  "architecture": "perception_ingress_ext + perception_ingress_wrist + perception_fusion; ingress watchdog 4 s -> exit -> launch respawn 2 s",
+  "date": "2026-11-24",
+  "files": [
+    "split_run4.json",
+    "split_run3.json",
+    "split_ingress_run.log",
+    "humble_gpu_run.log",
+    "replay_split_run4.json",
+    "recorded_split_run4.json"
+  ],
+  "hardware_claimed": true,
+  "kind": "real hardware, static scene, no motion commands",
+  "limitations": [
+    "static scene only",
+    "ingress watchdog creates a 2\u20134 s observation gap; a track can reset if the other view also gaps",
+    "split status counters are observation-based",
+    "motion gateway state unchanged; aux gateway remains CycloneDDS"
+  ],
+  "run4": {
+    "cross_view_mm": 1.55,
+    "cross_view_vector_mm": [
+      1.45,
+      -0.53,
+      -0.14
+    ],
+    "external": 134,
+    "fusion_track": {
+      "final_mm": 1.96,
+      "max_mm": 2.14,
+      "p95_mm": 1.64,
+      "samples": 1691
+    },
+    "ingress_watchdog": "external ingress stalled at 25 s (frames=139, depth=110), respawned at 28.5 s; fusion track survived",
+    "recorded_report": {
+      "final_mm": 2.0,
+      "max_mm": 2.0,
+      "p95_mm": 1.6
+    },
+    "replay_report": {
+      "final_mm": 0.5,
+      "max_mm": 5.0,
+      "p95_mm": 3.4
+    },
+    "wrist": 226
+  },
+  "safety_bounds": {
+    "max_target_distance_m": 1.0,
+    "max_track_speed_mps": 0.5
+  },
+  "session": "split per-camera ingress / fusion validation",
+  "tests": 77,
+  "trap": "colcon skipped reinstalling tracking/config due to source mtimes; fusion ran a stale tracker without velocity_min_dt_s and exploded. Touch all core/edge sources before rebuild and verify installed files."
+}

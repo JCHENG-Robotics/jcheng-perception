@@ -355,7 +355,36 @@ perception run 时停掉它，否则腕部 depth 会再次被阻塞。
 停止、网关 20:58:34 才重启，**不是这次 wedge 的触发者**。剩余问题在 edge 的
 wrist-depth DDS reader；下一步应做 per-camera ingress/participant 隔离。
 
-## 10. 调参顺序
+## 10. Split ingress（DDS reader 隔离）
+
+单进程 edge 同时订阅四路大图像（外机位/腕部 × RGB/depth）时，CycloneDDS 的单个
+reader 会在机器人上间歇性 wedge（watchdog 诊断：外机位 RGB 卡在 5 帧而 depth
+继续；腕部 depth 卡在 7 而 RGB 继续；同进程重建订阅无效）。生产上改为**每相机
+一个 ingress 进程 + 一个 fusion 进程**：
+
+- `perception_ingress_ext` / `perception_ingress_wrist`：`perception_edge` 加
+  `camera_filter:=<camera>`，只拥有该相机的图像/深度/CameraInfo、深度/TF 匹配、
+  反投影、JPEG uplink，并把 `TargetObservation` 发到
+  `/perception/observations/<camera>`；关闭 `publish_targets`/`publish_status`。
+- `perception_fusion`：订阅两路小观测，做关联/KF/融合，发布
+  `/perception/targets` 和 `/perception/status`。split 模式下 status 的
+  `total_frames`/`camera_fps` 是观测计数/观测率，不是原始相机计数。
+- ingress 有 4 s `link_stalled` watchdog：某相机 frames/depth 计数停增就退出，
+  launch `respawn=True` 以 2 s 后重启该进程（新 DDS participant）；另一路和
+  fusion 不受影响。
+- 启动：`ros2 launch jcheng_perception_edge split_edge.launch.py start_tf:=false ...`；
+  TF 由已运行的 `wrist_tf`/`ext_tf` 提供。旧的单进程 `perception_edge` 保留。
+
+实机 run 4（60 s 静置）：external 134 + wrist 226 条连续观测，跨视图 **1.55 mm**；
+fusion 单 track **max 2.14 mm / p95 1.64 mm / final 1.96 mm**。外机位 ingress 在
+25 s 被 watchdog 重启（depth=110），fusion track 靠腕部保持并在 external 恢复后
+继续。还有两个关键修正：部署 archive 后 colcon 会按 mtime **跳过 core 的
+tracking/config 重装**（导致 fusion 用旧 tracker、没有 min-dt，速度爆炸到
+1e8 m/s）；必须 touch 全部 core/edge 源文件并核对安装产物。另外 core 增加
+`max_track_speed_mps=0.5` / `max_target_distance_m=1.0` 安全上限，越界 track
+重锚定、越界 target 不发布。
+
+## 11. 调参顺序
 
 1. 用实机静态目标测 `depth` 噪声 vs 距离，拟合 `q`、`floor`（每相机）。
 2. 用固定基座标定验证 `T_base_camera`，确认外机位与腕相机在同一目标上的偏差。

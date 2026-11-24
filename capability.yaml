@@ -75,7 +75,7 @@ safety:
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 74
+  unit_tests: 77
   reference_point_backend:
     passed: 2026-11-24 (unit test + real hardware static run)
     config: config/gpu_tag.yaml (AprilTag 36h11, 60 mm, id 0)
@@ -94,6 +94,11 @@ verification:
     result: worst required-label drift 4.7 mm (90 s run, 16 s of frames) and 8.1 mm (60 s run); pre-fix reference 448-696 mm
     caveats: one 67 mm first-pair reference step; run 2 had poor wrist depth matching; absolute positions remain per-view bbox-centre points
     post_run_fix: velocity_min_dt_s=0.10; uplink clock-jump baseline reset and UplinkWorker exception handling; same-distro Humble GPU run gave wrist-only 7.30 mm over 60 s, external 0 (external uplink/reader still stops); dual-view pending
+  split_ingress:
+    passed: 2026-11-24 (real Pi 5 + Humble tag GPU, static 60 s)
+    evidence: evidence/hardware_20261124_split_edge/
+    result: per-camera ingress + fusion; external 134 + wrist 226 continuous, cross-view 1.55 mm, fusion max 2.14 / p95 1.64 / final 1.96 mm; external ingress watchdog restarted at 25 s without losing the fusion track
+    safety_bounds: max_track_speed_mps 0.5, max_target_distance_m 1.0; touch all core/edge sources after an archive deploy (colcon mtime skipped stale tracking/config once)
   uplink_robustness:
     passed: 2026-11-24 (tests/test_uplink_rate.py: normal gap, rate limit, backwards clock jump, long gap)
     deployed: Pi core+edge via tar; status notes expose encode_failures/rate_limited; UplinkWorker catches publish exceptions

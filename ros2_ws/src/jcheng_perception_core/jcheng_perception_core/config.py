@@ -179,6 +179,10 @@ class FusionConfig:
     # difference by a few hundredths of a second fabricates tens of mm/s, so a
     # velocity baseline must span at least this interval.
     velocity_min_dt_s: float = 0.10
+    # Sanity bounds for tabletop manipulation. A malformed/duplicate sample
+    # must not be able to drive the filter to metres per second or off-table.
+    max_track_speed_mps: float = 2.0
+    max_target_distance_m: float = 5.0
     # Publishing and association prediction clamp velocity extrapolation; a
     # millimetre-velocity estimate integrated for a second is decimetres.
     max_extrapolation_s: float = 0.35
@@ -296,6 +300,10 @@ def load_fusion_config(path):
     if config.velocity_min_dt_s > config.velocity_sample_max_age_s:
         raise ValueError(
             'velocity_min_dt_s must not exceed velocity_sample_max_age_s')
+    if config.max_track_speed_mps <= 0.0:
+        raise ValueError('max_track_speed_mps must be positive')
+    if config.max_target_distance_m <= 0.0:
+        raise ValueError('max_target_distance_m must be positive')
     if config.max_extrapolation_s < 0.0:
         raise ValueError('max_extrapolation_s must not be negative')
     if not 0.0 <= config.view_offset_alpha <= 1.0:

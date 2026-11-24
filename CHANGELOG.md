@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Split edge for DDS reader isolation: `perception_edge` gained
+  `camera_filter`, `publish_targets`, `publish_status` and an ingress watchdog;
+  new `perception_fusion` subscribes to the per-camera observation topics and
+  publishes targets/status; `split_edge.launch.py` starts one ingress per
+  camera plus fusion with respawn. Each ingress exits after 4 s without
+  camera-frame/depth progress, so launch restarts a fresh DDS participant
+  without touching the other view or fusion state. Static run 4: external 134 +
+  wrist 226 continuous observations, cross-view 1.55 mm, fusion max 2.14 /
+  p95 1.64 / final 1.96 mm; the external ingress watchdog restarted at 25 s and
+  the fusion track survived. Core gained `max_track_speed_mps=0.5` /
+  `max_target_distance_m=1.0` safety bounds. Deployment trap: colcon skipped
+  reinstalling stale tracking/config by mtime; touch all core/edge sources and
+  verify installed files. 77 tests.
 - Repeatability check: with the motion gateway stopped and a fresh edge, run
   10 kept the external tag stream continuous for 60 s (267 observations) but
   the wrist depth reader wedged at 7.5 s (26 observations). The motion gateway

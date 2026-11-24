@@ -34,3 +34,22 @@ def test_uplink_allowed_treats_a_long_gap_as_a_fresh_start():
         20_000_000_000, 1_000_000_000, interval)
     assert allowed
     assert last == 20_000_000_000
+
+
+def test_link_stalled_requires_data_and_timeout():
+    from jcheng_perception_core import link_stalled
+
+    timeout = 4_000_000_000
+    assert not link_stalled(10_000_000_000, 0, False, timeout)
+    assert not link_stalled(10_000_000_000, 9_000_000_000, True, timeout)
+    assert link_stalled(14_000_000_000, 10_000_000_000, True, timeout)
+
+
+def test_link_stalled_respects_cooldown_and_clock_jump():
+    from jcheng_perception_core import link_stalled
+
+    timeout = 4_000_000_000
+    assert not link_stalled(
+        20_000_000_000, 10_000_000_000, True, timeout,
+        cooldown_until_ns=25_000_000_000)
+    assert not link_stalled(5_000_000_000, 10_000_000_000, True, timeout)

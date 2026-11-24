@@ -1,0 +1,28 @@
+[INFO] [launch]: All log files can be found below /tmp/roslog/2026-11-24-13-14-54-563499-raspberrypi-450352
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [perception_edge-1]: process started with pid [450359]
+[INFO] [perception_edge-2]: process started with pid [450361]
+[INFO] [perception_fusion-3]: process started with pid [450363]
+[perception_fusion-3] [INFO] [1795526095.303925812] [perception_fusion]: fusion ready: cameras=d435i_ext,aurora_wrist target_frame=base_link
+[perception_edge-1] [INFO] [1795526096.149044589] [perception_ingress_ext]: edge ready: cameras=d435i_ext target_frame=base_link uplink=True
+[perception_edge-1] [WARN] [1795526096.150468885] [perception_ingress_ext]: TF unavailable base_link -> camera_color_optical_frame: "base_link" passed to lookupTransform argument target_frame does not exist. 
+[perception_edge-2] [INFO] [1795526096.231093422] [perception_ingress_wrist]: edge ready: cameras=aurora_wrist target_frame=base_link uplink=True
+[perception_edge-2] [WARN] [1795526096.236303959] [perception_ingress_wrist]: TF unavailable base_link -> camera_optical_measured: "base_link" passed to lookupTransform argument target_frame does not exist. 
+[perception_edge-1] [WARN] [1795526112.595028320] [perception_ingress_ext]: d435i_ext: JPEG encode+publish took 52.4 ms
+[perception_edge-1] [ERROR] [1795526125.087400776] [perception_ingress_ext]: d435i_ext: ingress link stalled (frames=139, depth=110); exiting for respawn
+[INFO] [perception_edge-1]: process has finished cleanly [pid 450359]
+[INFO] [perception_edge-1]: process started with pid [450667]
+[perception_edge-1] [INFO] [1795526128.557583977] [perception_ingress_ext]: edge ready: cameras=d435i_ext target_frame=base_link uplink=True
+[perception_edge-1] [WARN] [1795526128.563655755] [perception_ingress_ext]: TF unavailable base_link -> camera_color_optical_frame: "base_link" passed to lookupTransform argument target_frame does not exist. 
+[perception_edge-2] [ERROR] [1795526163.196166716] [perception_ingress_wrist]: aurora_wrist: ingress link stalled (frames=502, depth=206); exiting for respawn
+[INFO] [perception_edge-2]: process has finished cleanly [pid 450361]
+[INFO] [perception_edge-2]: process started with pid [450995]
+[perception_edge-2] [INFO] [1795526166.714449232] [perception_ingress_wrist]: edge ready: cameras=aurora_wrist target_frame=base_link uplink=True
+[perception_edge-2] [WARN] [1795526166.716413455] [perception_ingress_wrist]: TF unavailable base_link -> camera_optical_measured: "base_link" passed to lookupTransform argument target_frame does not exist. 
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [perception_fusion-3]: sending signal 'SIGINT' to process[perception_fusion-3]
+[INFO] [perception_edge-2]: sending signal 'SIGINT' to process[perception_edge-2]
+[INFO] [perception_edge-1]: sending signal 'SIGINT' to process[perception_edge-1]
+[INFO] [perception_fusion-3]: process has finished cleanly [pid 450363]
+[INFO] [perception_edge-2]: process has finished cleanly [pid 450995]
+[INFO] [perception_edge-1]: process has finished cleanly [pid 450667]

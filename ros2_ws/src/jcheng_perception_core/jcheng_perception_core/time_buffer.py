@@ -246,3 +246,16 @@ def uplink_allowed(now_ns, last_ns, min_interval_ns):
     if elapsed_ns < interval_ns:
         return False, last_ns
     return True, now_ns
+
+
+def link_stalled(now_ns, last_change_ns, had_data, timeout_ns,
+                 cooldown_until_ns=0):
+    """Return True when a sensor link should be considered stalled."""
+    if not had_data:
+        return False
+    now_ns = int(now_ns)
+    last_change_ns = int(last_change_ns)
+    timeout_ns = max(1, int(timeout_ns))
+    if now_ns < int(cooldown_until_ns):
+        return False
+    return now_ns - last_change_ns >= timeout_ns

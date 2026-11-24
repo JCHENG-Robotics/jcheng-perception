@@ -49,6 +49,7 @@ from jcheng_perception_core import (
     load_fusion_config,
     load_static_frames,
     make_transform,
+    link_stalled,
     matrix_from_quaternion,
     uplink_allowed,
 )
@@ -243,6 +244,14 @@ class PerceptionEdgeNode(Node):
         self.declare_parameter('status_rate_hz', 0.0)
         self.declare_parameter('enable_uplink', True)
         self.declare_parameter('timing_log', False)
+        # Split-edge mode: one ingress process per camera. With a non-empty
+        # filter only that camera is instantiated; targets/status are normally
+        # left to the fusion process. The watchdog exits the ingress when a
+        # reader stops advancing, so launch can respawn this participant.
+        self.declare_parameter('camera_filter', '')
+        self.declare_parameter('publish_targets', True)
+        self.declare_parameter('publish_status', True)
+        self.declare_parameter('ingress_watchdog', False)
         cv2.setNumThreads(1)
 
         cameras_path = str(
@@ -252,6 +261,21 @@ class PerceptionEdgeNode(Node):
         view_bias_path = str(
             self.get_parameter('view_bias_config').value)
         self.specs = load_camera_specs(cameras_path)
+        camera_filter = str(
+            self.get_parameter('camera_filter').value).strip()
+        if camera_filter:
+            if camera_filter not in self.specs:
+                raise RuntimeError(
+                    'camera_filter {} is not in {}'.format(
+                        camera_filter, cameras_path))
+            self.specs = {
+                camera_filter: self.specs[camera_filter]}
+        self.publish_targets_enabled = bool(
+            self.get_parameter('publish_targets').value)
+        self.publish_status_enabled = bool(
+            self.get_parameter('publish_status').value)
+        self.ingress_watchdog_enabled = bool(
+            self.get_parameter('ingress_watchdog').value)
         self.fusion = load_fusion_config(fusion_path)
         if view_bias_path and os.path.isfile(view_bias_path):
             self.view_bias = ViewBiasModel.from_config(view_bias_path)
@@ -345,10 +369,14 @@ class PerceptionEdgeNode(Node):
                     camera, message),
                 _state_qos(), callback_group=detection_group)
 
-        self.target_publisher = self.create_publisher(
-            FusedTargetArray, '/perception/targets', _state_qos())
-        self.status_publisher = self.create_publisher(
-            PerceptionStatus, '/perception/status', _state_qos(5))
+        self.target_publisher = None
+        if self.publish_targets_enabled:
+            self.target_publisher = self.create_publisher(
+                FusedTargetArray, '/perception/targets', _state_qos())
+        self.status_publisher = None
+        if self.publish_status_enabled:
+            self.status_publisher = self.create_publisher(
+                PerceptionStatus, '/perception/status', _state_qos(5))
         self.create_service(
             Trigger, '~/drop_recheck', self.on_drop_recheck,
             callback_group=detection_group)
@@ -368,12 +396,63 @@ class PerceptionEdgeNode(Node):
             self.on_publish_timer,
             callback_group=timer_group,
         )
+        if self.ingress_watchdog_enabled:
+            now_ns = self._now_ns()
+            self._ingress_watchdog = {
+                camera_id: {
+                    'frames': -1,
+                    'depth': -1,
+                    'last_frames_ns': now_ns,
+                    'last_depth_ns': now_ns,
+                    'had_frames': False,
+                    'had_depth': False,
+                }
+                for camera_id in self.specs
+            }
+            self.create_timer(
+                1.0, self.on_ingress_watchdog, callback_group=timer_group)
         self.get_logger().info(
             'edge ready: cameras={} target_frame={} uplink={}'.format(
                 ','.join(self.specs), self.fusion.target_frame,
                 self.enable_uplink))
 
     # ------------------------------------------------------------------ input
+    def on_ingress_watchdog(self):
+        """Exit an ingress when its camera links stop advancing.
+
+        The launch file runs each ingress with ``respawn=True``; exiting is the
+        participant-level recovery that subscription recreation could not
+        provide.
+        """
+        now_ns = self._now_ns()
+        stall_ns = 4_000_000_000
+        for camera_id in self.specs:
+            health = self.pipeline.health[camera_id]
+            state = self._ingress_watchdog[camera_id]
+            frames = int(health.frames_received)
+            depth = int(health.depth_received)
+            if frames != state['frames']:
+                state['frames'] = frames
+                state['last_frames_ns'] = now_ns
+                state['had_frames'] = True
+            if depth != state['depth']:
+                state['depth'] = depth
+                state['last_depth_ns'] = now_ns
+                state['had_depth'] = True
+            frames_stalled = link_stalled(
+                now_ns, state['last_frames_ns'], state['had_frames'],
+                stall_ns)
+            depth_stalled = link_stalled(
+                now_ns, state['last_depth_ns'], state['had_depth'],
+                stall_ns)
+            if not (frames_stalled or depth_stalled):
+                continue
+            self.get_logger().error(
+                '{}: ingress link stalled (frames={}, depth={}); exiting '
+                'for respawn'.format(camera_id, frames, depth))
+            rclpy.shutdown()
+            return
+
     def _now_ns(self):
         """Return the current ROS clock in nanoseconds."""
         return self.get_clock().now().nanoseconds
@@ -605,8 +684,9 @@ class PerceptionEdgeNode(Node):
         if observations:
             self.publish_observations(observations)
         self.publish_targets(targets, now_ns)
-        if now_ns - self._last_status_ns >= int(
-                1e9 / max(self.fusion.status_rate_hz, 1e-6)):
+        if self.publish_status_enabled and \
+                now_ns - self._last_status_ns >= int(
+                    1e9 / max(self.fusion.status_rate_hz, 1e-6)):
             with self._lock:
                 status = self.pipeline.status(now_ns)
             self.publish_status(status, now_ns)
@@ -650,6 +730,8 @@ class PerceptionEdgeNode(Node):
         wrist_ids = [
             camera_id for camera_id, spec in self.specs.items()
             if spec.role.value == 'wrist']
+        if self.target_publisher is None:
+            return
         message = FusedTargetArray()
         message.header.stamp = Time(nanoseconds=int(now_ns)).to_msg()
         message.header.frame_id = self.fusion.target_frame
@@ -691,6 +773,8 @@ class PerceptionEdgeNode(Node):
 
     def publish_status(self, status, now_ns):
         """Publish the edge health snapshot."""
+        if self.status_publisher is None:
+            return
         message = PerceptionStatus()
         message.header.stamp = Time(nanoseconds=int(now_ns)).to_msg()
         message.header.frame_id = self.fusion.target_frame

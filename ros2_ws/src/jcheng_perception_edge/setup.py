@@ -35,6 +35,7 @@ setup(
     entry_points={
         'console_scripts': [
             'perception_edge = jcheng_perception_edge.node:main',
+            'perception_fusion = jcheng_perception_edge.fusion_node:main',
             (
                 'synthetic_scene_publisher = '
                 'jcheng_perception_edge.synthetic:main'

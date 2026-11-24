@@ -290,6 +290,10 @@ class TrackManager:
                 current_position = current_position - track.view_offset
                 previous_position = previous_position - track.view_offset
             velocity = (current_position - previous_position) / dt
+            if not np.all(np.isfinite(velocity)) or float(
+                    np.linalg.norm(velocity)) > float(
+                        self.fusion.max_track_speed_mps):
+                continue
             noise = (
                 np.asarray(observation.covariance_base, dtype=np.float64)
                 + np.asarray(previous_covariance, dtype=np.float64)) / (
@@ -375,6 +379,7 @@ class TrackManager:
             fused.position_base, fused.covariance_base, velocity_gain=0.0)
         if velocity is not None:
             track.kf.update_velocity(velocity[0], velocity[1])
+        self._sanitize_track(track, fused)
         for observation in observations:
             track.view_samples[str(observation.camera_id)] = (
                 int(observation.capture_ns),
@@ -404,6 +409,36 @@ class TrackManager:
         if track.hits >= self.fusion.confirm_hits:
             track.status = TrackStatus.CONFIRMED
         return fused
+
+    def _sanitize_track(self, track, fused=None):
+        """Keep a track inside the configured physical bounds.
+
+        A malformed or numerically extreme sample must not drive the filter to
+        metre-per-second velocities or off the table. Re-anchor on the current
+        fused measurement when the position leaves the allowed range.
+        """
+        velocity = np.asarray(track.kf.velocity, dtype=np.float64)
+        speed = float(np.linalg.norm(velocity))
+        if not np.isfinite(speed) or \
+                speed > float(self.fusion.max_track_speed_mps):
+            track.kf.state[3:] = 0.0
+        position = np.asarray(track.kf.position, dtype=np.float64)
+        if not np.all(np.isfinite(position)) or float(
+                np.linalg.norm(position)) > float(
+                    self.fusion.max_target_distance_m):
+            if fused is not None:
+                track.kf = ConstantVelocityKalman(
+                    fused.position_base,
+                    fused.covariance_base,
+                    accel_noise=self.fusion.kalman_accel_noise,
+                    measurement_floor_m=self.fusion.measurement_floor_m,
+                    initial_velocity_sigma=(
+                        self.fusion.initial_velocity_sigma_mps),
+                )
+                track.last_state_ns = int(fused.stamp_ns)
+            else:
+                track.kf.state[:3] = 0.0
+                track.kf.state[3:] = 0.0
 
     def update(self, assignments, phase, now_ns):
         """Apply grouped assignments and return the fused measurements."""
@@ -512,6 +547,7 @@ class TrackManager:
                 secondary.last_fused.covariance_base,
                 velocity_gain=0.0)
             primary.last_state_ns = secondary.last_state_ns
+            self._sanitize_track(primary, secondary.last_fused)
         primary.hits = max(primary.hits, secondary.hits)
         primary.wrist_hits = max(
             primary.wrist_hits, secondary.wrist_hits)
@@ -581,6 +617,10 @@ class TrackManager:
             dt = max(0.0, (int(now_ns) - int(track.last_state_ns)) / 1e9)
             dt = min(dt, self.fusion.max_extrapolation_s)
             position = track.kf.position + track.kf.velocity * dt
+            if not np.all(np.isfinite(position)) or float(
+                    np.linalg.norm(position)) > float(
+                        self.fusion.max_target_distance_m):
+                continue
             covariance = track.kf.covariance[:3, :3].copy()
             covariance = covariance + np.eye(3) * (
                 self.fusion.measurement_floor_m ** 2

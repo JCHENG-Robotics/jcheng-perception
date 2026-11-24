@@ -407,6 +407,21 @@ learned Track.view_offset = (+0.03, -1.93, -3.31) mm
 
 证据：`evidence/hardware_20261124_tag_verify/`。
 
+### 2.14 Split ingress（DDS reader 隔离，2026-11-24）
+
+单进程 edge 的 reader wedge 无法在同进程重建订阅恢复，改为每相机 ingress 进程
++ fusion 进程（`split_edge.launch.py`）。ingress 只处理一个相机并发布
+`TargetObservation`，fusion 订阅小观测做关联/KF；ingress 有 4 s watchdog，
+退出后 launch 以 2 s 重启（新 participant）。
+
+实机 60 s 静置：external 134 + wrist 226 条连续，跨视图 **1.55 mm**；fusion
+单 track **max 2.14 / p95 1.64 / final 1.96 mm**；external ingress 在 25 s
+被 watchdog 重启，fusion track 保持。部署时发现 colcon 按 mtime 跳过 core
+`tracking.py`/`config.py` 重装（旧 tracker 无 `velocity_min_dt_s`，fusion 速度
+爆炸到 1e8 m/s）；必须 touch 全部 core/edge 源文件并核对安装产物。core 增加
+`max_track_speed_mps=0.5` / `max_target_distance_m=1.0` 安全上限。证据：
+`evidence/hardware_20261124_split_edge/`。
+
 ## 3. 本轮发现并修复的问题
 
 | # | 现象 | 根因 | 修复 |
