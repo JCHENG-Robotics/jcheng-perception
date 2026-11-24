@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+All notable changes to this project are documented here. Format based on
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project follows
+[Semantic Versioning](https://semver.org/).
+The `Unreleased` entries predate the documentation standard and are kept in
+their original narrative order.
+
+## [Unreleased]
 
 - Split edge for DDS reader isolation: `perception_edge` gained
   `camera_filter`, `publish_targets`, `publish_status` and an ingress watchdog;
@@ -163,7 +169,7 @@
   the currently deployed split UVC-colour + depth-only topology cannot be used
   for metric fusion.
 
-## 0.1.0 — 2026-11-23
+## [0.1.0] — 2026-11-23
 
 Initial distributed-perception implementation.
 
