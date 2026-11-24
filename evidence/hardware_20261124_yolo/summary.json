@@ -1,0 +1,105 @@
+{
+  "schema": "jcheng-perception-hardware/1",
+  "date": "2026-11-24",
+  "kind": "cross_machine_real_yolo_detection_path",
+  "hardware_claimed": true,
+  "motion_commands_sent": false,
+  "environment": {
+    "robot": "Raspberry Pi 5, 8 GB, Debian 12, aarch64",
+    "robot_container": "ArmPiUltra (ROS 2 Humble, rmw_cyclonedds_cpp, domain 0)",
+    "laptop": "Ubuntu 24.04, ROS 2 Jazzy, RTX 3060 6 GB",
+    "laptop_rmw": "rmw_cyclonedds_cpp 2.2.4 with cyclonedds 0.10.5 (installed 2026-11-24)",
+    "network": "USB Ethernet 10.42.0.1 (laptop) <-> 10.42.0.218 (robot)",
+    "perception_main": "e929703"
+  },
+  "topology": {
+    "edge": "Pi 5, external D435i colour only",
+    "gpu": "laptop, one asynchronous Ultralytics worker",
+    "transport": "CycloneDDS across machines; custom messages built on both ROS distros"
+  },
+  "edge_config": {
+    "file": "cameras_ext_hw.yaml (stored beside this summary)",
+    "rgb_topic": "/ext_cam/color/image_raw",
+    "depth_topic": "/camera/camera/depth/image_rect_raw",
+    "camera_info_topic": "/ext_cam/color/camera_info",
+    "optical_frame": "ext_cam_optical",
+    "jpeg_quality": 55,
+    "max_uplink_fps": 3.0,
+    "external_camera_rate_hz": 14.36,
+    "wrist": "dummy entry, no topics, pose_static"
+  },
+  "gpu_config": {
+    "file": "gpu_ext_real.yaml (stored beside this summary)",
+    "model": "vendor yolov8s.pt",
+    "model_id": "yolov8s.pt:1775123732000000000",
+    "task": "detect",
+    "imgsz": 640,
+    "conf": 0.20,
+    "device": "0",
+    "python": "~/.venvs/jcheng-perception-gpu/bin/python"
+  },
+  "gpu_measurements": {
+    "fps": 2.0593512058258057,
+    "inference_ms_average": 55.201446533203125,
+    "frames_received": 37,
+    "frames_dropped": 4,
+    "frames_failed": 0,
+    "first_detection_inference_ms": 9.456453323364258
+  },
+  "edge_measurements": {
+    "camera_fps": [4.387145519256592, 0.0],
+    "total_frames": 115,
+    "total_detections": 16,
+    "detections_matched": 0,
+    "detections_dropped": 16,
+    "match_success_rate": 0.0,
+    "mean_detection_latency_ms": 186.79690551757812,
+    "gpu_alive": true,
+    "notes": ["d435i_ext:depth_failures=25"]
+  },
+  "first_detection": {
+    "label": "dining table",
+    "class_id": 60,
+    "score": 0.22965675592422485,
+    "bbox_xyxy": [3.42578125, 45.28558349609375, 1276.867919921875, 707.2860107421875],
+    "image_width": 1280,
+    "image_height": 720,
+    "header_stamp_ns": 1795487500703345576,
+    "frame_seq_ns": 1795487500703345576,
+    "frame_id": "ext_cam_optical",
+    "stamp_preserved": true
+  },
+  "offline_smoke_on_captured_frame": {
+    "model": "yolov8s.pt",
+    "device": "0",
+    "detections": [
+      {"label": "chair", "score": 0.337},
+      {"label": "dining table", "score": 0.215}
+    ]
+  },
+  "cross_machine_discovery": {
+    "ros2_topic_list_from_laptop": "passed (robot topics visible)",
+    "joint_states_echo_from_laptop": "passed"
+  },
+  "limitations": [
+    "Depth is the split, unaligned RealSense stream (640x480) while colour is 1280x720 UVC; every detection was dropped at depth matching, so there are no metric observations or fused targets in this test.",
+    "Edge camera_fps was 4.39 while the raw UVC stream was 14.36 Hz; full 720p cv_bridge conversion saturates the Pi 5. Downsample or use 640x480 before aiming at 10 Hz fusion.",
+    "The test validates the real-model detection, cross-machine transport, capture-timestamp round-trip and GPU health path only.",
+    "CycloneDDS logged an 'invalid data size' serialization warning while running Humble and Jazzy participants; the detection/status streams were correct. Prefer matching ROS distros for production.",
+    "The first unbounded attempt coincided with the Pi becoming application-unresponsive (ping OK, SSH banner and gateway timed out); the command used then also contained a self-matching pkill, so whether the edge started is unproven. The bounded retry succeeded. Keep high-resolution edge runs bounded and monitor load."
+  ],
+  "cleanup": {
+    "edge_bounded_by": "timeout -s INT 60",
+    "gpu_bounded_by": "timeout -s INT 40",
+    "edge_processes_after_test": 0,
+    "gpu_processes_after_test": 0,
+    "vendor_services_after_test": {
+      "start_node": "active",
+      "armpi-ext-cam": "active",
+      "armpi-rs-depth": "active",
+      "armpi-gateway": "active"
+    },
+    "robot_load_after_test": 5.83,
+    "shutdown_tracebacks_fixed": "signal.SIGINT ignored during teardown in edge, GPU and synthetic nodes; synthetic demo now exits with zero tracebacks"
+  }
+}

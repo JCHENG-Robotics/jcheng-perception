@@ -1,0 +1,153 @@
+{
+  "date": "2026-11-24",
+  "decision": "ADR 0004 executed: single RealSense owner with colour + aligned depth",
+  "topology_before": {
+    "colour": "/ext_cam/color/image_raw (ext_cam_node, UVC /dev/video4, 1280x720)",
+    "depth": "/camera/camera/depth/image_rect_raw (realsense2_camera, 640x480, depth only)"
+  },
+  "topology_after": {
+    "owner": "realsense2_camera 4.55.1 (librealsense 2.55.1)",
+    "colour": "/camera/color/image_raw",
+    "depth": "/camera/aligned_depth_to_color/image_raw",
+    "camera_info": [
+      "/camera/color/camera_info",
+      "/camera/aligned_depth_to_color/camera_info"
+    ],
+    "frame": "camera_color_optical_frame",
+    "depth_profile": "640x480x15",
+    "colour_profile": "640x480x15",
+    "align_depth": true,
+    "launch": "rs_launch.py depth_module.depth_profile:=640x480x15 rgb_camera.color_profile:=640x480x15 enable_color:=true align_depth.enable:=true camera_namespace:=/",
+    "gateway_aux_topic": "/camera/color/image_raw",
+    "ext_cam_service": "stopped (unit kept for rollback)"
+  },
+  "measured": {
+    "colour_rate_hz": 6.9,
+    "aligned_depth_rate_hz": 7.54,
+    "stamp_delta_ms": 0.0,
+    "colour_encoding": "rgb8",
+    "depth_encoding": "16UC1",
+    "colour_intrinsics_640x480": [
+      606.5,
+      606.6,
+      325.03,
+      249.19
+    ],
+    "device_owner": "realsense2_camera (fuser -v /dev/video4)",
+    "gateway_status": {
+      "source": "armpi_debug_gateway_ros",
+      "topic": "ros:/camera/color/image_raw",
+      "fps": 10.6,
+      "sample_age_ms": 43
+    },
+    "edge_run_default_config_seconds": 45,
+    "edge_camera_fps": {
+      "d435i_ext": 4.78,
+      "aurora_wrist": 2.77
+    },
+    "edge_total_frames": 96,
+    "edge_total_detections": 251,
+    "edge_detections_matched": 179,
+    "edge_detections_dropped": 72,
+    "edge_match_success_rate": 0.713,
+    "edge_mean_depth_match_age_ms": 0.0,
+    "edge_depth_failures": {
+      "d435i_ext": 3
+    },
+    "gpu": {
+      "model": "yolov8s.pt",
+      "device": "RTX 3060",
+      "status": "alive, detections returned"
+    }
+  },
+  "wrist_tf_multipose": {
+    "method": "central-40% depth ROI plane fit, transformed with base_link -> camera_optical_measured",
+    "reference_table_z_m": -0.0825,
+    "same_height_poses": {
+      "count": 5,
+      "table_z_min_m": -0.0868,
+      "table_z_max_m": -0.0859,
+      "spread_mm": 0.9,
+      "tilt_deg": [
+        0.54,
+        0.76
+      ]
+    },
+    "raised_pose": {
+      "camera_z_m": 0.238,
+      "table_z_m": -0.1021,
+      "tilt_deg": 1.74,
+      "valid_points": 706,
+      "note": "16 mm lower than the same-height poses with only 27 % valid depth pixels; most likely a different table patch plus range-dependent depth bias, not proven TF error. Needs a fixed-target test to separate."
+    }
+  },
+  "artifacts": {
+    "rs_depth_run_script": "/usr/local/lib/armpi-rs-depth/rs-depth-run.sh (backup in /home/pi/adr0004-20261124/)",
+    "gateway_env": "/etc/armpi-gateway/gateway.env ARMPI_GATEWAY_AUX_CAMERA_TOPIC=/camera/color/image_raw",
+    "repo": [
+      "ros2_ws/src/jcheng_perception_edge/jcheng_perception_edge/ext_tf.py",
+      "config/ext_tf.yaml",
+      "scripts/wrist_tf_multipose_check.py"
+    ],
+    "logs_on_pi": [
+      "/tmp/edge_adr0004.log",
+      "/tmp/edge_dual.log",
+      "/tmp/wrist_multipose2.log",
+      "/tmp/jp_build4.log"
+    ]
+  },
+  "rollback": [
+    "sudo install /home/pi/adr0004-20261124/rs-depth-run.sh /usr/local/lib/armpi-rs-depth/rs-depth-run.sh",
+    "sudo systemctl stop armpi-rs-depth && sudo systemctl start armpi-rs-depth",
+    "sudo systemctl start armpi-ext-cam",
+    "remove ARMPI_GATEWAY_AUX_CAMERA_TOPIC from /etc/armpi-gateway/gateway.env and restart armpi-gateway"
+  ],
+  "not_verified": [
+    "wrist keypoint/pose model (no pose weights in the vendor tree; COCO detect is the interim)",
+    "fine (<5 mm) fixed-point validation with a defined marker or the cup rim centre",
+    "30-minute stability at 6-8 Hz with colour + alignment",
+    "raised-pose plane offset attributed (16 mm, 27 % valid depth)",
+    "planner integration"
+  ],
+  "fixed_target_test": {
+    "cup_pose_a": {
+      "wrist_xyz_m": [
+        0.247,
+        -0.03,
+        0.061
+      ],
+      "depth_m": 0.152,
+      "score": 0.94
+    },
+    "cup_pose_b2": {
+      "wrist_xyz_m": [
+        0.242,
+        0.012,
+        0.057
+      ],
+      "depth_m": 0.153,
+      "score": 0.71
+    },
+    "cup_delta_mm": [
+      -5.0,
+      42.3,
+      -4.3
+    ],
+    "table_plane_pose_a": {
+      "z_m": -0.086,
+      "tilt_deg": 0.57,
+      "rms_mm": 0.6
+    },
+    "table_plane_pose_b2": {
+      "z_m": -0.0889,
+      "tilt_deg": 0.87,
+      "rms_mm": 0.6
+    },
+    "table_plane_delta": {
+      "z_mm": 2.9,
+      "tilt_deg": 0.3
+    },
+    "conclusion": "Table plane agrees within 2.9 mm across poses; the 42 mm cup delta is a bbox-centre surface-point effect (depth unchanged at 0.152/0.153 m), not TF error.",
+    "envelope": "coarse positioning to ~5 mm at working height"
+  }
+}

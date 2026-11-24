@@ -1,0 +1,11 @@
+# Frame names for the chassis D435i static TF.
+#
+# The extrinsic itself is not duplicated here: ext_tf reads
+# static_fallbacks.d435i_ext from frames.yaml (the 2026-11-20 chessboard
+# result) and publishes base_link -> camera_link. The RealSense driver already
+# publishes camera_link -> camera_color_optical_frame, so the whole tree
+# connects; optical_frame is only named for the startup log.
+camera_id: d435i_ext
+base_frame: base_link
+camera_link_frame: camera_link
+optical_frame: camera_color_optical_frame

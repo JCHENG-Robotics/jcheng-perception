@@ -135,15 +135,49 @@ reference table z = -0.0825 m  ->  difference 1.1 mm
   本次最终采用 Pi 5 本地 CycloneDDS。
 - `tf2_echo` 看不到静态帧是其 `/tf_static` 订阅 QoS 限制，不代表 TF 树缺失。
 
-## 7. 下一步（需要受监督窗口）
+## 7. 跨机真实 YOLO（外机位，检测链路；2026-11-24）
+
+笔记本安装 `ros-jazzy-rmw-cyclonedds-cpp` 后，两端统一 CycloneDDS 域 0、有线直连，
+首次跑通“Pi 5 edge → 笔记本 GPU”的真实模型检测链路：
+
+```text
+Edge: 外机位 UVC 彩色 1280x720，uplink 3 fps / q55，哑元腕部；限时 60 s
+GPU:  RTX 3060，厂商 yolov8s.pt，imgsz 640，conf 0.20
+```
+
+```text
+GPU: fps 2.06, inference 55.2 ms 平均, frames 37, dropped 4, failed 0
+Edge: camera_fps 4.39, frames 115, detections 16, matched 0, dropped 16,
+      depth_failures 25, latency 186.8 ms, gpu_alive true
+检测: dining table 0.230, 1280x720, header.stamp 与 frame_seq 均为原采集时间
+```
+
+`matched=0` 是预期：彩色 1280x720 UVC 与深度 640x480 RealSense 未对齐，edge 在深度
+匹配阶段丢弃；本测试只验证真实模型、跨机传输、采集时间戳回传与 GPU 健康。度量融合
+仍需 ADR 0004。另一个信号：edge 的 `camera_fps` 只有 4.39，而原始彩色流是 14.36 Hz；
+720p 全量 `cv_bridge` 转换已让 Pi 5 饱和。切换单一 RealSense 后应把彩色降到 640x480
+或在 edge 端降采样，再谈 10 Hz 融合。
+
+操作注意：
+
+- 第一次**无界**尝试恰逢 Pi 应用层无响应（ping 正常，SSH banner/网关超时），随后
+  断电重启。该命令还包含会匹配自身 shell 的 `pkill`，所以 edge 是否真正启动无法
+  证实；之后用 `timeout -s INT 60` 的有界重试成功。结论：720p edge 在负载较高的
+  Pi 上必须限时/监控，不能无界运行。
+- Humble 与 Jazzy 的 CycloneDDS 组合记录了 `invalid data size` 序列化告警，但
+  检测/状态流正确；生产环境应优先统一 ROS 发行版。
+- 测试后 edge/GPU 进程为 0，四个厂商服务仍 active，负载回落到约 5.8，未发送运动命令。
+
+## 8. 下一步（需要受监督窗口）
 
 1. 已完成：腕部度量 TF 修正与单姿态桌面验证；仍需多姿态/固定目标复核 x/y/z。
 2. 按 ADR 0004 切换 D435i 为单一 RealSense 所有者 + `align_depth_to_color`，
    退役 UVC 彩色路径；验证 Studio 预览仍从 ROS 彩色话题工作。
-3. 用真实 YOLO（Ultralytics CUDA）替换蓝色 mock，在腕部/外机位分别验证。
+3. 外机位真实 YOLO 检测链路已通；仍待腕部真实模型/关键点、同发行版跨机联调。
 4. 只有在 `jcheng_safety`/`jcheng_motion` 之下、且位姿经过固定目标核验后，才允许
    接入运动；本仓库不发送运动命令。
 
 证据 JSON：
 [`evidence/hardware_20261123/summary.json`](../evidence/hardware_20261123/summary.json)（首次接入）、
-[`evidence/hardware_20261124/summary.json`](../evidence/hardware_20261124/summary.json)（TF 修正）。
+[`evidence/hardware_20261124/summary.json`](../evidence/hardware_20261124/summary.json)（TF 修正）、
+[`evidence/hardware_20261124_yolo/summary.json`](../evidence/hardware_20261124_yolo/summary.json)（跨机真实 YOLO）。

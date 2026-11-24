@@ -1,0 +1,54 @@
+# Hardware detection-path profile: external D435i colour only.
+# The depth topic is the unaligned depth-only RealSense stream, so metric
+# observations are expected to be dropped; this profile only validates the
+# real YOLO + uplink + timestamp round-trip across machines.
+cameras:
+  d435i_ext:
+    role: external
+    rgb_topic: /ext_cam/color/image_raw
+    depth_topic: /camera/camera/depth/image_rect_raw
+    camera_info_topic: /ext_cam/color/camera_info
+    optical_frame: ext_cam_optical
+    uplink_topic: /perception/uplink/d435i_ext/image_compressed
+    detection_topic: /perception/detections/d435i_ext
+    rgb_compressed: false
+    depth_compressed: false
+    depth_scale: 0.001
+    jpeg_quality: 55
+    max_uplink_fps: 3.0
+    max_detection_age_ms: 500.0
+    frame_match_tolerance_ms: 80.0
+    depth_match_tolerance_ms: 200.0
+    pose_match_tolerance_ms: 100.0
+    frame_buffer_seconds: 5.0
+    depth_buffer_seconds: 5.0
+    pose_buffer_seconds: 5.0
+    max_buffer_items: 256
+    pixel_sigma_px: 1.5
+    depth_noise_quadratic: 0.0025
+    depth_noise_floor_m: 0.0015
+    min_depth_m: 0.15
+    max_depth_m: 3.0
+    min_valid_depth_fraction: 0.15
+    min_range_m: 0.15
+    max_range_m: 2.0
+    range_penalty_width_m: 0.50
+    keypoint_min_confidence: 0.25
+    max_keypoints: 8
+    keypoint_axis_pairs: []
+    pose_static: true
+    intrinsics:
+      - [892.1014568378095, 0.0, 648.0281250804702]
+      - [0.0, 892.1014568378095, 380.1575036209251]
+      - [0.0, 0.0, 1.0]
+    distortion:
+      [0.14971375015723185, -0.44610982176402497, 6.162088294137897e-06,
+       -0.00012207241044489517, 0.34121030114110457]
+
+  aurora_wrist:
+    role: wrist
+    rgb_topic: /perception/disabled/wrist/rgb
+    depth_topic: /perception/disabled/wrist/depth
+    camera_info_topic: /perception/disabled/wrist/info
+    optical_frame: base_link
+    pose_static: true

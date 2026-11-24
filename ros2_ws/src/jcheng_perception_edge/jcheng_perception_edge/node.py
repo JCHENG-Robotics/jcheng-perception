@@ -797,6 +797,9 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
+        # ros2 launch sends SIGINT again while the threads are joining; ignore
+        # further interrupts so the node can shut its workers down cleanly.
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
         executor.shutdown()
         node.destroy_node()
         if rclpy.ok():

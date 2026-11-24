@@ -35,6 +35,9 @@ def generate_launch_description():
         DeclareLaunchArgument('start_wrist_tf', default_value='true'),
         DeclareLaunchArgument(
             'wrist_tf_config', default_value=_config('wrist_tf.yaml')),
+        DeclareLaunchArgument('start_ext_tf', default_value='true'),
+        DeclareLaunchArgument(
+            'ext_tf_config', default_value=_config('ext_tf.yaml')),
         Node(
             package='jcheng_perception_edge',
             executable='perception_edge',
@@ -58,6 +61,18 @@ def generate_launch_description():
                 LaunchConfiguration('start_wrist_tf')),
             parameters=[{
                 'config_file': LaunchConfiguration('wrist_tf_config'),
+            }],
+        ),
+        Node(
+            package='jcheng_perception_edge',
+            executable='ext_tf',
+            name='ext_tf',
+            output='screen',
+            condition=IfCondition(
+                LaunchConfiguration('start_ext_tf')),
+            parameters=[{
+                'frames_config': LaunchConfiguration('frames_config'),
+                'config_file': LaunchConfiguration('ext_tf_config'),
             }],
         ),
     ])

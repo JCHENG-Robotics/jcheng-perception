@@ -27,6 +27,8 @@
 | 方向 ±90°/180° 歧义 | yaw 跳变 | 输出一个合法 yaw；规划器需容忍夹爪对称性 | 键点/物体模型消歧 |
 | 带宽饱和 | 上行率低于相机率；`frames_rate_limited` | 按 `max_uplink_fps` 限速；队列丢最旧 | 降 JPEG 质量/分辨率/帧率 |
 | CPU 饱和 | `timing_log` 回调耗时上升；FPS 下降 | 仍按时间戳丢帧，不阻塞运动层 | 降帧率/分辨率；检查重复节点 |
+| 720p edge 在负载高的 Pi 上无界运行 | ping 正常但 SSH banner/网关超时，应用层无响应 | 进程/服务得不到调度 | 限时运行（`timeout -s INT`）、降分辨率/帧率、监控负载 |
+| Humble/Jazzy 跨发行版 CycloneDDS | 日志出现 `invalid data size` 序列化告警 | 本次检测/状态流仍正确，但不保证所有类型 | 生产环境优先统一 ROS 发行版 |
 | QoS 不匹配 | `ros2 topic echo` 收不到；日志提示 incompatible | 无数据 | 使用 `--qos-reliability best_effort`；不要改回 reliable |
 | reliable 回压 | 发布/回调卡顿数秒 | 本版本已改为 best-effort；若自定义 QoS 改回 reliable 会重现 | 恢复 best-effort |
 | 相机被其他进程占用 | 驱动无图像/`/dev/video4` busy | edge 无帧；状态 FPS=0 | 单一所有者：网关或 ROS 驱动 |

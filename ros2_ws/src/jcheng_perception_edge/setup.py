@@ -40,6 +40,7 @@ setup(
                 'jcheng_perception_edge.synthetic:main'
             ),
             'wrist_tf = jcheng_perception_edge.wrist_tf:main',
+            'ext_tf = jcheng_perception_edge.ext_tf:main',
         ],
     },
 )

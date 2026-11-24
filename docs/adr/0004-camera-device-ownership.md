@@ -1,6 +1,7 @@
 # ADR 0004 — D435i device ownership and depth/color alignment
 
-- Status: proposed (requires a supervised hardware decision)
+- Status: accepted and executed on the robot 2026-11-24 (evidence:
+  `evidence/hardware_20261124_adr0004/`)
 - Date: 2026-11-23
 
 ## Context
@@ -26,7 +27,7 @@ The repository's default `config/cameras.yaml` assumes a single RealSense node
 publishing colour plus `aligned_depth_to_color`, which is **not** the currently
 deployed topology.
 
-## Decision (proposed)
+## Decision
 
 Adopt one owner for the D435i: `realsense2_camera` with colour and aligned depth.
 
@@ -95,3 +96,18 @@ Negative / risks:
 Until this ADR is accepted and executed, the split topology must **not** be used
 for metric fusion. A temporary split profile would need the software registration
 work described above.
+
+## Execution notes (2026-11-24)
+
+- `rs_launch.py` needs `camera_namespace:=/`. The default `camera` publishes
+  `/camera/camera/*`, and an empty value is rejected by `ros2 launch` as a
+  malformed argument (it put `armpi-rs-depth` into a restart loop).
+- Retiring `armpi-ext-cam` also retires its `base_link -> ext_cam_optical`
+  static TF. `ext_tf` (in `pi5_edge.launch.py`, `start_ext_tf:=true`) publishes
+  `base_link -> camera_link` from `config/frames.yaml`, inverting the driver's
+  own `camera_link -> camera_color_optical_frame`; the ideal link/optical
+  rotation is 15 mm off because the driver's colour optical frame carries a
+  15 mm baseline.
+- Measured after the switch: colour 6.9 Hz, aligned depth 7.5 Hz, identical
+  stamps, edge `matched 179/251 (71.3 %)` with `mean_depth_match_age 0 ms`.
+  The wrist TF agrees within 2.9 mm across poses at working height.

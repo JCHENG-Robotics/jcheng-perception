@@ -14,12 +14,25 @@
     `bringup vision.launch.py`；
   - 车头 D435i：**推荐 `realsense2_camera` 单所有者 + 彩色对齐深度**
     （见 [ADR 0004](adr/0004-camera-device-ownership.md)）。
-- **当前部署的分离模式不适用于度量融合**：`armpi-ext-cam.service` 用 UVC
-  打开 `/dev/video4` 发布 `/ext_cam/color/image_raw`，`armpi-rs-depth.service`
-  用 `realsense2_camera` 只发布 `/camera/camera/depth/image_rect_raw`
-  （`camera_depth_optical_frame`）。彩色与深度未对齐、无同源时间戳，不能在
-  同一像素上做反投影。必须先按 ADR 0004 切换为
-  `realsense2_camera` 彩色 + `aligned_depth_to_color`，再启用本仓库默认配置。
+- **ADR 0004 已在实机执行（2026-11-24）**：`armpi-ext-cam.service` 已 disable，
+  `armpi-rs-depth.service` 的 `rs_launch.py` 现在同时开彩色与对齐深度：
+
+  ```text
+  depth_module.depth_profile:=640x480x15
+  rgb_camera.color_profile:=640x480x15
+  enable_color:=true
+  align_depth.enable:=true
+  camera_namespace:=/
+  ```
+
+  `camera_namespace` 必须是 `/`：默认 `camera` 会发布 `/camera/camera/*`，
+  与本仓库默认配置不一致；空值（`camera_namespace:=`）会被 `ros2 launch`
+  判为非法参数并进入 systemd 重启循环。切换后实测彩色 6.9 Hz、对齐深度
+  7.5 Hz、两路时间戳完全一致（见 `evidence/hardware_20261124_adr0004/`）。
+- **回退到分离模式**（仅在 RealSense 彩色流异常时）：恢复
+  `/home/pi/adr0004-20261124/` 下的备份 → 重启 `armpi-rs-depth` →
+  `systemctl start armpi-ext-cam` → 去掉 gateway 的
+  `ARMPI_GATEWAY_AUX_CAMERA_TOPIC`。分离模式只能预览/调试，不能做度量融合。
 - Python：`numpy`、`PyYAML`、`opencv-python`/`python3-opencv`、`cv_bridge`、
   `tf2_ros`。
 - 腕部 TF：`wrist_tf` 需要厂商 `ros_robot_controller_msgs` 和
@@ -113,9 +126,12 @@ ros2 run tf2_ros tf2_echo base_link camera_color_optical_frame
 `wrist_tf` 日志有 `wrist_tf reads=... failures=0`，且 z 轴朝下/前下方（桌面场景）。
 
 > 若现场仍是分离的 `/ext_cam/color/image_raw` +
-> `/camera/camera/depth/image_rect_raw`，只能用于预览/调试，不能接入本仓库的
-> 度量融合。先按 [ADR 0004](adr/0004-camera-device-ownership.md) 统一所有者并
-> 开启对齐深度。
+> `/camera/camera/depth/image_rect_raw`（例如换了一张没跑过 ADR 0004 的 SD 卡），
+> 只能用于预览/调试，不能接入本仓库的度量融合；按
+> [ADR 0004](adr/0004-camera-device-ownership.md) 统一所有者并开启对齐深度。
+> `ext_tf`（随 `pi5_edge.launch.py` 默认启动）从 `frames.yaml` 发布
+> `base_link → camera_link`，因此 `base_link → camera_color_optical_frame`
+> 应当能直接解析；若不行，先确认 RealSense 节点在发 `camera_link`。
 
 ## 4. 启动
 
@@ -165,6 +181,44 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
   WiFi 多播噪声（参考 `jcheng-manipulation/docs/hardware/ros_environment.md`）。
 - 测试/演示建议用独立域（如 `ROS_DOMAIN_ID=77`）隔离旧的 DDS 参与者。
 - 状态流是 best-effort；不要为了“可靠”改回 reliable——慢订阅者会反压 edge。
+
+### 4.4 跨机 CycloneDDS（2026-11-24 已验证）
+
+笔记本安装与机器人相同的 RMW：
+
+```bash
+sudo apt-get install -y ros-jazzy-rmw-cyclonedds-cpp
+# 本次实测 cyclonedds 0.10.5 / rmw_cyclonedds_cpp 2.2.4
+```
+
+两端都绑定有线接口。机器人已有 `/home/ubuntu/cyclonedds.xml`（`eth0`）；
+笔记本用 USB 网卡名，例如：
+
+```xml
+<CycloneDDS>
+  <Domain Id="0">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="enx00e04ca373c7" priority="1" multicast="true"/>
+      </Interfaces>
+    </General>
+  </Domain>
+</CycloneDDS>
+```
+
+```bash
+export ROS_DOMAIN_ID=0
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export CYCLONEDDS_URI=file:///tmp/cyclonedds-laptop.xml
+export ROS2CLI_NO_DAEMON=1
+ros2 topic list          # 应看到机器人话题
+ros2 topic echo /joint_states --once --field name
+```
+
+Humble（机器人）与 Jazzy（笔记本）跨发行版运行时，CycloneDDS 可能记录
+`invalid data size` 序列化告警；本次检测/状态流仍正确，但生产环境应优先统一
+ROS 发行版。跨机真实 YOLO 的实测结果见
+[`EVIDENCE.md`](EVIDENCE.md) 2.10。
 
 ## 5. 验证清单
 
