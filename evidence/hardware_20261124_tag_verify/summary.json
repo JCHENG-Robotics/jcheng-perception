@@ -177,7 +177,8 @@
       "UplinkWorker catches publish exceptions",
       "status notes encode_failures/rate_limited"
     ],
-    "velocity_min_dt_s": 0.1
+    "velocity_min_dt_s": 0.1,
+    "watchdog": "subscription recreation did not recover the wedged readers; watchdog reverted, Pi runs committed 2a33cbb only"
   },
   "reproduce": [
     "python3 scripts/fixed_point_report.py --wrist evidence/hardware_20261124_tag_verify/tag_wrist_fixed.csv --ext evidence/hardware_20261124_tag_verify/tag_ext_fixed.csv --ext-offset 0.0099 -0.0018 0.0094 --limit 0.005 --out evidence/hardware_20261124_tag_verify/tag_report_corrected.json",
@@ -266,5 +267,30 @@
     },
     "note": "meets the ~8 mm target on the wrist-only track, but not a dual-view confirmation"
   },
-  "session": "defined reference point (AprilTag) static validation"
+  "session": "defined reference point (AprilTag) static validation",
+  "watchdog_diagnostic": {
+    "conclusion": "DDS participant/reader-level wedge; recreating subscriptions in the same process does not recover. Host YOLO and Humble tag GPU both published during this diagnostic, so detection counters are not clean.",
+    "counters": {
+      "aurora_wrist": {
+        "depth_stuck": 7,
+        "frames_advanced": [
+          40,
+          80,
+          123
+        ],
+        "recoveries": 3
+      },
+      "d435i_ext": {
+        "depth_advanced": [
+          31,
+          75,
+          117
+        ],
+        "frames_stuck": 5,
+        "recoveries": 3
+      }
+    },
+    "deployed": "uncommitted subscription recreation after 4 s stall (10 s cooldown); reverted",
+    "evidence": "evidence/hardware_20261124_tag_verify/edge_tag_verify9.log"
+  }
 }

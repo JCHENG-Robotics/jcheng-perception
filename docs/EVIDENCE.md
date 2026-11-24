@@ -385,7 +385,11 @@ learned Track.view_offset = (+0.03, -1.93, -3.31) mm
   （0.5–59.8 s）、edge 468 帧/234 matched；**腕部-only** 轨迹 max **7.30 mm**、
   p95 4.66、final 3.93 mm。外机位仍 0 条 tag 观测（GPU 只收到 42 外机位帧，
   12 s 检查无外机位 uplink），当前外机位画面和 0.225 m 深度正常，剩余阻塞是
-  外机位 uplink/reader。双视图结果仍以上述 run 3 为准。
+  外机位 uplink/reader。
+- 订阅 watchdog 诊断（已回退）：外机位 RGB 卡在 5 帧（depth 仍增长），腕部
+  depth 卡在 7（RGB 仍增长）；重建订阅 3 次不恢复，说明 wedge 在 DDS
+  participant/reader 层。watchdog 未提交，Pi 运行 committed `2a33cbb`。
+  双视图结果仍以上述 run 3 为准。
 
 证据：`evidence/hardware_20261124_tag_verify/`。
 

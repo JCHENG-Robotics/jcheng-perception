@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Diagnostic: recreating a camera's image/depth/CameraInfo subscriptions after
+  a 4 s stall did **not** recover the wedged readers. In the test the external
+  RGB reader stayed at 5 frames while its depth advanced, and the wrist depth
+  reader stayed at 7 while its RGB advanced; three recreations each did not
+  help. The wedge is at the DDS participant/reader level, so the watchdog was
+  reverted; the Pi runs the committed uplink clock-jump/worker fix only. The
+  next step is reader isolation (separate participants/relay) or a
+  CycloneDDS version/configuration fix.
 - Uplink robustness and a same-distro Humble run. The per-camera uplink rate
   limiter now resets its baseline after a backwards clock jump
   (`uplink_allowed`, 3 new tests), and `UplinkWorker` catches encode/publish

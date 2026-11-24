@@ -321,6 +321,14 @@ GPU 只收到 42 外机位帧（腕部 376），12 s 检查无外机位 uplink �
 画面里标签和 0.225 m 深度都正常，所以仍是外机位 uplink/reader 问题，不是模型
 或发行版。双视图确认仍未完成。
 
+**订阅 watchdog 诊断（已回退）：** 加过“某相机 frames/depth 计数 4 s 不增长就
+销毁并重建其 image/depth/CameraInfo 订阅”的 watchdog。实测外机位 **RGB 卡在
+5 帧**（depth 仍 31→75→117），腕部 **depth 卡在 7**（RGB 40→80→123），重建 3
+次都不恢复。wedge 在 **DDS participant/reader 层**，不是订阅对象；同进程重建
+无效。watchdog 已回退，Pi 只保留 committed 的 `2a33cbb` uplink 钟跳/线程修复。
+下一步应做 reader 隔离（每相机独立 participant/relay）或 CycloneDDS 版本/配置
+修正。
+
 ## 10. 调参顺序
 
 1. 用实机静态目标测 `depth` 噪声 vs 距离，拟合 `q`、`floor`（每相机）。

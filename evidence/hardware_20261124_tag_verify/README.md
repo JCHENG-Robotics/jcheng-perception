@@ -167,6 +167,31 @@ docker exec jcheng-humble-tag bash -lc 'apt-get update -qq && apt-get install -y
 docker exec jcheng-humble-tag bash -lc 'source /opt/ros/humble/setup.bash; cd /workspace/tag_ws && colcon build --symlink-install --packages-select jcheng_perception_msgs jcheng_perception_core jcheng_perception_gpu'
 ```
 
+## Watchdog diagnostic (2026-11-24, reverted)
+
+A subscription watchdog was added after run 6: if a camera's frame or depth
+counter did not advance for 4 s, the edge destroyed and recreated that
+camera's image/depth/CameraInfo subscriptions (10 s cooldown). It was tested
+with the Humble tag GPU and then reverted.
+
+```text
+d435i_ext: frames=5 stuck, depth 31 -> 75 -> 117 (advancing); recoveries=3
+aurora_wrist: frames 40 -> 80 -> 123 (advancing), depth=7 stuck; recoveries=3
+```
+
+Recreating the links did **not** recover either stream. The two stuck streams
+are exactly the ones needed for tag observations (external colour and wrist
+depth). Note: the host Jazzy YOLO node and the Humble tag node were both
+publishing during this diagnostic, so its detection counters (5 matched / 134
+dropped) are not clean; the per-camera frame/depth counters are.
+
+Conclusion: the wedge is at the **DDS participant/reader** level, not the
+subscription object; recreating subscriptions in the same process cannot
+recover it. The watchdog was reverted (the Pi runs the committed `2a33cbb`
+uplink-clock-jump/worker fix only). The next fix should isolate the camera
+readers (separate participants/relay per camera) or address the CycloneDDS
+version/configuration.
+
 ## Ops residue
 
 The ready-gated wrapper's `kill -INT` went to the `ros2 run` parent, not the node

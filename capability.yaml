@@ -97,6 +97,7 @@ verification:
     passed: 2026-11-24 (tests/test_uplink_rate.py: normal gap, rate limit, backwards clock jump, long gap)
     deployed: Pi core+edge via tar; status notes expose encode_failures/rate_limited; UplinkWorker catches publish exceptions
     effect: same-distro Humble run kept the edge at 468 frames/60 s (previous stalled at 88) and external GPU frames rose 3 -> 42
+    watchdog_diagnostic: subscription recreation after a 4 s stall did not recover the external RGB (stuck at 5 frames while depth advanced) or wrist depth (stuck at 7 while RGB advanced); wedge is at the DDS participant/reader level and the watchdog was reverted
   ros_build: 4 packages on ROS 2 Jazzy (2026-11-24)
   synthetic_end_to_end: passed 2026-11-23 (Pi 5 edge logic on x86, mock detector)
   gpu_backend_smoke:
