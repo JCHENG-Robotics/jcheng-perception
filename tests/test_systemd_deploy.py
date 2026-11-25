@@ -225,8 +225,11 @@ LAPTOP = DEPLOY / 'laptop'
 LAPTOP_FILES = (
     LAPTOP / 'jcheng-perception-gpu.service',
     LAPTOP / 'jcheng-perception-gpu-alert@.service',
+    LAPTOP / 'jcheng-perception-gpu-watchdog.service',
     LAPTOP / 'gpu-run.sh',
     LAPTOP / 'gpu-alert.sh',
+    LAPTOP / 'gpu-watchdog.py',
+    LAPTOP / 'gpu-watchdog-run.sh',
     LAPTOP / 'gpu_laptop.yaml',
     LAPTOP / 'cyclonedds-laptop.xml',
     LAPTOP / 'install-laptop-gpu.sh',
@@ -237,7 +240,8 @@ LAPTOP_FILES = (
 def test_laptop_gpu_unit_and_scripts_exist():
     for path in LAPTOP_FILES:
         assert path.is_file(), path
-    for script in ('gpu-run.sh', 'gpu-alert.sh', 'install-laptop-gpu.sh'):
+    for script in ('gpu-run.sh', 'gpu-alert.sh', 'gpu-watchdog.py',
+                   'gpu-watchdog-run.sh', 'install-laptop-gpu.sh'):
         assert (LAPTOP / script).stat().st_mode & 0o111, script
 
 
@@ -265,3 +269,24 @@ def test_laptop_gpu_unit_policy_and_config():
     assert 'enable-linger' in installer
     assert 'laptop_gpu.launch.py' in installer
     assert 'systemctl --user enable' in installer
+
+
+def test_laptop_gpu_watchdog_wiring():
+    unit = unit_text(LAPTOP / 'jcheng-perception-gpu-watchdog.service')
+    assert 'After=jcheng-perception-gpu.service' in unit
+    assert 'Restart=always' in unit
+    assert 'ExecStart=%h/.local/lib/jcheng-perception/gpu-watchdog-run.sh' in unit
+
+    run = unit_text(LAPTOP / 'gpu-watchdog-run.sh')
+    assert 'source /opt/ros/jazzy/setup.bash' in run
+    assert 'exec python3' in run and 'gpu-watchdog.py' in run
+
+    watchdog = unit_text(LAPTOP / 'gpu-watchdog.py')
+    assert '/perception/gpu_status' in watchdog
+    assert 'systemctl' in watchdog and 'restart' in watchdog
+    assert 'all cameras frozen' in watchdog
+    assert 'JCHENG_GPU_STALL_S' in watchdog
+
+    installer = unit_text(LAPTOP / 'install-laptop-gpu.sh')
+    assert 'gpu-watchdog' in installer
+    assert 'jcheng-perception-gpu-watchdog.service' in installer

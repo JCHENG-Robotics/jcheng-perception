@@ -133,10 +133,18 @@ two-camera `gpu_laptop.yaml`. `Restart=always` + `StartLimitBurst=10` /
 Verified (`gpu_unit.txt`): unit active/enabled, linger on, `detector loaded`
 for both cameras; robot `/perception/status` `gpu_alive=true`; restart kept
 `NRestarts=0`; stop ended `inactive` with `Result=success` and no alert; start
-returned active. The known reader wedge (process alive, `frames_received`
-frozen) is **not** visible to systemd; the documented rule remains:
-after an edge restart, if `gpu_alive` stays false, run
-`systemctl --user restart jcheng-perception-gpu`.
+returned active.
+
+**Reader-wedge watchdog (`gpu_watchdog_test.txt`)**: a second user service
+`jcheng-perception-gpu-watchdog` subscribes to `/perception/gpu_status` and
+restarts the GPU unit when one camera's counter is frozen for 60 s while
+another advances, or the status has been absent for 30 s; both cameras frozen
+is treated as an edge-side outage and is not restarted. Budget 5 restarts /
+30 min, then `last-watchdog-alert.txt`. Fault injection
+(`systemctl --user kill -s STOP jcheng-perception-gpu`) was detected as
+`gpu_status stale` after 34 s; the watchdog restarted the unit and
+`detector loaded` returned 4 s later, with the robot back at `gpu_alive=true`
+and one confirmed track. No alert was written (1/5 restarts).
 
 ## Problems found and fixed during validation
 
@@ -204,6 +212,8 @@ after an edge restart, if `gpu_alive` stays false, run
   exits an ingress whose camera never produced a first frame.
 - `gpu_unit.txt` — laptop GPU user unit: state/enable/linger, detector load,
   restart/stop/start lifecycle and the robot-side `gpu_alive` check.
+- `gpu_watchdog_test.txt` — SIGSTOP fault injection: status stale detected,
+  watchdog restart, detector reload and robot recovery.
 
 ## How to reproduce
 

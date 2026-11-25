@@ -1,0 +1,32 @@
+captured=2026-11-25T15:03:24+08:00
+method: start both units, wait for 'watchdog armed', then
+  systemctl --user kill -s STOP jcheng-perception-gpu.service
+  (simulates a hung GPU process: unit stays active, GpuStatus stops)
+=== unit state ===
+Result=success
+NRestarts=0
+ActiveState=active
+Result=success
+NRestarts=0
+ActiveState=active
+enabled=enabled linger=yes
+=== watchdog timeline ===
+11月 25 15:00:59 jerichocheng-Lenovo-Legion-R9000P2021H gpu-watchdog-run.sh[1347683]: [INFO] [1795590059.194549776] [jcheng_gpu_watchdog]: state: warm-up
+11月 25 15:02:19 jerichocheng-Lenovo-Legion-R9000P2021H gpu-watchdog-run.sh[1347683]: [INFO] [1795590139.175243957] [jcheng_gpu_watchdog]: watchdog armed: stall=60s status_timeout=30s restart_budget=5/1800s
+11月 25 15:02:19 jerichocheng-Lenovo-Legion-R9000P2021H gpu-watchdog-run.sh[1347683]: [INFO] [1795590139.181569867] [jcheng_gpu_watchdog]: state: ok
+11月 25 15:02:59 jerichocheng-Lenovo-Legion-R9000P2021H gpu-watchdog-run.sh[1347683]: [INFO] [1795590179.181907948] [jcheng_gpu_watchdog]: state: gpu_status stale
+11月 25 15:02:59 jerichocheng-Lenovo-Legion-R9000P2021H gpu-watchdog-run.sh[1347683]: [WARN] [1795590179.182385617] [jcheng_gpu_watchdog]: restarting jcheng-perception-gpu.service (gpu_status stale)
+11月 25 15:03:00 jerichocheng-Lenovo-Legion-R9000P2021H gpu-watchdog-run.sh[1347683]: [WARN] [1795590180.607968381] [jcheng_gpu_watchdog]: restart requested
+11月 25 15:03:09 jerichocheng-Lenovo-Legion-R9000P2021H gpu-watchdog-run.sh[1347683]: [INFO] [1795590189.191120261] [jcheng_gpu_watchdog]: state: warm-up after restart
+=== gpu recovery ===
+11月 25 15:03:02 jerichocheng-Lenovo-Legion-R9000P2021H gpu-run.sh[1348884]: [python-1] [INFO] [1795590182.564967330] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+11月 25 15:03:03 jerichocheng-Lenovo-Legion-R9000P2021H gpu-run.sh[1348884]: [python-1] [INFO] [1795590183.392849537] [jcheng_perception_gpu]: detector loaded: yolov8s.pt:1795589617989085440
+11月 25 15:03:03 jerichocheng-Lenovo-Legion-R9000P2021H gpu-run.sh[1348884]: [python-1] [INFO] [1795590183.458669619] [jcheng_perception_gpu]: detector loaded: yolov8s.pt:1795589617989085440
+=== robot status ===
+camera_fps:
+- 0.09801538288593292
+--
+gpu_alive: true
+active_tracks: 2
+confirmed_tracks: 1
+notes:

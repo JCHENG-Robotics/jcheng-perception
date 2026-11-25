@@ -458,7 +458,9 @@ systemd `Restart=always` / `RestartSec=2`；每个 unit 的上限是 10 次 / 30
   `jcheng-perception-gpu.service`（`Restart=always` + 10/300 s + OnFailure），
   模型 `/opt/jcheng/models/yolov8s.pt`、持久化 CycloneDDS XML、双相机配置。
   实测 `detector loaded`、机器人侧 `gpu_alive=true`、stop/start `Result=success`。
-  DDS reader 冻结（进程活着但无帧）不在 systemd 视野内，仍需应用层 watchdog。
+  reader wedge 由 `jcheng-perception-gpu-watchdog` 覆盖（单路 60 s 冻结/状态
+  30 s 缺失重启，5 次 / 30 min 预算；两路都冻结视为 edge 掉线）；SIGSTOP
+  故障注入 34 s 检测、重启、4 s 后 `detector loaded`。
 
 验证中修掉的坑：`set -u` 会让 ROS `setup.bash` 报 `AMENT_TRACE_SETUP_FILES:
 unbound variable`；停进程时 rclpy teardown 以 1 退出，若把 1 一并记为

@@ -67,12 +67,36 @@ unit `failed`，`OnFailure=jcheng-perception-gpu-alert@gpu` 写：
 
 恢复：`systemctl --user reset-failed jcheng-perception-gpu && systemctl --user start jcheng-perception-gpu`。
 
+## GPU reader watchdog（`jcheng-perception-gpu-watchdog`）
+
+systemd 只能看到进程是否退出；已知的 reader wedge 会留下一个 active 但
+`frames_received` 冻结的进程。第二个 user service 订阅
+`/perception/gpu_status`：
+
+- 单路 60 s 不增长、另一路仍在增长 → 重启 `jcheng-perception-gpu`；
+- `GpuStatus` 30 s 不来且 unit active → 重启；
+- 两路都冻结 → 视为 edge 侧掉线，不重启；
+- 最多 5 次 / 30 min；超限写
+  `~/.local/state/jcheng-perception/last-watchdog-alert.txt` 并停止动作；
+  每次重启后 90 s warm-up。
+
+```bash
+systemctl --user status jcheng-perception-gpu-watchdog
+journalctl --user -u jcheng-perception-gpu-watchdog -f
+```
+
+2026-11-25 故障注入：`systemctl --user kill -s STOP jcheng-perception-gpu` 后
+34 s 检测到 `gpu_status stale`，重启，4 s 后 `detector loaded`，机器人侧
+`gpu_alive=true`。证据
+`evidence/hardware_20261125_systemd_split/gpu_watchdog_test.txt`。
+
+局限：单路相机真的没数据时也会按预算重启 GPU（`GpuStatus` 无法区分“相机
+死”与“reader 卡”）；到上限后需人工 `reset-failed`/`start`。
+
 ## 已知边界（重要）
 
-- **只覆盖进程崩溃/退出**。已知的跨机 DDS reader wedge 会让进程活着但
-  `frames_received` 冻结；systemd 看不到，需要应用层 watchdog（尚未实现）。
-  当前经验规则：edge ingress 重启后，如果 `/perception/status` 的
-  `gpu_alive` 仍为 false，`systemctl --user restart jcheng-perception-gpu`。
+- **systemd 只覆盖进程崩溃/退出；reader wedge 由 watchdog 覆盖**。如果
+  watchdog 也到预算上限，按告警人工处理；两路都冻结不重启（视为 edge 掉线）。
 - 网卡名写死在 `cyclonedds-laptop.xml`（当前 USB 网卡
   `enx00e04ca373c7`）；换网卡后改 XML 并重启 unit。
 - 模型权重在 `/opt/jcheng/models/`，不在仓库；换模型改 `gpu_laptop.yaml`

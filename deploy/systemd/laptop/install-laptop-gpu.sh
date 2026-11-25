@@ -20,8 +20,10 @@ STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/jcheng-perception"
 UNITS=(
     jcheng-perception-gpu.service
     jcheng-perception-gpu-alert@.service
+    jcheng-perception-gpu-watchdog.service
 )
-SCRIPTS=(gpu-run.sh gpu-alert.sh)
+SCRIPTS=(gpu-run.sh gpu-alert.sh gpu-watchdog-run.sh)
+PY_SCRIPTS=(gpu-watchdog.py)
 
 START=1
 UNINSTALL=0
@@ -40,12 +42,17 @@ done
 }
 
 if [[ "$UNINSTALL" == "1" ]]; then
-    systemctl --user disable --now jcheng-perception-gpu.service 2>/dev/null || true
+    systemctl --user disable --now \
+        jcheng-perception-gpu-watchdog.service \
+        jcheng-perception-gpu.service 2>/dev/null || true
     systemctl --user reset-failed 'jcheng-perception-gpu*' 2>/dev/null || true
     for unit in "${UNITS[@]}"; do
         rm -f "${UNIT_DIR}/${unit}"
     done
     for script in "${SCRIPTS[@]}"; do
+        rm -f "${LIB_DIR}/${script}"
+    done
+    for script in "${PY_SCRIPTS[@]}"; do
         rm -f "${LIB_DIR}/${script}"
     done
     rmdir "$LIB_DIR" 2>/dev/null || true
@@ -57,9 +64,18 @@ fi
 for script in "${SCRIPTS[@]}"; do
     bash -n "${HERE}/${script}" || { echo "syntax error in ${script}" >&2; exit 1; }
 done
+for script in "${PY_SCRIPTS[@]}"; do
+    python3 -m py_compile "${HERE}/${script}" || {
+        echo "syntax error in ${script}" >&2
+        exit 1
+    }
+done
 
 install -d -m 0755 "$UNIT_DIR" "$LIB_DIR" "$CONF_DIR" "$STATE_DIR"
 for script in "${SCRIPTS[@]}"; do
+    install -m 0755 "${HERE}/${script}" "${LIB_DIR}/${script}"
+done
+for script in "${PY_SCRIPTS[@]}"; do
     install -m 0755 "${HERE}/${script}" "${LIB_DIR}/${script}"
 done
 for unit in "${UNITS[@]}"; do
@@ -112,7 +128,13 @@ if [[ "$linger" != "yes" ]]; then
     echo "WARN: user lingering is off; run: sudo loginctl enable-linger $USER" >&2
 fi
 
-manual="$(pgrep -f 'laptop_gpu.launch.py' | tr '\n' ' ' || true)"
+# A running unit also contains a `laptop_gpu.launch.py` process; only treat a
+# launch as "manual" when the unit itself is not active.
+if systemctl --user is-active --quiet jcheng-perception-gpu.service; then
+    manual=""
+else
+    manual="$(pgrep -f 'laptop_gpu.launch.py' | tr '\n' ' ' || true)"
+fi
 if [[ -n "$manual" ]]; then
     echo "WARN: a manual GPU launch is already running (pids: $manual)." >&2
     echo "      Stop it before using the unit, otherwise two detectors publish." >&2
@@ -120,28 +142,36 @@ if [[ -n "$manual" ]]; then
 fi
 
 systemctl --user daemon-reload
-systemctl --user enable jcheng-perception-gpu.service >/dev/null
+systemctl --user enable \
+    jcheng-perception-gpu.service \
+    jcheng-perception-gpu-watchdog.service >/dev/null
 if [[ "$START" == "1" ]]; then
     systemctl --user restart jcheng-perception-gpu.service
-    echo "started jcheng-perception-gpu.service"
+    systemctl --user restart jcheng-perception-gpu-watchdog.service
+    echo "started jcheng-perception-gpu.service and the watchdog"
 else
     echo "enabled but not started"
 fi
 
 echo "== status"
 systemctl --user list-unit-files --no-pager 'jcheng-perception-gpu*' || true
-systemctl --user status --no-pager --lines=0 jcheng-perception-gpu.service || true
+systemctl --user status --no-pager --lines=0 \
+    jcheng-perception-gpu.service \
+    jcheng-perception-gpu-watchdog.service || true
 
 cat <<'EOF'
 
 Operate:
   systemctl --user status jcheng-perception-gpu
+  systemctl --user status jcheng-perception-gpu-watchdog
   systemctl --user restart jcheng-perception-gpu
   systemctl --user stop jcheng-perception-gpu
-  journalctl --user -u jcheng-perception-gpu -f
+  journalctl --user -u jcheng-perception-gpu -u jcheng-perception-gpu-watchdog -f
   cat ~/.local/state/jcheng-perception/last-alert.txt
 
 The model is /opt/jcheng/models/yolov8s.pt (not in the repository).
-A DDS reader wedge that leaves the process alive but silent is NOT detected by
-systemd; restart the unit after an edge restart if gpu_alive stays false.
+The watchdog restarts the GPU unit when one camera's frames_received is frozen
+for 60 s while another advances, or GpuStatus is absent for 30 s; it allows 5
+restarts per 30 min and then writes last-watchdog-alert.txt. Both cameras
+frozen is treated as an edge-side outage and is not restarted.
 EOF

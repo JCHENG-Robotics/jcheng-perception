@@ -13,10 +13,14 @@ their original narrative order.
   `/opt/jcheng/models/yolov8s.pt`, a persistent CycloneDDS XML and the
   two-camera `gpu_laptop.yaml`, using `Restart=always` and a 10-start/300 s
   budget. Verified 2026-11-25: `detector loaded`, robot
-  `/perception/status` `gpu_alive=true`, stop/start `Result=success`. The known
-  DDS reader wedge (process alive, `frames_received` frozen) is documented as
-  outside systemd's view. A fake `deadcam` config also confirmed the existing
-  4 s watchdog exits an ingress whose camera never produced a first frame.
+  `/perception/status` `gpu_alive=true`, stop/start `Result=success`. A
+  companion user service `jcheng-perception-gpu-watchdog` covers the known
+  DDS reader wedge: one camera frozen for 60 s while another advances, or
+  `GpuStatus` absent for 30 s, triggers a restart with a 5/30 min budget and a
+  local alert; both cameras frozen is treated as an edge-side outage. Verified
+  by SIGSTOP fault injection (34 s detect -> restart -> `detector loaded`).
+  A fake `deadcam` config also confirmed the existing 4 s watchdog exits an
+  ingress whose camera never produced a first frame.
 - Perception preflight and the Aurora depth-degradation finding:
   `scripts/check_models.py` checks the Ultralytics weight paths and loads them,
   `config/gpu_fallback.yaml` runs the stock COCO `yolov8n` for infrastructure

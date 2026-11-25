@@ -202,10 +202,11 @@ systemctl --user status jcheng-perception-gpu
   `~/.local/state/jcheng-perception/last-alert.txt` 等；
 - 2026-11-25 验证：`detector loaded`、机器人侧 `gpu_alive=true`、
   stop/start `Result=success`；
-- **已知边界**：进程活着但 DDS reader 冻结（`gpu_alive` 掉、
-  `frames_received` 不增）systemd 看不到，需要应用层 watchdog；当前经验规则是
-  edge 重启后若 `gpu_alive=false` 就
-  `systemctl --user restart jcheng-perception-gpu`。
+- **reader wedge**：`jcheng-perception-gpu-watchdog` 订阅
+  `/perception/gpu_status`；单路 `frames_received` 60 s 不增长（另一路仍在
+  增长）或状态 30 s 缺失时重启 GPU unit，预算 5 次 / 30 min，超限写
+  `last-watchdog-alert.txt`；两路都冻结视为 edge 侧掉线，不重启。实测
+  SIGSTOP 后 34 s 检测、重启、4 s 后 `detector loaded`。
 
 完整说明：[`laptop/README.md`](laptop/README.md)。
 
