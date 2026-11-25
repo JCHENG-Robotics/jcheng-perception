@@ -99,6 +99,12 @@ class WedgeDetector:
         """Return ``(action, reason)``; action is None, 'restart' or 'alert'."""
         now = float(now)
         if not unit_active:
+            # Do not keep the status/counter state from before the unit went
+            # down: on a manual start the old last_status would already be
+            # stale and the watchdog would restart the fresh process at once.
+            # Anchor a full status window to the moment the unit is seen down.
+            self.last_status = now
+            self.cameras.clear()
             return None, 'unit inactive'
         if now - self.started < self.warmup_s:
             return None, 'warm-up'

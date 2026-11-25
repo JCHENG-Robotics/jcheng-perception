@@ -103,3 +103,13 @@ def test_counter_reset_rebaselines():
     detector.on_status(20.0, {'ext': 5, 'wrist': 20})
     detector.on_status(30.0, {'ext': 6, 'wrist': 30})
     assert detector.decide(40.0, True) == (None, 'ok')
+
+
+def test_manual_start_after_inactive_gets_a_fresh_status_window():
+    detector = _detector(warmup_s=0.0, status_timeout_s=30.0)
+    detector.on_status(10.0, {'ext': 10, 'wrist': 10})
+    assert detector.decide(100.0, False) == (None, 'unit inactive')
+    # A fresh manual start must not inherit the pre-outage stale status.
+    assert detector.decide(101.0, True) == (None, 'no camera counters yet')
+    # After a full status window with no status it may restart.
+    assert detector.decide(131.0, True)[0] == 'restart'
