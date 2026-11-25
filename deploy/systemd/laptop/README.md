@@ -108,10 +108,13 @@ cat ~/.local/state/jcheng-perception/status.txt
 systemctl --user list-timers jcheng-perception-status.timer
 ```
 
-`overall` 为 `ok` / `degraded`（任一 unit 非 active，或 1 h 内有告警）/
-`robot_unreachable`。SSH 使用 `~/.ssh/id_ed25519_armpi`，可在 `gpu.env` 用
-`JCHENG_ROBOT_SSH` / `JCHENG_ROBOT_KEY` 覆盖；`ConnectTimeout=6`，机器人不可达
-只标记 `robot_unreachable`，不会让 timer 失败。
+`overall` 为 `ok` / `degraded` / `robot_unreachable`。`degraded` 的条件：
+任一 unit 非 active；任一 unit 本 boot 的 `NRestarts >= 5`（
+`JCHENG_STATUS_WARN_NRESTARTS` 可调，说明在反复重启/正在 wedge）；或 1 h 内有
+告警。`status.txt` 会列出对应的 `WARN`，告警行带 age。SSH 使用
+`~/.ssh/id_ed25519_armpi`，可在 `gpu.env` 用 `JCHENG_ROBOT_SSH` /
+`JCHENG_ROBOT_KEY` 覆盖；`ConnectTimeout=6`，机器人不可达只标记
+`robot_unreachable`，不会让 timer 失败。
 
 ## 已知边界（重要）
 

@@ -156,6 +156,13 @@ Verified (`status_aggregator.txt`): the timer refreshed after 54 s; the status
 listed 6 robot units + 2 laptop units, all active, reported the 10:08 robot
 alert separately and returned `overall=ok`.
 
+A follow-up added restart pressure: any unit with `NRestarts >= 5` in the
+current boot marks `overall=degraded` and is listed under `WARN`; alerts carry
+their age. `status_warnings.txt` shows the current state: ext ingress 9 and
+wrist ingress 7 restarts (both active), robot alert age 5.3 h,
+`overall=degraded` with two WARN lines. That is the intended signal for the
+ongoing DDS wedge.
+
 ## Fixed-point acceptance (2026-11-25, systemd stack)
 
 While the target and all five units were active, a 60 mm AprilTag 36h11 id 0
@@ -250,6 +257,8 @@ report JSONs.
   watchdog restart, detector reload and robot recovery.
 - `status_aggregator.txt` — timer state, combined `status.txt`/`status.json`,
   and the 54 s automatic refresh.
+- `status_warnings.txt` — restart-pressure warnings: ext 9 / wrist 7, alert
+  age, `overall=degraded`.
 - `fixed_point_20261125.txt`, `fixed_point_{ext,wrist}_20261125.csv`,
   `fixed_point_report_{raw,bias}_20261125.json` — systemd-stack fixed-point
   run and the 5 mm gate (depth 3.32 PASS / PnP 5.50 marginal FAIL).

@@ -44,11 +44,14 @@ def test_alert_age_and_missing():
     assert module.alert_age_s('not an alert') is None
 
 
-def _units(active='active'):
+def _units(active='active', nrestarts=0):
     return {
-        'robot/jcheng-perception.target': {'active': active},
-        'robot/jcheng-perception-fusion.service': {'active': active},
-        'laptop/jcheng-perception-gpu.service': {'active': active},
+        'robot/jcheng-perception.target': {
+            'active': active, 'nrestarts': nrestarts},
+        'robot/jcheng-perception-fusion.service': {
+            'active': active, 'nrestarts': nrestarts},
+        'laptop/jcheng-perception-gpu.service': {
+            'active': active, 'nrestarts': nrestarts},
     }
 
 
@@ -58,6 +61,8 @@ def test_overall_status():
     assert module.overall_status(True, _units(), {}) == 'ok'
     assert module.overall_status(
         True, _units(active='failed'), {}) == 'degraded'
+    assert module.overall_status(
+        True, _units(nrestarts=9), {}) == 'degraded'
     recent = 'at={}'.format(
         datetime.now().astimezone().isoformat(timespec='seconds'))
     assert module.overall_status(
@@ -67,11 +72,25 @@ def test_overall_status():
         True, _units(), {'robot_last': old}) == 'ok'
 
 
+def test_warnings_for_restarts_and_alerts():
+    module = _load()
+    warnings = module.warnings_for(
+        True, _units(nrestarts=9),
+        {'robot_age_s': 120.0, 'laptop_age_s': None})
+    text = '\n'.join(warnings)
+    assert 'NRestarts=9' in text
+    assert 'robot: recent alert' in text
+    assert 'laptop: recent alert' not in text
+    assert 'robot unreachable' in module.warnings_for(False, {}, {})[0]
+
+
 def test_summary_contains_both_sides():
     module = _load()
     status = {
         'checked_at': '2026-11-25T15:00:00+08:00',
         'overall': 'ok',
+        'warnings': [
+            'robot/jcheng-perception-fusion.service: NRestarts=9 (>= 5)'],
         'robot': {
             'host': 'pi@10.42.0.218',
             'reachable': True,
@@ -91,4 +110,5 @@ def test_summary_contains_both_sides():
     assert 'robot pi@10.42.0.218: reachable' in text
     assert 'jcheng-perception-fusion.service' in text
     assert 'jcheng-perception-gpu.service' in text
+    assert 'WARN robot/jcheng-perception-fusion.service: NRestarts=9' in text
     assert text.rstrip().endswith('overall: ok')

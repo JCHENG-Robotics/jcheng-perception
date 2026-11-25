@@ -210,7 +210,8 @@ systemctl --user status jcheng-perception-gpu
 - `jcheng-perception-status.timer` 每 60 s 汇总机器人 5 个 unit +
   笔记本 GPU/watchdog + 两侧告警到
   `~/.local/state/jcheng-perception/status.{json,txt}`；`overall` 为
-  `ok` / `degraded` / `robot_unreachable`。
+  `ok` / `degraded` / `robot_unreachable`，`NRestarts >= 5` 或 1 h 内告警会
+  置 `degraded` 并列出 `WARN`。
 
 完整说明：[`laptop/README.md`](laptop/README.md)。
 

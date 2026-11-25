@@ -465,7 +465,9 @@ systemd `Restart=always` / `RestartSec=2`；每个 unit 的上限是 10 次 / 30
   target + 5 unit，加笔记本 GPU/watchdog 和两侧告警，写
   `~/.local/state/jcheng-perception/status.{json,txt}`，`overall` 分
   `ok`/`degraded`/`robot_unreachable`。实测 timer 在 54 s 后自动刷新，
-  6 个机器人 unit + 2 个笔记本 unit 全部 active，`overall=ok`。
+  6 个机器人 unit + 2 个笔记本 unit 全部 active。后续加入重启压力：任一 unit
+  本 boot `NRestarts >= 5` 或 1 h 内告警即 `degraded` 并列出 `WARN`；当前
+  外机位 9 次、腕部 7 次，status 为 `degraded`（unit 仍 active）。
 - **systemd 下固定点验收**：5 unit active 时测 60 mm AprilTag；external
   68/25.3 s（外机位 wedge 丢了一段）、wrist 158/59.6 s，TF 全 exact。原始跨视图
   depth 13.33 / PnP 10.44 mm FAIL；加部署的 `view_bias` 外参修正后 depth

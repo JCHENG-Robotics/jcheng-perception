@@ -39,6 +39,11 @@ ROBOT_KEY = os.path.expanduser(os.environ.get(
     'JCHENG_ROBOT_KEY', '~/.ssh/id_ed25519_armpi'))
 ALERT_RECENT_S = float(
     os.environ.get('JCHENG_STATUS_ALERT_RECENT_S', '3600'))
+# A unit that restarted this many times in the current boot is thrashing even
+# if it is active right now (the external ingress does this during a DDS
+# wedge).  Cumulative NRestarts, so this is a warning, not the start limit.
+WARN_NRESTARTS = int(
+    os.environ.get('JCHENG_STATUS_WARN_NRESTARTS', '5'))
 STATE_DIR = os.path.join(
     os.environ.get('XDG_STATE_HOME', os.path.expanduser('~/.local/state')),
     'jcheng-perception')
@@ -191,6 +196,10 @@ def overall_status(robot_reachable, units, alerts):
         return 'robot_unreachable'
     if any(entry.get('active') != 'active' for entry in units.values()):
         return 'degraded'
+    if any(
+            int(entry.get('nrestarts', 0) or 0) >= WARN_NRESTARTS
+            for entry in units.values()):
+        return 'degraded'
     ages = [age for age in (
         alert_age_s(alerts.get('robot_last', '')),
         alert_age_s(alerts.get('laptop_last', '')),
@@ -199,6 +208,25 @@ def overall_status(robot_reachable, units, alerts):
     if ages and min(ages) <= ALERT_RECENT_S:
         return 'degraded'
     return 'ok'
+
+
+def warnings_for(robot_reachable, units, ages):
+    """Return operator-facing warnings for restarts and recent alerts."""
+    warnings = []
+    if not robot_reachable:
+        warnings.append('robot unreachable')
+    for name, entry in sorted(units.items()):
+        nrestarts = int(entry.get('nrestarts', 0) or 0)
+        if nrestarts >= WARN_NRESTARTS:
+            warnings.append(
+                '{}: NRestarts={} (>= {})'.format(
+                    name, nrestarts, WARN_NRESTARTS))
+    for label in ('robot_age_s', 'laptop_age_s', 'laptop_watchdog_age_s'):
+        age = ages.get(label)
+        if age is not None and age <= ALERT_RECENT_S:
+            warnings.append('{}: recent alert ({:.1f} h)'.format(
+                label.replace('_age_s', ''), age / 3600.0))
+    return warnings
 
 
 def build_status():
@@ -216,16 +244,27 @@ def build_status():
     all_units.update({'robot/' + name: entry for name, entry in robot.items()})
     all_units.update(
         {'laptop/' + name: entry for name, entry in laptop.items()})
+    robot_age = alert_age_s(robot_alerts.get('last', ''))
+    laptop_age = alert_age_s(laptop_alerts['last'])
+    watchdog_age = alert_age_s(laptop_alerts['watchdog'])
+    robot_alerts['age_s'] = robot_age
+    laptop_alerts['age_s'] = laptop_age
+    laptop_alerts['watchdog_age_s'] = watchdog_age
     alerts = {
         'robot_last': robot_alerts.get('last', ''),
         'robot_log_tail': robot_alerts.get('log_tail', []),
+        'robot_age_s': robot_age,
         'laptop_last': laptop_alerts['last'],
         'laptop_watchdog': laptop_alerts['watchdog'],
         'laptop_log_tail': laptop_alerts['log_tail'],
+        'laptop_age_s': laptop_age,
+        'laptop_watchdog_age_s': watchdog_age,
     }
+    warnings = warnings_for(robot_reachable, all_units, alerts)
     return {
         'checked_at': datetime.now().astimezone().isoformat(timespec='seconds'),
         'overall': overall_status(robot_reachable, all_units, alerts),
+        'warnings': warnings,
         'robot': {
             'host': ROBOT_SSH,
             'reachable': robot_reachable,
@@ -255,17 +294,25 @@ def summary(status):
         lines.append('  {:<55} {:<10} nrestarts={} result={}'.format(
             name, entry['active'], entry['nrestarts'], entry['result']))
     if status['robot']['alerts'].get('last'):
-        lines.append('robot last alert:')
+        age = status['robot']['alerts'].get('age_s')
+        suffix = '' if age is None else ' (age {:.1f} h)'.format(age / 3600.0)
+        lines.append('robot last alert:{}'.format(suffix))
         lines.extend('  ' + line
                      for line in status['robot']['alerts']['last'].splitlines())
     if status['laptop']['alerts'].get('last'):
-        lines.append('laptop last alert:')
+        age = status['laptop']['alerts'].get('age_s')
+        suffix = '' if age is None else ' (age {:.1f} h)'.format(age / 3600.0)
+        lines.append('laptop last alert:{}'.format(suffix))
         lines.extend('  ' + line
                      for line in status['laptop']['alerts']['last'].splitlines())
     if status['laptop']['alerts'].get('watchdog'):
-        lines.append('laptop watchdog alert:')
+        age = status['laptop']['alerts'].get('watchdog_age_s')
+        suffix = '' if age is None else ' (age {:.1f} h)'.format(age / 3600.0)
+        lines.append('laptop watchdog alert:{}'.format(suffix))
         lines.extend('  ' + line for line in
                      status['laptop']['alerts']['watchdog'].splitlines())
+    for warning in status.get('warnings', []):
+        lines.append('WARN {}'.format(warning))
     lines.append('overall: {}'.format(status['overall']))
     return '\n'.join(lines)
 

@@ -20,7 +20,10 @@ their original narrative order.
   `~/.local/state/jcheng-perception/status.{json,txt}` and classifies `overall`
   as `ok` / `degraded` / `robot_unreachable`. Verified 2026-11-25: the timer
   refreshed after 54 s and the status showed 6 robot + 2 laptop units, all
-  active, `overall=ok` (the 10:08 robot alert is reported separately).
+  active. Any unit with `NRestarts >= 5` in the current boot (thrashing) or an
+  alert younger than 1 h marks the status `degraded` and is listed under
+  `WARN`; the current ext 9 / wrist 7 restarts therefore show as `degraded`
+  while the units remain active.
 - Laptop GPU detector user unit: `deploy/systemd/laptop/` installs
   `jcheng-perception-gpu.service` (+ `OnFailure` alert) with the verified
   `/opt/jcheng/models/yolov8s.pt`, a persistent CycloneDDS XML and the
