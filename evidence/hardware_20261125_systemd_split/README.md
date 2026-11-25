@@ -156,6 +156,30 @@ Verified (`status_aggregator.txt`): the timer refreshed after 54 s; the status
 listed 6 robot units + 2 laptop units, all active, reported the 10:08 robot
 alert separately and returned `overall=ok`.
 
+## Fixed-point acceptance (2026-11-25, systemd stack)
+
+While the target and all five units were active, a 60 mm AprilTag 36h11 id 0
+was measured from both cameras with `scripts/fixed_point_check.py`:
+
+- external: 68 samples / 25.3 s (the tag left the stream for part of the 60 s
+  window during the known external ingress wedge); `tf=exact` for all samples.
+- wrist: 158 samples / 59.6 s; `tf=exact` for all; within-view depth sd
+  1.08 mm, PnP sd 1.11 mm.
+- raw cross-view: depth 13.33 mm / PnP 10.44 mm — **FAIL** (chain offset).
+- with the deployed `config/view_bias.yaml` external offset
+  (+9.9, -1.8, +9.4) mm: depth **3.32 mm PASS**, PnP **5.50 mm FAIL**
+  (0.5 mm over the 5 mm gate).
+
+The production depth path (what the edge back-projects and fusion consumes)
+passes. The PnP residual is the known wrist depth-vs-PnP bias (~7.2 mm in z)
+plus the curled tag sheet; the 2026-11-24 run quoted 3.67/3.07 mm with a
+flatter tag. Flatten/reposition the tag and repeat before quoting a <5 mm
+absolute-accuracy claim. This is the defined-point camera/TF gate, not a
+tag-fusion recording: the systemd GPU unit runs the COCO detector, so the
+tag-fusion reference remains split run 4 (cross-view 1.55 mm, fusion max
+2.14 mm). Files: `fixed_point_20261125.txt`, the two CSVs and the raw/bias
+report JSONs.
+
 ## Problems found and fixed during validation
 
 1. **`set -u` breaks ROS setup**: `source /opt/ros/humble/setup.bash` fails with
@@ -226,6 +250,9 @@ alert separately and returned `overall=ok`.
   watchdog restart, detector reload and robot recovery.
 - `status_aggregator.txt` — timer state, combined `status.txt`/`status.json`,
   and the 54 s automatic refresh.
+- `fixed_point_20261125.txt`, `fixed_point_{ext,wrist}_20261125.csv`,
+  `fixed_point_report_{raw,bias}_20261125.json` — systemd-stack fixed-point
+  run and the 5 mm gate (depth 3.32 PASS / PnP 5.50 marginal FAIL).
 
 ## How to reproduce
 

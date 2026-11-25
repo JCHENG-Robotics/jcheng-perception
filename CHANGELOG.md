@@ -8,6 +8,12 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Systemd-stack fixed-point acceptance (2026-11-25): with all five units
+  active, the 60 mm tag gave raw cross-view 13.33 (depth) / 10.44 mm (PnP);
+  with the deployed `view_bias` external offset the production depth path is
+  3.32 mm PASS while the PnP diagnostic is 5.50 mm (0.5 mm over the 5 mm gate,
+  known wrist depth-vs-PnP bias + curled tag). TF was exact for all samples;
+  the tag-fusion reference stays split run 4.
 - Combined perception status: a user timer runs
   `jcheng-perception-status.py` every 60 s, reads the robot target + five units
   over SSH plus the laptop GPU/watchdog and both alert files, writes

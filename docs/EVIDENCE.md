@@ -466,6 +466,13 @@ systemd `Restart=always` / `RestartSec=2`；每个 unit 的上限是 10 次 / 30
   `~/.local/state/jcheng-perception/status.{json,txt}`，`overall` 分
   `ok`/`degraded`/`robot_unreachable`。实测 timer 在 54 s 后自动刷新，
   6 个机器人 unit + 2 个笔记本 unit 全部 active，`overall=ok`。
+- **systemd 下固定点验收**：5 unit active 时测 60 mm AprilTag；external
+  68/25.3 s（外机位 wedge 丢了一段）、wrist 158/59.6 s，TF 全 exact。原始跨视图
+  depth 13.33 / PnP 10.44 mm FAIL；加部署的 `view_bias` 外参修正后 depth
+  **3.32 mm PASS**、PnP **5.50 mm FAIL（超 0.5 mm）**。生产 depth 路径通过；
+  PnP 残差是已知腕部 depth-vs-PnP ~7.2 mm + tag 纸翘曲，压平/换位置后复测；
+  在此之前不要引用 <5 mm 绝对精度。GPU unit 是 COCO 模式，tag 融合参考仍是
+  split run 4（跨视图 1.55 / fusion max 2.14 mm）。
 
 验证中修掉的坑：`set -u` 会让 ROS `setup.bash` 报 `AMENT_TRACE_SETUP_FILES:
 unbound variable`；停进程时 rclpy teardown 以 1 退出，若把 1 一并记为
