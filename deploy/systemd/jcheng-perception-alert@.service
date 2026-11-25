@@ -1,0 +1,11 @@
+[Unit]
+Description=JCHENG perception failure alert (%i)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+# Triggered by OnFailure= from the ingress/fusion units when they exhaust their
+# StartLimitBurst.  Oneshot; it logs, records state and exits, and never
+# restarts anything itself.
+[Service]
+Type=oneshot
+# The leading "-" keeps a logging problem from producing a second failed unit.
+ExecStart=-/usr/local/lib/jcheng-perception/alert.sh %i
+TimeoutStartSec=30

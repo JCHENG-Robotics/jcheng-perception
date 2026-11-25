@@ -1,0 +1,54 @@
+# Infrastructure-only fallback config: stock COCO yolov8n on both views.
+#
+# The repository does not ship the production weights. Use config/gpu.yaml
+# (ext_yolov8n.pt + wrist_grasp_pose.pt) for task work; use this config only to
+# verify the image, CUDA, DDS and the detection transport. The 80 COCO classes
+# are not the ArmPi object/keypoint set, so no task-accuracy claim follows from
+# a run with this file.
+#
+#   scripts/check_models.py --config \
+#     ros2_ws/src/jcheng_perception_gpu/config/gpu_fallback.yaml --load
+#
+# The model file is /opt/jcheng/models/fallback_yolov8n_coco.pt on the laptop.
+node:
+  stats_interval_s: 2.0
+  debug_publish: false
+  debug_interval_s: 1.0
+  queue_size: 2
+
+cameras:
+  d435i_ext:
+    input_topic: /perception/uplink/d435i_ext/image_compressed
+    detections_topic: /perception/detections/d435i_ext
+    debug_topic: /perception/debug/d435i_ext
+    hot_reload: false
+    model:
+      backend: ultralytics
+      path: /opt/jcheng/models/fallback_yolov8n_coco.pt
+      task: detect
+      imgsz: 640
+      conf: 0.25
+      iou: 0.45
+      device: "0"
+      half: false
+      max_detections: 20
+      keypoints: false
+      labels: []
+
+  aurora_wrist:
+    input_topic: /perception/uplink/aurora_wrist/image_compressed
+    detections_topic: /perception/detections/aurora_wrist
+    debug_topic: /perception/debug/aurora_wrist
+    hot_reload: false
+    model:
+      backend: ultralytics
+      path: /opt/jcheng/models/fallback_yolov8n_coco.pt
+      task: detect
+      imgsz: 416
+      conf: 0.25
+      iou: 0.45
+      device: "0"
+      half: false
+      max_detections: 10
+      keypoints: false
+      labels: []

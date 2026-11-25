@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh the JCHENG perception status every 60 s
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=60s
+AccuracySec=5s
+Unit=jcheng-perception-status.service
+
+[Install]
+WantedBy=timers.target

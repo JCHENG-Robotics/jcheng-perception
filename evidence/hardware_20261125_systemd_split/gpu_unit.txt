@@ -1,0 +1,32 @@
+captured=2026-11-25T14:55:03+08:00
+=== unit ===
+MainPID=1344109
+Result=success
+NRestarts=0
+ActiveState=active
+FragmentPath=/home/jerichocheng/.config/systemd/user/jcheng-perception-gpu.service
+enabled=enabled
+Linger=yes
+=== detector load ===
+11月 25 14:54:36 jerichocheng-Lenovo-Legion-R9000P2021H gpu-run.sh[1343994]: [python-1] [INFO] [1795589676.278821412] [jcheng_perception_gpu]: detector loaded: yolov8s.pt:1795589617989085440
+11月 25 14:54:43 jerichocheng-Lenovo-Legion-R9000P2021H gpu-run.sh[1344109]: [python-1] [INFO] [1795589683.093457741] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+11月 25 14:54:44 jerichocheng-Lenovo-Legion-R9000P2021H gpu-run.sh[1344109]: [python-1] [INFO] [1795589684.144941687] [jcheng_perception_gpu]: detector loaded: yolov8s.pt:1795589617989085440
+11月 25 14:54:44 jerichocheng-Lenovo-Legion-R9000P2021H gpu-run.sh[1344109]: [python-1] [INFO] [1795589684.214323671] [jcheng_perception_gpu]: detector loaded: yolov8s.pt:1795589617989085440
+=== restart ===
+restart active=active nrestarts=0
+=== stop ===
+stop active=inactive result=success
+alerts=0
+=== start ===
+start active=active
+=== pi status ===
+camera_fps:
+- 0.19005019962787628
+--
+total_detections: 2749
+detections_matched: 2749
+--
+gpu_alive: true
+active_tracks: 0
+confirmed_tracks: 0
+notes:

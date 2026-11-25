@@ -1,0 +1,23 @@
+[Unit]
+Description=JCHENG perception GPU detector (laptop, split-stack uplink consumer)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+After=network.target
+# Same finite budget as the Pi-side units: a crash loop must not spin forever.
+StartLimitIntervalSec=300
+StartLimitBurst=10
+OnFailure=jcheng-perception-gpu-alert@gpu.service
+
+[Service]
+Type=simple
+EnvironmentFile=-%h/.config/jcheng-perception/gpu.env
+ExecStart=%h/.local/lib/jcheng-perception/gpu-run.sh
+# The launch/node handle SIGINT cleanly; the detector loop is restarted after
+# a crash but never after an explicit stop.
+KillSignal=SIGINT
+SuccessExitStatus=130 143
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+
+[Install]
+WantedBy=default.target

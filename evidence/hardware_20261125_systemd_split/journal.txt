@@ -1,0 +1,57 @@
+=== watchdog restart (d435i_ext) ===
+Nov 25 09:26:42 raspberrypi ingress-run.sh[39491]: [ERROR] [1795570002.493072999] [perception_ingress_d435i_ext]: d435i_ext: ingress link stalled (frames=75, depth=89); exiting for respawn
+Nov 25 09:26:43 raspberrypi systemd[1]: jcheng-perception-ingress@d435i_ext.service: Deactivated successfully.
+Nov 25 09:26:45 raspberrypi systemd[1]: jcheng-perception-ingress@d435i_ext.service: Scheduled restart job, restart counter is at 1.
+Nov 25 09:26:45 raspberrypi systemd[1]: Stopped jcheng-perception-ingress@d435i_ext.service - JCHENG perception ingress for camera d435i_ext (split DDS participant).
+Nov 25 09:26:45 raspberrypi systemd[1]: Started jcheng-perception-ingress@d435i_ext.service - JCHENG perception ingress for camera d435i_ext (split DDS participant).
+Nov 25 09:26:48 raspberrypi ingress-run.sh[41495]: [INFO] [1795570008.602598754] [perception_ingress_d435i_ext]: edge ready: cameras=d435i_ext target_frame=base_link uplink=True
+Nov 25 09:26:48 raspberrypi ingress-run.sh[41495]: [WARN] [1795570008.604499069] [perception_ingress_d435i_ext]: TF unavailable base_link -> camera_color_optical_frame: "base_link" passed to lookupTransform argument target_frame does not exist.
+Nov 25 09:26:58 raspberrypi ingress-run.sh[41495]: [WARN] [1795570018.118275878] [perception_ingress_d435i_ext]: d435i_ext: JPEG encode+publish took 163.2 ms
+=== stop/start cycle ===
+Nov 25 09:27:22 raspberrypi systemd[1]: Stopping jcheng-perception-ext-tf.service - JCHENG external-camera static TF (base_link -> camera_link)...
+Nov 25 09:27:22 raspberrypi systemd[1]: Stopping jcheng-perception-fusion.service - JCHENG perception fusion (association, Kalman, two-view targets)...
+Nov 25 09:27:22 raspberrypi systemd[1]: Stopping jcheng-perception-ingress@aurora_wrist.service - JCHENG perception ingress for camera aurora_wrist (split DDS participant)...
+Nov 25 09:27:22 raspberrypi systemd[1]: Stopping jcheng-perception-ingress@d435i_ext.service - JCHENG perception ingress for camera d435i_ext (split DDS participant)...
+Nov 25 09:27:22 raspberrypi systemd[1]: Stopping jcheng-perception-wrist-tf.service - JCHENG wrist TF publisher (bus-servo joints -> camera_optical_measured)...
+Nov 25 09:27:23 raspberrypi ext-tf-run.sh[39418]: stop requested: container exit 1 treated as a normal stop
+Nov 25 09:27:23 raspberrypi wrist-tf-run.sh[39431]: stop requested: container exit 1 treated as a normal stop
+Nov 25 09:27:23 raspberrypi fusion-run.sh[39419]: stop requested: container exit 1 treated as a normal stop
+Nov 25 09:27:23 raspberrypi ingress-run.sh[41479]: stop requested: container exit 0 treated as a normal stop
+Nov 25 09:27:23 raspberrypi ingress-run.sh[39423]: stop requested: container exit 0 treated as a normal stop
+Nov 25 09:27:23 raspberrypi systemd[1]: Stopped jcheng-perception-ext-tf.service - JCHENG external-camera static TF (base_link -> camera_link).
+Nov 25 09:27:24 raspberrypi systemd[1]: Stopped jcheng-perception-ingress@aurora_wrist.service - JCHENG perception ingress for camera aurora_wrist (split DDS participant).
+Nov 25 09:27:24 raspberrypi systemd[1]: Stopped jcheng-perception-ingress@d435i_ext.service - JCHENG perception ingress for camera d435i_ext (split DDS participant).
+Nov 25 09:27:24 raspberrypi systemd[1]: Stopped jcheng-perception-fusion.service - JCHENG perception fusion (association, Kalman, two-view targets).
+Nov 25 09:27:24 raspberrypi systemd[1]: Stopped jcheng-perception-wrist-tf.service - JCHENG wrist TF publisher (bus-servo joints -> camera_optical_measured).
+Nov 25 09:27:24 raspberrypi systemd[1]: Started jcheng-perception-ext-tf.service - JCHENG external-camera static TF (base_link -> camera_link).
+Nov 25 09:27:24 raspberrypi systemd[1]: Started jcheng-perception-fusion.service - JCHENG perception fusion (association, Kalman, two-view targets).
+Nov 25 09:27:24 raspberrypi systemd[1]: Started jcheng-perception-ingress@aurora_wrist.service - JCHENG perception ingress for camera aurora_wrist (split DDS participant).
+Nov 25 09:27:24 raspberrypi systemd[1]: Started jcheng-perception-ingress@d435i_ext.service - JCHENG perception ingress for camera d435i_ext (split DDS participant).
+Nov 25 09:27:24 raspberrypi systemd[1]: Started jcheng-perception-wrist-tf.service - JCHENG wrist TF publisher (bus-servo joints -> camera_optical_measured).
+=== final counters ===
+jcheng-perception-ingress@d435i_ext.service active=active nrestarts=0
+jcheng-perception-ingress@aurora_wrist.service active=active nrestarts=0
+jcheng-perception-fusion.service active=active nrestarts=0
+jcheng-perception-wrist-tf.service active=active nrestarts=0
+jcheng-perception-ext-tf.service active=active nrestarts=0
+=== load/top ===
+ 09:28:03 up 20 min,  2 users,  load average: 8.95, 12.71, 8.48
+%CPU %MEM COMMAND
+ 100  0.0 ps -eo pcpu,pmem,args --sort=-pcpu
+76.0  1.1 /home/ubuntu/rs_ws/install/realsense2_camera/lib/realsense2_camera/realsense2_camera_node --ros-args --log-level info --ros-args -r __node:=camera -r __ns:=/ --params-file /tmp/launch_params_gpxtaejs --params-file /tmp/launch_params_cdvp67f4
+34.8  1.1 /home/ubuntu/jcheng_aurora_install/deptrum-ros-driver-aurora930/lib/deptrum-ros-driver-aurora930/aurora930_node --ros-args -r __ns:=/aurora --params-file /tmp/launch_params_77r8z0s9 -r /aurora/depth/image_raw:=/depth_cam/depth/image_raw -r /aurora/ir/camera_info:=/depth_cam/depth/camera_info -r /aurora/ir/image_raw:=/depth_cam/ir/image_raw -r /aurora/points2:=/depth_cam/depth_registered/points -r /aurora/rgb/camera_info:=/depth_cam/rgb/camera_info -r /aurora/rgb/image_raw:=/depth_cam/rgb/image_raw
+22.3  2.3 /usr/bin/python3 /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/perception_edge --ros-args -r __node:=perception_ingress_d435i_ext -p camera_filter:=d435i_ext -p publish_targets:=false -p publish_status:=false -p ingress_watchdog:=true -p enable_uplink:=true -p cameras_config:=/home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/share/jcheng_perception_edge/config/cameras.yaml -p fusion_config:=/home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/share/jcheng_perception_edge/config/fusion_dual_hardware.yaml -p frames_config:=/home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/share/jcheng_perception_edge/config/frames.yaml -p view_bias_config:=/home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/share/jcheng_perception_edge/config/view_bias.yaml
+=== defunct count ===
+28
+=== wrist ingress watchdog restarts (appended 09:29) ===
+Nov 25 09:27:29 raspberrypi ingress-run.sh[43349]: [INFO] [1795570049.675805582] [perception_ingress_aurora_wrist]: edge ready: cameras=aurora_wrist target_frame=base_link uplink=True
+Nov 25 09:28:24 raspberrypi ingress-run.sh[43349]: [ERROR] [1795570104.626464493] [perception_ingress_aurora_wrist]: aurora_wrist: ingress link stalled (frames=374, depth=171); exiting for respawn
+Nov 25 09:28:27 raspberrypi systemd[1]: jcheng-perception-ingress@aurora_wrist.service: Scheduled restart job, restart counter is at 1.
+Nov 25 09:28:30 raspberrypi ingress-run.sh[45427]: [INFO] [1795570110.312971175] [perception_ingress_aurora_wrist]: edge ready: cameras=aurora_wrist target_frame=base_link uplink=True
+Nov 25 09:29:06 raspberrypi ingress-run.sh[45427]: [ERROR] [1795570146.281644506] [perception_ingress_aurora_wrist]: aurora_wrist: ingress link stalled (frames=317, depth=89); exiting for respawn
+Nov 25 09:29:09 raspberrypi systemd[1]: jcheng-perception-ingress@aurora_wrist.service: Scheduled restart job, restart counter is at 2.
+Nov 25 09:29:11 raspberrypi ingress-run.sh[46229]: [INFO] [1795570151.747472373] [perception_ingress_aurora_wrist]: edge ready: cameras=aurora_wrist target_frame=base_link uplink=True
+=== counters ===
+jcheng-perception-ingress@d435i_ext.service nrestarts=0
+jcheng-perception-ingress@aurora_wrist.service nrestarts=2
+jcheng-perception-fusion.service nrestarts=0

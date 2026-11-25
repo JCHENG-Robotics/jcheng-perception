@@ -1,0 +1,16 @@
+Fixed-point run 2 (tag moved to a new position), 2026-11-25
+All five systemd units active. 60 mm AprilTag 36h11 id 0 at ~0.47 m.
+
+external: 57 samples / 21.3 s (tag left the stream during the known ext wedge)
+wrist:    148 samples / 58.6 s
+tf=exact for all; wrist within-view depth sd 1.60 mm, PnP sd 1.62 mm.
+
+raw cross-view: depth 12.06 mm / PnP 9.82 mm  FAIL
+with view_bias external offset (+9.9, -1.8, +9.4) mm:
+  depth 4.75 mm  PASS
+  PnP   4.37 mm  PASS
+worst 4.75 mm -> PASS
+
+The new tag position/flatter sheet brings both the production depth path and
+the PnP diagnostic under the 5 mm gate (the earlier position had PnP 5.50 mm).
+This is the clean fixed-point acceptance for the systemd stack.

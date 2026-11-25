@@ -1,0 +1,13 @@
+2026-11-25T09:27:22+08:00
+=== stop target ===
+settled=5/5 in 3s
+jcheng-perception-ingress@d435i_ext.service active=inactive result=success nrestarts=1
+jcheng-perception-ingress@aurora_wrist.service active=inactive result=success nrestarts=0
+jcheng-perception-fusion.service active=inactive result=success nrestarts=0
+jcheng-perception-wrist-tf.service active=inactive result=success nrestarts=0
+jcheng-perception-ext-tf.service active=inactive result=success nrestarts=0
+zsh:1: no matches found: /tmp/jcheng-perception-*.stopping
+markers=0 alert_files=0
+container_procs=0
+=== start target ===
+active=5/5

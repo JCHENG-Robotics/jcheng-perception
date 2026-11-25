@@ -1,0 +1,27 @@
+header:
+  stamp:
+    sec: 1795571285
+    nanosec: 76323645
+  frame_id: ''
+camera_ids:
+- d435i_ext
+- aurora_wrist
+fps:
+- 6.1087470054626465
+- 6.196625709533691
+inference_ms:
+- 8.511935234069824
+- 8.3868989944458
+frames_received:
+- 339
+- 328
+frames_dropped:
+- 16
+- 22
+frames_failed:
+- 0
+- 0
+model_ids:
+- yolov8n.pt:1795571224853761024
+- yolov8n.pt:1795571224853761024
+---

@@ -1,0 +1,17 @@
+<!--
+  CycloneDDS config for the laptop side of the split stack (domain 0).
+
+  The interface name is the USB Ethernet adapter used for the direct link to
+  the ArmPi (10.42.0.1/24).  If the adapter enumerates under a different name,
+  update NetworkInterface here (check `ip -br addr`), then restart
+  jcheng-perception-gpu.service.
+-->
+<CycloneDDS>
+  <Domain Id="0">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="enx00e04ca373c7" priority="1" multicast="true"/>
+      </Interfaces>
+    </General>
+  </Domain>
+</CycloneDDS>

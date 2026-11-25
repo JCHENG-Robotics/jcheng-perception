@@ -1,10 +1,15 @@
 # Perception GPU node in Docker (laptop)
 
-> Status: **image prepared, not built or GPU-verified.** The host has driver
-> 595.99.02 but no `nvidia-container-toolkit`, so `docker run --gpus all` is
-> unavailable and installing the toolkit needs the user's sudo password. The
-> tag/ArUco path continues to run in `armpi-humble-moveit`; this image is for
-> the `ultralytics` (YOLO) backend.
+> Status: **built, GPU-verified and hardware-smoke-tested on 2026-11-25.**
+> Image `jcheng-perception-gpu:latest` (14.5 GB) runs with `--gpus all`:
+> torch 2.9.1+cu128 reports CUDA 12.8 with `cuda_available()`, `cv2` is the
+> apt 4.5.4 build with ArUco, and `jcheng_perception_{msgs,core,gpu}` build in
+> `/workspace/tag_ws`. Against the live robot the tag backend ran at
+> 2.94/2.69 ms and a stock `yolov8n.pt` at 8.46/8.80 ms on the RTX 3060, with
+> the edge reporting `gpu_alive=true` for both; see
+> `evidence/hardware_20261125_gpu_image/`. The production wrist pose model is
+> still absent, so the YOLO run is an infrastructure check, not an accuracy
+> one. The tag/ArUco path also still runs in `armpi-humble-moveit`.
 
 ## Why
 
@@ -16,16 +21,25 @@ removed that cross-distro link; this image does the same for YOLO.
 
 ## Host prerequisite (once, needs sudo)
 
-Docker on this laptop currently lists only `runc`:
+The Ubuntu archive has no `nvidia-container-toolkit`; add NVIDIA's repository
+first. Docker 29 resolves `--gpus` through CDI, so the CDI spec is required —
+without it the error is `failed to discover GPU vendor from CDI: no known GPU
+vendor found`.
 
 ```bash
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
+  sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
 sudo apt-get update
 sudo apt-get install -y nvidia-container-toolkit
 sudo nvidia-ctk runtime configure --runtime=docker
 sudo systemctl restart docker
+sudo nvidia-ctk cdi generate --output=/var/run/cdi/nvidia.yaml
 ```
 
-Verify before building anything:
+Installed on this laptop on 2026-11-25 (toolkit 1.20.2). Verify:
 
 ```bash
 docker run --rm --gpus all nvidia/cuda:12.8.0-base-ubuntu22.04 nvidia-smi
@@ -41,10 +55,11 @@ From the repository root:
 docker build -f deploy/Dockerfile.gpu -t jcheng-perception-gpu:latest deploy
 ```
 
-The first build downloads several GB (torch + CUDA wheels); the verified host
-venv is 6.8 GB. The image does **not** install `opencv-python` — the apt
+The built image is 14.5 GB. The first build downloads several GB of CUDA
+wheels; `PIP_INDEX_URL` (default: the Tsinghua PyPI mirror) can be overridden
+with `--build-arg`. The image does **not** install `opencv-python` — the apt
 `python3-opencv` 4.5.4 build carries ArUco, and both the tag and YOLO backends
-must use it.
+must use it. `torch` is the PyPI 2.9.1 Linux wheel, which bundles CUDA 12.8.
 
 ## Build the Humble workspace
 
@@ -66,6 +81,30 @@ docker exec jcheng-perception-gpu bash -lc \
    colcon build --symlink-install \
      --packages-select jcheng_perception_msgs jcheng_perception_core jcheng_perception_gpu'
 ```
+
+## Pre-run checks
+
+```bash
+# weights: the repository does not ship them; this lists what is missing
+docker exec jcheng-perception-gpu bash -lc \
+  '/opt/jcheng/venv/bin/python /repo/scripts/check_models.py \
+     --config /repo/ros2_ws/src/jcheng_perception_gpu/config/gpu.yaml --load'
+
+# stock-COCO fallback for infrastructure tests only
+docker exec jcheng-perception-gpu bash -lc \
+  '/opt/jcheng/venv/bin/python /repo/scripts/check_models.py \
+     --config /repo/ros2_ws/src/jcheng_perception_gpu/config/gpu_fallback.yaml --load'
+
+# Aurora stream rates (BEST_EFFORT); want RGB >= 6 Hz and depth >= 5 Hz
+docker exec jcheng-perception-gpu bash -lc \
+  'source /opt/ros/humble/setup.bash && \
+   python3 /repo/scripts/check_camera_rates.py --duration 10'
+```
+
+The Aurora driver degrades after a long uptime: on 2026-11-25 the depth stream
+fell to 2.64 Hz after 12 h and returned to 10.83 Hz after
+`sudo systemctl restart armpi-vision` (~2.5 min). The ingress watchdog respawns
+its process when the driver returns.
 
 ## Run the node
 
@@ -100,8 +139,9 @@ docker exec jcheng-perception-gpu bash -lc \
 
 ## Limits
 
-- Nothing here has been run on hardware yet; the `armpi-humble-moveit` tag path
-  remains the verified Humble route.
+- The hardware smoke used a stock `yolov8n.pt`, not the production
+  `ext_yolov8n.pt` / `wrist_grasp_pose.pt`. Both runs were perception-only;
+  nothing on the arm, base or gripper was commanded.
 - The image inherits the plain `ros:humble-ros-base` tools; it does not include
   MoveIt, so it cannot replace `armpi-humble-moveit` for the arm.
 - `--network host` is required for the wired CycloneDDS configuration; the

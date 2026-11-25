@@ -1,0 +1,104 @@
+captured=2026-11-25T15:13:55+08:00
+=== timer ===
+NEXT                         LEFT LAST                         PASSED UNIT                           ACTIVATES
+Wed 2026-11-25 15:14:46 AWST  51s Wed 2026-11-25 15:13:46 AWST 9s ago jcheng-perception-status.timer jcheng-perception-status.service
+
+1 timers listed.
+Pass --all to see loaded but inactive timers, too.
+=== status.txt ===
+JCHENG perception status 2026-11-25T15:13:47+08:00
+robot pi@10.42.0.218: reachable
+  jcheng-perception.target                                active     nrestarts=0 result=unknown
+  jcheng-perception-ingress@d435i_ext.service             active     nrestarts=4 result=success
+  jcheng-perception-ingress@aurora_wrist.service          active     nrestarts=3 result=success
+  jcheng-perception-fusion.service                        active     nrestarts=0 result=success
+  jcheng-perception-wrist-tf.service                      active     nrestarts=0 result=success
+  jcheng-perception-ext-tf.service                        active     nrestarts=0 result=success
+laptop:
+  jcheng-perception-gpu.service                           active     nrestarts=0 result=success
+  jcheng-perception-gpu-watchdog.service                  active     nrestarts=0 result=success
+robot last alert:
+  at=2026-11-25T10:08:46+08:00
+  unit=jcheng-perception-ingress@d435i_ext.service
+  label=ingress-d435i_ext
+  nrestarts=10
+  result=start-limit-hit
+  action=systemctl reset-failed jcheng-perception-ingress@d435i_ext.service && systemctl start jcheng-perception-ingress@d435i_ext.service
+overall: ok
+=== status.json ===
+{
+ "checked_at": "2026-11-25T15:13:47+08:00",
+ "laptop": {
+  "alerts": {
+   "last": "",
+   "log_tail": [],
+   "watchdog": ""
+  },
+  "units": {
+   "jcheng-perception-gpu-watchdog.service": {
+    "active": "active",
+    "nrestarts": 0,
+    "result": "success",
+    "started": "Wed 2026-11-25 15:13:45 AWST"
+   },
+   "jcheng-perception-gpu.service": {
+    "active": "active",
+    "nrestarts": 0,
+    "result": "success",
+    "started": "Wed 2026-11-25 15:13:44 AWST"
+   }
+  }
+ },
+ "overall": "ok",
+ "robot": {
+  "alerts": {
+   "last": "at=2026-11-25T10:08:46+08:00\nunit=jcheng-perception-ingress@d435i_ext.service\nlabel=ingress-d435i_ext\nnrestarts=10\nresult=start-limit-hit\naction=systemctl reset-failed jcheng-perception-ingress@d435i_ext.service && systemctl start jcheng-perception-ingress@d435i_ext.service",
+   "log_tail": [
+    "2026-11-25T10:08:46+08:00 ALERT jcheng-perception-ingress@d435i_ext.service: restart limit hit (NRestarts=10 Result=start-limit-hit); after fixing the camera/driver run: systemctl reset-failed jcheng-perception-ingress@d435i_ext.service && systemctl start jcheng-perception-ingress@d435i_ext.service"
+   ]
+  },
+  "host": "pi@10.42.0.218",
+  "reachable": true,
+  "units": {
+   "jcheng-perception-ext-tf.service": {
+    "active": "active",
+    "nrestarts": 0,
+    "result": "success",
+    "started": "Wed 2026-11-25 14:42:28 HKT"
+   },
+   "jcheng-perception-fusion.service": {
+    "active": "active",
+    "nrestarts": 0,
+    "result": "success",
+    "started": "Wed 2026-11-25 13:17:54 HKT"
+   },
+   "jcheng-perception-ingress@aurora_wrist.service": {
+    "active": "active",
+    "nrestarts": 3,
+    "result": "success",
+    "started": "Wed 2026-11-25 15:06:06 HKT"
+   },
+   "jcheng-perception-ingress@d435i_ext.service": {
+    "active": "active",
+    "nrestarts": 4,
+    "result": "success",
+    "started": "Wed 2026-11-25 15:06:59 HKT"
+   },
+   "jcheng-perception-wrist-tf.service": {
+    "active": "active",
+    "nrestarts": 0,
+    "result": "success",
+    "started": "Wed 2026-11-25 13:17:54 HKT"
+   },
+   "jcheng-perception.target": {
+    "active": "active",
+    "nrestarts": 0,
+    "result": "unknown",
+    "started": "Wed 2026-11-25 13:17:54 HKT"
+   }
+  }
+ }
+}=== timer refresh ===
+refreshed=yes waited=54s
+new_last_trigger=Wed 2026-11-25 15:14:46 AWST
+status_mtime=2026-11-25 15:14:47.147297976 +0800

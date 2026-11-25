@@ -1,0 +1,51 @@
+captured=2026-11-25T14:42:37+08:00 uptime=1719s load=13.78 11.95 8.97
+=== target boot start ===
+Nov 25 13:17:54 raspberrypi systemd[1]: Reached target jcheng-perception.target - JCHENG perception split stack (2 ingress + fusion + required TF).
+=== unit starts (boot) ===
+Nov 25 13:17:31 raspberrypi systemd[1]: Started jcheng-perception-ext-tf.service - JCHENG external-camera static TF (base_link -> camera_link).
+Nov 25 13:17:34 raspberrypi systemd[1]: Started jcheng-perception-ext-tf.service - JCHENG external-camera static TF (base_link -> camera_link).
+Nov 25 13:17:54 raspberrypi systemd[1]: Started jcheng-perception-fusion.service - JCHENG perception fusion (association, Kalman, two-view targets).
+Nov 25 13:17:54 raspberrypi systemd[1]: Started jcheng-perception-ingress@aurora_wrist.service - JCHENG perception ingress for camera aurora_wrist (split DDS participant).
+Nov 25 13:17:54 raspberrypi systemd[1]: Started jcheng-perception-ingress@d435i_ext.service - JCHENG perception ingress for camera d435i_ext (split DDS participant).
+Nov 25 13:17:54 raspberrypi systemd[1]: Started jcheng-perception-wrist-tf.service - JCHENG wrist TF publisher (bus-servo joints -> camera_optical_measured).
+Nov 25 14:15:37 raspberrypi systemd[1]: Started jcheng-perception-ingress@d435i_ext.service - JCHENG perception ingress for camera d435i_ext (split DDS participant).
+Nov 25 14:16:12 raspberrypi systemd[1]: Started jcheng-perception-ingress@d435i_ext.service - JCHENG perception ingress for camera d435i_ext (split DDS participant).
+=== ext-tf boot failure (status 137) ===
+Nov 25 13:17:31 raspberrypi systemd[1]: Started jcheng-perception-ext-tf.service - JCHENG external-camera static TF (base_link -> camera_link).
+Nov 25 13:17:32 raspberrypi systemd[1]: jcheng-perception-ext-tf.service: Main process exited, code=exited, status=137/n/a
+Nov 25 13:17:32 raspberrypi systemd[1]: jcheng-perception-ext-tf.service: Failed with result 'exit-code'.
+Nov 25 13:17:34 raspberrypi systemd[1]: jcheng-perception-ext-tf.service: Scheduled restart job, restart counter is at 1.
+Nov 25 13:17:34 raspberrypi systemd[1]: Stopped jcheng-perception-ext-tf.service - JCHENG external-camera static TF (base_link -> camera_link).
+Nov 25 13:17:34 raspberrypi systemd[1]: Started jcheng-perception-ext-tf.service - JCHENG external-camera static TF (base_link -> camera_link).
+Nov 25 13:17:49 raspberrypi ext-tf-run.sh[2277]: [INFO] [1795583869.487183767] [ext_tf]: ext_tf: base_link -> camera_link at (+0.139, +0.012, +0.036) m, camera_color_optical_frame view_z=(+0.842, -0.019, -0.539)
+=== alert from previous boot ===
+at=2026-11-25T10:08:46+08:00
+unit=jcheng-perception-ingress@d435i_ext.service
+label=ingress-d435i_ext
+nrestarts=10
+result=start-limit-hit
+action=systemctl reset-failed jcheng-perception-ingress@d435i_ext.service && systemctl start jcheng-perception-ingress@d435i_ext.service
+=== counters after reboot ===
+jcheng-perception-ingress@d435i_ext.service active=active nrestarts=9 result=success
+jcheng-perception-ingress@aurora_wrist.service active=active nrestarts=6 result=success
+jcheng-perception-fusion.service active=active nrestarts=0 result=success
+jcheng-perception-wrist-tf.service active=active nrestarts=0 result=success
+jcheng-perception-ext-tf.service active=active nrestarts=0 result=success
+=== gpu status (after manual GPU restart) ===
+camera_fps:
+- 0.14961911737918854
+--
+total_detections: 621
+detections_matched: 621
+--
+gpu_alive: true
+active_tracks: 1
+confirmed_tracks: 1
+notes:
+- d435i_ext:obs_age_ms=5312
+- aurora_wrist:obs_age_ms=651
+---
+=== tf ===
+- Translation: [0.139, 0.027, 0.037]
+=== defunct ===
+3

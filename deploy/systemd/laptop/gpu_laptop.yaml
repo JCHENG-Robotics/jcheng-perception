@@ -1,0 +1,47 @@
+# Production laptop GPU detector config for the systemd user unit.
+#
+# The Pi ingresses publish JPEG uplinks on domain 0; this node runs YOLO and
+# returns detections carrying the original capture stamp.  Model weights live
+# outside the repository in /opt/jcheng/models/ (the verified yolov8s.pt copy).
+node:
+  stats_interval_s: 2.0
+  debug_publish: false
+  debug_interval_s: 1.0
+  queue_size: 2
+
+cameras:
+  d435i_ext:
+    input_topic: /perception/uplink/d435i_ext/image_compressed
+    detections_topic: /perception/detections/d435i_ext
+    debug_topic: /perception/debug/d435i_ext
+    hot_reload: true
+    model:
+      backend: ultralytics
+      path: /opt/jcheng/models/yolov8s.pt
+      task: detect
+      imgsz: 640
+      conf: 0.20
+      iou: 0.45
+      device: "0"
+      half: false
+      max_detections: 20
+      keypoints: false
+      labels: []
+
+  aurora_wrist:
+    input_topic: /perception/uplink/aurora_wrist/image_compressed
+    detections_topic: /perception/detections/aurora_wrist
+    debug_topic: /perception/debug/aurora_wrist
+    hot_reload: true
+    model:
+      backend: ultralytics
+      path: /opt/jcheng/models/yolov8s.pt
+      task: detect
+      imgsz: 640
+      conf: 0.20
+      iou: 0.45
+      device: "0"
+      half: false
+      max_detections: 20
+      keypoints: false
+      labels: []

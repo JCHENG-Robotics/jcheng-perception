@@ -61,10 +61,17 @@
   ```
 
 - Docker 替代方案：`deploy/Dockerfile.gpu` 把同一套运行时（torch
-  2.9.1+cu128 / ultralytics 8.4.216 / onnxruntime 1.32.0 / openvino 2026.4.1）
-  装进 Humble 镜像，节点与机器人回到同发行版；`--gpus all` 的宿主机前置步骤、
-  构建和验证命令见 [`deploy/README.md`](../deploy/README.md)。镜像已准备，
-  **尚未构建和实机验证**。
+  2.9.1+cu128 / ultralytics 8.4.216 / onnxruntime **1.23.2** / openvino
+  2026.4.1；1.23.2 是 Python 3.10 可用的最高版本，宿主 venv 的 1.32.0 要求
+  Python ≥3.11）装进 Humble 镜像，节点与机器人回到同发行版；`--gpus all`
+  的宿主机前置步骤、构建和验证命令见 [`deploy/README.md`](../deploy/README.md)。
+  镜像已于 2026-11-25 构建并验证（14.5 GB；RTX 3060 在容器内可见，
+  `cuda_available()` 为 true，三个感知包可在 `/workspace/tag_ws` 构建）；
+  同日完成真机 smoke：tag 后端 2.94/2.69 ms、edge `gpu_alive=true`，stock
+  `yolov8n.pt` 稳态 8.46/8.80 ms（容器内 `nvidia-smi` 看到 210 MiB 的
+  节点进程），证据在 `evidence/hardware_20261125_gpu_image/`。生产用的
+  `ext_yolov8n.pt` / `wrist_grasp_pose.pt` 仍未就位，因此 YOLO 只验证了
+  镜像与后端，不代表检测精度。
 
 - 安装后先做无 ROS 烟测：
 
@@ -138,6 +145,14 @@ ros2 run tf2_ros tf2_echo base_link camera_color_optical_frame
 > `ext_tf`（随 `pi5_edge.launch.py` 默认启动）从 `frames.yaml` 发布
 > `base_link → camera_link`，因此 `base_link → camera_color_optical_frame`
 > 应当能直接解析；若不行，先确认 RealSense 节点在发 `camera_link`。
+
+> **Aurora 深度退化（2026-11-25 实测）**：驱动连续运行 12 h 后，ingress 在
+> 22 s 内收到 RGB 175 帧、深度只有 58 帧（约 7.95 / 2.64 Hz），融合观测率
+> 降到 0.6–1.5 fps；`sudo systemctl restart armpi-vision`（oneshot 就绪轮询
+> 约 2.5 min）后实测 **RGB 10.92 / 深度 10.83 Hz**。每次会话前跑
+> `scripts/check_camera_rates.py`（阈值 RGB 6 / depth 5 Hz）；低帧率就重启
+> 驱动，ingress 看门狗会自动重启其进程。证据：
+> `evidence/hardware_20261125_gpu_image/camera_rates_after_restart.txt`。
 
 ## 4. 启动
 
@@ -275,28 +290,59 @@ RMS 0.61 mm）。仍需：多姿态/固定目标 x/y/z、移动目标跟踪误�
 千兆有线足够。WiFi 下建议降低 `max_uplink_fps`、`jpeg_quality` 或分辨率。
 Pi 5 上 JPEG 编码在独立线程，主要占用 CPU；实测合成场景 edge 进程约 25% 单核。
 
-## 7. systemd（可选）
+## 7. systemd（split 三进程）
 
-```ini
-# /etc/systemd/system/jcheng-perception-edge.service
-[Unit]
-Description=JCHENG perception edge
-After=network-online.target
+生产上用 systemd 管理 split 部署，不再手动 `ros2 launch`。每个进程一个 unit，
+launch 的 `respawn=True` 由 systemd 接管：
 
-[Service]
-User=ubuntu
-Environment=ROS_DOMAIN_ID=0
-Environment=RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && source /home/ubuntu/jcheng-perception/ros2_ws/install/setup.bash && exec ros2 launch jcheng_perception_edge pi5_edge.launch.py'
-Restart=on-failure
-RestartSec=2
+| unit | 内容 |
+|---|---|
+| `jcheng-perception-ingress@d435i_ext.service` | 外机位 ingress |
+| `jcheng-perception-ingress@aurora_wrist.service` | 腕部 ingress |
+| `jcheng-perception-fusion.service` | 融合 |
+| `jcheng-perception-wrist-tf.service` | 腕部动态 TF（总线舵机，只读） |
+| `jcheng-perception-ext-tf.service` | 外机位静态链 `base_link→camera_link` |
+| `jcheng-perception.target` | 以上五者一起启停、开机自启 |
+| `jcheng-perception-alert@.service` | 超过重启上限时的告警 |
 
-[Install]
-WantedBy=multi-user.target
+```bash
+sudo bash deploy/systemd/install-split-systemd.sh --start
+sudo systemctl stop jcheng-perception.target     # PartOf= 停掉五个进程
+journalctl -u 'jcheng-perception-*' -f
 ```
 
-> 机器人厂商栈在容器内运行时，unit 需要进入对应容器/命名空间；不要和厂商
-> `start_node.service` 争抢设备或域。
+要点：
+
+- ingress watchdog 仍以 **0** 退出（为了换新 DDS participant），所以 unit 用
+  `Restart=always` + `RestartSec=2`，不能用 `on-failure`；
+- 每个 ingress 的重启上限是 **10 次 / 300 s**（`StartLimitIntervalSec`/
+  `StartLimitBurst`）。相机彻底失效时约 40–60 s 后 unit 进入 `failed` 并触发
+  `jcheng-perception-alert@ingress-<camera>`：写 journal `user.err`、
+  `/var/lib/jcheng-perception/last-alert.txt` 与 `alerts.log`（无外网，不发远程
+  通知）。修复后显式 `systemctl reset-failed && systemctl start`；
+- 包装脚本在容器内运行，显式使用 CycloneDDS 和 domain 0，与相机驱动一致；
+- 所有容器内 unit 都 `After=/Wants=armpi-vision.service`：`start_node` 启动时会
+  执行 `~/.stop_ros.sh`，对命令行含 “ros” 的进程 `kill -9`；`armpi-vision`
+  只在厂商 bringup 起来后 active，等待它可以避开这个窗口（2026-11-25 开机时
+  `ext-tf` 就因只等 `armpi-rs-depth` 被 SIGKILL 137）；
+- 两个 TF 发布器也在 target 内：`wrist_tf` 没有 `camera_optical_measured` 时腕部
+  观测会被丢弃，`ext_tf` 让外机位链有 `base_link`。`wrist_tf` 只读总线舵机
+  （`get_state`），不发运动命令，依赖厂商工作区的 `ros_robot_controller_msgs`
+  （`perception.env` 的 `JCHENG_PERCEPTION_VENDOR_SETUP`）。
+- 笔记本 GPU 节点是 user unit（`deploy/systemd/laptop/`）：
+  `jcheng-perception-gpu.service` 用 `/opt/jcheng/models/yolov8s.pt` 和
+  `gpu_laptop.yaml`，`Restart=always` + 10/300 s + 本地 OnFailure 告警。
+  已知 reader wedge（进程活着但 `frames_received` 冻结）由
+  `jcheng-perception-gpu-watchdog` 覆盖：单路 60 s 不增长/状态 30 s 缺失时
+  重启，预算 5 次 / 30 min 后告警；两路都冻结视为 edge 掉线不重启。
+  `jcheng-perception-status.timer` 每 60 s 生成
+  `~/.local/state/jcheng-perception/status.{json,txt}`，汇总机器人 5 个 unit、
+  笔记本 GPU/watchdog 和两侧告警。
+
+完整安装/验证/告警/回滚说明见
+[`deploy/systemd/README.md`](../deploy/systemd/README.md)。厂商栈在容器内运行，
+unit 只通过 `docker exec` 进入容器，不打开相机设备、不与 `start_node.service`
+争抢设备或域。
 
 ## 8. 故障排查
 

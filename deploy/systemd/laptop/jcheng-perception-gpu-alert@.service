@@ -1,0 +1,9 @@
+[Unit]
+Description=JCHENG perception GPU failure alert (%i)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+# Triggered by OnFailure= when the GPU unit exhausts StartLimitBurst.
+# Oneshot; logs and records state, never restarts by itself.
+[Service]
+Type=oneshot
+ExecStart=-%h/.local/lib/jcheng-perception/gpu-alert.sh %i
+TimeoutStartSec=30

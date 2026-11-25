@@ -1,0 +1,20 @@
+[Unit]
+Description=JCHENG GPU reader-wedge watchdog (laptop)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+After=jcheng-perception-gpu.service
+# The watchdog itself is small; keep it alive across GPU restarts.  No
+# OnFailure alert: its own failure only stops wedge recovery, while the GPU
+# unit's alert already covers a dead detector.
+StartLimitIntervalSec=300
+StartLimitBurst=20
+
+[Service]
+Type=simple
+EnvironmentFile=-%h/.config/jcheng-perception/gpu.env
+ExecStart=%h/.local/lib/jcheng-perception/gpu-watchdog-run.sh
+Restart=always
+RestartSec=10
+TimeoutStopSec=10
+
+[Install]
+WantedBy=default.target

@@ -22,7 +22,9 @@ cameras:
     depth_compressed: false
     depth_scale: 0.001
     jpeg_quality: 75
-    max_uplink_fps: 15.0
+    # 4 fps is ample for the GPU detector and cuts JPEG/CPU load; the old
+    # 15 fps only fed a ~2 fps inference path.
+    max_uplink_fps: 4.0
     max_detection_age_ms: 400.0
     frame_match_tolerance_ms: 50.0
     # Depth+colour on the D435i can run at 4-8 Hz; the external camera is
@@ -78,7 +80,8 @@ cameras:
     depth_scale: 0.001
     jpeg_quality: 80
     # The Aurora runs at ~12 Hz RGB / ~8 Hz depth over USB 2.0.
-    max_uplink_fps: 12.0
+    # The GPU consumes ~2 fps; 3 fps is enough and reduces JPEG load.
+    max_uplink_fps: 3.0
     max_detection_age_ms: 500.0
     frame_match_tolerance_ms: 80.0
     depth_match_tolerance_ms: 150.0

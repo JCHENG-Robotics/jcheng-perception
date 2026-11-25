@@ -17,7 +17,7 @@ def test_real_camera_config():
         'camera_optical_measured'
     assert specs['d435i_ext'].intrinsics.shape == (3, 3)
     assert specs['aurora_wrist'].distortion.shape == (5,)
-    assert specs['d435i_ext'].max_uplink_fps == 15.0
+    assert specs["d435i_ext"].max_uplink_fps == 4.0
     assert specs['aurora_wrist'].depth_match_tolerance_ms == 150.0
 
 

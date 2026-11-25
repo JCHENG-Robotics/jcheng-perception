@@ -1,0 +1,30 @@
+Fixed-point (60 mm AprilTag 36h11 id 0) under the systemd stack
+2026-11-25, arm stationary, tag on the table. jcheng-perception.target and all
+five units were active during both runs.
+
+external: 68 samples / 25.3 s (the tag left the stream for part of the 60 s
+          window during the known external ingress wedge); tf=exact for all.
+wrist:    158 samples / 59.6 s; tf=exact for all.
+camera:   wrist (+174.6, +9.0, +195.4) mm.
+within-view depth sd 1.08 mm, PnP sd 1.11 mm.
+
+raw cross-view (no offset):
+  depth (+7.3, -0.6, +11.1) mm  |d| = 13.33 mm  FAIL
+  pnp   (+9.6, -1.5,  +3.9) mm  |d| = 10.44 mm  FAIL
+
+with the deployed config/view_bias.yaml external offset (+9.9, -1.8, +9.4) mm:
+  depth (-2.6, +1.2, +1.7) mm  |d| = 3.32 mm  PASS
+  pnp   (-0.3, +0.3, -5.5) mm  |d| = 5.50 mm  FAIL (0.5 mm over the 5 mm gate)
+
+Interpretation: the production depth path (what the edge back-projects and the
+fusion consumes) passes the 5 mm gate at 3.32 mm; the depth-free PnP diagnostic
+is 5.50 mm because the wrist depth-vs-PnP bias is ~7.2 mm in z and the tag sheet
+is curled. The 2026-11-24 run quoted 3.67/3.07 mm with a flatter tag. Do not
+quote <5 mm absolute accuracy from this run; flatten/reposition the tag and
+repeat for a clean PnP. The systemd camera/TF chain itself is stable (TF exact,
+1 mm within-view scatter).
+
+This is the defined-point camera/TF gate, not a tag-fusion recording: the
+systemd GPU unit runs the COCO detector (gpu_laptop.yaml). The tag-fusion
+reference remains the launch-based split run 4 (cross-view 1.55 mm, fusion
+max 2.14 mm).

@@ -1,0 +1,25 @@
+at=2026-11-25T09:27:13+08:00
+unit=jcheng-perception-ingress@selftest.service
+label=ingress-selftest
+nrestarts=10
+result=exit-code
+action=systemctl reset-failed jcheng-perception-ingress@selftest.service && systemctl start jcheng-perception-ingress@selftest.service
+--- status dump (head) ---
+× jcheng-perception-ingress@selftest.service - JCHENG perception ingress for camera selftest (split DDS participant)
+     Loaded: loaded (/etc/systemd/system/jcheng-perception-ingress@.service; disabled; preset: enabled)
+     Active: failed (Result: exit-code) since Wed 2026-11-25 09:27:13 HKT; 57ms ago
+   Duration: 4.214s
+       Docs: https://github.com/JCHENG-Robotics/jcheng-perception
+    Process: 42328 ExecStart=/usr/local/lib/jcheng-perception/ingress-run.sh selftest (code=exited, status=1/FAILURE)
+   Main PID: 42328 (code=exited, status=1/FAILURE)
+        CPU: 50ms
+
+Nov 25 09:27:11 raspberrypi systemd[1]: jcheng-perception-ingress@selftest.service: Failed with result 'exit-code'.
+Nov 25 09:27:13 raspberrypi systemd[1]: jcheng-perception-ingress@selftest.service: Scheduled restart job, restart counter is at 10.
+Nov 25 09:27:13 raspberrypi systemd[1]: Stopped jcheng-perception-ingress@selftest.service - JCHENG perception ingress for camera selftest (split DDS participant).
+Nov 25 09:27:13 raspberrypi systemd[1]: jcheng-perception-ingress@selftest.service: Start request repeated too quickly.
+Nov 25 09:27:13 raspberrypi systemd[1]: jcheng-perception-ingress@selftest.service: Failed with result 'exit-code'.
+Nov 25 09:27:13 raspberrypi systemd[1]: Failed to start jcheng-perception-ingress@selftest.service - JCHENG perception ingress for camera selftest (split DDS participant).
+Nov 25 09:27:13 raspberrypi systemd[1]: jcheng-perception-ingress@selftest.service: Triggering OnFailure= dependencies.
+--- alerts.log ---
+2026-11-25T09:27:13+08:00 ALERT jcheng-perception-ingress@selftest.service: restart limit hit (NRestarts=10 Result=exit-code); after fixing the camera/driver run: systemctl reset-failed jcheng-perception-ingress@selftest.service && systemctl start jcheng-perception-ingress@selftest.service

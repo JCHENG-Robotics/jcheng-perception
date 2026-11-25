@@ -103,6 +103,7 @@ jcheng-perception/
 │   ├── FAILURE_MODES.md          # faults and degradation
 │   ├── EVIDENCE.md               # verification record for this version
 │   └── adr/
+├── deploy/systemd/               # split-stack systemd units for the Pi host
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # provisional IDL (M2 promotes to jcheng-interfaces)
 │   ├── jcheng_perception_core/   # pure Python, no ROS dependency

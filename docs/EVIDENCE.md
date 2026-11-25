@@ -422,6 +422,70 @@ learned Track.view_offset = (+0.03, -1.93, -3.31) mm
 `max_track_speed_mps=0.5` / `max_target_distance_m=1.0` 安全上限。证据：
 `evidence/hardware_20261124_split_edge/`。
 
+### 2.15 Split 三进程的 systemd 管理（2026-11-25）
+
+split 部署不再手动 `ros2 launch split_edge.launch.py`：每个进程一个 unit
+（两个 ingress + fusion），并补上必需的 `wrist_tf`/`ext_tf`，统一由
+`jcheng-perception.target` 启停、开机自启。launch 的 `respawn=True` 交给
+systemd `Restart=always` / `RestartSec=2`；每个 unit 的上限是 10 次 / 300 s，
+超限后 `failed` 并触发 `jcheng-perception-alert@<label>`（journal `user.err` +
+`/var/lib/jcheng-perception/`）。实机验证：
+
+- 5 个 unit active；TF 腕部位姿 `[0.176, 0.009, 0.196]` m，外机位
+  `[0.139, 0.027, 0.037]` m；
+- 09:26:42 外机位 ingress watchdog 报 `link stalled (frames=75, depth=89)` 退出 0，
+  systemd 在 3 s 内重启（restart counter 1），`edge ready` 恢复 —— 与 launch
+  respawn 等价；
+- `systemctl stop jcheng-perception.target` 3 s 内 5/5 inactive、`Result=success`、
+  无告警、无残留容器进程；
+- 无相机的 `@selftest` 实例在 10 次重启 / 63 s 后 `failed`，告警文件写入
+  `label=ingress-selftest`，`reset-failed` 可恢复。
+- **安装后重启（2026-11-25）**：`jcheng-perception.target` 自动拉起，5/5 unit
+  启动；fusion/wrist_tf 0 重启；`ext-tf` 在 `start_node` 的 `~/.stop_ros.sh`
+  `kill -9` 窗口里被 SIGKILL（status 137），已改为 `After=/Wants=armpi-vision`
+  （二次重启尚未验证）；重启清空了此前累计的 28 个 `<defunct>`。笔记本 GPU
+  节点当时已退出，手动重启后 `gpu_alive=true`、腕部 1 条 confirmed track。
+- **真实上限告警**：上一 boot 的 10:08:46 外机位 ingress 达到 10 次 / 300 s，
+  `Result=start-limit-hit`，告警文件 `label=ingress-d435i_ext` 保留到本次
+  boot；本 boot 25 min 内外机位已 9 次、腕部 6 次。10/300 的上限与告警按设计
+  工作，外机位 DDS wedge 频率仍可能触达上限（是否放宽是策略选择）。
+- **死相机验证**：用临时 `deadcam` 配置（不存在的 topic，保留 external/wrist
+  两种角色）跑基线 ingress，约 7 s 后以
+  `ingress link stalled (frames=0, depth=0); exiting for respawn` 退出 0。
+  状态初始 `frames/depth=-1`，第一个 watchdog tick 读到 0 就把链路标记为已见，
+  因此 4 s stall 已覆盖“从启动起从未出帧”的情况，不需要额外首帧逻辑。
+- **笔记本 GPU 纳入 user unit**：`deploy/systemd/laptop/` 安装
+  `jcheng-perception-gpu.service`（`Restart=always` + 10/300 s + OnFailure），
+  模型 `/opt/jcheng/models/yolov8s.pt`、持久化 CycloneDDS XML、双相机配置。
+  实测 `detector loaded`、机器人侧 `gpu_alive=true`、stop/start `Result=success`。
+  reader wedge 由 `jcheng-perception-gpu-watchdog` 覆盖（单路 60 s 冻结/状态
+  30 s 缺失重启，5 次 / 30 min 预算；两路都冻结视为 edge 掉线）；SIGSTOP
+  故障注入 34 s 检测、重启、4 s 后 `detector loaded`。
+- **合并 status**：`jcheng-perception-status.timer` 每 60 s 通过 SSH 读取机器人
+  target + 5 unit，加笔记本 GPU/watchdog 和两侧告警，写
+  `~/.local/state/jcheng-perception/status.{json,txt}`，`overall` 分
+  `ok`/`degraded`/`robot_unreachable`。实测 timer 在 54 s 后自动刷新，
+  6 个机器人 unit + 2 个笔记本 unit 全部 active。后续加入重启压力：任一 unit
+  本 boot `NRestarts >= 5` 或 1 h 内告警即 `degraded` 并列出 `WARN`；当前
+  外机位 9 次、腕部 7 次，status 为 `degraded`（unit 仍 active）。
+- **systemd 下固定点验收**：5 unit active 时测 60 mm AprilTag；external
+  68/25.3 s（外机位 wedge 丢了一段）、wrist 158/59.6 s，TF 全 exact。原始跨视图
+  depth 13.33 / PnP 10.44 mm FAIL；加部署的 `view_bias` 外参修正后 depth
+  **3.32 mm PASS**、PnP **5.50 mm FAIL（超 0.5 mm）**。把 tag 换到新位置
+  （~0.47 m、贴合更平）后复测：external 57/21.3 s、wrist 148/58.6 s，TF 全
+  exact；原始 depth 12.06 / PnP 9.82 FAIL；加同一修正后 **depth 4.75 mm /
+  PnP 4.37 mm 双路径 PASS**（worst 4.75）。GPU unit 是 COCO 模式，tag 融合
+  参考仍是 split run 4（跨视图 1.55 / fusion max 2.14 mm）。
+
+验证中修掉的坑：`set -u` 会让 ROS `setup.bash` 报 `AMENT_TRACE_SETUP_FILES:
+unbound variable`；停进程时 rclpy teardown 以 1 退出，若把 1 一并记为
+`SuccessExitStatus`，上限仍会计数（干净退出同样计入 `StartLimitBurst`），但崩溃
+会被伪装成成功、丢失 `Result`/OnFailure 的诊断语义；最终用 ExecStop 写
+`/tmp/jcheng-perception-<unit>.stopping` 标记 + 包装脚本 TERM trap 把“主动停止”
+翻译成 0，崩溃仍保留失败语义。旧 ExecStop 会同时杀掉 `ros2 run` 父进程，留下
+`<defunct>`；改为只匹配节点可执行路径后，一次 stop/start 不再新增僵尸。
+证据：`evidence/hardware_20261125_systemd_split/`。
+
 ## 3. 本轮发现并修复的问题
 
 | # | 现象 | 根因 | 修复 |

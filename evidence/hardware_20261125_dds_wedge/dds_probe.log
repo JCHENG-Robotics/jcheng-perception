@@ -1,0 +1,41 @@
+07:36:12 image_raw=20 image_raw=38 image_raw=28 image_raw=28
+07:36:17 image_raw=32 image_raw=66 image_raw=59 image_raw=61
+07:36:22 image_raw=59 image_raw=78 image_raw=102 image_raw=88
+07:36:27 image_raw=66 image_raw=107 image_raw=128 image_raw=115
+07:36:32 image_raw=76 image_raw=121 image_raw=153 image_raw=143
+07:36:37 image_raw=91 image_raw=140 image_raw=191 image_raw=167
+07:36:42 image_raw=113 image_raw=142 image_raw=219 image_raw=193
+07:36:47 image_raw=131 image_raw=142 image_raw=254 image_raw=218
+07:36:52 image_raw=144 image_raw=142 image_raw=285 image_raw=244
+07:36:57 image_raw=149 image_raw=142 image_raw=311 image_raw=271
+07:37:02 image_raw=149 image_raw=142 image_raw=332 image_raw=291
+07:37:07 image_raw=149 image_raw=142 image_raw=364 image_raw=306
+07:37:12 image_raw=149 image_raw=142 image_raw=390 image_raw=328
+07:37:17 image_raw=149 image_raw=142 image_raw=413 image_raw=352
+07:37:22 image_raw=149 image_raw=142 image_raw=451 image_raw=381
+07:37:27 image_raw=149 image_raw=142 image_raw=478 image_raw=412
+07:37:32 image_raw=149 image_raw=142 image_raw=498 image_raw=430
+07:37:37 image_raw=149 image_raw=142 image_raw=515 image_raw=459
+07:37:42 image_raw=149 image_raw=142 image_raw=540 image_raw=471
+07:37:47 image_raw=149 image_raw=142 image_raw=571 image_raw=508
+07:37:52 image_raw=149 image_raw=142 image_raw=601 image_raw=525
+07:37:57 image_raw=149 image_raw=142 image_raw=628 image_raw=558
+07:38:02 image_raw=149 image_raw=142 image_raw=659 image_raw=575
+07:38:07 image_raw=149 image_raw=142 image_raw=685 image_raw=598
+07:38:12 image_raw=149 image_raw=142 image_raw=702 image_raw=624
+Traceback (most recent call last):
+  File "/tmp/dds_probe.py", line 56, in <module>
+    main()
+  File "/tmp/dds_probe.py", line 46, in main
+    rclpy.spin(node)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 222, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 739, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 728, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 711, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 612, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

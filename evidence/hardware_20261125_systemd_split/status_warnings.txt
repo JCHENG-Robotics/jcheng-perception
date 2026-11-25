@@ -1,0 +1,30 @@
+captured=2026-11-25T15:24:30+08:00
+=== timer ===
+active
+=== status.txt ===
+JCHENG perception status 2026-11-25T15:24:25+08:00
+robot pi@10.42.0.218: reachable
+  jcheng-perception.target                                active     nrestarts=0 result=unknown
+  jcheng-perception-ingress@d435i_ext.service             active     nrestarts=9 result=success
+  jcheng-perception-ingress@aurora_wrist.service          active     nrestarts=7 result=success
+  jcheng-perception-fusion.service                        active     nrestarts=0 result=success
+  jcheng-perception-wrist-tf.service                      active     nrestarts=0 result=success
+  jcheng-perception-ext-tf.service                        active     nrestarts=0 result=success
+laptop:
+  jcheng-perception-gpu.service                           active     nrestarts=0 result=success
+  jcheng-perception-gpu-watchdog.service                  active     nrestarts=0 result=success
+robot last alert: (age 5.3 h)
+  at=2026-11-25T10:08:46+08:00
+  unit=jcheng-perception-ingress@d435i_ext.service
+  label=ingress-d435i_ext
+  nrestarts=10
+  result=start-limit-hit
+  action=systemctl reset-failed jcheng-perception-ingress@d435i_ext.service && systemctl start jcheng-perception-ingress@d435i_ext.service
+WARN robot/jcheng-perception-ingress@aurora_wrist.service: NRestarts=7 (>= 5)
+WARN robot/jcheng-perception-ingress@d435i_ext.service: NRestarts=9 (>= 5)
+overall: degraded
+=== json warnings ===
+overall: degraded
+warnings: ['robot/jcheng-perception-ingress@aurora_wrist.service: NRestarts=7 (>= 5)', 'robot/jcheng-perception-ingress@d435i_ext.service: NRestarts=9 (>= 5)']
+robot_age_s: 18939.076384
+laptop_age_s: None

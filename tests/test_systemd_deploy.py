@@ -1,0 +1,325 @@
+"""Static checks for the systemd deployment of the split stack.
+
+The units run on the robot, so these tests cannot start them; they assert the
+contract that matters: one process per unit, the watchdog's clean exit is
+covered by Restart=always, the ingress restart budget is finite, and a failed
+unit triggers the alert template.  Syntax is checked with bash -n and, when
+available, systemd-analyze verify.
+"""
+
+import shutil
+import subprocess
+import tempfile
+from pathlib import Path
+
+import pytest
+
+DEPLOY = Path(__file__).resolve().parents[1] / 'deploy' / 'systemd'
+INGRESS_UNIT = DEPLOY / 'jcheng-perception-ingress@.service'
+FUSION_UNIT = DEPLOY / 'jcheng-perception-fusion.service'
+ALERT_UNIT = DEPLOY / 'jcheng-perception-alert@.service'
+TARGET_UNIT = DEPLOY / 'jcheng-perception.target'
+WRIST_TF_UNIT = DEPLOY / 'jcheng-perception-wrist-tf.service'
+EXT_TF_UNIT = DEPLOY / 'jcheng-perception-ext-tf.service'
+SCRIPTS = (
+    DEPLOY / 'ingress-run.sh',
+    DEPLOY / 'fusion-run.sh',
+    DEPLOY / 'wrist-tf-run.sh',
+    DEPLOY / 'ext-tf-run.sh',
+    DEPLOY / 'alert.sh',
+    DEPLOY / 'install-split-systemd.sh',
+)
+
+
+def unit_text(path):
+    """Return a unit file as text."""
+    return path.read_text(encoding='utf-8')
+
+
+def test_expected_units_and_scripts_exist():
+    for path in (INGRESS_UNIT, FUSION_UNIT, ALERT_UNIT, TARGET_UNIT,
+                 WRIST_TF_UNIT, EXT_TF_UNIT,
+                 DEPLOY / 'perception.env',
+                 DEPLOY / '90-cyclonedds-rmem.conf', *SCRIPTS):
+        assert path.is_file(), path
+    for script in SCRIPTS:
+        assert script.stat().st_mode & 0o111, script
+
+
+def test_target_starts_the_three_processes_and_required_tf():
+    text = unit_text(TARGET_UNIT)
+    assert 'Wants=jcheng-perception-ingress@d435i_ext.service' in text
+    assert 'Wants=jcheng-perception-ingress@aurora_wrist.service' in text
+    assert 'Wants=jcheng-perception-fusion.service' in text
+    # Without these the wrist view is dropped and the external chain has no
+    # base_link; they used to be hand-started with the launch.
+    assert 'Wants=jcheng-perception-wrist-tf.service' in text
+    assert 'Wants=jcheng-perception-ext-tf.service' in text
+    assert 'WantedBy=multi-user.target' in text
+
+
+def test_ingress_restart_policy_and_budget():
+    text = unit_text(INGRESS_UNIT)
+    # The watchdog exits 0 on purpose, so on-failure would leave the view down.
+    assert 'Restart=always' in text
+    assert 'RestartSec=2' in text
+    assert 'StartLimitIntervalSec=300' in text
+    assert 'StartLimitBurst=10' in text
+    assert 'OnFailure=jcheng-perception-alert@ingress-%i.service' in text
+    assert 'PartOf=jcheng-perception.target' in text
+    # Stop must address the in-container node, not only the docker exec wrapper.
+    assert 'docker exec' in text and 'pkill -TERM' in text
+    assert 'lib/jcheng_perception_edge/perception_edge' in text
+    assert 'camera_filter:=%i' in text
+
+
+def test_fusion_restart_policy_and_alert():
+    text = unit_text(FUSION_UNIT)
+    assert 'Restart=always' in text
+    assert 'StartLimitIntervalSec=300' in text
+    assert 'StartLimitBurst=10' in text
+    assert 'OnFailure=jcheng-perception-alert@fusion.service' in text
+    assert 'PartOf=jcheng-perception.target' in text
+    assert 'lib/jcheng_perception_edge/perception_fusion' in text
+
+
+def test_stop_is_not_a_failure():
+    """A deliberate stop must not fail the unit or fire OnFailure."""
+    for unit in (INGRESS_UNIT, FUSION_UNIT, WRIST_TF_UNIT, EXT_TF_UNIT):
+        text = unit_text(unit)
+        assert 'Restart=always' in text
+        # The wrapper translates the SIGTERM exit only when ExecStop has left
+        # the stop marker, so a crash still reaches the start limit.
+        assert 'SuccessExitStatus=143' in text, unit
+        assert 'SuccessExitStatus=1 ' not in text, unit
+        assert '.stopping' in text, unit
+
+
+def test_stop_marker_translation_in_wrappers():
+    for script, marker in (
+            (DEPLOY / 'ingress-run.sh', 'ingress-${camera}.stopping'),
+            (DEPLOY / 'fusion-run.sh', 'fusion.stopping'),
+            (DEPLOY / 'wrist-tf-run.sh', 'wrist-tf.stopping'),
+            (DEPLOY / 'ext-tf-run.sh', 'ext-tf.stopping')):
+        text = unit_text(script)
+        assert 'rm -f "$MARKER"' in text, script
+        assert marker in text, script
+        assert 'treated as a normal stop' in text, script
+        # systemd's TERM must also be reported as a clean stop.
+        assert "trap 'STOP_REQUESTED=1' TERM INT" in text, script
+        assert '"$STOP_REQUESTED" -eq 1' in text, script
+        # No exec: the wrapper must survive docker exec to translate the code.
+        assert 'exec docker exec' not in text, script
+
+
+def test_tf_units_restart_and_alert():
+    for unit, label, node in (
+            (WRIST_TF_UNIT, 'wrist-tf', 'lib/jcheng_perception_edge/wrist_tf'),
+            (EXT_TF_UNIT, 'ext-tf', 'lib/jcheng_perception_edge/ext_tf')):
+        text = unit_text(unit)
+        assert 'Restart=always' in text
+        assert 'StartLimitIntervalSec=300' in text
+        assert 'StartLimitBurst=10' in text
+        assert 'OnFailure=jcheng-perception-alert@{}.service'.format(
+            label) in text
+        assert 'PartOf=jcheng-perception.target' in text
+        assert node in text
+    # wrist_tf needs the vendor message package for the bus-servo service.
+    assert 'VENDOR_SETUP' in unit_text(DEPLOY / 'wrist-tf-run.sh')
+
+
+def test_alert_unit_and_label_mapping():
+    text = unit_text(ALERT_UNIT)
+    assert 'Type=oneshot' in text
+    assert '/usr/local/lib/jcheng-perception/alert.sh %i' in text
+    script = unit_text(DEPLOY / 'alert.sh')
+    assert 'ingress-*' in script
+    for label in ('wrist-tf', 'ext-tf', 'fusion'):
+        assert label in script
+    assert 'logger -t jcheng-perception -p user.err' in script
+    assert 'reset-failed' in script
+    assert '/var/lib/jcheng-perception' in script
+
+
+def test_wrappers_run_one_node_per_unit():
+    ingress = unit_text(DEPLOY / 'ingress-run.sh')
+    fusion = unit_text(DEPLOY / 'fusion-run.sh')
+    wrist_tf = unit_text(DEPLOY / 'wrist-tf-run.sh')
+    ext_tf = unit_text(DEPLOY / 'ext-tf-run.sh')
+    # A launch file would put three children under one unit again.
+    for text in (ingress, fusion, wrist_tf, ext_tf):
+        assert 'ros2 launch' not in text
+    assert 'exec ros2 run jcheng_perception_edge perception_edge' in ingress
+    assert 'exec ros2 run jcheng_perception_edge perception_fusion' in fusion
+    assert 'exec ros2 run jcheng_perception_edge wrist_tf' in wrist_tf
+    assert 'exec ros2 run jcheng_perception_edge ext_tf' in ext_tf
+    for parameter in ('camera_filter', 'publish_targets',
+                      'publish_status', 'ingress_watchdog',
+                      'cameras_config', 'fusion_config',
+                      'frames_config', 'view_bias_config'):
+        assert '-p {}:='.format(parameter) in ingress, parameter
+    assert 'RMW_IMPLEMENTATION' in ingress and 'CYCLONEDDS_URI' in ingress
+    assert 'RMW_IMPLEMENTATION' in fusion and 'CYCLONEDDS_URI' in fusion
+    # The camera id becomes part of a quoted container command.
+    assert '^[a-z0-9_]+$' in ingress
+
+
+@pytest.mark.parametrize('script', SCRIPTS, ids=lambda p: p.name)
+def test_shell_syntax(script):
+    result = subprocess.run(
+        ['bash', '-n', str(script)], capture_output=True, text=True, check=False)
+    assert result.returncode == 0, result.stderr
+
+
+def _verifiable_copy(tmp_path):
+    """Copy the units with paths/users replaced for an off-robot verifier."""
+    replacements = {
+        'ExecStart=/usr/local/lib/jcheng-perception/ingress-run.sh %i':
+            'ExecStart=/bin/true',
+        'ExecStart=/usr/local/lib/jcheng-perception/fusion-run.sh':
+            'ExecStart=/bin/true',
+        'ExecStart=/usr/local/lib/jcheng-perception/wrist-tf-run.sh':
+            'ExecStart=/bin/true',
+        'ExecStart=/usr/local/lib/jcheng-perception/ext-tf-run.sh':
+            'ExecStart=/bin/true',
+        'ExecStart=-/usr/local/lib/jcheng-perception/alert.sh %i':
+            'ExecStart=/bin/true',
+        'User=pi': 'User=root',
+        'Group=docker': 'Group=root',
+    }
+    for unit in (TARGET_UNIT, INGRESS_UNIT, FUSION_UNIT, WRIST_TF_UNIT,
+                 EXT_TF_UNIT, ALERT_UNIT):
+        text = unit_text(unit)
+        for old, new in replacements.items():
+            text = text.replace(old, new)
+        (tmp_path / unit.name).write_text(text, encoding='utf-8')
+
+
+@pytest.mark.skipif(
+    shutil.which('systemd-analyze') is None,
+    reason='systemd-analyze is not installed')
+def test_systemd_analyze_verify(tmp_path):
+    _verifiable_copy(tmp_path)
+    files = [str(tmp_path / unit.name) for unit in (
+        TARGET_UNIT, INGRESS_UNIT, FUSION_UNIT, WRIST_TF_UNIT, EXT_TF_UNIT,
+        ALERT_UNIT)]
+    result = subprocess.run(
+        ['systemd-analyze', 'verify', '--man=no', *files],
+        capture_output=True, text=True, check=False)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_container_units_wait_for_the_vendor_bringup():
+    """start_node's ~/.stop_ros.sh kill -9s every "ros" process.
+
+    armpi-vision becomes active only after the vendor launch is up (post-kill);
+    every unit that runs inside the container must wait for it.  The 2026-11-25
+    boot test caught ext-tf starting in the kill window and dying with 137.
+    """
+    for unit in (INGRESS_UNIT, FUSION_UNIT, WRIST_TF_UNIT, EXT_TF_UNIT):
+        text = unit_text(unit)
+        assert 'After=' in text and 'armpi-vision.service' in text, unit
+        assert 'Wants=' in text and 'armpi-vision.service' in text, unit
+
+
+LAPTOP = DEPLOY / 'laptop'
+LAPTOP_FILES = (
+    LAPTOP / 'jcheng-perception-gpu.service',
+    LAPTOP / 'jcheng-perception-gpu-alert@.service',
+    LAPTOP / 'jcheng-perception-gpu-watchdog.service',
+    LAPTOP / 'jcheng-perception-status.service',
+    LAPTOP / 'jcheng-perception-status.timer',
+    LAPTOP / 'gpu-run.sh',
+    LAPTOP / 'gpu-alert.sh',
+    LAPTOP / 'gpu-watchdog.py',
+    LAPTOP / 'gpu-watchdog-run.sh',
+    LAPTOP / 'jcheng-perception-status.py',
+    LAPTOP / 'gpu_laptop.yaml',
+    LAPTOP / 'cyclonedds-laptop.xml',
+    LAPTOP / 'install-laptop-gpu.sh',
+    LAPTOP / 'README.md',
+)
+
+
+def test_laptop_gpu_unit_and_scripts_exist():
+    for path in LAPTOP_FILES:
+        assert path.is_file(), path
+    for script in ('gpu-run.sh', 'gpu-alert.sh', 'gpu-watchdog.py',
+                   'gpu-watchdog-run.sh', 'jcheng-perception-status.py',
+                   'install-laptop-gpu.sh'):
+        assert (LAPTOP / script).stat().st_mode & 0o111, script
+
+
+def test_laptop_gpu_unit_policy_and_config():
+    text = unit_text(LAPTOP / 'jcheng-perception-gpu.service')
+    assert 'Restart=always' in text
+    assert 'RestartSec=5' in text
+    assert 'StartLimitIntervalSec=300' in text
+    assert 'StartLimitBurst=10' in text
+    assert 'OnFailure=jcheng-perception-gpu-alert@gpu.service' in text
+    assert 'KillSignal=SIGINT' in text
+    assert 'EnvironmentFile=-%h/.config/jcheng-perception/gpu.env' in text
+
+    run = unit_text(LAPTOP / 'gpu-run.sh')
+    assert 'source /opt/ros/jazzy/setup.bash' in run
+    assert 'exec ros2 launch jcheng_perception_gpu laptop_gpu.launch.py' in run
+    assert 'RMW_IMPLEMENTATION' in run and 'CYCLONEDDS_URI' in run
+
+    config = unit_text(LAPTOP / 'gpu_laptop.yaml')
+    assert 'd435i_ext' in config and 'aurora_wrist' in config
+    assert '/opt/jcheng/models/yolov8s.pt' in config
+    assert '/perception/uplink/' in config
+
+    installer = unit_text(LAPTOP / 'install-laptop-gpu.sh')
+    assert 'enable-linger' in installer
+    assert 'laptop_gpu.launch.py' in installer
+    assert 'systemctl --user enable' in installer
+
+
+def test_laptop_gpu_watchdog_wiring():
+    unit = unit_text(LAPTOP / 'jcheng-perception-gpu-watchdog.service')
+    assert 'After=jcheng-perception-gpu.service' in unit
+    assert 'Restart=always' in unit
+    assert 'ExecStart=%h/.local/lib/jcheng-perception/gpu-watchdog-run.sh' in unit
+
+    run = unit_text(LAPTOP / 'gpu-watchdog-run.sh')
+    assert 'source /opt/ros/jazzy/setup.bash' in run
+    assert 'exec python3' in run and 'gpu-watchdog.py' in run
+
+    watchdog = unit_text(LAPTOP / 'gpu-watchdog.py')
+    assert '/perception/gpu_status' in watchdog
+    assert 'systemctl' in watchdog and 'restart' in watchdog
+    assert 'all cameras frozen' in watchdog
+    assert 'JCHENG_GPU_STALL_S' in watchdog
+
+    installer = unit_text(LAPTOP / 'install-laptop-gpu.sh')
+    assert 'gpu-watchdog' in installer
+    assert 'jcheng-perception-gpu-watchdog.service' in installer
+
+
+def test_laptop_perception_status_aggregator_wiring():
+    service = unit_text(LAPTOP / 'jcheng-perception-status.service')
+    assert 'Type=oneshot' in service
+    assert 'jcheng-perception-status.py --quiet' in service
+    timer = unit_text(LAPTOP / 'jcheng-perception-status.timer')
+    assert 'Unit=jcheng-perception-status.service' in timer
+    assert 'OnUnitActiveSec=60s' in timer
+    script = unit_text(LAPTOP / 'jcheng-perception-status.py')
+    for unit in ('jcheng-perception.target',
+                 'jcheng-perception-ingress@d435i_ext.service',
+                 'jcheng-perception-fusion.service'):
+        assert unit in script, unit
+    assert 'robot_unreachable' in script
+    assert 'status.json' in script and 'status.txt' in script
+    installer = unit_text(LAPTOP / 'install-laptop-gpu.sh')
+    assert 'jcheng-perception-status.timer' in installer
+    assert 'status.txt' in installer
+
+
+def test_kernel_socket_buffer_tuning_installed():
+    text = unit_text(DEPLOY / '90-cyclonedds-rmem.conf')
+    assert 'rmem_max = 4194304' in text
+    assert 'rmem_default = 1048576' in text
+    installer = unit_text(DEPLOY / 'install-split-systemd.sh')
+    assert '90-cyclonedds-rmem.conf' in installer
+    assert 'sysctl --system' in installer

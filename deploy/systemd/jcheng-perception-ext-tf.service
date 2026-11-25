@@ -1,0 +1,35 @@
+[Unit]
+Description=JCHENG external-camera static TF (base_link -> camera_link)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+# 2026-11-25 boot test: with only After=armpi-rs-depth (Type=simple, marked
+# started before its script has waited for the vendor bringup) ext-tf started
+# at 13:17:31 and was SIGKILLed one second later by start_node's
+# ~/.stop_ros.sh, which kill -9s every process with "ros" in its cmdline.
+# armpi-vision is active only after the vendor launch is up (post-kill), so
+# waiting for it as well keeps this unit out of that window.
+After=armpi-rs-depth.service armpi-vision.service
+Wants=armpi-rs-depth.service armpi-vision.service
+
+StartLimitIntervalSec=300
+StartLimitBurst=10
+OnFailure=jcheng-perception-alert@ext-tf.service
+PartOf=jcheng-perception.target
+
+[Service]
+Type=simple
+User=pi
+Group=docker
+EnvironmentFile=-/etc/jcheng-perception/perception.env
+ExecStart=/usr/local/lib/jcheng-perception/ext-tf-run.sh
+# Kill the node executable only; its `ros2 run` parent reaps it (no <defunct>).
+ExecStop=/bin/bash -c 'touch /tmp/jcheng-perception-ext-tf.stopping; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -TERM -f "lib/jcheng_perception_edge/ext_tf" || true; for i in 1 2 3 4 5; do /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pgrep -f "lib/jcheng_perception_edge/ext_tf" >/dev/null || break; sleep 1; done; if [ -n "${MAINPID:-}" ]; then for i in 1 2 3 4 5 6 7 8 9 10; do kill -0 "$MAINPID" 2>/dev/null || exit 0; sleep 1; done; fi; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -KILL -f "lib/jcheng_perception_edge/ext_tf" || true'
+TimeoutStopSec=30
+Restart=always
+RestartSec=2
+# See the ingress unit: a stop marker makes the wrapper report a clean stop,
+# while a crash/restart still reaches the start limit.  143 is the fallback for
+# systemd terminating the docker exec wrapper itself.
+SuccessExitStatus=143
+
+[Install]
+WantedBy=jcheng-perception.target
