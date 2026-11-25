@@ -62,6 +62,36 @@ ros2 topic echo --once --qos-reliability best_effort /perception/status
 ros2 topic echo --once --qos-reliability best_effort /perception/gpu_status
 ```
 
+### 4.1 D435i 只有彩色、没有对齐深度
+
+症状：`/camera/color/image_raw` 正常，`/camera/aligned_depth_to_color/image_raw`
+无数据；`perception_ingress_d435i_ext` 反复退出并报
+`ingress link stalled (frames=…, depth=0)`；`dmesg` 出现
+`uvcvideo 2-1.1.1:1.x: Non-zero status (-71) in video completion handler.`。
+
+常见触发：`docker stop` / 容器重建后，深度单元第一次打开失败。彩色不受影响，
+这不是 perception 代码问题。
+
+```bash
+# 1) 宿主机：重启深度驱动。rs-depth-run.sh 内含 IR 预热重试，
+#    实测第 1–4 次尝试成功；不要手动反复 restart
+sudo systemctl restart armpi-rs-depth
+
+# 2) 容器内：确认深度出帧（不要用固定 sleep）
+sudo docker exec -u ubuntu ArmPiUltra bash -lc \
+  'source /opt/ros/humble/setup.bash; \
+   timeout 20 ros2 topic hz /camera/aligned_depth_to_color/image_raw'
+
+# 3) ingress 若已撞到 systemd 启动上限（NRestarts=10、start-limit-hit），
+#    先 reset 再启动
+sudo systemctl reset-failed jcheng-perception-ingress@d435i_ext
+sudo systemctl start jcheng-perception-ingress@d435i_ext
+```
+
+边界：`armpi-ext-cam.service` 已停用，不要改走 UVC 路径绕过（ADR 0004 要求
+`armpi-rs-depth.service` 是 D435i 的单一所有者）。重启 `armpi-rs-depth` 会短暂
+中断深度，但不会移动机械臂。
+
 ## 5. 安全声明
 
 本仓库是**感知建议源**：不发布运动命令、不做安全校验、没有急停/抱闸。
