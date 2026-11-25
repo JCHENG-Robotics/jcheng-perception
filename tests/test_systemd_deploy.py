@@ -206,3 +206,16 @@ def test_systemd_analyze_verify(tmp_path):
         ['systemd-analyze', 'verify', '--man=no', *files],
         capture_output=True, text=True, check=False)
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_container_units_wait_for_the_vendor_bringup():
+    """start_node's ~/.stop_ros.sh kill -9s every "ros" process.
+
+    armpi-vision becomes active only after the vendor launch is up (post-kill);
+    every unit that runs inside the container must wait for it.  The 2026-11-25
+    boot test caught ext-tf starting in the kill window and dying with 137.
+    """
+    for unit in (INGRESS_UNIT, FUSION_UNIT, WRIST_TF_UNIT, EXT_TF_UNIT):
+        text = unit_text(unit)
+        assert 'After=' in text and 'armpi-vision.service' in text, unit
+        assert 'Wants=' in text and 'armpi-vision.service' in text, unit

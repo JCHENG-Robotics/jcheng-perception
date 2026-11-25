@@ -159,6 +159,14 @@ sudo systemctl reset-failed jcheng-perception-ingress@selftest.service
   `NRestarts=10`、`label=ingress-selftest`；`reset-failed` 后删除测试实例；
 - 验证中约 20 个 `<defunct>` 节点来自早期测试版本；当前 stop/start 不再新增，
   容器重启后清空。
+- **安装后重启（2026-11-25）**：target 自动拉起 5/5 unit；fusion/wrist_tf
+  0 重启。`ext-tf` 曾在 `start_node` 的 `~/.stop_ros.sh` `kill -9` 窗口内被
+  SIGKILL（status 137），unit 已加 `After=/Wants=armpi-vision.service`，本次
+  运行已应用但未做第二次重启确认。
+- **真实上限事件**：上一 boot 的 10:08:46 外机位 ingress 达到 10 次 / 300 s，
+  `Result=start-limit-hit` 并告警；本 boot 25 min 内已 9 次。说明 10/300 会在
+  外机位 wedge 高峰期触发——这是上限/告警按设计工作，不是误报；放宽次数属于
+  策略选择，当前默认保持 10/300。
 
 完整记录：`evidence/hardware_20261125_systemd_split/`。
 

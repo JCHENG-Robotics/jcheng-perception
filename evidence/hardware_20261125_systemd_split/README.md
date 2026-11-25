@@ -27,9 +27,12 @@ which writes a journal `user.err` entry plus
 
 ## Results
 
-1. **Five units active, target enabled at boot**, `NRestarts=0` after a manual
-   start. `systemctl list-units --all 'jcheng-perception*'` shows the target plus
-   five running services (`runtime_state.txt`, `installed_units.txt`).
+1. **Five units active, target enabled and verified at boot** (2026-11-25
+   reboot after install): `jcheng-perception.target` was reached and all five
+   services started automatically (`boot_test.txt`). `NRestarts=0` after a
+   manual start; the boot counters are in the boot section below.
+   `systemctl list-units --all 'jcheng-perception*'` shows the target plus five
+   running services (`runtime_state.txt`, `installed_units.txt`).
 2. **TF frames publish**: wrist `base_link -> camera_optical_measured` at the
    known pose translation `[0.176, 0.009, 0.196]` m (matches the 2026-11-24
    pose A); external composed `base_link -> camera_color_optical_frame` at
@@ -44,12 +47,17 @@ which writes a journal `user.err` entry plus
    ```
 
    This is the old launch `respawn=True` behaviour, now owned by systemd. The
-   wrist ingress also restarted twice after the final start
-   (09:28:24 `frames=374 depth=171`, 09:29:06 `frames=317 depth=89`) and
-   recovered each time; the known Aurora DDS wedge is still present at roughly
-   two restarts per 100 s, i.e. ~6 starts per 300 s, below the 10-start cap.
-   If it ever reaches 10/300 s the unit fails and alerts by design, and fusion
-   keeps publishing from the external view until an operator resets it.
+   wrist ingress also restarted repeatedly (5-6 starts in the first 25 min) and
+   recovered each time; the known Aurora DDS wedge is still present. On the
+   **previous boot the external ingress actually hit the cap**: at 10:08:46 it
+   failed with `Result=start-limit-hit` after 10 starts and wrote
+   `label=ingress-d435i_ext` (the alert file persisted across the reboot and is
+   the best evidence that the budget + alert work on a real ingress, not only
+   on the synthetic `@selftest`). On the post-install boot the external ingress
+   was at 9 restarts after 25 min, so the current wedge rate can still reach
+   10/300 s during a bad phase. Raising the budget is a policy choice; the
+   default stays 10/300 s and fusion continues on the wrist view whenever the
+   external ingress is down.
 4. **Stop propagation is clean**: `sudo systemctl stop jcheng-perception.target`
    left 5/5 units `inactive`, `Result=success`, zero markers, zero alerts and
    zero container processes; each wrapper logged
@@ -79,6 +87,34 @@ which writes a journal `user.err` entry plus
    left running from the 2026-11-24 session stopped delivering heartbeats; that
    is the known cross-machine DDS-wedge issue, not this change.
 
+## Boot acceptance (2026-11-25, after install)
+
+The host was rebooted after the units were installed (uptime confirmed with
+`/proc/uptime`; the Pi RTC makes `who -b`/journal wall times jump, which is why
+the journal shows 13:17 for a boot that ended at 14:14 wall time). Results:
+
+- `jcheng-perception.target` was reached at boot; all five units started
+  without a manual command.
+- `fusion`, `wrist_tf` and both ingresses waited for `armpi-vision` and started
+  after the vendor bringup; `NRestarts=0` for fusion/wrist_tf.
+- **`ext-tf` had one boot failure**: it started at 13:17:31 with only
+  `After=armpi-rs-depth` and was SIGKILLed (status 137) one second later by
+  `start_node`'s `~/.stop_ros.sh` (which `kill -9`s every process with "ros" in
+  its command line). systemd restarted it at 13:17:34 and it stayed up. The
+  unit now also has `After=/Wants=armpi-vision.service` (active only after the
+  vendor launch is up, post-kill); a test enforces this for all four
+  container-side units. This fix is applied on the running host but has not
+  been through a second reboot yet.
+- After the boot the two camera drivers were up (`armpi-rs-depth`,
+  `armpi-vision`; `aurora930_node` and `realsense2_camera_node` running). The
+  laptop GPU node had stopped (SIGINT from the previous session); it was
+  restarted manually for this check and then reported `gpu_alive=true`,
+  `camera_fps` wrist 2.34, 1 confirmed track, 16 matched detections. It is not
+  systemd-managed yet.
+- The 28 `<defunct>` entries accumulated before the reboot were cleared (3
+  remained after the boot-time/health checks). Load average was 13-14 during
+  the check.
+
 ## Problems found and fixed during validation
 
 1. **`set -u` breaks ROS setup**: `source /opt/ros/humble/setup.bash` fails with
@@ -101,13 +137,19 @@ which writes a journal `user.err` entry plus
    the node and its `ros2 run` parent, orphaning the node into the container's
    `tail` PID 1 (which does not reap). The pattern now matches the node
    executable path only, so the parent reaps it; a stop/start cycle adds zero
-   node zombies. About 20 `[perception_*]/[tf] <defunct>` entries left by the
-   earlier test iterations remain until the container is restarted; they hold
-   no memory and do not match any stop pattern.
+   node zombies. The entries left by the earlier test iterations were cleared
+   by the 2026-11-25 reboot (3 remained from the boot-time health checks).
 4. **Wrapper killed before it could consume the marker**: under a concurrent
    target stop, systemd SIGTERMs the wrapper as soon as the node is gone. The
    fix is the deferred `TERM` trap in every wrapper plus a `$MAINPID` wait in
    `ExecStop`.
+5. **`ext-tf` started inside the vendor kill window** (boot test): with only
+   `After=armpi-rs-depth` it started in the same second as `start_node`, whose
+   `~/.stop_ros.sh` `kill -9`s every process with "ros" in its cmdline; the unit
+   died with status 137. It now also has `After=/Wants=armpi-vision.service`
+   and `tests/test_systemd_deploy.py::test_container_units_wait_for_the_vendor_bringup`
+   enforces that dependency for all container-side units. Applied on the host;
+   a second reboot has not been done.
 
 ## Environment notes
 
@@ -131,6 +173,10 @@ which writes a journal `user.err` entry plus
   dump.
 - `journal.txt` — watchdog restart, stop/start journal lines, load/top,
   defunct count.
+- `boot_test.txt` — post-install reboot: target/unit starts, the `ext-tf`
+  status-137 boot failure, the real `start-limit-hit` alert from the previous
+  boot, counters, GPU status after the manual laptop restart, TF and defunct
+  count.
 
 ## How to reproduce
 

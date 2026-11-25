@@ -1,8 +1,14 @@
 [Unit]
 Description=JCHENG external-camera static TF (base_link -> camera_link)
 Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
-After=armpi-rs-depth.service
-Wants=armpi-rs-depth.service
+# 2026-11-25 boot test: with only After=armpi-rs-depth (Type=simple, marked
+# started before its script has waited for the vendor bringup) ext-tf started
+# at 13:17:31 and was SIGKILLed one second later by start_node's
+# ~/.stop_ros.sh, which kill -9s every process with "ros" in its cmdline.
+# armpi-vision is active only after the vendor launch is up (post-kill), so
+# waiting for it as well keeps this unit out of that window.
+After=armpi-rs-depth.service armpi-vision.service
+Wants=armpi-rs-depth.service armpi-vision.service
 
 StartLimitIntervalSec=300
 StartLimitBurst=10

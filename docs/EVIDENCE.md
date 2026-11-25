@@ -440,6 +440,15 @@ systemd `Restart=always` / `RestartSec=2`；每个 unit 的上限是 10 次 / 30
   无告警、无残留容器进程；
 - 无相机的 `@selftest` 实例在 10 次重启 / 63 s 后 `failed`，告警文件写入
   `label=ingress-selftest`，`reset-failed` 可恢复。
+- **安装后重启（2026-11-25）**：`jcheng-perception.target` 自动拉起，5/5 unit
+  启动；fusion/wrist_tf 0 重启；`ext-tf` 在 `start_node` 的 `~/.stop_ros.sh`
+  `kill -9` 窗口里被 SIGKILL（status 137），已改为 `After=/Wants=armpi-vision`
+  （二次重启尚未验证）；重启清空了此前累计的 28 个 `<defunct>`。笔记本 GPU
+  节点当时已退出，手动重启后 `gpu_alive=true`、腕部 1 条 confirmed track。
+- **真实上限告警**：上一 boot 的 10:08:46 外机位 ingress 达到 10 次 / 300 s，
+  `Result=start-limit-hit`，告警文件 `label=ingress-d435i_ext` 保留到本次
+  boot；本 boot 25 min 内外机位已 9 次、腕部 6 次。10/300 的上限与告警按设计
+  工作，外机位 DDS wedge 频率仍可能触达上限（是否放宽是策略选择）。
 
 验证中修掉的坑：`set -u` 会让 ROS `setup.bash` 报 `AMENT_TRACE_SETUP_FILES:
 unbound variable`；停进程时 rclpy teardown 以 1 退出，若把 1 一并记为

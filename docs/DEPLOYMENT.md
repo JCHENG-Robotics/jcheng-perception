@@ -307,7 +307,7 @@ launch 的 `respawn=True` 由 systemd 接管：
 
 ```bash
 sudo bash deploy/systemd/install-split-systemd.sh --start
-sudo systemctl stop jcheng-perception.target     # PartOf= 停掉三个进程
+sudo systemctl stop jcheng-perception.target     # PartOf= 停掉五个进程
 journalctl -u 'jcheng-perception-*' -f
 ```
 
@@ -321,6 +321,10 @@ journalctl -u 'jcheng-perception-*' -f
   `/var/lib/jcheng-perception/last-alert.txt` 与 `alerts.log`（无外网，不发远程
   通知）。修复后显式 `systemctl reset-failed && systemctl start`；
 - 包装脚本在容器内运行，显式使用 CycloneDDS 和 domain 0，与相机驱动一致；
+- 所有容器内 unit 都 `After=/Wants=armpi-vision.service`：`start_node` 启动时会
+  执行 `~/.stop_ros.sh`，对命令行含 “ros” 的进程 `kill -9`；`armpi-vision`
+  只在厂商 bringup 起来后 active，等待它可以避开这个窗口（2026-11-25 开机时
+  `ext-tf` 就因只等 `armpi-rs-depth` 被 SIGKILL 137）；
 - 两个 TF 发布器也在 target 内：`wrist_tf` 没有 `camera_optical_measured` 时腕部
   观测会被丢弃，`ext_tf` 让外机位链有 `base_link`。`wrist_tf` 只读总线舵机
   （`get_state`），不发运动命令，依赖厂商工作区的 `ros_robot_controller_msgs`

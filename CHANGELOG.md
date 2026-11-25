@@ -37,7 +37,12 @@ their original narrative order.
   success by a stop marker plus a deferred TERM trap in the wrappers, so they
   do not fire `OnFailure`; exit 1 remains a failure, so the 10/300 s budget and
   alert still work. Stop patterns target the node executable only, so the
-  `ros2 run` parent reaps it (no new `<defunct>` entries).
+  `ros2 run` parent reaps it (no new `<defunct>` entries). Post-install boot
+  test 2026-11-25: the target auto-started 5/5; `ext-tf` was SIGKILLed (137) in
+  `start_node`'s `~/.stop_ros.sh` window and now waits for `armpi-vision`; the
+  external ingress hit the real 10/300 start limit at 10:08:46 and wrote the
+  alert (next boot: 9 restarts in 25 min), confirming the budget/alert on a
+  real ingress. The laptop GPU node was restarted manually (not yet managed).
 - Split edge for DDS reader isolation: `perception_edge` gained
   `camera_filter`, `publish_targets`, `publish_status` and an ingress watchdog;
   new `perception_fusion` subscribes to the per-camera observation topics and
