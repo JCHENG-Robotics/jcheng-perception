@@ -1,0 +1,6 @@
+[INFO] [launch]: All log files can be found below /tmp/.ros/log/2026-11-25-01-48-23-683618-jerichocheng-Lenovo-Legion-R9000P2021H-823
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python-1]: process started with pid [857]
+[python-1] [INFO] [1795571304.180987212] [jcheng_perception_gpu]: GPU detector ready: d435i_ext,aurora_wrist
+[python-1] [INFO] [1795571304.181762787] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m
+[python-1] [INFO] [1795571304.181955057] [jcheng_perception_gpu]: detector loaded: aruco:DICT_APRILTAG_36h11:0:0.060m

@@ -14,6 +14,10 @@
 ARG ROS_BASE_IMAGE=ros:humble-ros-base@sha256:dfc94c85d8e01f230951b2a85ca5576e08473081c3da5fbbe8f3ab844703b9ba
 FROM ${ROS_BASE_IMAGE}
 
+# The PyPI mirror is much faster here; the PyPI Linux wheel of torch 2.9.1
+# already bundles the CUDA 12.8 runtime. Override for a different network.
+ARG PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Domestic mirrors, then the ROS foundations and the apt OpenCV build.
@@ -46,23 +50,29 @@ RUN set -eux; \
 
 # Python 3.10 venv with system site packages, so rclpy and the message packages
 # remain visible. Versions match the verified host venv
-# (~/.venvs/jcheng-perception-gpu, 2026-11-24): torch 2.9.1+cu128,
-# ultralytics 8.4.216, onnxruntime 1.32.0, openvino 2026.4.1, numpy 1.26.4.
+# (~/.venvs/jcheng-perception-gpu, 2026-11-24) except onnxruntime: the host is
+# Python 3.12 and runs 1.32.0, while this image is Python 3.10 and the newest
+# cp310 build is 1.23.2. torch 2.9.1 is the PyPI Linux wheel (CUDA 12.8).
 #
 # `opencv-python` is deliberately NOT installed and `ultralytics` is installed
 # with --no-deps after its dependency list: the PyPI wheel would shadow the apt
 # `python3-opencv` 4.5.4 build, which is the one that carries ArUco. The tag
 # backend and the YOLO backend must share the same cv2.
 RUN python3 -m venv --system-site-packages /opt/jcheng/venv && \
-    /opt/jcheng/venv/bin/pip install --no-cache-dir --upgrade pip && \
-    /opt/jcheng/venv/bin/pip install --no-cache-dir \
-        --index-url https://download.pytorch.org/whl/cu128 \
-        'torch==2.9.1+cu128' 'torchvision==0.24.1+cu128' && \
-    /opt/jcheng/venv/bin/pip install --no-cache-dir \
+    /opt/jcheng/venv/bin/pip install --no-cache-dir --upgrade pip \
+        --index-url "$PIP_INDEX_URL"
+
+# Split layers so a later dependency change does not re-download the multi-GB
+# CUDA wheels.
+RUN /opt/jcheng/venv/bin/pip install --no-cache-dir --index-url "$PIP_INDEX_URL" \
+        'torch==2.9.1' 'torchvision==0.24.1'
+
+RUN /opt/jcheng/venv/bin/pip install --no-cache-dir --index-url "$PIP_INDEX_URL" \
         'numpy==1.26.4' 'PyYAML==6.0.1' matplotlib pillow requests scipy \
         tqdm psutil py-cpuinfo pandas seaborn ultralytics-thop polars \
-        'onnxruntime==1.32.0' 'openvino==2026.4.1' && \
-    /opt/jcheng/venv/bin/pip install --no-cache-dir --no-deps \
-        'ultralytics==8.4.216'
+        'onnxruntime==1.23.2' 'openvino==2026.4.1'
+
+RUN /opt/jcheng/venv/bin/pip install --no-cache-dir --no-deps \
+        --index-url "$PIP_INDEX_URL" 'ultralytics==8.4.216'
 
 WORKDIR /workspace

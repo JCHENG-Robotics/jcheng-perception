@@ -61,10 +61,17 @@
   ```
 
 - Docker 替代方案：`deploy/Dockerfile.gpu` 把同一套运行时（torch
-  2.9.1+cu128 / ultralytics 8.4.216 / onnxruntime 1.32.0 / openvino 2026.4.1）
-  装进 Humble 镜像，节点与机器人回到同发行版；`--gpus all` 的宿主机前置步骤、
-  构建和验证命令见 [`deploy/README.md`](../deploy/README.md)。镜像已准备，
-  **尚未构建和实机验证**。
+  2.9.1+cu128 / ultralytics 8.4.216 / onnxruntime **1.23.2** / openvino
+  2026.4.1；1.23.2 是 Python 3.10 可用的最高版本，宿主 venv 的 1.32.0 要求
+  Python ≥3.11）装进 Humble 镜像，节点与机器人回到同发行版；`--gpus all`
+  的宿主机前置步骤、构建和验证命令见 [`deploy/README.md`](../deploy/README.md)。
+  镜像已于 2026-11-25 构建并验证（14.5 GB；RTX 3060 在容器内可见，
+  `cuda_available()` 为 true，三个感知包可在 `/workspace/tag_ws` 构建）；
+  同日完成真机 smoke：tag 后端 2.94/2.69 ms、edge `gpu_alive=true`，stock
+  `yolov8n.pt` 稳态 8.46/8.80 ms（容器内 `nvidia-smi` 看到 210 MiB 的
+  节点进程），证据在 `evidence/hardware_20261125_gpu_image/`。生产用的
+  `ext_yolov8n.pt` / `wrist_grasp_pose.pt` 仍未就位，因此 YOLO 只验证了
+  镜像与后端，不代表检测精度。
 
 - 安装后先做无 ROS 烟测：
 
@@ -138,6 +145,14 @@ ros2 run tf2_ros tf2_echo base_link camera_color_optical_frame
 > `ext_tf`（随 `pi5_edge.launch.py` 默认启动）从 `frames.yaml` 发布
 > `base_link → camera_link`，因此 `base_link → camera_color_optical_frame`
 > 应当能直接解析；若不行，先确认 RealSense 节点在发 `camera_link`。
+
+> **Aurora 深度退化（2026-11-25 实测）**：驱动连续运行 12 h 后，ingress 在
+> 22 s 内收到 RGB 175 帧、深度只有 58 帧（约 7.95 / 2.64 Hz），融合观测率
+> 降到 0.6–1.5 fps；`sudo systemctl restart armpi-vision`（oneshot 就绪轮询
+> 约 2.5 min）后实测 **RGB 10.92 / 深度 10.83 Hz**。每次会话前跑
+> `scripts/check_camera_rates.py`（阈值 RGB 6 / depth 5 Hz）；低帧率就重启
+> 驱动，ingress 看门狗会自动重启其进程。证据：
+> `evidence/hardware_20261125_gpu_image/camera_rates_after_restart.txt`。
 
 ## 4. 启动
 

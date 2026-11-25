@@ -8,6 +8,17 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Perception preflight and the Aurora depth-degradation finding:
+  `scripts/check_models.py` checks the Ultralytics weight paths and loads them,
+  `config/gpu_fallback.yaml` runs the stock COCO `yolov8n` for infrastructure
+  tests (a 2026-11-25 search of the laptop, vendor source, robot Docker overlay
+  and the `ti5robot` workstation found no `ext_yolov8n.pt` /
+  `wrist_grasp_pose.pt` and no labelled training set; the validated reference
+  is `config/gpu_tag.yaml`), and `scripts/check_camera_rates.py` measures the
+  Aurora RGB/depth streams. On 2026-11-25 the wrist ingress saw 7.95 Hz RGB
+  but only 2.64 Hz depth after 12 h, and `systemctl restart armpi-vision`
+  restored 10.92/10.83 Hz; `docs/DEPLOYMENT.md` records the recovery and the
+  6/5 Hz thresholds.
 - systemd management for the split stack: `deploy/systemd/` adds one unit per
   process (`jcheng-perception-ingress@d435i_ext`, `@aurora_wrist`,
   `jcheng-perception-fusion`, plus the required `wrist_tf`/`ext_tf`
@@ -65,12 +76,20 @@ their original narrative order.
   pointcloud subscription/QoS changed or must be stopped during perception.
 - Deploy image for the GPU node: `deploy/Dockerfile.gpu` builds a ROS 2 Humble
   image with `/opt/jcheng/venv` (torch 2.9.1+cu128, ultralytics 8.4.216,
-  onnxruntime 1.32.0, openvino 2026.4.1, numpy 1.26.4) and the apt
+  onnxruntime 1.23.2, openvino 2026.4.1, numpy 1.26.4) and the apt
   `python3-opencv` 4.5.4 build that carries ArUco. It deliberately does not
   install `opencv-python`, whose wheel would shadow the ArUco-capable system
-  cv2. Not built or GPU-verified yet: the host has no nvidia-container
-  runtime, so `--gpus all` and the one-time sudo install are documented in
-  `deploy/README.md`.
+  cv2. onnxruntime is 1.23.2, not the host venv's 1.32.0, because the image is
+  Python 3.10 and 1.32 requires Python >= 3.11. Built and GPU-verified on
+  2026-11-25 with nvidia-container-toolkit 1.20.2 + CDI: `--gpus all` sees the
+  RTX 3060, `cuda_available()` is true, and the three perception packages
+  build in `/workspace/tag_ws`. Image 14.5 GB. Hardware smoke on 2026-11-25:
+  the tag backend ran at 2.94/2.69 ms and the edge reported
+  `gpu_alive=true`; a stock `yolov8n.pt` ran at 8.46/8.80 ms steady on the
+  RTX 3060 (210 MiB, `nvidia-smi` process check) with `gpu_alive=true`.
+  Evidence: `evidence/hardware_20261125_gpu_image/`. The production
+  `ext_yolov8n.pt` / `wrist_grasp_pose.pt` models are still absent, so this
+  validates the image and backend, not detection quality.
 - Diagnostic: recreating a camera's image/depth/CameraInfo subscriptions after
   a 4 s stall did **not** recover the wedged readers. In the test the external
   RGB reader stayed at 5 frames while its depth advanced, and the wrist depth

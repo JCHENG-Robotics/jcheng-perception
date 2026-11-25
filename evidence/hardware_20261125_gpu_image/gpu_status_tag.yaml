@@ -1,0 +1,27 @@
+header:
+  stamp:
+    sec: 1795571312
+    nanosec: 131225205
+  frame_id: ''
+camera_ids:
+- d435i_ext
+- aurora_wrist
+fps:
+- 5.414934158325195
+- 5.357826232910156
+inference_ms:
+- 2.935917377471924
+- 2.692491292953491
+frames_received:
+- 44
+- 43
+frames_dropped:
+- 0
+- 0
+frames_failed:
+- 0
+- 0
+model_ids:
+- aruco:DICT_APRILTAG_36h11:0:0.060m
+- aruco:DICT_APRILTAG_36h11:0:0.060m
+---

@@ -1,0 +1,26 @@
+header:
+  stamp:
+    sec: 1795571315
+    nanosec: 481345235
+  frame_id: base_link
+camera_ids:
+- d435i_ext
+- aurora_wrist
+camera_fps:
+- 1.4787442684173584
+- 0.5761391520500183
+total_frames: 1708
+total_detections: 1708
+detections_matched: 1708
+detections_dropped: 0
+match_success_rate: 1.0
+mean_detection_latency_ms: 892.8245849609375
+mean_depth_match_age_ms: 0.0
+phase: 1
+gpu_alive: true
+active_tracks: 1
+confirmed_tracks: 1
+notes:
+- d435i_ext:obs_age_ms=160
+- aurora_wrist:obs_age_ms=135
+---

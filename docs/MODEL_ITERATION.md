@@ -40,6 +40,16 @@ cameras:
 支持的路径：Ultralytics `.pt`、`.onnx`、`*_openvino_model/` 目录。厂商
 `yolov8_detect` 的 OpenVINO 导出可直接复用。
 
+> **2026-11-25 权重状态**：本机 `/opt/jcheng/models/` 只有
+> `fallback_yolov8n_coco.pt`（stock COCO，80 类，仅用于基础设施验证）；
+> 生产用的 `ext_yolov8n.pt` 与 `wrist_grasp_pose.pt` **仍缺失**。已检查
+> 本机、厂商源码、SD 卡/备份、工作站 `ti5robot`（192.168.5.31）以及机器人
+> 的 Docker overlay：只有厂商 garbage/mask/yolov8s 模型和一份 25 张的
+> orange/Paizi 演示集，**没有本项目权重，也没有可训练的标注数据集**。当前
+> 已验证的路线是 `config/gpu_tag.yaml` 的 AprilTag 参考点模式；没有生产
+> 权重时用 `config/gpu_fallback.yaml`，它不做任何任务精度声明。检查命令：
+> `python3 scripts/check_models.py --config <config> --load`。
+
 ### 后端选择
 
 | `backend` | 运行时 | 支持任务 | 适用场景 |
@@ -104,6 +114,22 @@ python3 scripts/check_gpu_backend.py \
 
 输出包含 `model_id`、加载/推理耗时、检测框与关键点。缺少运行时或模型路径时
 脚本以退出码 2 返回并给出明确原因；它不会自动安装依赖。
+
+部署前预检（2026-11-25 新增）：
+
+```bash
+# 1) 权重：列出缺失文件并实际加载
+python3 scripts/check_models.py \
+  --config ros2_ws/src/jcheng_perception_gpu/config/gpu.yaml --load
+# 没有生产权重时，仅做基础设施验证：
+python3 scripts/check_models.py \
+  --config ros2_ws/src/jcheng_perception_gpu/config/gpu_fallback.yaml --load
+
+# 2) 相机速率（Humble + 有线 CycloneDDS 容器内运行）
+python3 scripts/check_camera_rates.py --duration 10   # 阈值 RGB 6 / depth 5 Hz
+# 低帧率：sudo systemctl restart armpi-vision（约 2.5 分钟就绪）
+# ingress 看门狗会自动重启进程；若 unit 到达启动上限再 reset-failed
+```
 
 ROS 节点用 venv 解释器启动（console script 的 shebang 仍指向系统 Python，
 `python_executable` 会把脚本作为参数交给 venv Python）：

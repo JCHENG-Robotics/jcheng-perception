@@ -1,0 +1,7 @@
+duration_s 12.0
+/depth_cam/rgb/image_raw 10.92 Hz (131 frames)
+/depth_cam/depth/image_raw 10.83 Hz (130 frames)
+/camera/color/image_raw 0.00 Hz (0 frames)
+/camera/aligned_depth_to_color/image_raw 0.00 Hz (0 frames)
+/ext_cam/color/image_raw 0.00 Hz (0 frames)
+/camera/camera/depth/image_raw 0.00 Hz (0 frames)
