@@ -1,7 +1,9 @@
 # jcheng-perception roadmap
 
-> Status: **v0.1.0** as of 2026-11-24. Synthetic, Pi 5 and wrist-data-path
-> evidence exists; metric accuracy, aligned depth and motion integration do not.
+> Status: **v0.1.0** as of 2026-11-25. Synthetic, Pi 5, wrist-data-path,
+> ADR 0004 aligned-depth, split-edge and a single dual-view tag run are
+> verified; repeatable dual-view, multi-pose accuracy and motion integration
+> are not.
 
 ## Current state
 
@@ -12,10 +14,13 @@
 | Wrist Aurora real data path | Complete (2026-11-23) | `docs/HARDWARE_BRINGUP.md` |
 | Bus-measured wrist TF | Complete (2026-11-24) | 1000+ reads, 0 failures; `camera_optical_measured` |
 | Single static-pose table-plane check | Complete (2026-11-24) | z difference 1.1 mm, tilt 1.21°, RMS 0.61 mm |
-| Cross-machine real-YOLO detection path | Complete (2026-11-24) | 16 detections, capture stamp preserved, 0 depth matches |
-| Aligned external depth (ADR 0004) | Not started | Split UVC colour + depth-only topology |
+| Cross-machine real-YOLO detection path | Complete (2026-11-24) | 16 detections, capture stamp preserved; run on the earlier split camera topology |
+| Aligned external depth (ADR 0004) | Complete (2026-11-24) | `armpi-ext-cam.service` disabled; `armpi-rs-depth.service` owns the D435i with colour + aligned depth; `evidence/hardware_20261124_adr0004/` |
+| Split edge (per-camera ingress + fusion) | Complete (2026-11-24) | Static run 4: cross-view 1.55 mm; fusion max/p95/final 2.14 / 1.64 / 1.96 mm; `evidence/hardware_20261124_split_edge/` |
+| Dual-view tag run 9 | Complete, single run (2026-11-24) | 240 external + 195 wrist observations / 60 s; cross-view 3.37 mm; fused p95 3.78 / final 1.19 mm; `evidence/hardware_20261124_dualview/` |
+| Dual-view repeatability | In progress | Run 10 wrist depth reader wedged at 7.5 s; full 60 s window not repeatable |
+| D435i depth-missing recovery | Documented (2026-11-25) | `docs/FAILURE_MODES.md` §4.1 |
 | Multi-pose and moving-target accuracy | Not started | — |
-| Dual-view repeatability | In progress | Run 10 wrist depth reader wedged at 7.5 s; split-edge work ongoing |
 | Motion integration through `jcheng-system` | Not started | — |
 
 ## Milestones
@@ -26,20 +31,20 @@
 | M1 | Pi 5 ARM64 + wrist real data path | Complete (2026-11-23) | 4 packages; wrist stream and mock detection | `docs/HARDWARE_BRINGUP.md` |
 | M2 | Wrist TF and table-plane geometry | Complete, single pose (2026-11-24) | Bus TF at 10 Hz; table plane within 2 mm / 2° | `evidence/hardware_20261124_drift_verify/` |
 | M3 | Cross-machine YOLO detection path | Complete (2026-11-24) | Capture stamp preserved; latency measured | `docs/EVIDENCE.md` |
-| M4 | Aligned external depth and dual-view metric observations | Not started | Depth/colour aligned; non-zero match rate | ADR 0004 |
+| M4 | Aligned external depth and dual-view metric observations | Complete (2026-11-24) | Depth/colour aligned; non-zero match rate; single dual-view run | `evidence/hardware_20261124_adr0004/`, `evidence/hardware_20261124_dualview/` |
+| M4.1 | Dual-view repeatability | In progress | A repeatable 60 s dual-view window; no wrist-depth wedge | Run 10 (wrist depth wedged at 7.5 s) |
 | M5 | Multi-pose and moving-target accuracy | Not started | Fixed-target error and tracking error within declared bounds | — |
 | M6 | Supervised integration with the system/planner | Not started | Advisory pose consumed under `jcheng_safety`/`jcheng_motion`; no direct motion | — |
 
 ## Next
 
-1. **M4 — align the external camera.** Execute ADR 0004: one RealSense owner,
-   aligned depth, then re-run the dual-view tag test. Prerequisite: stop the
-   second depth consumer during perception runs.
-2. **Stabilize the wrist depth reader.** The DDS reader still wedges under load;
-   the split per-camera ingress work is aimed at that. Until it is stable, a
-   full dual-view 60 s window is not repeatable.
-3. **M5 — multi-pose accuracy.** Repeat the table-plane and tag checks across
+1. **M4.1 — repeat the dual-view window.** Run 9 produced a 60 s dual-view
+   result, but run 10 shows the wrist depth DDS reader can still wedge. Stabilize
+   the per-camera ingress before claiming repeatability.
+2. **M5 — multi-pose accuracy.** Repeat the table-plane and tag checks across
    several arm poses before any motion integration.
+3. **M6 — motion integration.** Route the advisory pose through
+   `jcheng_safety`/`jcheng_motion`; this repository never commands motion.
 
 ## Out of scope
 
