@@ -177,12 +177,18 @@ was measured from both cameras with `scripts/fixed_point_check.py`:
   (+9.9, -1.8, +9.4) mm: depth **3.32 mm PASS**, PnP **5.50 mm FAIL**
   (0.5 mm over the 5 mm gate).
 
-The production depth path (what the edge back-projects and fusion consumes)
-passes. The PnP residual is the known wrist depth-vs-PnP bias (~7.2 mm in z)
-plus the curled tag sheet; the 2026-11-24 run quoted 3.67/3.07 mm with a
-flatter tag. Flatten/reposition the tag and repeat before quoting a <5 mm
-absolute-accuracy claim. This is the defined-point camera/TF gate, not a
-tag-fusion recording: the systemd GPU unit runs the COCO detector, so the
+The tag was then moved to a new position (~0.47 m from the external camera,
+flatter contact). Run 2 (`*_run2*` files) gave:
+
+- external 57 samples / 21.3 s, wrist 148 / 58.6 s; `tf=exact` for all;
+  wrist within-view depth sd 1.60 mm, PnP sd 1.62 mm.
+- raw cross-view: depth 12.06 mm / PnP 9.82 mm — FAIL.
+- with the same external offset: depth **4.75 mm PASS**, PnP **4.37 mm PASS**
+  (worst 4.75 mm) — both paths under the 5 mm gate.
+
+Run 1's 5.50 mm PnP was the curled/old-position artifact; the moved tag gives
+the clean fixed-point acceptance. This is the defined-point camera/TF gate, not
+a tag-fusion recording: the systemd GPU unit runs the COCO detector, so the
 tag-fusion reference remains split run 4 (cross-view 1.55 mm, fusion max
 2.14 mm). Files: `fixed_point_20261125.txt`, the two CSVs and the raw/bias
 report JSONs.
@@ -261,7 +267,10 @@ report JSONs.
   age, `overall=degraded`.
 - `fixed_point_20261125.txt`, `fixed_point_{ext,wrist}_20261125.csv`,
   `fixed_point_report_{raw,bias}_20261125.json` — systemd-stack fixed-point
-  run and the 5 mm gate (depth 3.32 PASS / PnP 5.50 marginal FAIL).
+  run 1 (depth 3.32 PASS / PnP 5.50 marginal FAIL).
+- `fixed_point_run2_20261125.txt`, `fixed_point_{ext,wrist}_20261125_run2.csv`,
+  `fixed_point_report_{raw,bias}_20261125_run2.json` — moved tag; depth 4.75 /
+  PnP 4.37 mm, both PASS.
 
 ## How to reproduce
 

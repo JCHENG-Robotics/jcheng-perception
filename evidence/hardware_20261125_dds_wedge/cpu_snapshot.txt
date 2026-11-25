@@ -1,0 +1,36 @@
+captured=2026-11-25T15:39:49+08:00
+
+load:
+ 15:39:49 up  1:25,  2 users,  load average: 9.84, 10.92, 11.43
+
+top cpu:
+%CPU   RSS     PID COMMAND
+ 100  3584   76477 ps -eo pcpu,rss,pid,args --sort=-pcpu
+76.9 97920    3443 /home/ubuntu/rs_ws/install/realsense2_camera/lib/realsense2_camera/realsense2_camera_node 
+47.7 201264  73472 /usr/bin/python3 /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/perception_edge 
+38.4 94912    3475 /home/ubuntu/jcheng_aurora_install/deptrum-ros-driver-aurora930/lib/deptrum-ros-driver-aurora930/aurora930_node 
+37.5 10240   76462 python3 /home/pi/hiwonder-toolbox/find_device.py
+35.3 173648  75934 /usr/bin/python3 /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/perception_edge 
+26.5 56224    4191 /usr/bin/python3 /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/perception_fusion 
+25.0     0   76468 [docker] <defunct>
+21.7 149360   4781 python3 -m armpi_debug_gateway.main --host 10.42.0.218 --port 8766 --token-file /home/ubuntu/shared/armpi_gateway_deploy/token --enable-motion --motion-config /home/ubuntu/shared/armpi_gateway_pose/takeover_limits.json --pointcloud-topic /depth_cam/depth_registered/points --no-aux-camera --camera-topic /armpi_pose_camera_off
+20.1 191744   2728 python3 -m armpi_debug_gateway.main --host 10.42.0.218 --port 8765 --token-file /home/ubuntu/shared/armpi_gateway_deploy/token --aux-camera-topic /camera/color/image_raw
+10.9 56528    3610 /usr/bin/python3 /home/ubuntu/ros2_ws/install/ros_robot_controller/lib/ros_robot_controller/ros_robot_controller 
+ 9.6 54704    3616 /usr/bin/python3 /opt/ros/humble/lib/joint_state_publisher/joint_state_publisher 
+ 7.5 118160   3614 /usr/bin/python3 /home/ubuntu/ros2_ws/install/kinematics/lib/kinematics/search_kinematics_solutions 
+
+mem:
+MemAvailable:    6260912 kB
+SwapFree:        2196448 kB
+CommitLimit:     6322368 kB
+Committed_AS:    8044688 kB
+
+throttle:
+temp=57.1'C
+throttled=0x0
+
+vm errors:
+109
+
+dds errors (2h):
+92
