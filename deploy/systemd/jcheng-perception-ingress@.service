@@ -1,0 +1,51 @@
+[Unit]
+Description=JCHENG perception ingress for camera %i (split DDS participant)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+# Camera drivers are vendor units.  Wants= (not Requires=) keeps the ingress
+# startable when a driver unit was stopped by an operator; the ingress then
+# waits for its first frame and the dead view shows up in its log and in the
+# observation topics instead of being hidden by a start refusal.
+After=armpi-rs-depth.service armpi-vision.service
+Wants=armpi-rs-depth.service armpi-vision.service
+
+# Restart budget.  A wedged camera DDS reader is recovered by replacing the
+# process (watchdog 4 s -> clean exit 0 -> RestartSec 2 s, ~6-7 s per cycle).
+# Normal recovery is one or two starts, far below the limit.  A dead camera or
+# driver must not restart forever: after 10 starts in 300 s the unit fails and
+# jcheng-perception-alert@ingress-%i.service fires.  Recovery after the fault
+# is fixed is explicit: `systemctl reset-failed <unit> && systemctl start <unit>`.
+StartLimitIntervalSec=300
+StartLimitBurst=10
+OnFailure=jcheng-perception-alert@ingress-%i.service
+PartOf=jcheng-perception.target
+
+[Service]
+Type=simple
+# The host-side wrapper only runs `docker exec`; the node itself runs as the
+# vendor `ubuntu` user inside the container.
+User=pi
+Group=docker
+EnvironmentFile=-/etc/jcheng-perception/perception.env
+ExecStart=/usr/local/lib/jcheng-perception/ingress-run.sh %i
+# `docker exec` does not forward signals to the container.  Kill only the node
+# executable, not its `ros2 run` parent: the parent reaps the child for a clean
+# exit (the container PID 1 is `tail` and never reaps, so killing both leaves a
+# <defunct> entry on every stop).  `camera_filter:=%i` keeps the two ingresses
+# apart.  This is the same teardown the vendor camera units use.
+ExecStop=/bin/bash -c 'touch /tmp/jcheng-perception-ingress-%i.stopping; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -TERM -f "lib/jcheng_perception_edge/perception_edge.*camera_filter:=%i" || true; for i in 1 2 3 4 5; do /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pgrep -f "lib/jcheng_perception_edge/perception_edge.*camera_filter:=%i" >/dev/null || break; sleep 1; done; if [ -n "${MAINPID:-}" ]; then for i in 1 2 3 4 5 6 7 8 9 10; do kill -0 "$MAINPID" 2>/dev/null || exit 0; sleep 1; done; fi; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -KILL -f "lib/jcheng_perception_edge/perception_edge.*camera_filter:=%i" || true'
+TimeoutStopSec=30
+# `Restart=always`, not on-failure: the ingress watchdog exits 0 by design so
+# a fresh DDS participant replaces the wedged reader.  Treating that as a
+# failure-free exit would leave the view down.
+Restart=always
+RestartSec=2
+# A deliberate `systemctl stop` is handled by the stop marker: ExecStop touches
+# /tmp/jcheng-perception-ingress-%i.stopping and the wrapper turns the node's
+# SIGTERM exit (1 from rclpy teardown, or 143 from docker exec) into a clean
+# stop only while the marker exists.  Without the marker (crash / watchdog) the
+# real exit code reaches systemd, so a crash loop still hits the start limit.
+# 143 stays listed as a fallback if systemd terminates the wrapper itself.
+SuccessExitStatus=143
+
+[Install]
+WantedBy=jcheng-perception.target

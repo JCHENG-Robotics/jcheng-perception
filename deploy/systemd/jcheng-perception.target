@@ -1,0 +1,25 @@
+[Unit]
+Description=JCHENG perception split stack (2 ingress + fusion + required TF)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+# The three processes that used to be started by
+# `ros2 launch jcheng_perception_edge split_edge.launch.py`: one ingress per
+# camera (fresh DDS participant each) plus the fusion.  Each runs as its own
+# unit so systemd, not launch, owns the restart policy and the restart budget.
+Wants=jcheng-perception-ingress@d435i_ext.service
+Wants=jcheng-perception-ingress@aurora_wrist.service
+Wants=jcheng-perception-fusion.service
+# The TF publishers are not optional for metric output: the wrist ingress drops
+# observations without camera_optical_measured, and the external chain needs
+# base_link -> camera_link.  They used to be hand-started alongside the launch;
+# the target now starts and stops them with the rest.
+Wants=jcheng-perception-wrist-tf.service
+Wants=jcheng-perception-ext-tf.service
+# The camera drivers are part of the vendor stack; starting the ingresses
+# before them only delays the first frame (the ingress waits for its first
+# frame before the 4 s watchdog can fire), but ordering avoids a pointless
+# restart at boot while start_node.sh is still re-execing the vendor launch.
+After=armpi-rs-depth.service armpi-vision.service
+After=docker.service
+
+[Install]
+WantedBy=multi-user.target

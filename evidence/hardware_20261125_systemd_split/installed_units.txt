@@ -1,0 +1,207 @@
+# /etc/systemd/system/jcheng-perception.target
+[Unit]
+Description=JCHENG perception split stack (2 ingress + fusion + required TF)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+# The three processes that used to be started by
+# `ros2 launch jcheng_perception_edge split_edge.launch.py`: one ingress per
+# camera (fresh DDS participant each) plus the fusion.  Each runs as its own
+# unit so systemd, not launch, owns the restart policy and the restart budget.
+Wants=jcheng-perception-ingress@d435i_ext.service
+Wants=jcheng-perception-ingress@aurora_wrist.service
+Wants=jcheng-perception-fusion.service
+# The TF publishers are not optional for metric output: the wrist ingress drops
+# observations without camera_optical_measured, and the external chain needs
+# base_link -> camera_link.  They used to be hand-started alongside the launch;
+# the target now starts and stops them with the rest.
+Wants=jcheng-perception-wrist-tf.service
+Wants=jcheng-perception-ext-tf.service
+# The camera drivers are part of the vendor stack; starting the ingresses
+# before them only delays the first frame (the ingress waits for its first
+# frame before the 4 s watchdog can fire), but ordering avoids a pointless
+# restart at boot while start_node.sh is still re-execing the vendor launch.
+After=armpi-rs-depth.service armpi-vision.service
+After=docker.service
+
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/jcheng-perception-ingress@.service
+[Unit]
+Description=JCHENG perception ingress for camera %i (split DDS participant)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+# Camera drivers are vendor units.  Wants= (not Requires=) keeps the ingress
+# startable when a driver unit was stopped by an operator; the ingress then
+# waits for its first frame and the dead view shows up in its log and in the
+# observation topics instead of being hidden by a start refusal.
+After=armpi-rs-depth.service armpi-vision.service
+Wants=armpi-rs-depth.service armpi-vision.service
+
+# Restart budget.  A wedged camera DDS reader is recovered by replacing the
+# process (watchdog 4 s -> clean exit 0 -> RestartSec 2 s, ~6-7 s per cycle).
+# Normal recovery is one or two starts, far below the limit.  A dead camera or
+# driver must not restart forever: after 10 starts in 300 s the unit fails and
+# jcheng-perception-alert@ingress-%i.service fires.  Recovery after the fault
+# is fixed is explicit: `systemctl reset-failed <unit> && systemctl start <unit>`.
+StartLimitIntervalSec=300
+StartLimitBurst=10
+OnFailure=jcheng-perception-alert@ingress-%i.service
+PartOf=jcheng-perception.target
+
+[Service]
+Type=simple
+# The host-side wrapper only runs `docker exec`; the node itself runs as the
+# vendor `ubuntu` user inside the container.
+User=pi
+Group=docker
+EnvironmentFile=-/etc/jcheng-perception/perception.env
+ExecStart=/usr/local/lib/jcheng-perception/ingress-run.sh %i
+# `docker exec` does not forward signals to the container.  Kill only the node
+# executable, not its `ros2 run` parent: the parent reaps the child for a clean
+# exit (the container PID 1 is `tail` and never reaps, so killing both leaves a
+# <defunct> entry on every stop).  `camera_filter:=%i` keeps the two ingresses
+# apart.  This is the same teardown the vendor camera units use.
+ExecStop=/bin/bash -c 'touch /tmp/jcheng-perception-ingress-%i.stopping; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -TERM -f "lib/jcheng_perception_edge/perception_edge.*camera_filter:=%i" || true; for i in 1 2 3 4 5; do /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pgrep -f "lib/jcheng_perception_edge/perception_edge.*camera_filter:=%i" >/dev/null || break; sleep 1; done; if [ -n "${MAINPID:-}" ]; then for i in 1 2 3 4 5 6 7 8 9 10; do kill -0 "$MAINPID" 2>/dev/null || exit 0; sleep 1; done; fi; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -KILL -f "lib/jcheng_perception_edge/perception_edge.*camera_filter:=%i" || true'
+TimeoutStopSec=30
+# `Restart=always`, not on-failure: the ingress watchdog exits 0 by design so
+# a fresh DDS participant replaces the wedged reader.  Treating that as a
+# failure-free exit would leave the view down.
+Restart=always
+RestartSec=2
+# A deliberate `systemctl stop` is handled by the stop marker: ExecStop touches
+# /tmp/jcheng-perception-ingress-%i.stopping and the wrapper turns the node's
+# SIGTERM exit (1 from rclpy teardown, or 143 from docker exec) into a clean
+# stop only while the marker exists.  Without the marker (crash / watchdog) the
+# real exit code reaches systemd, so a crash loop still hits the start limit.
+# 143 stays listed as a fallback if systemd terminates the wrapper itself.
+SuccessExitStatus=143
+
+[Install]
+WantedBy=jcheng-perception.target
+
+# /etc/systemd/system/jcheng-perception-fusion.service
+[Unit]
+Description=JCHENG perception fusion (association, Kalman, two-view targets)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+After=armpi-rs-depth.service armpi-vision.service
+Wants=armpi-rs-depth.service armpi-vision.service
+
+# Fusion crashing is a software fault, not a camera wedge: keep the same
+# budget as the ingresses so a crash loop cannot spin forever unnoticed.
+StartLimitIntervalSec=300
+StartLimitBurst=10
+OnFailure=jcheng-perception-alert@fusion.service
+PartOf=jcheng-perception.target
+
+[Service]
+Type=simple
+User=pi
+Group=docker
+EnvironmentFile=-/etc/jcheng-perception/perception.env
+ExecStart=/usr/local/lib/jcheng-perception/fusion-run.sh
+# Kill the node executable only; its `ros2 run` parent reaps it (no <defunct>).
+ExecStop=/bin/bash -c 'touch /tmp/jcheng-perception-fusion.stopping; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -TERM -f "lib/jcheng_perception_edge/perception_fusion" || true; for i in 1 2 3 4 5; do /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pgrep -f "lib/jcheng_perception_edge/perception_fusion" >/dev/null || break; sleep 1; done; if [ -n "${MAINPID:-}" ]; then for i in 1 2 3 4 5 6 7 8 9 10; do kill -0 "$MAINPID" 2>/dev/null || exit 0; sleep 1; done; fi; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -KILL -f "lib/jcheng_perception_edge/perception_fusion" || true'
+TimeoutStopSec=30
+Restart=always
+RestartSec=2
+# See the ingress unit: a stop marker makes the wrapper report a clean stop,
+# while a crash/restart still reaches the start limit.  143 is the fallback for
+# systemd terminating the docker exec wrapper itself.
+SuccessExitStatus=143
+
+[Install]
+WantedBy=jcheng-perception.target
+
+# /etc/systemd/system/jcheng-perception-wrist-tf.service
+[Unit]
+Description=JCHENG wrist TF publisher (bus-servo joints -> camera_optical_measured)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+# Needs the vendor graph: /robot_description, the bus-servo service and the
+# vendor message packages.  armpi-vision is only used as an ordering anchor
+# (it is up after start_node's vendor bringup); this unit is read-only.
+After=armpi-vision.service start_node.service
+Wants=armpi-vision.service
+
+# A bus-servo read failure keeps the node alive and publishing nothing (fail
+# closed); a crash is a real fault, so restart with the same finite budget.
+StartLimitIntervalSec=300
+StartLimitBurst=10
+OnFailure=jcheng-perception-alert@wrist-tf.service
+PartOf=jcheng-perception.target
+
+[Service]
+Type=simple
+User=pi
+Group=docker
+EnvironmentFile=-/etc/jcheng-perception/perception.env
+ExecStart=/usr/local/lib/jcheng-perception/wrist-tf-run.sh
+# Kill the node executable only; its `ros2 run` parent reaps it (no <defunct>).
+ExecStop=/bin/bash -c 'touch /tmp/jcheng-perception-wrist-tf.stopping; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -TERM -f "lib/jcheng_perception_edge/wrist_tf" || true; for i in 1 2 3 4 5; do /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pgrep -f "lib/jcheng_perception_edge/wrist_tf" >/dev/null || break; sleep 1; done; if [ -n "${MAINPID:-}" ]; then for i in 1 2 3 4 5 6 7 8 9 10; do kill -0 "$MAINPID" 2>/dev/null || exit 0; sleep 1; done; fi; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -KILL -f "lib/jcheng_perception_edge/wrist_tf" || true'
+TimeoutStopSec=30
+Restart=always
+RestartSec=2
+# See the ingress unit: a stop marker makes the wrapper report a clean stop,
+# while a crash/restart still reaches the start limit.  143 is the fallback for
+# systemd terminating the docker exec wrapper itself.
+SuccessExitStatus=143
+
+[Install]
+WantedBy=jcheng-perception.target
+
+# /etc/systemd/system/jcheng-perception-ext-tf.service
+[Unit]
+Description=JCHENG external-camera static TF (base_link -> camera_link)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+After=armpi-rs-depth.service
+Wants=armpi-rs-depth.service
+
+StartLimitIntervalSec=300
+StartLimitBurst=10
+OnFailure=jcheng-perception-alert@ext-tf.service
+PartOf=jcheng-perception.target
+
+[Service]
+Type=simple
+User=pi
+Group=docker
+EnvironmentFile=-/etc/jcheng-perception/perception.env
+ExecStart=/usr/local/lib/jcheng-perception/ext-tf-run.sh
+# Kill the node executable only; its `ros2 run` parent reaps it (no <defunct>).
+ExecStop=/bin/bash -c 'touch /tmp/jcheng-perception-ext-tf.stopping; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -TERM -f "lib/jcheng_perception_edge/ext_tf" || true; for i in 1 2 3 4 5; do /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pgrep -f "lib/jcheng_perception_edge/ext_tf" >/dev/null || break; sleep 1; done; if [ -n "${MAINPID:-}" ]; then for i in 1 2 3 4 5 6 7 8 9 10; do kill -0 "$MAINPID" 2>/dev/null || exit 0; sleep 1; done; fi; /usr/bin/docker exec "${JCHENG_PERCEPTION_CONTAINER:-ArmPiUltra}" pkill -KILL -f "lib/jcheng_perception_edge/ext_tf" || true'
+TimeoutStopSec=30
+Restart=always
+RestartSec=2
+# See the ingress unit: a stop marker makes the wrapper report a clean stop,
+# while a crash/restart still reaches the start limit.  143 is the fallback for
+# systemd terminating the docker exec wrapper itself.
+SuccessExitStatus=143
+
+[Install]
+WantedBy=jcheng-perception.target
+
+# /etc/systemd/system/jcheng-perception-alert@.service
+[Unit]
+Description=JCHENG perception failure alert (%i)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+# Triggered by OnFailure= from the ingress/fusion units when they exhaust their
+# StartLimitBurst.  Oneshot; it logs, records state and exits, and never
+# restarts anything itself.
+[Service]
+Type=oneshot
+# The leading "-" keeps a logging problem from producing a second failed unit.
+ExecStart=-/usr/local/lib/jcheng-perception/alert.sh %i
+TimeoutStartSec=30
+=== enabled ===
+enabled
+=== installed hashes ===
+c1b5c56807a51474adcddd83769470ad4c64f00d474c3b4bd8c95a27f10b231c  /etc/systemd/system/jcheng-perception.target
+0e83e14575e1b533bfe667e3c1103191696775ae143e25502be2395b9274c907  /etc/systemd/system/jcheng-perception-ingress@.service
+bba75fd18613422b6204ecc4cc17ec12489909f6f3fdf2c78aa23ea19e9c624d  /etc/systemd/system/jcheng-perception-fusion.service
+9a99ac19db5947a237d693406e13c22007b4f02113dabe5eac2d617ea611b4dd  /etc/systemd/system/jcheng-perception-wrist-tf.service
+dcc230c147227b3c80661f108aa739275358bb67961b928b63c8e6baa4574dc8  /etc/systemd/system/jcheng-perception-ext-tf.service
+779abd6f1284d7e5bdeb8476b7dabe1cd029dbd43a7ea377a848aefa325b3cf4  /etc/systemd/system/jcheng-perception-alert@.service
+bfce43f007c487b3d74dd9e2be902764289ec828136cd1da1b6b3e5c86ba1a10  /usr/local/lib/jcheng-perception/alert.sh
+1243f1c2e6d81e7e5c19a9d9252dfe8a527ff1162f02c10847ee3ed3fc287f2f  /usr/local/lib/jcheng-perception/ext-tf-run.sh
+507a3a9d8a9433345fd11b7d99a4796ebc39d014f3355be5b81bd74732eb6b7e  /usr/local/lib/jcheng-perception/fusion-run.sh
+cdda4ffd03825b24c9ca84f2bc282f7aa7cb3e7ab684891e92ddb5b1aac658ef  /usr/local/lib/jcheng-perception/ingress-run.sh
+8ee4ae8de72e993740f1db288db20e29e5f95508040df292bca06c8eeb874da6  /usr/local/lib/jcheng-perception/wrist-tf-run.sh
+8e85e80e0e9a9b226602423ab91d7ec2503cc03d69ad590f97b7604158de8ed2  /etc/jcheng-perception/perception.env

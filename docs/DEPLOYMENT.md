@@ -275,28 +275,46 @@ RMS 0.61 mm）。仍需：多姿态/固定目标 x/y/z、移动目标跟踪误�
 千兆有线足够。WiFi 下建议降低 `max_uplink_fps`、`jpeg_quality` 或分辨率。
 Pi 5 上 JPEG 编码在独立线程，主要占用 CPU；实测合成场景 edge 进程约 25% 单核。
 
-## 7. systemd（可选）
+## 7. systemd（split 三进程）
 
-```ini
-# /etc/systemd/system/jcheng-perception-edge.service
-[Unit]
-Description=JCHENG perception edge
-After=network-online.target
+生产上用 systemd 管理 split 部署，不再手动 `ros2 launch`。每个进程一个 unit，
+launch 的 `respawn=True` 由 systemd 接管：
 
-[Service]
-User=ubuntu
-Environment=ROS_DOMAIN_ID=0
-Environment=RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && source /home/ubuntu/jcheng-perception/ros2_ws/install/setup.bash && exec ros2 launch jcheng_perception_edge pi5_edge.launch.py'
-Restart=on-failure
-RestartSec=2
+| unit | 内容 |
+|---|---|
+| `jcheng-perception-ingress@d435i_ext.service` | 外机位 ingress |
+| `jcheng-perception-ingress@aurora_wrist.service` | 腕部 ingress |
+| `jcheng-perception-fusion.service` | 融合 |
+| `jcheng-perception-wrist-tf.service` | 腕部动态 TF（总线舵机，只读） |
+| `jcheng-perception-ext-tf.service` | 外机位静态链 `base_link→camera_link` |
+| `jcheng-perception.target` | 以上五者一起启停、开机自启 |
+| `jcheng-perception-alert@.service` | 超过重启上限时的告警 |
 
-[Install]
-WantedBy=multi-user.target
+```bash
+sudo bash deploy/systemd/install-split-systemd.sh --start
+sudo systemctl stop jcheng-perception.target     # PartOf= 停掉三个进程
+journalctl -u 'jcheng-perception-*' -f
 ```
 
-> 机器人厂商栈在容器内运行时，unit 需要进入对应容器/命名空间；不要和厂商
-> `start_node.service` 争抢设备或域。
+要点：
+
+- ingress watchdog 仍以 **0** 退出（为了换新 DDS participant），所以 unit 用
+  `Restart=always` + `RestartSec=2`，不能用 `on-failure`；
+- 每个 ingress 的重启上限是 **10 次 / 300 s**（`StartLimitIntervalSec`/
+  `StartLimitBurst`）。相机彻底失效时约 40–60 s 后 unit 进入 `failed` 并触发
+  `jcheng-perception-alert@ingress-<camera>`：写 journal `user.err`、
+  `/var/lib/jcheng-perception/last-alert.txt` 与 `alerts.log`（无外网，不发远程
+  通知）。修复后显式 `systemctl reset-failed && systemctl start`；
+- 包装脚本在容器内运行，显式使用 CycloneDDS 和 domain 0，与相机驱动一致；
+- 两个 TF 发布器也在 target 内：`wrist_tf` 没有 `camera_optical_measured` 时腕部
+  观测会被丢弃，`ext_tf` 让外机位链有 `base_link`。`wrist_tf` 只读总线舵机
+  （`get_state`），不发运动命令，依赖厂商工作区的 `ros_robot_controller_msgs`
+  （`perception.env` 的 `JCHENG_PERCEPTION_VENDOR_SETUP`）。
+
+完整安装/验证/告警/回滚说明见
+[`deploy/systemd/README.md`](../deploy/systemd/README.md)。厂商栈在容器内运行，
+unit 只通过 `docker exec` 进入容器，不打开相机设备、不与 `start_node.service`
+争抢设备或域。
 
 ## 8. 故障排查
 

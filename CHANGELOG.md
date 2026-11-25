@@ -8,6 +8,25 @@ their original narrative order.
 
 ## [Unreleased]
 
+- systemd management for the split stack: `deploy/systemd/` adds one unit per
+  process (`jcheng-perception-ingress@d435i_ext`, `@aurora_wrist`,
+  `jcheng-perception-fusion`, plus the required `wrist_tf`/`ext_tf`
+  publishers) together with `jcheng-perception.target` and an `OnFailure` alert
+  template, with host-side `docker exec` wrappers that force CycloneDDS/domain
+  0. Launch `respawn=True` is replaced by `Restart=always` (the 4 s watchdog
+  exits 0 on purpose) and `RestartSec=2`; each unit has a finite restart budget
+  of 10 starts / 300 s, after which it fails and `alert.sh` writes a journal
+  `user.err` entry and
+  `/var/lib/jcheng-perception/{last-alert.txt,alerts.log,last-alert-status.txt}`.
+  Installer supports `--start`, `--no-enable` and `--uninstall`.
+  Verified on the robot 2026-11-25 (units active, stop propagation,
+  restart-limit/alert path with a camera-less instance). A real ingress
+  watchdog restart was observed (external stall -> exit 0 -> systemd restart
+  counter 1 -> `edge ready` 3 s later). Deliberate stops are translated to
+  success by a stop marker plus a deferred TERM trap in the wrappers, so they
+  do not fire `OnFailure`; exit 1 remains a failure, so the 10/300 s budget and
+  alert still work. Stop patterns target the node executable only, so the
+  `ros2 run` parent reaps it (no new `<defunct>` entries).
 - Split edge for DDS reader isolation: `perception_edge` gained
   `camera_filter`, `publish_targets`, `publish_status` and an ingress watchdog;
   new `perception_fusion` subscribes to the per-camera observation topics and

@@ -422,6 +422,34 @@ learned Track.view_offset = (+0.03, -1.93, -3.31) mm
 `max_track_speed_mps=0.5` / `max_target_distance_m=1.0` 安全上限。证据：
 `evidence/hardware_20261124_split_edge/`。
 
+### 2.15 Split 三进程的 systemd 管理（2026-11-25）
+
+split 部署不再手动 `ros2 launch split_edge.launch.py`：每个进程一个 unit
+（两个 ingress + fusion），并补上必需的 `wrist_tf`/`ext_tf`，统一由
+`jcheng-perception.target` 启停、开机自启。launch 的 `respawn=True` 交给
+systemd `Restart=always` / `RestartSec=2`；每个 unit 的上限是 10 次 / 300 s，
+超限后 `failed` 并触发 `jcheng-perception-alert@<label>`（journal `user.err` +
+`/var/lib/jcheng-perception/`）。实机验证：
+
+- 5 个 unit active；TF 腕部位姿 `[0.176, 0.009, 0.196]` m，外机位
+  `[0.139, 0.027, 0.037]` m；
+- 09:26:42 外机位 ingress watchdog 报 `link stalled (frames=75, depth=89)` 退出 0，
+  systemd 在 3 s 内重启（restart counter 1），`edge ready` 恢复 —— 与 launch
+  respawn 等价；
+- `systemctl stop jcheng-perception.target` 3 s 内 5/5 inactive、`Result=success`、
+  无告警、无残留容器进程；
+- 无相机的 `@selftest` 实例在 10 次重启 / 63 s 后 `failed`，告警文件写入
+  `label=ingress-selftest`，`reset-failed` 可恢复。
+
+验证中修掉的坑：`set -u` 会让 ROS `setup.bash` 报 `AMENT_TRACE_SETUP_FILES:
+unbound variable`；停进程时 rclpy teardown 以 1 退出，若把 1 一并记为
+`SuccessExitStatus`，上限仍会计数（干净退出同样计入 `StartLimitBurst`），但崩溃
+会被伪装成成功、丢失 `Result`/OnFailure 的诊断语义；最终用 ExecStop 写
+`/tmp/jcheng-perception-<unit>.stopping` 标记 + 包装脚本 TERM trap 把“主动停止”
+翻译成 0，崩溃仍保留失败语义。旧 ExecStop 会同时杀掉 `ros2 run` 父进程，留下
+`<defunct>`；改为只匹配节点可执行路径后，一次 stop/start 不再新增僵尸。
+证据：`evidence/hardware_20261125_systemd_split/`。
+
 ## 3. 本轮发现并修复的问题
 
 | # | 现象 | 根因 | 修复 |

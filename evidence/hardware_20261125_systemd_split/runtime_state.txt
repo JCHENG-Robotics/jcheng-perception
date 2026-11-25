@@ -1,0 +1,64 @@
+=== watchdog restart evidence ===
+Nov 25 09:26:06 raspberrypi systemd[1]: jcheng-perception-ingress@d435i_ext.service: Deactivated successfully.
+Nov 25 09:26:13 raspberrypi ingress-run.sh[39491]: [INFO] [1795569973.561337053] [perception_ingress_d435i_ext]: edge ready: cameras=d435i_ext target_frame=base_link uplink=True
+Nov 25 09:26:42 raspberrypi ingress-run.sh[39491]: [ERROR] [1795570002.493072999] [perception_ingress_d435i_ext]: d435i_ext: ingress link stalled (frames=75, depth=89); exiting for respawn
+Nov 25 09:26:43 raspberrypi systemd[1]: jcheng-perception-ingress@d435i_ext.service: Deactivated successfully.
+Nov 25 09:26:45 raspberrypi systemd[1]: jcheng-perception-ingress@d435i_ext.service: Scheduled restart job, restart counter is at 1.
+Nov 25 09:26:48 raspberrypi ingress-run.sh[41495]: [INFO] [1795570008.602598754] [perception_ingress_d435i_ext]: edge ready: cameras=d435i_ext target_frame=base_link uplink=True
+Nov 25 09:27:24 raspberrypi systemd[1]: jcheng-perception-ingress@d435i_ext.service: Deactivated successfully.
+Nov 25 09:27:30 raspberrypi ingress-run.sh[43365]: [INFO] [1795570050.630540822] [perception_ingress_d435i_ext]: edge ready: cameras=d435i_ext target_frame=base_link uplink=True
+=== counters after start ===
+jcheng-perception-ingress@d435i_ext.service active=active nrestarts=0 result=success
+jcheng-perception-ingress@aurora_wrist.service active=active nrestarts=0 result=success
+jcheng-perception-fusion.service active=active nrestarts=0 result=success
+jcheng-perception-wrist-tf.service active=active nrestarts=0 result=success
+jcheng-perception-ext-tf.service active=active nrestarts=0 result=success
+=== process list ===
+  24650 /usr/bin/python3 /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/perception_fusion 
+  24670 /usr/bin/python3 /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/ext_tf 
+  24672 /usr/bin/python3 /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/perception_edge 
+  24696 /usr/bin/python3 /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/perception_edge 
+  24720 /usr/bin/python3 /home/ubuntu/jcheng-perception/ros2_ws/install/jcheng_perception_edge/lib/jcheng_perception_edge/wrist_tf 
+=== status ===
+header:
+  stamp:
+    sec: 1795570055
+    nanosec: 84240949
+  frame_id: base_link
+camera_ids:
+- d435i_ext
+- aurora_wrist
+camera_fps:
+- 0.0
+- 0.0
+total_frames: 0
+total_detections: 0
+detections_matched: 0
+detections_dropped: 0
+match_success_rate: 1.0
+mean_detection_latency_ms: 0.0
+mean_depth_match_age_ms: 0.0
+phase: 0
+gpu_alive: false
+active_tracks: 0
+confirmed_tracks: 0
+=== tf wrist ===
+[INFO] [1795570056.835077466] [tf2_echo]: Waiting for transform base_link ->  camera_optical_measured: Invalid frame ID "base_link" passed to canTransform argument target_frame - frame does not exist
+At time 1795570057.639164614
+- Translation: [0.176, 0.009, 0.196]
+- Rotation: in Quaternion [-0.679, 0.686, -0.185, 0.185]
+- Rotation: in RPY (radian) [-2.612, 0.002, -1.581]
+- Rotation: in RPY (degree) [-149.651, 0.142, -90.572]
+- Matrix:
+ -0.010 -0.863  0.505  0.176
+ -1.000  0.010 -0.003  0.009
+=== tf ext ===
+[INFO] [1795570060.138521131] [tf2_echo]: Waiting for transform base_link ->  camera_color_optical_frame: Invalid frame ID "base_link" passed to canTransform argument target_frame - frame does not exist
+At time 0.0
+- Translation: [0.139, 0.027, 0.037]
+- Rotation: in Quaternion [-0.602, 0.638, -0.337, 0.342]
+- Rotation: in RPY (radian) [-2.140, 0.031, -1.613]
+- Rotation: in RPY (degree) [-122.640, 1.765, -92.418]
+- Matrix:
+ -0.042 -0.538  0.842  0.139
+ -0.999  0.049 -0.019  0.027

@@ -89,6 +89,7 @@ jcheng-perception/
 │   ├── FAILURE_MODES.md          # 故障与降级
 │   ├── EVIDENCE.md               # 本版本验证记录
 │   └── adr/
+├── deploy/systemd/               # Pi 宿主机的 split 三进程 systemd unit
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # 临时 IDL（M2 提升到 jcheng-interfaces）
 │   ├── jcheng_perception_core/   # 纯 Python，无 ROS 依赖
