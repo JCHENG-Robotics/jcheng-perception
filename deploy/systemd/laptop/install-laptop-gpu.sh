@@ -21,9 +21,11 @@ UNITS=(
     jcheng-perception-gpu.service
     jcheng-perception-gpu-alert@.service
     jcheng-perception-gpu-watchdog.service
+    jcheng-perception-status.service
 )
+TIMERS=(jcheng-perception-status.timer)
 SCRIPTS=(gpu-run.sh gpu-alert.sh gpu-watchdog-run.sh)
-PY_SCRIPTS=(gpu-watchdog.py)
+PY_SCRIPTS=(gpu-watchdog.py jcheng-perception-status.py)
 
 START=1
 UNINSTALL=0
@@ -43,10 +45,11 @@ done
 
 if [[ "$UNINSTALL" == "1" ]]; then
     systemctl --user disable --now \
+        jcheng-perception-status.timer \
         jcheng-perception-gpu-watchdog.service \
         jcheng-perception-gpu.service 2>/dev/null || true
-    systemctl --user reset-failed 'jcheng-perception-gpu*' 2>/dev/null || true
-    for unit in "${UNITS[@]}"; do
+    systemctl --user reset-failed 'jcheng-perception-*' 2>/dev/null || true
+    for unit in "${UNITS[@]}" "${TIMERS[@]}"; do
         rm -f "${UNIT_DIR}/${unit}"
     done
     for script in "${SCRIPTS[@]}"; do
@@ -78,7 +81,7 @@ done
 for script in "${PY_SCRIPTS[@]}"; do
     install -m 0755 "${HERE}/${script}" "${LIB_DIR}/${script}"
 done
-for unit in "${UNITS[@]}"; do
+for unit in "${UNITS[@]}" "${TIMERS[@]}"; do
     install -m 0644 "${HERE}/${unit}" "${UNIT_DIR}/${unit}"
 done
 
@@ -105,6 +108,9 @@ CYCLONEDDS_URI=file://${CONF_DIR}/cyclonedds-laptop.xml
 JCHENG_GPU_WS=${HOME}/jcheng/jcheng-perception/ros2_ws
 JCHENG_GPU_CONFIG=${CONF_DIR}/gpu_laptop.yaml
 JCHENG_GPU_PYTHON=${HOME}/.venvs/jcheng-perception-gpu/bin/python
+# Used by jcheng-perception-status.py; override for a different robot/key.
+JCHENG_ROBOT_SSH=pi@10.42.0.218
+JCHENG_ROBOT_KEY=${HOME}/.ssh/id_ed25519_armpi
 EOF
     chmod 0644 "${CONF_DIR}/gpu.env"
 fi
@@ -144,29 +150,36 @@ fi
 systemctl --user daemon-reload
 systemctl --user enable \
     jcheng-perception-gpu.service \
-    jcheng-perception-gpu-watchdog.service >/dev/null
+    jcheng-perception-gpu-watchdog.service \
+    jcheng-perception-status.timer >/dev/null
 if [[ "$START" == "1" ]]; then
     systemctl --user restart jcheng-perception-gpu.service
     systemctl --user restart jcheng-perception-gpu-watchdog.service
-    echo "started jcheng-perception-gpu.service and the watchdog"
+    # Produce a status file immediately, then let the timer refresh it.
+    systemctl --user start jcheng-perception-status.service || true
+    systemctl --user start jcheng-perception-status.timer
+    echo "started the GPU unit, watchdog and 60 s status timer"
 else
     echo "enabled but not started"
 fi
 
 echo "== status"
-systemctl --user list-unit-files --no-pager 'jcheng-perception-gpu*' || true
+systemctl --user list-unit-files --no-pager 'jcheng-perception-*' || true
 systemctl --user status --no-pager --lines=0 \
     jcheng-perception-gpu.service \
-    jcheng-perception-gpu-watchdog.service || true
+    jcheng-perception-gpu-watchdog.service \
+    jcheng-perception-status.timer || true
 
 cat <<'EOF'
 
 Operate:
   systemctl --user status jcheng-perception-gpu
   systemctl --user status jcheng-perception-gpu-watchdog
+  systemctl --user list-timers jcheng-perception-status.timer
   systemctl --user restart jcheng-perception-gpu
   systemctl --user stop jcheng-perception-gpu
   journalctl --user -u jcheng-perception-gpu -u jcheng-perception-gpu-watchdog -f
+  cat ~/.local/state/jcheng-perception/status.txt
   cat ~/.local/state/jcheng-perception/last-alert.txt
 
 The model is /opt/jcheng/models/yolov8s.pt (not in the repository).
@@ -174,4 +187,6 @@ The watchdog restarts the GPU unit when one camera's frames_received is frozen
 for 60 s while another advances, or GpuStatus is absent for 30 s; it allows 5
 restarts per 30 min and then writes last-watchdog-alert.txt. Both cameras
 frozen is treated as an edge-side outage and is not restarted.
+The status timer merges the robot units (over SSH) and the laptop units plus
+both alert files into status.json/status.txt every 60 s.
 EOF

@@ -93,6 +93,26 @@ journalctl --user -u jcheng-perception-gpu-watchdog -f
 局限：单路相机真的没数据时也会按预算重启 GPU（`GpuStatus` 无法区分“相机
 死”与“reader 卡”）；到上限后需人工 `reset-failed`/`start`。
 
+## 合并 status（`jcheng-perception-status.timer`）
+
+`jcheng-perception-status.py` 每 60 s 通过 SSH 读取机器人
+`jcheng-perception.target` + 5 个 unit 的
+`ActiveState/NRestarts/Result/ActiveEnterTimestamp`，加上笔记本 GPU/watchdog
+状态和两侧告警文件，写：
+
+- `~/.local/state/jcheng-perception/status.json`（机器可读）
+- `~/.local/state/jcheng-perception/status.txt`（人读）
+
+```bash
+cat ~/.local/state/jcheng-perception/status.txt
+systemctl --user list-timers jcheng-perception-status.timer
+```
+
+`overall` 为 `ok` / `degraded`（任一 unit 非 active，或 1 h 内有告警）/
+`robot_unreachable`。SSH 使用 `~/.ssh/id_ed25519_armpi`，可在 `gpu.env` 用
+`JCHENG_ROBOT_SSH` / `JCHENG_ROBOT_KEY` 覆盖；`ConnectTimeout=6`，机器人不可达
+只标记 `robot_unreachable`，不会让 timer 失败。
+
 ## 已知边界（重要）
 
 - **systemd 只覆盖进程崩溃/退出；reader wedge 由 watchdog 覆盖**。如果

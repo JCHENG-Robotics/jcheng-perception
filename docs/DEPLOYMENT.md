@@ -335,6 +335,9 @@ journalctl -u 'jcheng-perception-*' -f
   已知 reader wedge（进程活着但 `frames_received` 冻结）由
   `jcheng-perception-gpu-watchdog` 覆盖：单路 60 s 不增长/状态 30 s 缺失时
   重启，预算 5 次 / 30 min 后告警；两路都冻结视为 edge 掉线不重启。
+  `jcheng-perception-status.timer` 每 60 s 生成
+  `~/.local/state/jcheng-perception/status.{json,txt}`，汇总机器人 5 个 unit、
+  笔记本 GPU/watchdog 和两侧告警。
 
 完整安装/验证/告警/回滚说明见
 [`deploy/systemd/README.md`](../deploy/systemd/README.md)。厂商栈在容器内运行，

@@ -461,6 +461,11 @@ systemd `Restart=always` / `RestartSec=2`；每个 unit 的上限是 10 次 / 30
   reader wedge 由 `jcheng-perception-gpu-watchdog` 覆盖（单路 60 s 冻结/状态
   30 s 缺失重启，5 次 / 30 min 预算；两路都冻结视为 edge 掉线）；SIGSTOP
   故障注入 34 s 检测、重启、4 s 后 `detector loaded`。
+- **合并 status**：`jcheng-perception-status.timer` 每 60 s 通过 SSH 读取机器人
+  target + 5 unit，加笔记本 GPU/watchdog 和两侧告警，写
+  `~/.local/state/jcheng-perception/status.{json,txt}`，`overall` 分
+  `ok`/`degraded`/`robot_unreachable`。实测 timer 在 54 s 后自动刷新，
+  6 个机器人 unit + 2 个笔记本 unit 全部 active，`overall=ok`。
 
 验证中修掉的坑：`set -u` 会让 ROS `setup.bash` 报 `AMENT_TRACE_SETUP_FILES:
 unbound variable`；停进程时 rclpy teardown 以 1 退出，若把 1 一并记为

@@ -207,6 +207,10 @@ systemctl --user status jcheng-perception-gpu
   增长）或状态 30 s 缺失时重启 GPU unit，预算 5 次 / 30 min，超限写
   `last-watchdog-alert.txt`；两路都冻结视为 edge 侧掉线，不重启。实测
   SIGSTOP 后 34 s 检测、重启、4 s 后 `detector loaded`。
+- `jcheng-perception-status.timer` 每 60 s 汇总机器人 5 个 unit +
+  笔记本 GPU/watchdog + 两侧告警到
+  `~/.local/state/jcheng-perception/status.{json,txt}`；`overall` 为
+  `ok` / `degraded` / `robot_unreachable`。
 
 完整说明：[`laptop/README.md`](laptop/README.md)。
 

@@ -1,0 +1,10 @@
+[Unit]
+Description=Collect the combined JCHENG perception status (robot + laptop)
+Documentation=https://github.com/JCHENG-Robotics/jcheng-perception
+After=jcheng-perception-gpu.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=-%h/.config/jcheng-perception/gpu.env
+ExecStart=%h/.local/lib/jcheng-perception/jcheng-perception-status.py --quiet
+TimeoutStartSec=40

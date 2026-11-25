@@ -8,6 +8,13 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Combined perception status: a user timer runs
+  `jcheng-perception-status.py` every 60 s, reads the robot target + five units
+  over SSH plus the laptop GPU/watchdog and both alert files, writes
+  `~/.local/state/jcheng-perception/status.{json,txt}` and classifies `overall`
+  as `ok` / `degraded` / `robot_unreachable`. Verified 2026-11-25: the timer
+  refreshed after 54 s and the status showed 6 robot + 2 laptop units, all
+  active, `overall=ok` (the 10:08 robot alert is reported separately).
 - Laptop GPU detector user unit: `deploy/systemd/laptop/` installs
   `jcheng-perception-gpu.service` (+ `OnFailure` alert) with the verified
   `/opt/jcheng/models/yolov8s.pt`, a persistent CycloneDDS XML and the

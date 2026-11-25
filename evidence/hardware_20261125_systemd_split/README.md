@@ -146,6 +146,16 @@ is treated as an edge-side outage and is not restarted. Budget 5 restarts /
 `detector loaded` returned 4 s later, with the robot back at `gpu_alive=true`
 and one confirmed track. No alert was written (1/5 restarts).
 
+## Combined status (2026-11-25)
+
+`jcheng-perception-status.timer` runs `jcheng-perception-status.py` every 60 s.
+It reads the robot target + five units over SSH, the laptop GPU/watchdog units
+and both alert files, writes `~/.local/state/jcheng-perception/status.{json,txt}`
+and classifies `overall` as `ok` / `degraded` / `robot_unreachable`.
+Verified (`status_aggregator.txt`): the timer refreshed after 54 s; the status
+listed 6 robot units + 2 laptop units, all active, reported the 10:08 robot
+alert separately and returned `overall=ok`.
+
 ## Problems found and fixed during validation
 
 1. **`set -u` breaks ROS setup**: `source /opt/ros/humble/setup.bash` fails with
@@ -214,6 +224,8 @@ and one confirmed track. No alert was written (1/5 restarts).
   restart/stop/start lifecycle and the robot-side `gpu_alive` check.
 - `gpu_watchdog_test.txt` — SIGSTOP fault injection: status stale detected,
   watchdog restart, detector reload and robot recovery.
+- `status_aggregator.txt` — timer state, combined `status.txt`/`status.json`,
+  and the 54 s automatic refresh.
 
 ## How to reproduce
 

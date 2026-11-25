@@ -226,10 +226,13 @@ LAPTOP_FILES = (
     LAPTOP / 'jcheng-perception-gpu.service',
     LAPTOP / 'jcheng-perception-gpu-alert@.service',
     LAPTOP / 'jcheng-perception-gpu-watchdog.service',
+    LAPTOP / 'jcheng-perception-status.service',
+    LAPTOP / 'jcheng-perception-status.timer',
     LAPTOP / 'gpu-run.sh',
     LAPTOP / 'gpu-alert.sh',
     LAPTOP / 'gpu-watchdog.py',
     LAPTOP / 'gpu-watchdog-run.sh',
+    LAPTOP / 'jcheng-perception-status.py',
     LAPTOP / 'gpu_laptop.yaml',
     LAPTOP / 'cyclonedds-laptop.xml',
     LAPTOP / 'install-laptop-gpu.sh',
@@ -241,7 +244,8 @@ def test_laptop_gpu_unit_and_scripts_exist():
     for path in LAPTOP_FILES:
         assert path.is_file(), path
     for script in ('gpu-run.sh', 'gpu-alert.sh', 'gpu-watchdog.py',
-                   'gpu-watchdog-run.sh', 'install-laptop-gpu.sh'):
+                   'gpu-watchdog-run.sh', 'jcheng-perception-status.py',
+                   'install-laptop-gpu.sh'):
         assert (LAPTOP / script).stat().st_mode & 0o111, script
 
 
@@ -290,3 +294,22 @@ def test_laptop_gpu_watchdog_wiring():
     installer = unit_text(LAPTOP / 'install-laptop-gpu.sh')
     assert 'gpu-watchdog' in installer
     assert 'jcheng-perception-gpu-watchdog.service' in installer
+
+
+def test_laptop_perception_status_aggregator_wiring():
+    service = unit_text(LAPTOP / 'jcheng-perception-status.service')
+    assert 'Type=oneshot' in service
+    assert 'jcheng-perception-status.py --quiet' in service
+    timer = unit_text(LAPTOP / 'jcheng-perception-status.timer')
+    assert 'Unit=jcheng-perception-status.service' in timer
+    assert 'OnUnitActiveSec=60s' in timer
+    script = unit_text(LAPTOP / 'jcheng-perception-status.py')
+    for unit in ('jcheng-perception.target',
+                 'jcheng-perception-ingress@d435i_ext.service',
+                 'jcheng-perception-fusion.service'):
+        assert unit in script, unit
+    assert 'robot_unreachable' in script
+    assert 'status.json' in script and 'status.txt' in script
+    installer = unit_text(LAPTOP / 'install-laptop-gpu.sh')
+    assert 'jcheng-perception-status.timer' in installer
+    assert 'status.txt' in installer
