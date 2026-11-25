@@ -8,6 +8,16 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Load-reduction A/B (2026-11-25), aborted by a Pi wedge: D435i 6 fps is not
+  viable on this camera (color stayed at 0.9-4.2 Hz with frame timeouts;
+  reverted to 15 fps). Ingress `max_uplink_fps` 15/12 -> 4/3 is kept (wrist
+  ingress CPU 35-43 % -> 23 %, external 48 % -> 43 %). Stopping
+  `armpi-gateway-pose` drops load to ~3 but conflicts with the jcheng-ops
+  `armpi-ops-health` restart policy. `net.core.rmem_max` is 208 KB; a 4 MB
+  `SocketReceiveBufferSize` test coincided with load 18.9 and SSH banner
+  timeouts, and the hardware watchdog rebooted the Pi (first real firing); a
+  second wedge left it unreachable pending a power cycle. The CycloneDDS XML
+  was not deployed. See `evidence/hardware_20261125_load_ab/`.
 - Systemd-stack fixed-point acceptance (2026-11-25): with all five units
   active, the 60 mm tag gave raw cross-view 13.33 (depth) / 10.44 mm (PnP);
   with the deployed `view_bias` external offset the production depth path was
