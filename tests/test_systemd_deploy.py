@@ -39,7 +39,8 @@ def unit_text(path):
 def test_expected_units_and_scripts_exist():
     for path in (INGRESS_UNIT, FUSION_UNIT, ALERT_UNIT, TARGET_UNIT,
                  WRIST_TF_UNIT, EXT_TF_UNIT,
-                 DEPLOY / 'perception.env', *SCRIPTS):
+                 DEPLOY / 'perception.env',
+                 DEPLOY / '90-cyclonedds-rmem.conf', *SCRIPTS):
         assert path.is_file(), path
     for script in SCRIPTS:
         assert script.stat().st_mode & 0o111, script
@@ -313,3 +314,12 @@ def test_laptop_perception_status_aggregator_wiring():
     installer = unit_text(LAPTOP / 'install-laptop-gpu.sh')
     assert 'jcheng-perception-status.timer' in installer
     assert 'status.txt' in installer
+
+
+def test_kernel_socket_buffer_tuning_installed():
+    text = unit_text(DEPLOY / '90-cyclonedds-rmem.conf')
+    assert 'rmem_max = 4194304' in text
+    assert 'rmem_default = 1048576' in text
+    installer = unit_text(DEPLOY / 'install-split-systemd.sh')
+    assert '90-cyclonedds-rmem.conf' in installer
+    assert 'sysctl --system' in installer

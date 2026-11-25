@@ -44,6 +44,7 @@ sudo bash install-split-systemd.sh --no-enable
 | `/etc/systemd/system/jcheng-perception*.{target,service}` | unit 文件 |
 | `/usr/local/lib/jcheng-perception/{ingress-run,fusion-run,wrist-tf-run,ext-tf-run,alert}.sh` | 宿主机包装脚本 |
 | `/etc/jcheng-perception/perception.env` | 容器名 / 工作区 / RMW / 可选配置覆盖（首次安装才写入，之后不覆盖） |
+| `/etc/sysctl.d/90-cyclonedds-rmem.conf` | 内核 socket 接收缓冲 4 MB / 1 MB（安装器执行 `sysctl --system`） |
 | `/var/lib/jcheng-perception/` | 告警历史 |
 
 包装脚本在容器内执行 `ros2 run jcheng_perception_edge perception_edge`
@@ -226,3 +227,7 @@ systemctl --user status jcheng-perception-gpu
 - 本栈只读：不发布运动命令，不是急停。
 - `docker` 容器重启后，包装脚本会等容器最多 60 s；容器不在时 unit 失败并计入
   重启上限。
+- **socket 缓冲**：`90-cyclonedds-rmem.conf` 把内核 `net.core.rmem_max/default`
+  提到 4 MB / 1 MB；CycloneDDS 0.10.4 的 XML `SocketReceiveBufferSize` 会被
+  拒绝（rcl node 创建失败，两个 ingress 都起不来），不要加。相机驱动自己的
+  writer socket 要重启驱动才应用；本次只重启了 perception target 和 8765。

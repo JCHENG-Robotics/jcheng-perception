@@ -8,6 +8,14 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Kernel socket buffers and the perception hold (2026-11-25): add
+  `deploy/systemd/90-cyclonedds-rmem.conf` (4 MB/1 MB, applied by the installer
+  with `sysctl --system`). The CycloneDDS XML `SocketReceiveBufferSize` is
+  rejected by 0.10.4 (`rcl node's rmw handle is invalid`) and was reverted.
+  With the 4/3 uplink and the jcheng-ops pose hold
+  (`/run/armpi-ops/hold-pose`), a 4.5 min window had **0 ingress stalls** and
+  the load fell from 16.2 to ~10.7 (baseline 4/4 per 10 min); a longer window
+  is still pending.
 - Load-reduction A/B (2026-11-25), aborted by a Pi wedge: D435i 6 fps is not
   viable on this camera (color stayed at 0.9-4.2 Hz with frame timeouts;
   reverted to 15 fps). Ingress `max_uplink_fps` 15/12 -> 4/3 is kept (wrist

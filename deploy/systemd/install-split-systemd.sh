@@ -27,6 +27,7 @@ UNIT_DIR=/etc/systemd/system
 LIB_DIR=/usr/local/lib/jcheng-perception
 CONF_DIR=/etc/jcheng-perception
 STATE_DIR=/var/lib/jcheng-perception
+SYSCTL_FILE=90-cyclonedds-rmem.conf
 UNITS=(
     jcheng-perception.target
     jcheng-perception-ingress@.service
@@ -70,6 +71,9 @@ if [[ "$UNINSTALL" == "1" ]]; then
         rm -f "${LIB_DIR}/${script}"
     done
     rmdir "$LIB_DIR" 2>/dev/null || true
+    echo "== removing kernel socket-buffer tuning"
+    rm -f "/etc/sysctl.d/${SYSCTL_FILE}"
+    sysctl --system >/dev/null 2>&1 || true
     systemctl daemon-reload
     echo "kept ${CONF_DIR}/perception.env and ${STATE_DIR}/ (alert history)"
     exit 0
@@ -87,6 +91,9 @@ done
 for unit in "${UNITS[@]}"; do
     install -m 0644 "${HERE}/${unit}" "${UNIT_DIR}/${unit}"
 done
+echo "== kernel socket buffers"
+install -m 0644 "${HERE}/${SYSCTL_FILE}" "/etc/sysctl.d/${SYSCTL_FILE}"
+sysctl --system >/dev/null 2>&1 || true
 # Keep operator edits: only seed the environment file on first install.
 if [[ -f "${CONF_DIR}/perception.env" ]]; then
     echo "keeping existing ${CONF_DIR}/perception.env"

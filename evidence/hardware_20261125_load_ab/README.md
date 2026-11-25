@@ -56,3 +56,37 @@
   for the motion gateway; the 76.9 % `colord-sane` host daemon and
   `hiwonder-toolbox/find_device.py` are investigated.
 - Keep 15 fps; keep the uplink 4/3 change.
+
+## Follow-up: kernel receive buffers and the perception hold
+
+After the power cycle, `net.core.rmem_max`/`rmem_default` were still 208 KB.
+They were raised to 4 MB / 1 MB and persisted in
+`/etc/sysctl.d/90-cyclonedds-rmem.conf`; the perception target and the 8765
+gateway were restarted (the camera drivers were left untouched).
+
+A 4 MB CycloneDDS `SocketReceiveBufferSize` XML was **rejected** by the 0.10.4
+build in the vendor container: both ingresses failed with
+`rcl node's rmw handle is invalid`, and the external ingress hit its
+start-limit before the XML was reverted. Do not add that element on this
+version; the kernel defaults are the only working lever here.
+
+Results with the kernel buffers raised, ingress `max_uplink_fps` 4/3 and (from
+16:15) the pose-gateway hold:
+
+- 16:12:13-16:15: 0 ext / 0 wrist stalls (rmem + 4/3, pose still active);
+  load 13-16.
+- 16:15: pose gateway stopped with `/run/armpi-ops/hold-pose`; the deployed
+  `armpi-ops-health` logged `skipped restart of armpi-gateway-pose: perception
+  hold` and left it down. Load fell from 16.2 to ~10.7.
+- 16:12:13-16:16:31: **0 ext / 0 wrist stalls, both ingresses active** (about
+  4.5 min, versus the 4/4 stalls per 10 min baseline). This is a promising but
+  short window, not a long-run proof.
+
+The external start-limit alert at 16:11 was produced by the rejected XML
+experiment, not by a production fault.
+
+Next: keep the kernel buffers, 4/3 and the hold for perception runs; observe a
+longer window; the camera-driver writer sockets are still the old 208 KB until
+the drivers are restarted (a fragile step; do it in a quiescent window). The
+8765 gateway (~35 % CPU) is the remaining optional load. Do not apply the
+`SocketReceiveBufferSize` XML on CycloneDDS 0.10.4.
