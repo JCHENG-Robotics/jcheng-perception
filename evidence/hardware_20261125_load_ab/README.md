@@ -90,3 +90,27 @@ longer window; the camera-driver writer sockets are still the old 208 KB until
 the drivers are restarted (a fragile step; do it in a quiescent window). The
 8765 gateway (~35 % CPU) is the remaining optional load. Do not apply the
 `SocketReceiveBufferSize` XML on CycloneDDS 0.10.4.
+
+## 30-minute observation: FAILED (2026-11-25 16:18:46-16:54)
+
+The sampler `perception-observe30` recorded load, NRestarts, ingress/fusion
+states, pose/hold and memory every 30 s; a laptop waiter polled for its
+`.done` file. At the start the target, both drivers and the 8765 gateway were
+active, the pose gateway was held down, rmem was 4 MB/1 MB and there had been
+0 stalls since 16:12:13. The first five minutes showed 0 stalls.
+
+At 16:54 the Pi was unreachable: SSH timed out (banner exchange), ping 100 %
+loss, and the waiter timed out after 35 min without the `.done` file. The
+sampler log could not be fetched; the Pi is offline and `/tmp` may be lost
+across a reboot. The laptop USB Ethernet interface `enx00e04ca373c7`
+disappeared (no `ip link` entry, NO-CARRIER) and `jcheng-perception-gpu`
+failed (`error creating node`, link down); the combined status is
+`robot_unreachable` with a recent laptop alert.
+
+Conclusion: the kernel receive-buffer raise + uplink 4/3 + pose hold is **not
+sufficient for 30-minute stability**. The 5-minute zero-stall window was not
+predictive; the reader/host wedge recurs and takes the whole Pi down. The next
+investigation must address the host CPU/load or the DDS reader fundamentally
+(the 8765 gateway ~35 %, the camera drivers ~76 %, and the possibility that the
+Pi host itself is at its limit), not add more recovery layers. A power cycle
+(and possibly replugging the USB Ethernet adapter) is required.
