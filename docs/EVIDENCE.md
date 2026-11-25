@@ -449,6 +449,16 @@ systemd `Restart=always` / `RestartSec=2`；每个 unit 的上限是 10 次 / 30
   `Result=start-limit-hit`，告警文件 `label=ingress-d435i_ext` 保留到本次
   boot；本 boot 25 min 内外机位已 9 次、腕部 6 次。10/300 的上限与告警按设计
   工作，外机位 DDS wedge 频率仍可能触达上限（是否放宽是策略选择）。
+- **死相机验证**：用临时 `deadcam` 配置（不存在的 topic，保留 external/wrist
+  两种角色）跑基线 ingress，约 7 s 后以
+  `ingress link stalled (frames=0, depth=0); exiting for respawn` 退出 0。
+  状态初始 `frames/depth=-1`，第一个 watchdog tick 读到 0 就把链路标记为已见，
+  因此 4 s stall 已覆盖“从启动起从未出帧”的情况，不需要额外首帧逻辑。
+- **笔记本 GPU 纳入 user unit**：`deploy/systemd/laptop/` 安装
+  `jcheng-perception-gpu.service`（`Restart=always` + 10/300 s + OnFailure），
+  模型 `/opt/jcheng/models/yolov8s.pt`、持久化 CycloneDDS XML、双相机配置。
+  实测 `detector loaded`、机器人侧 `gpu_alive=true`、stop/start `Result=success`。
+  DDS reader 冻结（进程活着但无帧）不在 systemd 视野内，仍需应用层 watchdog。
 
 验证中修掉的坑：`set -u` 会让 ROS `setup.bash` 报 `AMENT_TRACE_SETUP_FILES:
 unbound variable`；停进程时 rclpy teardown 以 1 退出，若把 1 一并记为

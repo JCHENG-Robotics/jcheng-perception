@@ -329,6 +329,12 @@ journalctl -u 'jcheng-perception-*' -f
   观测会被丢弃，`ext_tf` 让外机位链有 `base_link`。`wrist_tf` 只读总线舵机
   （`get_state`），不发运动命令，依赖厂商工作区的 `ros_robot_controller_msgs`
   （`perception.env` 的 `JCHENG_PERCEPTION_VENDOR_SETUP`）。
+- 笔记本 GPU 节点是 user unit（`deploy/systemd/laptop/`）：
+  `jcheng-perception-gpu.service` 用 `/opt/jcheng/models/yolov8s.pt` 和
+  `gpu_laptop.yaml`，`Restart=always` + 10/300 s + 本地 OnFailure 告警。
+  进程活着但 DDS reader 冻结时 systemd 不会发现，edge 重启后若
+  `gpu_alive=false` 需 `systemctl --user restart jcheng-perception-gpu`（应用层
+  watchdog 尚未实现）。
 
 完整安装/验证/告警/回滚说明见
 [`deploy/systemd/README.md`](../deploy/systemd/README.md)。厂商栈在容器内运行，

@@ -86,6 +86,12 @@ which writes a journal `user.err` entry plus
    sample). The later sample shows `gpu_alive=false` because the laptop GPU node
    left running from the 2026-11-24 session stopped delivering heartbeats; that
    is the known cross-machine DDS-wedge issue, not this change.
+7. **A camera dead from start is already covered** (`deadcam_test.txt`): a
+   temporary config with a `deadcam` external role and nonexistent topics exits
+   after ~7 s with `ingress link stalled (frames=0, depth=0); exiting for
+   respawn` (rc 0). The state initialises the counters to `-1`, so the first
+   watchdog tick reads 0 and marks the link as seen; the 4 s stall deadline then
+   applies even with zero real frames. No first-frame-specific code is needed.
 
 ## Boot acceptance (2026-11-25, after install)
 
@@ -114,6 +120,23 @@ the journal shows 13:17 for a boot that ended at 14:14 wall time). Results:
 - The 28 `<defunct>` entries accumulated before the reboot were cleared (3
   remained after the boot-time/health checks). Load average was 13-14 during
   the check.
+
+## Laptop GPU unit (2026-11-25)
+
+The laptop detector is now a systemd **user** unit
+(`~/.config/systemd/user/jcheng-perception-gpu.service`) installed by
+`deploy/systemd/laptop/install-laptop-gpu.sh`, with the verified
+`/opt/jcheng/models/yolov8s.pt`, a persistent CycloneDDS XML and the
+two-camera `gpu_laptop.yaml`. `Restart=always` + `StartLimitBurst=10` /
+`StartLimitIntervalSec=300` + `OnFailure` mirror the robot-side policy.
+
+Verified (`gpu_unit.txt`): unit active/enabled, linger on, `detector loaded`
+for both cameras; robot `/perception/status` `gpu_alive=true`; restart kept
+`NRestarts=0`; stop ended `inactive` with `Result=success` and no alert; start
+returned active. The known reader wedge (process alive, `frames_received`
+frozen) is **not** visible to systemd; the documented rule remains:
+after an edge restart, if `gpu_alive` stays false, run
+`systemctl --user restart jcheng-perception-gpu`.
 
 ## Problems found and fixed during validation
 
@@ -177,6 +200,10 @@ the journal shows 13:17 for a boot that ended at 14:14 wall time). Results:
   status-137 boot failure, the real `start-limit-hit` alert from the previous
   boot, counters, GPU status after the manual laptop restart, TF and defunct
   count.
+- `deadcam_test.txt` — fake-camera test proving the existing 4 s watchdog
+  exits an ingress whose camera never produced a first frame.
+- `gpu_unit.txt` — laptop GPU user unit: state/enable/linger, detector load,
+  restart/stop/start lifecycle and the robot-side `gpu_alive` check.
 
 ## How to reproduce
 

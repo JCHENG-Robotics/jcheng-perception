@@ -1,0 +1,16 @@
+Dead-camera watchdog test (no real camera used)
+captured: 2026-11-25 14:52 +08:00
+method: a temporary cameras_deadcam.yaml keeps one external (deadcam) and one
+wrist role; deadcam points at nonexistent topics. The installed baseline node
+runs with camera_filter=deadcam and ingress_watchdog=true.
+
+output:
+[INFO] [1795589524.483225760] [perception_ingress_deadcam]: edge ready: cameras=deadcam target_frame=base_link uplink=False
+[WARN] [1795589524.484658130] [perception_ingress_deadcam]: TF unavailable base_link -> deadcam_optical: "base_link" passed to lookupTransform argument target_frame does not exist.
+[ERROR] [1795589529.421107664] [perception_ingress_deadcam]: deadcam: ingress link stalled (frames=0, depth=0); exiting for respawn
+elapsed=7s rc=0
+
+conclusion: a camera that never produces a first frame is already covered by
+the existing 4 s link watchdog. The state initialises frames/depth to -1; the
+first watchdog tick reads 0 and marks the link as seen, so the stall deadline
+applies even with zero real frames. No first-frame-specific code is needed.

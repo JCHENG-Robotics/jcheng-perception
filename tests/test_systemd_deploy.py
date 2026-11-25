@@ -219,3 +219,49 @@ def test_container_units_wait_for_the_vendor_bringup():
         text = unit_text(unit)
         assert 'After=' in text and 'armpi-vision.service' in text, unit
         assert 'Wants=' in text and 'armpi-vision.service' in text, unit
+
+
+LAPTOP = DEPLOY / 'laptop'
+LAPTOP_FILES = (
+    LAPTOP / 'jcheng-perception-gpu.service',
+    LAPTOP / 'jcheng-perception-gpu-alert@.service',
+    LAPTOP / 'gpu-run.sh',
+    LAPTOP / 'gpu-alert.sh',
+    LAPTOP / 'gpu_laptop.yaml',
+    LAPTOP / 'cyclonedds-laptop.xml',
+    LAPTOP / 'install-laptop-gpu.sh',
+    LAPTOP / 'README.md',
+)
+
+
+def test_laptop_gpu_unit_and_scripts_exist():
+    for path in LAPTOP_FILES:
+        assert path.is_file(), path
+    for script in ('gpu-run.sh', 'gpu-alert.sh', 'install-laptop-gpu.sh'):
+        assert (LAPTOP / script).stat().st_mode & 0o111, script
+
+
+def test_laptop_gpu_unit_policy_and_config():
+    text = unit_text(LAPTOP / 'jcheng-perception-gpu.service')
+    assert 'Restart=always' in text
+    assert 'RestartSec=5' in text
+    assert 'StartLimitIntervalSec=300' in text
+    assert 'StartLimitBurst=10' in text
+    assert 'OnFailure=jcheng-perception-gpu-alert@gpu.service' in text
+    assert 'KillSignal=SIGINT' in text
+    assert 'EnvironmentFile=-%h/.config/jcheng-perception/gpu.env' in text
+
+    run = unit_text(LAPTOP / 'gpu-run.sh')
+    assert 'source /opt/ros/jazzy/setup.bash' in run
+    assert 'exec ros2 launch jcheng_perception_gpu laptop_gpu.launch.py' in run
+    assert 'RMW_IMPLEMENTATION' in run and 'CYCLONEDDS_URI' in run
+
+    config = unit_text(LAPTOP / 'gpu_laptop.yaml')
+    assert 'd435i_ext' in config and 'aurora_wrist' in config
+    assert '/opt/jcheng/models/yolov8s.pt' in config
+    assert '/perception/uplink/' in config
+
+    installer = unit_text(LAPTOP / 'install-laptop-gpu.sh')
+    assert 'enable-linger' in installer
+    assert 'laptop_gpu.launch.py' in installer
+    assert 'systemctl --user enable' in installer

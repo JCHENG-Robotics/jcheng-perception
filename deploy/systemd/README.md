@@ -186,7 +186,30 @@ docker exec -u ubuntu ArmPiUltra bash -lc '
   exec ros2 launch jcheng_perception_edge split_edge.launch.py start_tf:=false'
 ```
 
-## 7. 已知边界
+## 7. 笔记本电脑 GPU（user unit）
+
+机器人侧栈需要笔记本上的 YOLO 节点配合。`deploy/systemd/laptop/` 把它做成
+user unit（`systemctl --user`）：
+
+```bash
+bash deploy/systemd/laptop/install-laptop-gpu.sh
+systemctl --user status jcheng-perception-gpu
+```
+
+- 模型 `/opt/jcheng/models/yolov8s.pt`（不在仓库），配置
+  `~/.config/jcheng-perception/gpu_laptop.yaml`；
+- `Restart=always`、10 次 / 300 s、`OnFailure` 写
+  `~/.local/state/jcheng-perception/last-alert.txt` 等；
+- 2026-11-25 验证：`detector loaded`、机器人侧 `gpu_alive=true`、
+  stop/start `Result=success`；
+- **已知边界**：进程活着但 DDS reader 冻结（`gpu_alive` 掉、
+  `frames_received` 不增）systemd 看不到，需要应用层 watchdog；当前经验规则是
+  edge 重启后若 `gpu_alive=false` 就
+  `systemctl --user restart jcheng-perception-gpu`。
+
+完整说明：[`laptop/README.md`](laptop/README.md)。
+
+## 8. 已知边界
 
 - **TF 已纳入 target**：`wrist_tf` 需要厂商工作区里的 `ros_robot_controller_msgs`
   （`/etc/jcheng-perception/perception.env` 的 `JCHENG_PERCEPTION_VENDOR_SETUP`），
