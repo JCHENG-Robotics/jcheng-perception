@@ -8,6 +8,16 @@ their original narrative order.
 
 ## [Unreleased]
 
+- D435i depth-missing recovery (2026-11-25): a container restart can leave the
+  depth unit closed (`uvcvideo -71`) while colour still streams, so the ingress
+  exits on `depth=0` until the systemd start limit. Recovery: restart
+  `armpi-rs-depth` (its IR warm-up retries), then `reset-failed` and start
+  `jcheng-perception-ingress@d435i_ext`. Documented in
+  `docs/FAILURE_MODES.md` §4.1; no motion.
+- ADR 0004 executed on the robot (2026-11-24): `armpi-ext-cam.service` disabled;
+  `armpi-rs-depth.service` now publishes colour plus aligned depth, and the
+  config uses `/camera/aligned_depth_to_color/image_raw`. This retires the
+  unaligned split UVC/depth topology.
 - Split edge for DDS reader isolation: `perception_edge` gained
   `camera_filter`, `publish_targets`, `publish_status` and an ingress watchdog;
   new `perception_fusion` subscribes to the per-camera observation topics and
