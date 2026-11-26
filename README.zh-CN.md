@@ -331,7 +331,7 @@ AABB 与 PCA OBB；已测 1 m 合成平面、平移、零深度和空 mask。尚
 0.960/0.437/0.600；瓶颈是分割/匹配。在公开 8 图 `40_70mm` 集（9,208 个 GT
 实例）上，bbox + 局部 mask 关系图可扩展到稠密场景：经典匹配 10.4%，
 P/R/F1 0.787/0.015/0.030；SAM2.1 匹配 59.1%，P/R/F1 0.957/0.394/0.558。
-多视角身份与运行时集成仍待做。
+多视角身份目前只有 S4 设计稿（未实现），运行时集成仍待做。
 
 设计与证据：
 
@@ -339,6 +339,7 @@ P/R/F1 0.787/0.015/0.030；SAM2.1 匹配 59.1%，P/R/F1 0.957/0.394/0.558。
 - [S1.5 SAM 2.1 离线 MVE](docs/ORE_SCENE_S1_5.md)
 - [S2 可见几何 MVE](docs/ORE_SCENE_S2.md)
 - [S3 关系图 MVE](docs/ORE_SCENE_S3.md)
+- [S4 多视角关联设计稿](docs/ORE_SCENE_S4.md)（仅设计，未实现）
 - [调研](docs/ORE_SCENE_RESEARCH.md) ·
   [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [路线图](docs/ORE_SCENE_ROADMAP.md) ·

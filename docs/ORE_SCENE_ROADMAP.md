@@ -17,7 +17,7 @@
 | S1.5 | 深度分割后端对照（SAM 2.1） | In progress（离线 MVE，2026-11-26） | Partially verified（40–70 mm）；UAV 负迁移 | 无（远端 Orin） | `evidence/ore_scene_sam2_20261126/` |
 | S2 | 实例级 3D 可见几何 | In progress（离线合成 MVE，2026-11-26） | Partially verified（仅公式/失败路径） | 中（离线录制/仿真；真机只读） | `docs/ORE_SCENE_S2.md`；2 个几何测试 |
 | S3 | 结构化 Scene Graph / Scene State | In progress（schema v2 几何+关系原型，2026-11-26） | Partially verified（受控合成 + 公开 8 图稠密评测） | 无（离线） | 18 场景受控基准 P/R/F1 1.0；e2e relation F1 0.067（经典）→0.600（SAM2）；公开 40_70mm 8 图（9,208 GT）F1 0.030→0.558；无真实/独立关系标注 |
-| S4 | 多视角实例关联与场景融合 | Planned | Unverified | 中（双摄录制/静态真机，只读） | 待立 |
+| S4 | 多视角实例关联与场景融合 | Design drafted（2026-11-26，未实现） | Unverified（设计稿） | 中（双摄录制/静态真机，只读） | `docs/ORE_SCENE_S4.md` |
 | S5 | 主动感知 / NBV | Planned | Unverified | 高（仿真先行，真机需授权） | 待立 |
 | S6 | 抓取可操作性评估 | Planned | Unverified | 高（仿真/离线，真机需授权） | 待立 |
 | S7 | Applications/Learning/Benchmark 集成 | Planned | Unverified | 无（契约/离线） | 待立 |
@@ -269,42 +269,53 @@ round-trip；大场景性能基准。
 
 **实机依赖**：无（离线）；S4 才需要多视角。
 
-## 8. S4 — 多视角实例关联与场景融合（Planned）
+## 8. S4 — 多视角实例关联与场景融合（Design drafted，未实现）
 
 **目标**：把外机位/腕部同一物理实例关联起来，形成跨视角一致的场景状态；输出
 关联置信度与证据，不把关联 ID 当客观真值。
 
+**详细设计**：[`ORE_SCENE_S4.md`](ORE_SCENE_S4.md)（2026-11-26，Design only）。
+本节只是摘要；门控、数据模型、评测协议与待 Board 决策以该文为准。
+
 **前置**：S2 几何可用；S3 schema v2 稳定；双摄时间同步/标定可用。
 
-**技术选型**：3D 几何门控（可见中心/点云距离、尺寸、支撑面）+ 匈牙利匹配；
-2D mask IoU/特征作为第二证据；时序一致性作为第三证据。SAM 2 视频传播可作为
-研究对照，不作为身份真值。
+**技术选型**：以互相投影支持（一个视角的可见点投影到另一视角的实例 mask 内，
+且深度一致）为主证据；对称 Chamfer、尺寸相容性、支撑面/关系上下文为辅；
+可见质心 Mahalanobis 只作弱先验，因为两视角看到不同表面，可见质心不相等。
+匈牙利匹配 + `ambiguity_margin`；不做强制一对一。SAM 2 视频传播仅作研究对照，
+不作为身份真值。
 
-**输入/输出**：两路 `SceneState` + 相机外参/时间戳；输出融合 `SceneState`，
-含 `source_cameras`、`association_confidence`、`association_evidence`、
-`unmatched_reason`。
+**输入/输出**：两路 `SceneState` v2 + 内参/外参/时间戳；输出独立的
+`jcheng.scene_association.v1`（设计提案，未入契约），含 `clusters`、
+`associated`/`ambiguous`/`singleton`、`association_confidence`、
+`association_evidence`、`unmatched_reason` 和单视角原始证据引用。
 
 **实现任务**：
 
-1. 跨视角候选生成（3D 距离/尺寸/平面门控）。
-2. 匈牙利/贪心匹配与冲突处理。
-3. 融合可见几何/不确定性；保留单视角证据。
+1. 离线合成双视角生成器（已知外参、实例 mask+depth、遮挡）。
+2. 候选生成（时间/视锥/AABB/尺寸门控）+ 互相投影支持 + 匈牙利。
+3. 可见几何融合/不确定性；保留单视角证据。
 4. 关联失败/歧义显式输出。
-5. 离线双摄回放与静态真机只读验证。
+5. 评测 CLI（配对/聚类/敏感性/消融）。
+6. 离线双摄回放与静态真机只读验证（逐次授权）。
 
 **测试要求**：合成双视角真值；同一矿石/相邻矿石的混淆矩阵；时间偏移/外参
-误差敏感性；空场景/单视角缺失。
+误差敏感性；空场景/单视角缺失；置换不变性与确定性；歧义不强制 ID。
 
 **验收标准（建议，待 Board 确认）**：
 
-- 关联准确率/召回率在合成双视角集上报告；真实集用可核验子集。
-- 每个关联有证据；歧义场景输出 `ambiguous` 而不是强行同 ID。
-- 不修改 `jcheng-system` 运动路径；不发布运动命令。
+- 合成 easy pair F1 ≥0.95、dense/occluded ≥0.80（建议值，未跑）；
+- 歧义构造正确标记 ≥0.90，且 ambiguous 绝不输出唯一 `global_id`；
+- 真实集只报告人工核验子集，不设最低 F1；
+- 每个关联有证据；不修改 `jcheng-system` 运动路径；不发布运动命令。
 
-**风险**：跨视角偏置（现有感知已知 10–14 mm 常数偏移）；遮挡导致单视角缺失；
-外参误差。缓解：先静态、同场景、已知目标；分视角报告；不接运动。
+**风险**：可见表面差异导致质心偏移（历史静态实验曾出现 10–14 mm 常数偏移，
+疑似外参；另一轮 AprilTag 为 3.37 mm）；遮挡导致单视角缺失；外参误差。
+缓解：主证据用互相投影支持；显式 `occluded`/`ambiguous`；先静态、同场景、
+已知目标；分视角报告；不接运动。
 
-**实机依赖**：中高。需要双摄静态录制/只读真机；逐次授权。
+**实机依赖**：中高。需要双摄静态录制/只读真机；逐次授权。S4.1–S4.4 可完全
+离线。
 
 ## 9. S5 — 主动感知 / Next Best View（Planned）
 

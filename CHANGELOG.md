@@ -8,6 +8,13 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S4 multi-view association design draft (2026-11-26): defines per-view
+  `SceneState` inputs, mutual-projection support as the primary evidence (visible
+  centroids differ by view), Hungarian matching with an ambiguity margin,
+  `associated`/`ambiguous`/`singleton` statuses, a proposed
+  `jcheng.scene_association.v1` file, a synthetic + real-static evaluation
+  protocol, and proposed acceptance gates. Design only: no implementation, no
+  data collection, no DDS/device/motion/interfaces change.
 - S3 dense-scene relation evaluation (2026-11-26): added bbox + local-mask
   relation graph and matching, so public 5 MP / ~1000-instance scenes no longer
   need full-image boolean masks. On the 8-image Mendeley 40_70mm test split

@@ -375,7 +375,7 @@ P/R/F1 0.850/0.035/0.067; SAM2.1 masks match 76.3% and raise this to
 public `40_70mm` set (9,208 GT instances) a bbox/local-mask relation graph
 scales to dense scenes: classical match 10.4% gives P/R/F1
 0.787/0.015/0.030, SAM2.1 match 59.1% gives 0.957/0.394/0.558. Multi-view
-identity and runtime integration remain planned.
+identity is design-only (S4 draft) and runtime integration remains planned.
 
 Design and evidence:
 
@@ -383,6 +383,7 @@ Design and evidence:
 - [S1.5 SAM 2.1 offline MVE](docs/ORE_SCENE_S1_5.md)
 - [S2 visible geometry MVE](docs/ORE_SCENE_S2.md)
 - [S3 relation graph MVE](docs/ORE_SCENE_S3.md)
+- [S4 multi-view association design](docs/ORE_SCENE_S4.md) (design only, not implemented)
 - [Research](docs/ORE_SCENE_RESEARCH.md) ·
   [Architecture](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [Roadmap](docs/ORE_SCENE_ROADMAP.md) ·
