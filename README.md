@@ -10,13 +10,13 @@ with the **capture timestamp**, the Pi 5 matches depth and TF by that timestamp,
 weights the two views by distance-dependent variance, and publishes one fused
 target pose for the arm planner.
 
-> Status: **Experimental** — v0.1.0 as of 2026-11-25: code, offline simulation,
+> Status: **Experimental** — v0.1.0 as of 2026-11-26: code, offline simulation,
 > single-host synthetic, Pi 5 ARM64 synthetic, the wrist real-camera data path,
 > bus-measured wrist TF, the single static-pose table-plane check, the
 > cross-machine YOLO detection path, the ADR 0004 aligned external camera, the
-> split-edge ingress/fusion pipeline and a single 60 s dual-view tag run are
-> verified. Multi-pose accuracy, a repeatable full dual-view window and motion
-> integration are not.
+> split-edge ingress/fusion pipeline, a single 60 s dual-view tag run and the
+> offline ore-scene S1 pipeline are verified. Multi-pose accuracy, a repeatable
+> full dual-view window, real-ore accuracy and motion integration are not.
 > This repository contains no model weights, no vendor code and publishes no
 > motion command.
 > **Ore scene understanding (offline S1, 2026-11-26):** a ROS-free
@@ -213,7 +213,7 @@ Full fields: [TOPICS.md](docs/TOPICS.md).
 | Output track | 1 confirmed, two-view fused, weights 0.21 / 0.79, phase FINE |
 | Real-model CPU smoke | ONNX 197.5 ms / OpenVINO 126.7 ms / Ultralytics 1.04 s (first frame), 4 boxes each |
 | Real-model GPU smoke | RTX 3060: Ultralytics steady **9.0 ms (FP32) / 7.4 ms (FP16)** per image; ROS node 54.3 ms/frame average |
-| Unit tests | 77 passed (current `main`) |
+| Unit tests | 93 passed (current `main`) |
 | colcon build | 4 packages (Jazzy host) |
 
 > These synthetic numbers are not hardware accuracy or latency validation. The

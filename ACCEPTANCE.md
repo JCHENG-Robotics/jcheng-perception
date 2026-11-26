@@ -1,11 +1,12 @@
 # Acceptance report — jcheng-perception
 
-> Status: **inconclusive** as of 2026-11-25 for v0.1.0.
+> Status: **inconclusive** as of 2026-11-26 for v0.1.0.
 > Operator: JerichoCheng. Reviewer: pending.
 > Scope: core/synthetic pipeline, Pi 5 build, wrist real data path, wrist TF,
 > single-pose table-plane geometry, the cross-machine YOLO detection path,
 > ADR 0004 aligned external depth, the split-edge ingress/fusion pipeline, one
-> 60 s dual-view tag run and the D435i depth-recovery procedure.
+> 60 s dual-view tag run, the D435i depth-recovery procedure and the offline
+> ore-scene S0/S1 pipeline.
 > Synthetic and partial hardware gates pass, including one dual-view run. The
 > full dual-view window is not repeatable, multi-pose accuracy and motion
 > integration have not run, so this is not a metric perception acceptance.
@@ -15,7 +16,7 @@
 
 | Gate | Command | Level | Result | Evidence |
 |---|---|---|---|---|
-| Unit tests | `python3 -m pytest tests -q` | L1 | pass (77 tests) | `tests/` |
+| Unit tests | `python3 -m pytest tests -q` | L1 | pass (93 tests) | `tests/` |
 | Offline simulation | `python3 scripts/simulate_pipeline.py` | L3 | pass | `docs/EVIDENCE.md` |
 | ROS build (host) | `colcon build --packages-select ...` | L0 | pass (4 packages) | CI `ros-build` |
 | Synthetic end-to-end | `ros2 launch ... synthetic_demo.launch.py` | L3 | pass | 10 Hz, match 99%+ |
@@ -30,6 +31,7 @@
 | Dual-view tag run 9 | two-view tag run, 60 s | L5 (single run) | pass — cross-view 3.37 mm; p95 3.78 mm; final 1.19 mm | `evidence/hardware_20261124_dualview/` |
 | Dual-view repeatability run 10 | repeat 60 s dual-view | L5 | inconclusive — wrist depth reader wedged at 7.5 s | `CHANGELOG.md` |
 | D435i depth recovery | restart `armpi-rs-depth`, reset-failed ingress | L5 (recovery) | pass — documented recovery | `docs/FAILURE_MODES.md` §4.1 |
+| Ore scene S1 (offline) | `scripts/ore_scene.py` synthetic and public Mendeley baselines | L1–L3 | pass — synthetic/public baselines; real-ore accuracy Unverified | `evidence/ore_scene_s1_20261126/`; `docs/ORE_SCENE_S1.md` |
 | Multi-pose / motion accuracy | — | L5 | not run | — |
 
 ## 2. Verified claims
@@ -56,6 +58,7 @@
 |---|---|---|
 | Dual-view repeatability | Run 10 wrist depth reader wedged at 7.5 s | Full dual-view window is not repeatable |
 | Multi-pose accuracy | Only one static arm pose was measured | Poses may not generalise; not cleared for motion |
+| Real-ore accuracy / depth / multi-view / grasp | Offline ore-scene S1 uses synthetic and public baselines only | No real-ore product claim |
 | Fixed-target and moving-target error | Not measured | No accuracy claim |
 | 1 s occlusion recovery time | Not measured on hardware | Tracking recovery is unknown |
 | GPU loss → COASTING → LOST timing | Not measured on hardware | Degradation timing is unknown |
@@ -80,7 +83,7 @@
 
 | Role | Name | Date |
 |---|---|---|
-| Operator | JerichoCheng | 2026-11-25 |
+| Operator | JerichoCheng | 2026-11-26 |
 | Reviewer | pending | — |
 
 ## 6. Machine-readable report
