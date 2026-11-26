@@ -1,0 +1,171 @@
+{
+  "data_source": "synthetic",
+  "dataset_id": "relation_benchmark_20261126",
+  "evaluated_scenes": 18,
+  "f1": 1.0,
+  "hardware_validation": false,
+  "limitations": [
+    "Synthetic constructed pairs; not real ore relations.",
+    "Evaluation uses GT masks (oracle segmentation), not predicted masks.",
+    "Contact collapses touching/near into one predicate.",
+    "No real relation-pair labels or hardware validation."
+  ],
+  "params": {
+    "adjacency_px": 5,
+    "max_instances": 128,
+    "touching_min_px": 8
+  },
+  "per_scene": {
+    "rel-20261126-clear-012": {
+      "f1": null,
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": null,
+      "true_positive": 0,
+      "truth_edges": 0
+    },
+    "rel-20261126-clear-013": {
+      "f1": null,
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": null,
+      "true_positive": 0,
+      "truth_edges": 0
+    },
+    "rel-20261126-clear-014": {
+      "f1": null,
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": null,
+      "true_positive": 0,
+      "truth_edges": 0
+    },
+    "rel-20261126-clear-015": {
+      "f1": null,
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": null,
+      "true_positive": 0,
+      "truth_edges": 0
+    },
+    "rel-20261126-clear-016": {
+      "f1": null,
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": null,
+      "true_positive": 0,
+      "truth_edges": 0
+    },
+    "rel-20261126-clear-017": {
+      "f1": null,
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": null,
+      "true_positive": 0,
+      "truth_edges": 0
+    },
+    "rel-20261126-contact-000": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-contact-001": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-contact-002": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-contact-003": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-contact-004": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-contact-005": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-near-006": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-near-007": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-near-008": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-near-009": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-near-010": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "rel-20261126-near-011": {
+      "f1": 1.0,
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    }
+  },
+  "precision": 1.0,
+  "predicted_edges": 12,
+  "real_ore_validation": false,
+  "recall": 1.0,
+  "schema_version": "jcheng.relation_evaluation.v1",
+  "true_positive": 12,
+  "truth_edges": 12
+}

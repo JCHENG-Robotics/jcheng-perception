@@ -11,9 +11,9 @@
   ],
   "tests": {
     "command": "python3 -m pytest tests -q",
-    "passed": 102,
+    "passed": 103,
     "failed": 0,
-    "s3_tests": 3
+    "s3_tests": 4
   },
   "checks": [
     "v1 record remains unchanged",
@@ -21,7 +21,8 @@
     "missing geometry -> not_computed",
     "true_centroid/forbidden fields rejected",
     "build_relation_graph touching/near edges with contact evidence",
-    "v2 relation references/self/duplicate validation"
+    "v2 relation references/self/duplicate validation",
+    "controlled 18-scene relation benchmark P/R/F1 1.0"
   ],
   "limitations": [
     "Synthetic depth only; no real depth/NEES.",

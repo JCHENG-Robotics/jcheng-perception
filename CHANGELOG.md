@@ -8,6 +8,12 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S3 relation benchmark (2026-11-26): controlled 18-scene synthetic benchmark
+  (6 contact / 6 near / 6 clear) with pair truth defined by construction gaps,
+  evaluated on GT masks. `generate-relation-benchmark` and
+  `evaluate-relations` clip into P/R/F1 1.0 for these controlled cases; this is
+  a sanity check, not real-ore relation accuracy. One new test (103 total).
+  No runtime, DDS, device or motion change.
 - Scene State v2 relation graph prototype (2026-11-26):
   `build_relation_graph` emits evidence-backed `touching`/`near` edges (never
   `occludes` from a single RGB view); `build_scene_v2(..., relations=...)`

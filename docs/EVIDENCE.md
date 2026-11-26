@@ -547,7 +547,7 @@ python3 -m pytest tests -q
   mask 在仓库外）。
 - 转换器：`python3 scripts/ore_scene.py import-sam2-tiles`（无 torch/SAM2
   导入）复现独立 4 图 1008 AP50 0.5681 与混合 AP50 0.6375 / AP50-95 0.3909；
-  新增 4 个测试，总计 **100 passed**（含 S2 geometry / S3 v2）。
+  新增 4 个测试；含 S2/S3 后当前总计 **103 passed**。
 - 设计与限制：`docs/ORE_SCENE_S1_5.md`。
 
 ### 6.5 S2 可见几何 MVE（2026-11-26）
@@ -568,7 +568,7 @@ D435i/Aurora 噪声与空洞未覆盖。可见中心/尺寸/OBB 不是真实质�
 体积；这些字段保持 `unknown`。
 
 - 设计与限制：`docs/ORE_SCENE_S2.md`。
-- 测试：100 passed（含 2 个几何测试）。
+- 测试：当前 103 passed（S2 含 2 个几何测试）。
 
 ### 6.6 Scene State v2 几何原型（2026-11-26）
 
@@ -581,7 +581,24 @@ D435i/Aurora 噪声与空洞未覆盖。可见中心/尺寸/OBB 不是真实质�
   search radius/`depth_order=unknown`；不发单视角 `occludes`；
 - `build_scene_v2(..., relations=...)` 校验引用/自环/重复；
   `compare_relation_sets` 提供 P/R/F1 工具，但**无独立配对标注**；
-- 3 个测试；总计 **102 passed**；多视角身份仍待做；
+- 4 个测试；总计 **103 passed**；多视角身份仍待做；
 - 设计与兼容：`docs/SCENE_REPRESENTATION.md` §4.1/§8/§9。
 
 真实深度、NEES、独立关系标注和运行时均未验证。
+
+### 6.7 S3 关系基准（2026-11-26）
+
+受控合成基准：18 场景 = 6 contact（间距 0 px）+ 6 near（4 px）+ 6 clear
+（80 px）；真值来自构造间距，不是关系检测器输出；评测使用 GT mask
+（oracle segmentation），`touching`/`near` 折叠为 `contact`。
+
+| 指标 | 结果 |
+|---|---|
+| 预测 / 真值边 | 12 / 12 |
+| Precision / Recall / F1 | **1.000 / 1.000 / 1.000** |
+| 场景 | 18/18 无错误 |
+
+这是**sanity benchmark**：矩形、固定间距、GT mask；不能外推到真实矿石、
+预测 mask 误差或真实关系标注。证据：
+`evidence/ore_scene_s3_relations_20261126/`；设计与限制：
+`docs/ORE_SCENE_S3.md`。

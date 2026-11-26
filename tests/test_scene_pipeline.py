@@ -30,6 +30,10 @@ from jcheng_perception_scene.dataset import (
 from jcheng_perception_scene.geometry import GeometryParams, visible_geometry
 from jcheng_perception_scene.metrics import evaluate
 from jcheng_perception_scene.pipeline import run_dataset, run_unlabelled
+from jcheng_perception_scene.relation_benchmark import (
+    evaluate_relation_benchmark,
+    generate_relation_benchmark,
+)
 from jcheng_perception_scene.relations import (
     RelationParams,
     build_relation_graph,
@@ -346,6 +350,25 @@ def test_relation_set_comparison_and_v2_attachment():
     with pytest.raises(ValueError):
         build_scene_v2(
             scene_v1.to_dict(), {}, relations=edges + edges)
+
+
+def test_relation_benchmark_generate_and_evaluate(tmp_path):
+    dataset_path, truth_path = generate_relation_benchmark(
+        str(tmp_path / 'relation-benchmark'), per_class=2, seed=7,
+        created_at=CREATED_AT)
+    dataset = load_dataset(str(tmp_path / 'relation-benchmark'))
+    result = evaluate_relation_benchmark(
+        dataset, truth_path, RelationParams(
+            adjacency_px=5, touching_min_px=8, max_instances=128))
+    assert result['precision'] == pytest.approx(1.0)
+    assert result['recall'] == pytest.approx(1.0)
+    assert result['f1'] == pytest.approx(1.0)
+    assert result['predicted_edges'] == 4
+    assert result['truth_edges'] == 4
+    assert result['evaluated_scenes'] == 6
+    assert result['data_source'] == 'synthetic'
+    assert result['hardware_validation'] is False
+    assert result['real_ore_validation'] is False
 
 
 def test_scene_v2_attaches_visible_geometry():

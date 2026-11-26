@@ -106,6 +106,7 @@ jcheng-perception/
 │   ├── ORE_SCENE_S1.md           # S1 验证报告
 │   ├── ORE_SCENE_S1_5.md         # SAM 2.1 离线 MVE 报告
 │   ├── ORE_SCENE_S2.md           # 可见几何 MVE 报告
+│   ├── ORE_SCENE_S3.md           # 关系图 MVE 报告
 │   └── adr/
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # 临时 IDL（M2 提升到 jcheng-interfaces）
@@ -118,7 +119,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 102 项 ROS-free 测试（77 原有 + 25 矿石场景/S2/S3）
+├── tests/                        # 103 项 ROS-free 测试（77 原有 + 26 矿石场景/S2/S3）
 └── capability.yaml
 ```
 
@@ -323,14 +324,16 @@ AABB 与 PCA OBB；已测 1 m 合成平面、平移、零深度和空 mask。尚
 `build_scene_v2` 把可见几何附加到冻结的 v1 记录；缺失几何写
 `not_computed`，`validate_scene_v2` 拒绝真实质心/完整尺寸/体积/质量字段。
 `build_relation_graph` 增加有证据的 `touching`/`near` 边（单视角不发
-`occludes`）；`compare_relation_sets` 已为独立配对标注准备好，但该标注尚不
-存在。多视角身份与运行时集成仍待做。
+`occludes`）；`compare_relation_sets` 在 18 个受控合成场景（6 contact /
+6 near / 6 clear，GT mask，构造真值）上得到 P/R/F1 1.0，这是 sanity check，
+不是真实关系精度。多视角身份与运行时集成仍待做。
 
 设计与证据：
 
 - [S1 验证报告](docs/ORE_SCENE_S1.md)
 - [S1.5 SAM 2.1 离线 MVE](docs/ORE_SCENE_S1_5.md)
 - [S2 可见几何 MVE](docs/ORE_SCENE_S2.md)
+- [S3 关系图 MVE](docs/ORE_SCENE_S3.md)
 - [调研](docs/ORE_SCENE_RESEARCH.md) ·
   [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [路线图](docs/ORE_SCENE_ROADMAP.md) ·

@@ -11,6 +11,10 @@ from .config import DEFAULT_CONFIG, config_sha256, load_config, validate_config
 from .dataset import import_coco_dataset, load_dataset, read_predictions
 from .geometry import GeometryParams, visible_geometry
 from .metrics import evaluate
+from .relation_benchmark import (
+    evaluate_relation_benchmark,
+    generate_relation_benchmark,
+)
 from .relations import (
     RelationParams,
     build_relation_graph,
@@ -67,6 +71,8 @@ __all__ = [
     'compare_relation_sets',
     'config_sha256',
     'evaluate',
+    'evaluate_relation_benchmark',
+    'generate_relation_benchmark',
     'geometry_for_mask',
     'import_coco_dataset',
     'load_config',

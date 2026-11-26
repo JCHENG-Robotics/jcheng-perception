@@ -24,6 +24,11 @@ from .dataset import (
 )
 from .metrics import evaluate
 from .pipeline import run_dataset, run_unlabelled
+from .relation_benchmark import (
+    evaluate_relation_benchmark,
+    generate_relation_benchmark,
+)
+from .relations import RelationParams
 from .sam2_tiles import load_tiles_config, run_sam2_tiles
 from .synthetic import generate_dataset
 from .types import (
@@ -194,6 +199,43 @@ def _command_import_sam2_tiles(args):
         'output': os.path.abspath(args.out),
         'metrics': os.path.join(os.path.abspath(args.out), 'metrics.json')
         if args.metrics else None,
+        'data_source': dataset.source,
+        'hardware_validation': False,
+    })
+    return EXIT_OK
+
+
+def _command_generate_relation_benchmark(args):
+    dataset_path, truth_path = generate_relation_benchmark(
+        args.out, per_class=args.per_class, seed=args.seed)
+    _print_json({
+        'dataset_manifest': dataset_path,
+        'truth': truth_path,
+        'per_class': args.per_class,
+        'seed': args.seed,
+        'source': 'synthetic',
+    })
+    return EXIT_OK
+
+
+def _command_evaluate_relations(args):
+    dataset = load_dataset(args.dataset)
+    params = RelationParams(
+        adjacency_px=args.adjacency_px,
+        touching_min_px=args.touching_min_px,
+        max_instances=args.max_instances,
+    )
+    result = evaluate_relation_benchmark(dataset, args.truth, params)
+    with open(args.out, 'w', encoding='utf-8') as handle:
+        json.dump(result, handle, indent=2, sort_keys=True)
+        handle.write('\n')
+    _print_json({
+        'metrics': os.path.abspath(args.out),
+        'precision': result['precision'],
+        'recall': result['recall'],
+        'f1': result['f1'],
+        'predicted_edges': result['predicted_edges'],
+        'truth_edges': result['truth_edges'],
         'data_source': dataset.source,
         'hardware_validation': False,
     })
@@ -385,6 +427,25 @@ def build_parser():
     run.add_argument('--allow-failures', action='store_true')
     run.add_argument('--allow-dataset-errors', action='store_true')
     run.set_defaults(func=_command_run)
+
+    relation = subparsers.add_parser(
+        'generate-relation-benchmark',
+        help='generate a controlled synthetic relation benchmark')
+    relation.add_argument('--out', required=True)
+    relation.add_argument('--per-class', type=int, default=4)
+    relation.add_argument('--seed', type=int, default=20261126)
+    relation.set_defaults(func=_command_generate_relation_benchmark)
+
+    relation_eval = subparsers.add_parser(
+        'evaluate-relations',
+        help='evaluate relation edges on GT masks against pair truth')
+    relation_eval.add_argument('--dataset', required=True)
+    relation_eval.add_argument('--truth', required=True)
+    relation_eval.add_argument('--out', required=True)
+    relation_eval.add_argument('--adjacency-px', type=int, default=5)
+    relation_eval.add_argument('--touching-min-px', type=int, default=8)
+    relation_eval.add_argument('--max-instances', type=int, default=128)
+    relation_eval.set_defaults(func=_command_evaluate_relations)
 
     sam2 = subparsers.add_parser(
         'import-sam2-tiles',

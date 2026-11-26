@@ -122,6 +122,7 @@ jcheng-perception/
 │   ├── ORE_SCENE_S1.md           # S1 validation report (Chinese)
 │   ├── ORE_SCENE_S1_5.md         # SAM 2.1 offline MVE report (Chinese)
 │   ├── ORE_SCENE_S2.md           # visible-geometry MVE report (Chinese)
+│   ├── ORE_SCENE_S3.md           # relation-graph MVE report (Chinese)
 │   └── adr/
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # provisional IDL (M2 promotes to jcheng-interfaces)
@@ -134,7 +135,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 102 ROS-free tests (77 existing + 25 ore scene/S2/S3)
+├── tests/                        # 103 ROS-free tests (77 existing + 26 ore scene/S2/S3)
 └── capability.yaml
 ```
 
@@ -365,14 +366,17 @@ visible geometry to a frozen v1 record via `build_scene_v2`; missing geometry is
 explicit `not_computed`, and `validate_scene_v2` rejects true-centroid/full-
 extent/volume/mass fields. `build_relation_graph` adds evidence-backed
 `touching`/`near` edges (never `occludes` from one RGB view);
-`compare_relation_sets` is ready for independent pair labels, which do not
-exist yet. Multi-view identity and runtime integration remain planned.
+`compare_relation_sets` scores a controlled 18-scene synthetic benchmark
+(6 contact / 6 near / 6 clear, GT masks, constructed truth) at P/R/F1 1.0,
+which is a sanity check — not real relation accuracy. Multi-view identity and
+runtime integration remain planned.
 
 Design and evidence:
 
 - [S1 validation report](docs/ORE_SCENE_S1.md)
 - [S1.5 SAM 2.1 offline MVE](docs/ORE_SCENE_S1_5.md)
 - [S2 visible geometry MVE](docs/ORE_SCENE_S2.md)
+- [S3 relation graph MVE](docs/ORE_SCENE_S3.md)
 - [Research](docs/ORE_SCENE_RESEARCH.md) ·
   [Architecture](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [Roadmap](docs/ORE_SCENE_ROADMAP.md) ·

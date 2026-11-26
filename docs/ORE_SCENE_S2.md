@@ -96,7 +96,7 @@ OBB 的轴符号选择保证右手系；`quaternion_xyzw` 与 core 的
 | 空 mask | `invalid_mask` |
 | mask/depth 形状不一致 | `ValueError` |
 
-完整测试：**99 passed**（77 原有 + 20 矿石场景/转换器 + 2 几何）。
+S2 时完整测试：**99 passed**；后续 S3/关系基准增加后当前总计 **103 passed**。
 
 ## 6. 限制与风险
 

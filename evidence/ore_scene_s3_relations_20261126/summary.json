@@ -1,0 +1,43 @@
+{
+  "schema_version": "jcheng.ore_s3_relations_mve.v1",
+  "created_at": "2026-11-26T13:24:54+00:00",
+  "hardware_claimed": false,
+  "real_ore_validation": false,
+  "scope": "controlled synthetic relation benchmark on GT masks",
+  "dataset": {
+    "dataset_id": "relation_benchmark_20261126",
+    "scenes": 18,
+    "per_class": 6,
+    "classes": [
+      "contact",
+      "near",
+      "clear"
+    ],
+    "truth": "constructed placement gaps, not detector output",
+    "source": "synthetic",
+    "license": "CC0-1.0"
+  },
+  "method": {
+    "params": {
+      "adjacency_px": 5,
+      "max_instances": 128,
+      "touching_min_px": 8
+    },
+    "instances": "GT masks (oracle segmentation)",
+    "predicate_mapping": "touching/near -> contact",
+    "metric": "pair/predicate precision/recall/F1"
+  },
+  "results": {
+    "predicted_edges": 12,
+    "truth_edges": 12,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "limitations": [
+    "Controlled synthetic rectangles, not real ore.",
+    "GT masks, not predicted segmentation.",
+    "touching and near are collapsed to contact for the benchmark.",
+    "No independent real relation labels; not an accuracy claim."
+  ]
+}
