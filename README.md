@@ -1,5 +1,7 @@
 # JCHENG Perception
 
+**English** | [简体中文](README.zh-CN.md)
+
 **Distributed robot perception (design D).** The Raspberry Pi 5 acquires images,
 decodes depth, maintains TF, keeps timestamp-indexed rings, back-projects 3D
 points, associates targets and runs the Kalman fusion; the laptop GPU runs two
@@ -8,11 +10,13 @@ with the **capture timestamp**, the Pi 5 matches depth and TF by that timestamp,
 weights the two views by distance-dependent variance, and publishes one fused
 target pose for the arm planner.
 
-> Status: **Experimental** — v0.1.0 as of 2026-11-24: code, offline simulation,
+> Status: **Experimental** — v0.1.0 as of 2026-11-25: code, offline simulation,
 > single-host synthetic, Pi 5 ARM64 synthetic, the wrist real-camera data path,
-> bus-measured wrist TF with a single static-pose table-plane check, and the
-> cross-machine external-camera real-YOLO detection path are verified.
-> Multi-pose accuracy, aligned depth and motion integration are not.
+> bus-measured wrist TF, the single static-pose table-plane check, the
+> cross-machine YOLO detection path, the ADR 0004 aligned external camera, the
+> split-edge ingress/fusion pipeline and a single 60 s dual-view tag run are
+> verified. Multi-pose accuracy, a repeatable full dual-view window and motion
+> integration are not.
 > This repository contains no model weights, no vendor code and publishes no
 > motion command.
 > **Ore scene understanding (offline S1, 2026-11-26):** a ROS-free
@@ -20,7 +24,7 @@ target pose for the arm planner.
 > state, a reproducible CLI and mask-AP evaluation. Synthetic pipeline metrics
 > are verified; real-ore accuracy is **Unverified**. No DDS, device, depth or
 > motion path is added. See [docs/ORE_SCENE_S1.md](docs/ORE_SCENE_S1.md).
-> English canonical; see [README.zh-CN.md](README.zh-CN.md) for the Chinese translation.
+> English canonical; the Chinese README is a translation.
 
 ---
 
@@ -209,7 +213,7 @@ Full fields: [TOPICS.md](docs/TOPICS.md).
 | Output track | 1 confirmed, two-view fused, weights 0.21 / 0.79, phase FINE |
 | Real-model CPU smoke | ONNX 197.5 ms / OpenVINO 126.7 ms / Ultralytics 1.04 s (first frame), 4 boxes each |
 | Real-model GPU smoke | RTX 3060: Ultralytics steady **9.0 ms (FP32) / 7.4 ms (FP16)** per image; ROS node 54.3 ms/frame average |
-| Unit tests | 58 passed (v0.1.0) |
+| Unit tests | 77 passed (current `main`) |
 | colcon build | 4 packages (Jazzy host) |
 
 > These synthetic numbers are not hardware accuracy or latency validation. The
@@ -222,7 +226,7 @@ Full fields: [TOPICS.md](docs/TOPICS.md).
 > `torch.cuda.is_available()=True`. The ROS node verified ONNX Runtime,
 > Ultralytics CPU and CUDA through the venv Python.
 
-### 7.1 Pi 5 and real cameras (data path + TF + cross-machine YOLO)
+### 7.1 Pi 5 and real cameras (data path + TF + aligned depth + dual-view)
 
 | Item | Result |
 |---|---|
@@ -232,15 +236,19 @@ Full fields: [TOPICS.md](docs/TOPICS.md).
 | Wrist real data path (mock blue detector) | GPU 4.9 Hz / 0 failures; edge emitted `blue_block-001`, FINE, wrist weight 1.0 |
 | Wrist metric TF | `wrist_tf` bus-measured at 10 Hz, 1000+ reads / 0 failures; `camera_optical_measured` |
 | Table-plane check | z=-0.0836 m (reference -0.0825 m, difference 1.1 mm), tilt 1.21°, RMS 0.61 mm; **single static pose** |
-| Cross-machine real YOLO (external) | laptop RTX 3060 + CycloneDDS; GPU 2.06 fps / 55 ms, edge received 16 detections, 0 matches because depth was unaligned; capture stamp returned unchanged |
-| External camera | UVC colour + depth-only RealSense, unaligned; ADR 0004 pending |
+| Cross-machine real YOLO (external) | laptop RTX 3060 + CycloneDDS; GPU 2.06 fps / 55 ms, edge received 16 detections; capture stamp returned unchanged (run on the earlier split camera topology) |
+| External camera (ADR 0004) | Executed 2026-11-24: `armpi-ext-cam.service` disabled; `armpi-rs-depth.service` owns the D435i and publishes colour + aligned depth; config uses `/camera/aligned_depth_to_color/image_raw` |
+| Aligned-depth rate | Colour ~6.5 Hz / aligned depth ~3.9 Hz on the rebuilt 2026-11-25 image (`jcheng-system` deploy acceptance) |
+| Split edge | Per-camera ingress + fusion with respawn; static run 4: 134 external + 226 wrist observations, cross-view 1.55 mm, fusion max/p95/final 2.14 / 1.64 / 1.96 mm; the external ingress watchdog restarted at 25 s and the fused track survived |
+| Dual-view tag run 9 | 240 external + 195 wrist observations over 60 s; cross-view 3.37 mm; fused p95 3.78 mm, final 1.19 mm, max 10.03 mm (12.4 mm view-switch transient); no 67 mm reference step |
+| Repeatability run 10 | External stream continuous for 60 s (267 observations); the wrist depth reader wedged at 7.5 s (26 observations); the full dual-view window is **not repeatable** |
+| D435i depth recovery | If depth is missing (`uvcvideo -71`), restart `armpi-rs-depth`, then `reset-failed`/start the ingress; documented in [FAILURE_MODES.md](docs/FAILURE_MODES.md) |
 
-> Details: [HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md). The test sent no
-> motion command; camera/perception processes were stopped afterwards and the
-> vendor services were left unchanged. The cross-machine YOLO test verifies the
-> detection path only; unaligned depth produces no metric observation.
-> Multi-pose/fixed-target accuracy and TF lag during motion remain unverified;
-> the current poses must not be used for motion.
+> The dual-view result is a single 60 s run; run 10 shows the wrist depth DDS
+> reader can still wedge, so the full dual-view window is not yet repeatable.
+> The aligned-depth topology is deployed; multi-pose/fixed-target accuracy and
+> TF lag during motion remain unverified. The current poses must not be used
+> for motion. The test sent no motion command.
 
 ## 8. Design boundaries
 

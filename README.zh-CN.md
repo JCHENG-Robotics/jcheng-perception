@@ -1,16 +1,19 @@
 # JCHENG Perception
 
+**简体中文** | [English](README.md)
+
 **分布式机器人视觉感知（D 方案）**：树莓派 5 负责图像采集、深度解码、TF 维护、时间戳环形缓存、3D 反投影、目标关联与卡尔曼融合；笔记本 GPU 异步承担两路 YOLO 检测。图像经压缩跨 ROS 2 传输，检测结果携带**采集时间戳**返回；Pi 5 按时间戳回溯匹配深度与 TF，两路观测按距离动态加权，输出统一目标位姿给机械臂规划。
 
-> 状态：**实验性** — v0.1.0（2026-11-24）：代码、离线仿真、单机合成、Pi 5 ARM64
-> 合成、腕部真实相机数据链路、腕部总线实测 TF 与单姿态桌面平面核验、外机位跨机
-> 真实 YOLO 检测链路已验证；多姿态精度、深度对齐与运动集成未验证。
+> 状态：**实验性** — v0.1.0（2026-11-25）：代码、离线仿真、单机合成、Pi 5 ARM64
+> 合成、腕部真实相机数据链路、腕部总线实测 TF、单姿态桌面平面核验、外机位跨机
+> 真实 YOLO 检测链路、ADR 0004 外机位对齐深度、split-edge 入站/融合管线，以及
+> 单次 60 s 双视图 tag run 已验证；多姿态精度、可重复的完整双视图窗口与运动集成未验证。
 > 本仓库不包含模型权重，不包含厂商代码，不发布任何运动命令。
 > **矿石场景理解（离线 S1，2026-11-26）**：新增 ROS-free 的
 > `jcheng_perception_scene` 子模块，提供实例 mask、版本化场景状态、可复现
 > CLI 与 mask AP 评测。合成管线已验证；真实矿石精度**未验证**。不新增
 > DDS、设备、深度或运动路径。详见 [docs/ORE_SCENE_S1.md](docs/ORE_SCENE_S1.md)。
-> 本文为英文主文档的中文对照；如有歧义，以 [README.md](README.md) 为准。
+> 本文为英文主文档的中文对照；如有歧义，以英文版为准。
 
 ---
 
@@ -190,7 +193,7 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 | 输出轨迹 | 1 条 confirmed，双视图融合，权重 0.21 / 0.79，phase FINE |
 | 真实模型 CPU 烟测 | ONNX 197.5 ms / OpenVINO 126.7 ms / Ultralytics 1.04 s（首帧），各 4 个框 |
 | 真实模型 GPU 烟测 | RTX 3060：Ultralytics 稳态 **9.0 ms（FP32）/ 7.4 ms（FP16）** 单图；ROS 节点平均 54.3 ms/帧 |
-| 单元测试 | 58 passed（v0.1.0） |
+| 单元测试 | 77 passed（当前 `main`） |
 | colcon 构建 | 4 包通过（Jazzy 主机） |
 
 > 以上合成指标不是实机精度或延迟验证。真实模型烟测是**单图推理**，不代表
@@ -201,7 +204,7 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 > Ultralytics 8.4.216**；CUDA 版使用 RTX 3060，`torch.cuda.is_available()=True`。
 > ROS 节点通过 venv Python 验证了 ONNX Runtime、Ultralytics CPU 与 CUDA。
 
-### 7.1 Pi 5 与真实相机（数据链路 + TF + 跨机 YOLO）
+### 7.1 Pi 5 与真实相机（数据链路 + TF + 对齐深度 + 双视图）
 
 | 项 | 结果 |
 |---|---|
@@ -211,13 +214,17 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 | 腕部真实链路（mock 蓝色检测） | GPU 4.9 Hz/0 失败；edge 输出 `blue_block-001`，FINE，wrist 权重 1.0 |
 | 腕部度量 TF | `wrist_tf` 总线实测 10 Hz、1000+ 次读取 0 失败；`camera_optical_measured` |
 | 桌面平面核验 | z=-0.0836 m（参考 -0.0825 m，差 1.1 mm）、倾角 1.21°、RMS 0.61 mm；**单静态姿态** |
-| 跨机真实 YOLO（外机位） | 笔记本 RTX 3060 + CycloneDDS；GPU 2.06 fps / 55 ms，edge 收到 16 次检测，深度未对齐故 0 匹配；时间戳原样回传 |
-| 外机位 | UVC 彩色 + 仅深度 RealSense，未对齐；ADR 0004 待执行 |
+| 跨机真实 YOLO（外机位） | 笔记本 RTX 3060 + CycloneDDS；GPU 2.06 fps / 55 ms，edge 收到 16 次检测；时间戳原样回传（运行于较早的分离相机拓扑） |
+| 外机位（ADR 0004） | 2026-11-24 已执行：`armpi-ext-cam.service` 停用；`armpi-rs-depth.service` 独占 D435i 并发布彩色 + 对齐深度；配置使用 `/camera/aligned_depth_to_color/image_raw` |
+| 对齐深度帧率 | 2026-11-25 重建镜像上彩色 ~6.5 Hz / 对齐深度 ~3.9 Hz（`jcheng-system` 部署验收） |
+| Split edge | 每相机独立 ingress + fusion，带 respawn；静态 run 4：外机位 134 + 腕部 226 条连续观测，cross-view 1.55 mm，融合 max/p95/final 2.14 / 1.64 / 1.96 mm；外机位 ingress 看门狗在第 25 s 重启，融合轨迹存活 |
+| 双视图 tag run 9 | 60 s 内 240 条外机位 + 195 条腕部观测；cross-view 3.37 mm；融合 p95 3.78 mm、final 1.19 mm、max 10.03 mm（26.2 s 处 12.4 mm 视图切换瞬态）；没有 67 mm 参考跳变 |
+| 重复性 run 10 | 外机位连续 60 s（267 条观测）；腕部深度读取器在 7.5 s 卡死（26 条观测）；完整双视图窗口**尚不可重复** |
+| D435i 深度恢复 | 深度缺失（`uvcvideo -71`）时重启 `armpi-rs-depth`，再 `reset-failed`/启动 ingress；见 [FAILURE_MODES.md](docs/FAILURE_MODES.md) |
 
-> 详细记录：[HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md)。测试未发送运动命令；
-> 测试后已停止相机/感知进程，厂商服务保持原状。跨机 YOLO 只验证检测链路，
-> 深度未对齐时不产生度量观测；多姿态/固定目标精度与运动中的 TF 滞后仍未验证，
-> 当前位姿不得直接用于运动。
+> 双视图结果是单次 60 s 运行；run 10 表明腕部深度 DDS reader 仍可能卡死，完整双视图
+> 窗口尚不可重复。对齐深度拓扑已部署；多姿态/固定目标精度与运动中的 TF 滞后仍未验证，
+> 当前位姿不得直接用于运动。测试未发送运动命令。
 
 ## 8. 设计边界
 
