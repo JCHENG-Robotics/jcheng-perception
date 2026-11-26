@@ -1,0 +1,65 @@
+{
+  "annotation_method": "dataset_provided_coco_polygons",
+  "by_density": {},
+  "by_illumination": {},
+  "by_occlusion": {},
+  "data_source": "public",
+  "dataset_id": "mendeley_rocks_uav",
+  "dataset_license": "CC-BY-4.0",
+  "dataset_manifest_sha256": "b86612d38309bbbb85f70084cfb26c047d16e388e56735ca9c1ff4d228851a11",
+  "failed_scenes": [],
+  "gt_instances": 803,
+  "hardware_validation": false,
+  "instance_count_mae": 1010.0,
+  "instance_count_relative_mae": 2.515566625155666,
+  "iou_thresholds": [
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9,
+    0.95
+  ],
+  "latency_ms": {
+    "max": 317336.89999999997,
+    "n": 2,
+    "p50": 239140.74999999997,
+    "p95": 309517.285
+  },
+  "limitations": [
+    "Synthetic ground truth measures pipeline mechanics, not real-ore accuracy.",
+    "Scores are heuristic and uncalibrated; precision/recall at a fixed score threshold are not operating-point guarantees.",
+    "Occlusion strata are scene-level labels supplied by the synthetic generator; public datasets without such labels are not stratified.",
+    "Fully occluded zero-area instances are excluded from the ground-truth count because they have no observable mask."
+  ],
+  "mask_ap50": 0.3010208165008441,
+  "mask_ap50_95": 0.16430604107180638,
+  "mask_ap_by_threshold": {
+    "0.50": 0.3010208165008441,
+    "0.55": 0.2873260359452012,
+    "0.60": 0.24717753807129836,
+    "0.65": 0.21891169962813406,
+    "0.70": 0.19462509000873174,
+    "0.75": 0.16594183834170834,
+    "0.80": 0.12462262142288598,
+    "0.85": 0.07871541782012226,
+    "0.90": 0.022934868325998718,
+    "0.95": 0.0017844846531389642
+  },
+  "missing_prediction_scenes": [],
+  "operating_point": {
+    "iou": 0.5,
+    "score_threshold": 0.5
+  },
+  "precision_at_operating_point": 0.17215727948990436,
+  "predicted_instances": 2823,
+  "real_ore_validation": false,
+  "recall_at_operating_point": 0.6052303860523038,
+  "scenes": 2,
+  "schema_version": "jcheng.ore_evaluation.v1",
+  "score_threshold_for_ap": 0.05
+}

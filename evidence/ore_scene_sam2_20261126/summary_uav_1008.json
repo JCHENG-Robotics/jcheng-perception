@@ -1,0 +1,70 @@
+{
+  "schema_version": "jcheng.ore_s1_5_uav.v1",
+  "created_at": "2026-11-26T12:43:15+00:00",
+  "hardware_claimed": false,
+  "real_ore_validation": false,
+  "offline_only": true,
+  "dataset": {
+    "name": "Mendeley Rocks UAV independent scene type",
+    "license": "CC BY 4.0",
+    "doi": "10.17632/v9grvgsrh9.1",
+    "images": [
+      "DJI_0157",
+      "DJI_0158"
+    ],
+    "resolution": "5472x3648",
+    "gt_instances": 803,
+    "note": "different scene type (UAV aerial), same public dataset/annotation source; 2 images only"
+  },
+  "method": {
+    "backend": "SAM2.1 Hiera Tiny",
+    "tiles": "6x4 1008px per image",
+    "points_per_side": 32,
+    "merge": "greedy, max area 5% of tile, >=30% new pixels",
+    "policy": "fixed 1008; no 504 fallback (20MP would need 88 tiles/image)"
+  },
+  "results": {
+    "aggregate": {
+      "mask_ap50": 0.3010208165008441,
+      "mask_ap50_95": 0.16430604107180638,
+      "precision_at_operating_point": 0.17215727948990436,
+      "recall_at_operating_point": 0.6052303860523038,
+      "predicted_instances": 2823,
+      "gt_instances": 803,
+      "instance_count_mae": 1010.0,
+      "latency_ms": {
+        "p50": 239140.74999999997,
+        "p95": 309517.285,
+        "max": 317336.89999999997,
+        "n": 2
+      }
+    },
+    "per_image": {
+      "DJI_0157": {
+        "mask_ap50": 0.21647690722732282,
+        "mask_ap50_95": 0.12319821207460553,
+        "predicted_instances": 1119,
+        "gt_instances": 263,
+        "instance_count_mae": 856.0,
+        "precision_at_operating_point": 0.12689901697944594,
+        "recall_at_operating_point": 0.5399239543726235
+      },
+      "DJI_0158": {
+        "mask_ap50": 0.34136915138085705,
+        "mask_ap50_95": 0.1853224734601715,
+        "predicted_instances": 1704,
+        "gt_instances": 540,
+        "instance_count_mae": 1164.0,
+        "precision_at_operating_point": 0.20187793427230047,
+        "recall_at_operating_point": 0.6370370370370371
+      }
+    }
+  },
+  "limitations": [
+    "Only 2 images; not an independent domain fully (same Mendeley dataset/annotation source).",
+    "SAM2 1008 over-segments the UAV scenes (2823 predictions vs 803 GT); fixed tiling/area filters do not transfer.",
+    "No 504 fallback tested; 20 MP would require ~88 tiles/image.",
+    "Public annotations human-review status unverified.",
+    "No runtime/interfaces/depth/3D."
+  ]
+}

@@ -57,6 +57,19 @@ Only `40_2` triggered the fallback: 0.245 → **0.546**. Same public dataset and
 annotation source; this is an independent image split, not an independent
 domain.
 
+Independent scene type — `Rocks UAV`, 2 images at 5472×3648 (803 GT), fixed
+1008 tiles, no tuning and no 504 fallback:
+
+| Image | AP50 | AP50-95 | P | R | Pred/GT | Count MAE |
+|---|---|---|---|---|---|---|
+| `DJI_0157` | 0.216 | 0.123 | 0.127 | 0.540 | 1119/263 | 856 |
+| `DJI_0158` | 0.341 | 0.185 | 0.202 | 0.637 | 1704/540 | 1164 |
+| **Aggregate** | **0.301** | **0.164** | 0.172 | 0.605 | 2823/803 | 1010 |
+
+**Negative result:** the 40–70 mm tile/area/merge policy does not transfer to
+aerial UAV scenes; it over-segments ~3.5× GT. Domain-specific scale/tiling or a
+trained model is required.
+
 ## Files
 
 | File | Content |
@@ -74,6 +87,9 @@ domain.
 | `summary_1008.json` | method, host, weight hash, limitations |
 | `summary_hybrid500.json` | adaptive policy, results, limitations |
 | `summary_independent_hybrid.json` | independent-split policy/results/limits |
+| `metrics_uav_1008.json` | Rocks UAV fixed-1008 evaluation (negative result) |
+| `per_image_uav_1008.json` | per-image UAV metrics |
+| `summary_uav_1008.json` | UAV scene-type method/results/limits |
 
 ## Reproduce
 
@@ -99,6 +115,9 @@ S1; full label maps live in
   domain.
 - 504 fallback over-segments (11,564 predictions / 9,208 GT on the 8-image set;
   5,262 / 4,585 on the independent set) and costs ~2.5–4.8 min/image.
-- Only 12 of 49 public images across both splits; no real-ore data.
+- Only 14 of 49 public images across all splits; no real-ore data.
+- The 2-image Rocks UAV check (different scene type) failed to transfer:
+  AP50 0.301, precision 0.172, ~3.5× over-segmentation. This is a negative
+  result, not a capability claim.
 - No depth, 3D, multi-view, grasp or runtime integration.
 - `_C` post-processing is skipped; verify before production.

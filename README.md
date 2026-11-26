@@ -342,7 +342,9 @@ AP50-95 0.328; a 504-px fallback for low-count images raises this to AP50 0.637
 / AP50-95 0.387, but the threshold/merge parameters were fitted on those 8
 images and over-segment. A 4-image independent split (selected before inference)
 reproduced AP50 0.6375 / AP50-95 0.3909; it is the same public dataset, not an
-independent domain. Real-ore accuracy remains Unverified.
+independent domain. A 2-image Rocks UAV scene-type check failed to transfer
+(AP50 0.301, precision 0.172, ~3.5x over-segmentation), so the tiling policy is
+not general. Real-ore accuracy remains Unverified.
 
 Design and evidence:
 

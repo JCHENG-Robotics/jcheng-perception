@@ -1,0 +1,20 @@
+{
+  "DJI_0157": {
+    "gt_instances": 263,
+    "instance_count_mae": 856.0,
+    "mask_ap50": 0.21647690722732282,
+    "mask_ap50_95": 0.12319821207460553,
+    "precision_at_operating_point": 0.12689901697944594,
+    "predicted_instances": 1119,
+    "recall_at_operating_point": 0.5399239543726235
+  },
+  "DJI_0158": {
+    "gt_instances": 540,
+    "instance_count_mae": 1164.0,
+    "mask_ap50": 0.34136915138085705,
+    "mask_ap50_95": 0.1853224734601715,
+    "precision_at_operating_point": 0.20187793427230047,
+    "predicted_instances": 1704,
+    "recall_at_operating_point": 0.6370370370370371
+  }
+}

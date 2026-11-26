@@ -17,8 +17,10 @@ their original narrative order.
   fallback threshold and tiling parameters were fitted on those 8 images; a
   4-image independent split (selected before inference) reproduced AP50
   0.6375 / AP50-95 0.3909 (P 0.649 / R 0.745, MAE 246.3), but it is the same
-  public dataset/annotation source, not an independent domain. Real-ore
-  accuracy is Unverified.
+  public dataset/annotation source, not an independent domain. A 2-image
+  Rocks UAV scene-type check failed to transfer (AP50 0.301 / AP50-95 0.164,
+  P 0.172, ~3.5x over-segmentation), so the tiling policy is not general.
+  Real-ore accuracy is Unverified.
   No DDS, device, depth, motion, weight or `jcheng-interfaces` change.
   Evidence: `evidence/ore_scene_sam2_20261126/`; design/limits:
   `docs/ORE_SCENE_S1_5.md`.
