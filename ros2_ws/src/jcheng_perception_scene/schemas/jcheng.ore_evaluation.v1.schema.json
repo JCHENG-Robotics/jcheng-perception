@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jcheng-robotics.github.io/schemas/jcheng.ore_evaluation.v1.schema.json",
+  "title": "JCHENG ore segmentation evaluation v1",
+  "description": "Offline mask evaluation report. Synthetic/public provenance is explicit and never promoted to hardware validation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "dataset_id", "data_source", "annotation_method",
+    "dataset_license", "scenes", "gt_instances", "predicted_instances",
+    "mask_ap50", "mask_ap50_95", "instance_count_mae", "latency_ms",
+    "failed_scenes", "hardware_validation", "real_ore_validation",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {"const": "jcheng.ore_evaluation.v1"},
+    "dataset_id": {"type": "string"},
+    "data_source": {"enum": ["synthetic", "public", "recorded"]},
+    "annotation_method": {"type": "string"},
+    "dataset_license": {"type": "string"},
+    "dataset_manifest_sha256": {"type": ["string", "null"]},
+    "iou_thresholds": {"type": "array", "items": {"type": "number"}},
+    "score_threshold_for_ap": {"type": "number"},
+    "operating_point": {
+      "type": "object",
+      "required": ["iou", "score_threshold"],
+      "properties": {
+        "iou": {"type": "number"},
+        "score_threshold": {"type": "number"}
+      }
+    },
+    "scenes": {"type": "integer", "minimum": 0},
+    "gt_instances": {"type": "integer", "minimum": 0},
+    "predicted_instances": {"type": "integer", "minimum": 0},
+    "mask_ap50": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "mask_ap50_95": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "mask_ap_by_threshold": {"type": "object"},
+    "precision_at_operating_point": {"type": ["number", "null"]},
+    "recall_at_operating_point": {"type": ["number", "null"]},
+    "instance_count_mae": {"type": ["number", "null"]},
+    "instance_count_relative_mae": {"type": ["number", "null"]},
+    "latency_ms": {
+      "type": "object",
+      "required": ["p50", "p95", "max", "n"],
+      "properties": {
+        "p50": {"type": ["number", "null"]},
+        "p95": {"type": ["number", "null"]},
+        "max": {"type": ["number", "null"]},
+        "n": {"type": "integer", "minimum": 0}
+      }
+    },
+    "failed_scenes": {"type": "array"},
+    "missing_prediction_scenes": {"type": "array"},
+    "by_illumination": {"type": "object"},
+    "by_density": {"type": "object"},
+    "by_occlusion": {"type": "object"},
+    "hardware_validation": {"const": false},
+    "real_ore_validation": {"type": "boolean"},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  }
+}

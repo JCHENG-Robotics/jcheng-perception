@@ -476,3 +476,47 @@ ros2 run tf2_ros tf2_echo base_link camera_optical_measured
 ```
 
 配置/代码/结果如与本文件不一致，以仓库提交和重新运行结果为准。
+
+## 6. S1 矿石场景理解离线验证（2026-11-26）
+
+范围：**离线、无机器人、无 DDS、无深度、无运动**。验证对象是新子模块
+`jcheng_perception_scene`，不涉及现有双摄运行时。
+
+### 6.1 命令
+
+```bash
+cd jcheng-perception
+python3 scripts/ore_scene.py generate-synthetic \
+  --out /tmp/ore-data --scenes 36 --empty-scenes 3 --seed 20261127
+python3 scripts/ore_scene.py run \
+  --dataset /tmp/ore-data --out /tmp/ore-run --config config/ore_scene.yaml
+python3 scripts/ore_scene.py selftest --out /tmp/ore-selftest
+python3 -m pytest tests -q
+```
+
+公开数据另用 `import-coco` 导入 Mendeley `40_70mm`（CC BY 4.0），调参
+`40_0/40_1`、测试 `40_2`–`40_9`，配置
+`config/ore_scene_public_40_70mm.yaml`。
+
+### 6.2 结果
+
+| 项 | 结果 |
+|---|---|
+| 测试 | **93 passed**（77 原有 + 16 新增） |
+| selftest | 空场景 / 坏图 / 重叠 mask 三项通过 |
+| 合成测试（39 场景 / 600 GT） | mask AP50 **0.3682**，AP50-95 **0.2114**，计数 MAE 6.51 |
+| 合成延迟（640×480，CPU） | P50 14.4 ms / P95 22.3 ms |
+| 公开 `40_70mm` 测试（8 图 / 9,208 GT） | AP50 **0.0429**，AP50-95 0.0122，计数 MAE 793.5 |
+| 公开延迟（2592×1944，CPU） | P50 4.68 s / P95 8.53 s |
+| 失败场景 | 0（合成/公开） |
+| 空场景 | 3，预测 0 实例 |
+
+### 6.3 证据与结论
+
+- Bundle：`evidence/ore_scene_s1_20261126/`（`summary.json`、metrics、
+  manifest、selftest、config、overlay、SHA-256）。
+- **合成结果只证明管线/评测可工作，不证明真实矿石精度。**
+- 公开结果在密集真实碎石上 AP50 约 0.043，是明确的域差距 baseline；经典
+  baseline 严重欠分割，不能作为产品验收。
+- 本轮**未**验证：真实矿石精度、深度/3D、多视角、GPU 后端、真机。
+- 相关设计与路线：`docs/ORE_SCENE_S1.md`、`docs/ORE_SCENE_ROADMAP.md`。

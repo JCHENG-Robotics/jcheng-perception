@@ -25,6 +25,8 @@ jobs:
         run: python -m pytest tests -q
       - name: Mock detector smoke
         run: python scripts/check_gpu_backend.py --backend mock --json > /dev/null
+      - name: Ore scene selftest
+        run: python scripts/ore_scene.py selftest > /dev/null
 
   simulation:
     name: offline fusion simulation
@@ -60,7 +62,8 @@ jobs:
             jcheng_perception_msgs \
             jcheng_perception_core \
             jcheng_perception_edge \
-            jcheng_perception_gpu
+            jcheng_perception_gpu \
+            jcheng_perception_scene
 
   m1-gate:
     name: m1-gate

@@ -1,0 +1,24 @@
+{
+  "bad_input": {
+    "accuracy_metrics": null,
+    "failed_scenes": 1
+  },
+  "checks": {
+    "bad_input_structured": true,
+    "empty_scene_ok": true,
+    "overlap_rejected": true
+  },
+  "hardware_validation": false,
+  "out_dir": "/home/jerichocheng/jcheng/perception_datasets/ore_s1_20261126/selftest",
+  "overlap_rejected": true,
+  "passed": true,
+  "real_ore_validation": false,
+  "schema_version": "jcheng.ore_selftest.v1",
+  "synthetic": {
+    "empty_scenes": 2,
+    "failed_scenes": 0,
+    "mask_ap50": 0.2197319525122728,
+    "mask_ap50_95": 0.13122968374112537,
+    "scenes": 6
+  }
+}

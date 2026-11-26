@@ -1,0 +1,252 @@
+{
+  "annotation_method": "procedural_ground_truth",
+  "by_density": {
+    "dense": {
+      "gt_instances": 360,
+      "instance_count_mae": 14.166666666666666,
+      "instance_count_relative_mae": 0.4722222222222222,
+      "mask_ap50": 0.33314606741573105,
+      "mask_ap50_95": 0.191675562697758,
+      "mask_ap_by_threshold": {
+        "0.50": 0.33314606741573105,
+        "0.55": 0.27674781523096137,
+        "0.60": 0.2564606741573032,
+        "0.65": 0.2293695380774031,
+        "0.70": 0.21362359550561846,
+        "0.75": 0.19575530586766537,
+        "0.80": 0.18540886392009995,
+        "0.85": 0.16075230134997975,
+        "0.90": 0.0654914654528175,
+        "0.95": 0.0
+      },
+      "precision_at_operating_point": 0.6630434782608695,
+      "predicted_instances": 190,
+      "recall_at_operating_point": 0.16944444444444445,
+      "scenes": 12
+    },
+    "medium": {
+      "gt_instances": 174,
+      "instance_count_mae": 5.5,
+      "instance_count_relative_mae": 0.3793103448275862,
+      "mask_ap50": 0.43236189099847394,
+      "mask_ap50_95": 0.25893239544581936,
+      "mask_ap_by_threshold": {
+        "0.50": 0.43236189099847394,
+        "0.55": 0.42472508440177204,
+        "0.60": 0.38276316902379287,
+        "0.65": 0.2916890687005633,
+        "0.70": 0.26898525856859157,
+        "0.75": 0.23131681536853924,
+        "0.80": 0.2233237547892722,
+        "0.85": 0.20459770114942546,
+        "0.90": 0.12381408502098154,
+        "0.95": 0.005747126436781609
+      },
+      "precision_at_operating_point": 0.8194444444444444,
+      "predicted_instances": 108,
+      "recall_at_operating_point": 0.3390804597701149,
+      "scenes": 12
+    },
+    "sparse": {
+      "gt_instances": 66,
+      "instance_count_mae": 1.5,
+      "instance_count_relative_mae": 0.2727272727272727,
+      "mask_ap50": 0.46192783692783707,
+      "mask_ap50_95": 0.24410063524115952,
+      "mask_ap_by_threshold": {
+        "0.50": 0.46192783692783707,
+        "0.55": 0.3758454730994779,
+        "0.60": 0.3449146046400051,
+        "0.65": 0.2540734514418725,
+        "0.70": 0.22839418365734157,
+        "0.75": 0.21019884608401354,
+        "0.80": 0.1885506521870158,
+        "0.85": 0.1885506521870158,
+        "0.90": 0.1885506521870158,
+        "0.95": 0.0
+      },
+      "precision_at_operating_point": 0.8484848484848485,
+      "predicted_instances": 48,
+      "recall_at_operating_point": 0.42424242424242425,
+      "scenes": 12
+    }
+  },
+  "by_illumination": {
+    "bright": {
+      "gt_instances": 214,
+      "instance_count_mae": 8.416666666666666,
+      "instance_count_relative_mae": 0.4719626168224299,
+      "mask_ap50": 0.32645507541408336,
+      "mask_ap50_95": 0.18390842524365572,
+      "mask_ap_by_threshold": {
+        "0.50": 0.32645507541408336,
+        "0.55": 0.303553252521514,
+        "0.60": 0.26723420005551957,
+        "0.65": 0.20768946053483836,
+        "0.70": 0.18363097992042215,
+        "0.75": 0.16105302118996945,
+        "0.80": 0.16105302118996945,
+        "0.85": 0.15134488854689698,
+        "0.90": 0.07707035306334371,
+        "0.95": 0.0
+      },
+      "precision_at_operating_point": 0.7258064516129032,
+      "predicted_instances": 113,
+      "recall_at_operating_point": 0.2102803738317757,
+      "scenes": 12
+    },
+    "dark": {
+      "gt_instances": 197,
+      "instance_count_mae": 6.333333333333333,
+      "instance_count_relative_mae": 0.38578680203045684,
+      "mask_ap50": 0.38211811215117647,
+      "mask_ap50_95": 0.24033210756042914,
+      "mask_ap_by_threshold": {
+        "0.50": 0.38211811215117647,
+        "0.55": 0.3655811949890555,
+        "0.60": 0.32739370372095206,
+        "0.65": 0.27744143808503713,
+        "0.70": 0.24817212313137424,
+        "0.75": 0.24141945699250247,
+        "0.80": 0.23475993107623536,
+        "0.85": 0.21098890768941547,
+        "0.90": 0.1154462077685429,
+        "0.95": 0.0
+      },
+      "precision_at_operating_point": 0.7352941176470589,
+      "predicted_instances": 121,
+      "recall_at_operating_point": 0.25380710659898476,
+      "scenes": 12
+    },
+    "normal": {
+      "gt_instances": 189,
+      "instance_count_mae": 6.416666666666667,
+      "instance_count_relative_mae": 0.4074074074074074,
+      "mask_ap50": 0.4123123391825892,
+      "mask_ap50_95": 0.22556183532277055,
+      "mask_ap_by_threshold": {
+        "0.50": 0.4123123391825892,
+        "0.55": 0.313831146272522,
+        "0.60": 0.3052763923008846,
+        "0.65": 0.26257167841326223,
+        "0.70": 0.26257167841326223,
+        "0.75": 0.22542254225422573,
+        "0.80": 0.19719233828144708,
+        "0.85": 0.17392615415574614,
+        "0.90": 0.09722307866276139,
+        "0.95": 0.005291005291005291
+      },
+      "precision_at_operating_point": 0.7910447761194029,
+      "predicted_instances": 112,
+      "recall_at_operating_point": 0.2804232804232804,
+      "scenes": 12
+    }
+  },
+  "by_occlusion": {
+    "occluded": {
+      "gt_instances": 585,
+      "instance_count_mae": 7.666666666666667,
+      "instance_count_relative_mae": 0.4324786324786325,
+      "mask_ap50": 0.3570255421164758,
+      "mask_ap50_95": 0.20353502364164422,
+      "mask_ap_by_threshold": {
+        "0.50": 0.3570255421164758,
+        "0.55": 0.3098141637049118,
+        "0.60": 0.2827024237169169,
+        "0.65": 0.2354801516236327,
+        "0.70": 0.2165277270012356,
+        "0.75": 0.1964001562663772,
+        "0.80": 0.18602368769592806,
+        "0.85": 0.16567578106733938,
+        "0.90": 0.08399120151422287,
+        "0.95": 0.0017094017094017094
+      },
+      "precision_at_operating_point": 0.7365591397849462,
+      "predicted_instances": 332,
+      "recall_at_operating_point": 0.2341880341880342,
+      "scenes": 33
+    },
+    "touching": {
+      "gt_instances": 15,
+      "instance_count_mae": 0.3333333333333333,
+      "instance_count_relative_mae": 0.06666666666666667,
+      "mask_ap50": 0.8,
+      "mask_ap50_95": 0.5606349206349206,
+      "mask_ap_by_threshold": {
+        "0.50": 0.8,
+        "0.55": 0.8,
+        "0.60": 0.8,
+        "0.65": 0.6031746031746031,
+        "0.70": 0.6031746031746031,
+        "0.75": 0.5,
+        "0.80": 0.5,
+        "0.85": 0.5,
+        "0.90": 0.5,
+        "0.95": 0.0
+      },
+      "precision_at_operating_point": 1.0,
+      "predicted_instances": 14,
+      "recall_at_operating_point": 0.7333333333333333,
+      "scenes": 3
+    }
+  },
+  "data_source": "synthetic",
+  "dataset_id": "synthetic_20261127",
+  "dataset_license": "CC0-1.0",
+  "dataset_manifest_sha256": "fca2a1f9c02915d58d1ea6ef627da04593e512d2d4d414ace6b7a4df6b89b918",
+  "failed_scenes": [],
+  "gt_instances": 600,
+  "hardware_validation": false,
+  "instance_count_mae": 6.512820512820513,
+  "instance_count_relative_mae": 0.42333333333333334,
+  "iou_thresholds": [
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9,
+    0.95
+  ],
+  "latency_ms": {
+    "max": 26.0603,
+    "n": 39,
+    "p50": 14.3815,
+    "p95": 22.29287
+  },
+  "limitations": [
+    "Synthetic ground truth measures pipeline mechanics, not real-ore accuracy.",
+    "Scores are heuristic and uncalibrated; precision/recall at a fixed score threshold are not operating-point guarantees.",
+    "Occlusion strata are scene-level labels supplied by the synthetic generator; public datasets without such labels are not stratified.",
+    "Fully occluded zero-area instances are excluded from the ground-truth count because they have no observable mask."
+  ],
+  "mask_ap50": 0.3682459135553646,
+  "mask_ap50_95": 0.21143666917865564,
+  "mask_ap_by_threshold": {
+    "0.50": 0.3682459135553646,
+    "0.55": 0.32143106018312423,
+    "0.60": 0.29487212309406335,
+    "0.65": 0.24380542599901758,
+    "0.70": 0.22510794671566434,
+    "0.75": 0.20239192568774544,
+    "0.80": 0.1921829224723115,
+    "0.85": 0.17233769861676085,
+    "0.90": 0.09232500879583826,
+    "0.95": 0.0016666666666666668
+  },
+  "missing_prediction_scenes": [],
+  "operating_point": {
+    "iou": 0.5,
+    "score_threshold": 0.5
+  },
+  "precision_at_operating_point": 0.751269035532995,
+  "predicted_instances": 346,
+  "real_ore_validation": false,
+  "recall_at_operating_point": 0.24666666666666667,
+  "scenes": 39,
+  "schema_version": "jcheng.ore_evaluation.v1",
+  "score_threshold_for_ap": 0.05
+}

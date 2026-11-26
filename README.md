@@ -15,6 +15,11 @@ target pose for the arm planner.
 > Multi-pose accuracy, aligned depth and motion integration are not.
 > This repository contains no model weights, no vendor code and publishes no
 > motion command.
+> **Ore scene understanding (offline S1, 2026-11-26):** a ROS-free
+> `jcheng_perception_scene` submodule adds instance masks, a versioned scene
+> state, a reproducible CLI and mask-AP evaluation. Synthetic pipeline metrics
+> are verified; real-ore accuracy is **Unverified**. No DDS, device, depth or
+> motion path is added. See [docs/ORE_SCENE_S1.md](docs/ORE_SCENE_S1.md).
 > English canonical; see [README.zh-CN.md](README.zh-CN.md) for the Chinese translation.
 
 ---
@@ -91,7 +96,9 @@ jcheng-perception/
 │   ├── gpu_onnx.example.yaml     # ONNX Runtime CPU
 │   ├── gpu_openvino.example.yaml # OpenVINO IR CPU
 │   ├── gpu_tag.yaml              # AprilTag reference-point mode
-│   └── gpu_shadow.example.yaml   # shadow-model template
+│   ├── gpu_shadow.example.yaml   # shadow-model template
+│   ├── ore_scene.yaml            # offline ore S1 (synthetic defaults)
+│   └── ore_scene_public_40_70mm.yaml  # offline ore S1 (public 5 MP profile)
 ├── docs/
 │   ├── ARCHITECTURE.md           # node roles, processes/threads, data flow
 │   ├── TOPICS.md                 # topics/QoS/field semantics
@@ -102,17 +109,25 @@ jcheng-perception/
 │   ├── CALIBRATION.md            # reuse / update calibration
 │   ├── FAILURE_MODES.md          # faults and degradation
 │   ├── EVIDENCE.md               # verification record for this version
+│   ├── ORE_SCENE_RESEARCH.md     # ore scene research (Chinese)
+│   ├── ORE_SCENE_UNDERSTANDING.md# architecture/module boundaries (Chinese)
+│   ├── ORE_SCENE_ROADMAP.md      # S0-S8 roadmap (Chinese)
+│   ├── SCENE_REPRESENTATION.md   # scene state v1 design (Chinese)
+│   ├── ORE_SCENE_EVALUATION.md   # evaluation protocol (Chinese)
+│   ├── ORE_SCENE_S1.md           # S1 validation report (Chinese)
 │   └── adr/
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # provisional IDL (M2 promotes to jcheng-interfaces)
 │   ├── jcheng_perception_core/   # pure Python, no ROS dependency
 │   ├── jcheng_perception_edge/   # Pi 5 node + synthetic scene + wrist_tf
-│   └── jcheng_perception_gpu/    # laptop GPU detector node
+│   ├── jcheng_perception_gpu/    # laptop GPU detector node
+│   └── jcheng_perception_scene/  # offline ore S1 (ROS-free, no weights)
 ├── scripts/
 │   ├── simulate_pipeline.py      # offline full-pipeline simulation
+│   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 58 ROS-free tests (v0.1.0; the branch adds more)
+├── tests/                        # 93 ROS-free tests (77 existing + 16 ore S1)
 └── capability.yaml
 ```
 
@@ -135,7 +150,8 @@ cd ros2_ws
 source /opt/ros/humble/setup.bash      # robot; a Jazzy host also builds
 colcon build --packages-select \
   jcheng_perception_msgs jcheng_perception_core \
-  jcheng_perception_edge jcheng_perception_gpu
+  jcheng_perception_edge jcheng_perception_gpu \
+  jcheng_perception_scene          # offline ore S1 only; omit for runtime-only builds
 source install/setup.bash
 ```
 
@@ -284,3 +300,39 @@ Full fields: [TOPICS.md](docs/TOPICS.md).
 The license review is in progress; this repository has no `LICENSE` and all
 rights are reserved. Model weights and third-party inference runtimes remain
 under their own licenses; see [LICENSE-REVIEW.md](LICENSE-REVIEW.md).
+
+## 12. Ore scene understanding (offline S1)
+
+The `jcheng_perception_scene` package is a **ROS-free, offline** submodule for
+ore/rock instance segmentation, versioned scene state and evidence-labelled
+evaluation. It does not join DDS, open devices, read depth or publish motion.
+
+```bash
+# Deterministic synthetic ore pile (640x480, 36 scenes + 3 empty)
+python3 scripts/ore_scene.py generate-synthetic --out /tmp/ore-data \
+  --scenes 36 --empty-scenes 3 --seed 20261127
+python3 scripts/ore_scene.py run --dataset /tmp/ore-data --out /tmp/ore-run \
+  --config config/ore_scene.yaml
+python3 scripts/ore_scene.py selftest --out /tmp/ore-selftest
+```
+
+S1 results (2026-11-26, CPU only):
+
+| Data | Scope | mask AP50 | mask AP50-95 | Count MAE |
+|---|---|---|---|---|
+| synthetic, seed 20261127 | 39 scenes / 600 GT | 0.368 | 0.211 | 6.51 |
+| public Mendeley `40_70mm`, held-out | 8 images / 9,208 GT | 0.043 | 0.012 | 793.5 |
+
+The synthetic result verifies the pipeline, not real-ore accuracy. The public
+result is a **domain-gap baseline** (the classical baseline under-segments dense
+real piles) and is not an acceptance result. No real-ore accuracy is claimed.
+
+Design and evidence:
+
+- [S1 validation report](docs/ORE_SCENE_S1.md)
+- [Research](docs/ORE_SCENE_RESEARCH.md) ·
+  [Architecture](docs/ORE_SCENE_UNDERSTANDING.md) ·
+  [Roadmap](docs/ORE_SCENE_ROADMAP.md) ·
+  [Scene representation](docs/SCENE_REPRESENTATION.md) ·
+  [Evaluation](docs/ORE_SCENE_EVALUATION.md)
+- [Evidence bundle](evidence/ore_scene_s1_20261126/README.md)

@@ -6,6 +6,10 @@
 > 合成、腕部真实相机数据链路、腕部总线实测 TF 与单姿态桌面平面核验、外机位跨机
 > 真实 YOLO 检测链路已验证；多姿态精度、深度对齐与运动集成未验证。
 > 本仓库不包含模型权重，不包含厂商代码，不发布任何运动命令。
+> **矿石场景理解（离线 S1，2026-11-26）**：新增 ROS-free 的
+> `jcheng_perception_scene` 子模块，提供实例 mask、版本化场景状态、可复现
+> CLI 与 mask AP 评测。合成管线已验证；真实矿石精度**未验证**。不新增
+> DDS、设备、深度或运动路径。详见 [docs/ORE_SCENE_S1.md](docs/ORE_SCENE_S1.md)。
 > 本文为英文主文档的中文对照；如有歧义，以 [README.md](README.md) 为准。
 
 ---
@@ -77,7 +81,9 @@ jcheng-perception/
 │   ├── gpu_onnx.example.yaml     # ONNX Runtime CPU
 │   ├── gpu_openvino.example.yaml # OpenVINO IR CPU
 │   ├── gpu_tag.yaml              # AprilTag 参考点模式（定义点）
-│   └── gpu_shadow.example.yaml   # 影子模型模板
+│   ├── gpu_shadow.example.yaml   # 影子模型模板
+│   ├── ore_scene.yaml            # 离线矿石 S1（合成默认）
+│   └── ore_scene_public_40_70mm.yaml  # 离线矿石 S1（公开 5 MP 配置）
 ├── docs/
 │   ├── ARCHITECTURE.md           # 节点职责、进程/线程、数据流
 │   ├── TOPICS.md                 # 话题/QoS/字段语义
@@ -88,17 +94,25 @@ jcheng-perception/
 │   ├── CALIBRATION.md            # 复用/更新标定
 │   ├── FAILURE_MODES.md          # 故障与降级
 │   ├── EVIDENCE.md               # 本版本验证记录
+│   ├── ORE_SCENE_RESEARCH.md     # 矿石场景调研
+│   ├── ORE_SCENE_UNDERSTANDING.md# 架构与模块边界
+│   ├── ORE_SCENE_ROADMAP.md      # S0-S8 路线图
+│   ├── SCENE_REPRESENTATION.md   # Scene State v1 设计
+│   ├── ORE_SCENE_EVALUATION.md   # 评测协议
+│   ├── ORE_SCENE_S1.md           # S1 验证报告
 │   └── adr/
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # 临时 IDL（M2 提升到 jcheng-interfaces）
 │   ├── jcheng_perception_core/   # 纯 Python，无 ROS 依赖
 │   ├── jcheng_perception_edge/   # Pi5 节点 + 合成场景 + wrist_tf
-│   └── jcheng_perception_gpu/    # 笔记本 GPU 检测节点
+│   ├── jcheng_perception_gpu/    # 笔记本 GPU 检测节点
+│   └── jcheng_perception_scene/  # 离线矿石 S1（ROS-free，无权重）
 ├── scripts/
 │   ├── simulate_pipeline.py      # 离线全链路仿真
+│   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 58 项 ROS-free 测试（v0.1.0；当前分支更多）
+├── tests/                        # 93 项 ROS-free 测试（77 原有 + 16 矿石 S1）
 └── capability.yaml
 ```
 
@@ -120,7 +134,8 @@ cd ros2_ws
 source /opt/ros/humble/setup.bash      # 机器人；本机 Jazzy 也可构建
 colcon build --packages-select \
   jcheng_perception_msgs jcheng_perception_core \
-  jcheng_perception_edge jcheng_perception_gpu
+  jcheng_perception_edge jcheng_perception_gpu \
+  jcheng_perception_scene          # 仅离线矿石 S1；纯运行时构建可省略
 source install/setup.bash
 ```
 
@@ -250,3 +265,38 @@ ros2 launch jcheng_perception_gpu laptop_gpu.launch.py
 
 许可证审查进行中；本仓库没有 `LICENSE`，默认版权保留。模型权重与第三方
 推理框架的许可由使用者自行遵守，详见 [LICENSE-REVIEW.md](LICENSE-REVIEW.md)。
+
+## 12. 矿石场景理解（离线 S1）
+
+`jcheng_perception_scene` 是 **ROS-free、离线**子模块，提供矿石/岩石实例
+分割、版本化场景状态与带 provenance 的评测。它不加入 DDS、不打开设备、不读
+深度、不发布运动命令。
+
+```bash
+# 确定性合成矿石堆（640x480，36 场景 + 3 空场景）
+python3 scripts/ore_scene.py generate-synthetic --out /tmp/ore-data \
+  --scenes 36 --empty-scenes 3 --seed 20261127
+python3 scripts/ore_scene.py run --dataset /tmp/ore-data --out /tmp/ore-run \
+  --config config/ore_scene.yaml
+python3 scripts/ore_scene.py selftest --out /tmp/ore-selftest
+```
+
+S1 结果（2026-11-26，仅 CPU）：
+
+| 数据 | 范围 | mask AP50 | mask AP50-95 | 计数 MAE |
+|---|---|---|---|---|
+| 合成，seed 20261127 | 39 场景 / 600 GT | 0.368 | 0.211 | 6.51 |
+| 公开 Mendeley `40_70mm`，测试集 | 8 图 / 9,208 GT | 0.043 | 0.012 | 793.5 |
+
+合成结果只验证管线，不证明真实矿石精度。公开结果是一个**域差距 baseline**
+（经典方法在密集真实堆上严重欠分割），不是验收结论；本轮不宣称真实矿石精度。
+
+设计与证据：
+
+- [S1 验证报告](docs/ORE_SCENE_S1.md)
+- [调研](docs/ORE_SCENE_RESEARCH.md) ·
+  [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
+  [路线图](docs/ORE_SCENE_ROADMAP.md) ·
+  [场景表达](docs/SCENE_REPRESENTATION.md) ·
+  [评测](docs/ORE_SCENE_EVALUATION.md)
+- [证据包](evidence/ore_scene_s1_20261126/README.md)
