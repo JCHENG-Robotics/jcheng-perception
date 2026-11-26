@@ -14,8 +14,8 @@
 |---|---|---|---|---|---|
 | S0 | 调研、架构、接口/场景表达设计 | **Complete（2026-11-26）** | 设计评审待 Board | 无 | 本文档集 + 只读审查 |
 | S1 | 离线矿石实例分割 baseline | **Complete（离线验证，2026-11-26）** | **Partially verified**：合成闭环 Verified；公开真实数据 baseline 已测；真实矿石验收 Unverified | 无 | `evidence/ore_scene_s1_20261126/` |
-| S1.5 | 深度分割后端对照（SAM 2/MobileSAM） | Planned | Unverified | 无（笔记本 GPU） | 待立 |
-| S2 | 实例级 3D 可见几何 | Planned | Unverified | 中（离线录制/仿真；真机只读） | 待立 |
+| S1.5 | 深度分割后端对照（SAM 2.1） | In progress（离线 MVE，2026-11-26） | Partially verified（40–70 mm）；UAV 负迁移 | 无（远端 Orin） | `evidence/ore_scene_sam2_20261126/` |
+| S2 | 实例级 3D 可见几何 | In progress（离线合成 MVE，2026-11-26） | Partially verified（仅公式/失败路径） | 中（离线录制/仿真；真机只读） | `docs/ORE_SCENE_S2.md`；2 个几何测试 |
 | S3 | 结构化 Scene Graph / Scene State | Planned | Unverified | 无（离线） | 待立 |
 | S4 | 多视角实例关联与场景融合 | Planned | Unverified | 中（双摄录制/静态真机，只读） | 待立 |
 | S5 | 主动感知 / NBV | Planned | Unverified | 高（仿真先行，真机需授权） | 待立 |

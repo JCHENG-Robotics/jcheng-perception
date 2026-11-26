@@ -27,6 +27,7 @@ from jcheng_perception_scene.dataset import (
     read_predictions,
     validate_dataset_files,
 )
+from jcheng_perception_scene.geometry import GeometryParams, visible_geometry
 from jcheng_perception_scene.metrics import evaluate
 from jcheng_perception_scene.pipeline import run_dataset, run_unlabelled
 from jcheng_perception_scene.sam2_tiles import (
@@ -217,6 +218,62 @@ def test_adjacency_relation_has_evidence():
     assert relation.predicate == 'adjacent'
     assert relation.evidence['contact_px'] > 0
     assert relation.evidence['depth_order'] == 'unknown'
+
+
+def _plane_geometry_inputs():
+    mask = np.zeros((480, 640), dtype=bool)
+    mask[190:290, 270:370] = True
+    depth = np.ones((480, 640), dtype=np.float64)
+    camera = np.array([[500.0, 0.0, 320.0],
+                       [0.0, 500.0, 240.0],
+                       [0.0, 0.0, 1.0]])
+    return mask, depth, camera
+
+
+def test_visible_geometry_plane():
+    mask, depth, camera = _plane_geometry_inputs()
+    result = visible_geometry(
+        mask, depth, camera, np.eye(4), GeometryParams(stride=2))
+    assert result['status'] == 'computed'
+    assert result['visible_point_count'] == 2500
+    assert result['depth_valid_fraction'] == pytest.approx(1.0)
+    centroid = np.asarray(result['visible_centroid_base'])
+    assert centroid[2] == pytest.approx(1.0, abs=1e-9)
+    assert abs(float(centroid[0])) < 0.01
+    assert abs(float(centroid[1])) < 0.01
+    aabb = result['visible_aabb']
+    assert aabb['extent'][2] == pytest.approx(0.0, abs=1e-9)
+    assert aabb['extent'][0] == pytest.approx(0.196, abs=0.01)
+    assert result['visible_obb'] is not None
+    assert np.asarray(result['visible_centroid_covariance']).shape == (3, 3)
+    assert result['field_status']['true_centroid'] == 'unknown'
+    assert 'true_centroid' in result['unknowns']
+
+
+def test_visible_geometry_transform_and_failure_paths():
+    mask, depth, camera = _plane_geometry_inputs()
+    transform = np.eye(4)
+    transform[:3, 3] = [0.1, 0.2, 0.3]
+    result = visible_geometry(
+        mask, depth, camera, transform, GeometryParams(stride=2))
+    assert result['status'] == 'computed'
+    centroid = np.asarray(result['visible_centroid_base'])
+    assert centroid[0] == pytest.approx(0.1, abs=0.01)
+    assert centroid[1] == pytest.approx(0.2, abs=0.01)
+    assert centroid[2] == pytest.approx(1.3, abs=1e-9)
+
+    bad = visible_geometry(
+        mask, np.zeros_like(depth), camera, np.eye(4))
+    assert bad['status'] == 'insufficient_depth'
+    assert bad['visible_centroid_base'] is None
+    assert bad['depth_valid_fraction'] == 0.0
+
+    empty = np.zeros_like(mask)
+    invalid = visible_geometry(empty, depth, camera, np.eye(4))
+    assert invalid['status'] == 'invalid_mask'
+
+    with pytest.raises(ValueError):
+        visible_geometry(mask, depth[:, :-1], camera, np.eye(4))
 
 
 def test_bad_image_produces_structured_failure(tmp_path):

@@ -105,6 +105,7 @@ jcheng-perception/
 │   ├── ORE_SCENE_EVALUATION.md   # 评测协议
 │   ├── ORE_SCENE_S1.md           # S1 验证报告
 │   ├── ORE_SCENE_S1_5.md         # SAM 2.1 离线 MVE 报告
+│   ├── ORE_SCENE_S2.md           # 可见几何 MVE 报告
 │   └── adr/
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # 临时 IDL（M2 提升到 jcheng-interfaces）
@@ -117,7 +118,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 97 项 ROS-free 测试（77 原有 + 20 矿石场景）
+├── tests/                        # 99 项 ROS-free 测试（77 原有 + 22 矿石场景/S2）
 └── capability.yaml
 ```
 
@@ -313,10 +314,16 @@ AP50-95 0.3909；仍是同一公开数据集，不是独立域。另用 2 张 Ro
 图做跨场景类型检查，迁移失败（AP50 0.301、precision 0.172、约 3.5 倍过分割），
 说明分块策略不具备通用性。真实矿石精度仍为 Unverified。
 
+**S2（2026-11-26，离线合成）**：`visible_geometry` 从 mask + 米制深度 +
+K + `base<-camera` 变换计算可见点数、深度有效率、可见中心、3×3 样本协方差、
+AABB 与 PCA OBB；已测 1 m 合成平面、平移、零深度和空 mask。尚无真实深度、
+校准协方差或 schema v2；可见几何不是真实质心/完整尺寸/体积。
+
 设计与证据：
 
 - [S1 验证报告](docs/ORE_SCENE_S1.md)
 - [S1.5 SAM 2.1 离线 MVE](docs/ORE_SCENE_S1_5.md)
+- [S2 可见几何 MVE](docs/ORE_SCENE_S2.md)
 - [调研](docs/ORE_SCENE_RESEARCH.md) ·
   [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [路线图](docs/ORE_SCENE_ROADMAP.md) ·

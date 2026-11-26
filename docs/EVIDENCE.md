@@ -547,5 +547,25 @@ python3 -m pytest tests -q
   mask 在仓库外）。
 - 转换器：`python3 scripts/ore_scene.py import-sam2-tiles`（无 torch/SAM2
   导入）复现独立 4 图 1008 AP50 0.5681 与混合 AP50 0.6375 / AP50-95 0.3909；
-  新增 4 个测试，总计 **97 passed**。
+  新增 4 个测试，总计 **99 passed**（含 S2 geometry）。
 - 设计与限制：`docs/ORE_SCENE_S1_5.md`。
+
+### 6.5 S2 可见几何 MVE（2026-11-26）
+
+范围：离线合成深度，只验证 mask → 可见几何的数学与失败路径；无真机/深度
+采集/运行时。
+
+| 项 | 结果 |
+|---|---|
+| 输入 | 480×640 深度恒 1.0 m、K fx=fy=500/cx=320/cy=240、100×100 mask、identity TF |
+| 可见点 | stride 2 → 2500 点；深度有效率 1.0 |
+| 可见中心 | z=1.0 m；AABB extent ≈ 0.196×0.196×0 |
+| 平移 [0.1,0.2,0.3] | 中心 ≈ [0.1,0.2,1.3] |
+| 零深度/空 mask/形状不一致 | `insufficient_depth` / `invalid_mask` / `ValueError` |
+
+**注意**：合成平面只证明公式与失败路径；协方差未校准、未做 NEES，真实
+D435i/Aurora 噪声与空洞未覆盖。可见中心/尺寸/OBB 不是真实质心/完整尺寸/
+体积；这些字段保持 `unknown`。
+
+- 设计与限制：`docs/ORE_SCENE_S2.md`。
+- 测试：99 passed（含 2 个几何测试）。

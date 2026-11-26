@@ -75,7 +75,7 @@ safety:
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 97
+  unit_tests: 99
   ore_scene_s1:
     passed: 2026-11-26 (offline only; no DDS/device/depth/motion)
     evidence: evidence/ore_scene_s1_20261126/
@@ -92,13 +92,24 @@ verification:
     passed: 2026-11-26 (offline converter only; no torch/SAM2 import)
     evidence: evidence/ore_scene_sam2_20261126/
     result: >-
-      4 converter tests; 97 total pass. The converter reproduces the frozen
+      4 converter tests; 99 total pass. The converter reproduces the frozen
       independent hybrid AP50 0.6375 / AP50-95 0.3909. SAM2 1008 fixed gives
       0.508 on 8 held-out images; Rocks UAV scene type failed to transfer
       (AP50 0.301).
     caveats: >-
       Reads exported tiles only; no runtime, DDS, device or motion. Thresholds
       were fitted on the earlier 8 images. Real-ore accuracy is Unverified.
+  ore_scene_s2_geometry:
+    passed: 2026-11-26 (offline synthetic depth only)
+    evidence: docs/ORE_SCENE_S2.md
+    result: >-
+      visible_geometry computes visible point count, depth valid fraction,
+      visible centroid, 3x3 sample covariance, AABB and PCA OBB from a mask +
+      metric depth + K + base<-camera transform. Two tests cover a 1 m plane,
+      translation, zero depth, empty mask and shape mismatch.
+    caveats: >-
+      No real depth/NEES; covariance is uncalibrated. Visible fields are not
+      true centroid/full extent/volume. No runtime or schema v2.
   reference_point_backend:
     passed: 2026-11-24 (unit test + real hardware static run)
     config: config/gpu_tag.yaml (AprilTag 36h11, 60 mm, id 0)

@@ -121,6 +121,7 @@ jcheng-perception/
 │   ├── ORE_SCENE_EVALUATION.md   # evaluation protocol (Chinese)
 │   ├── ORE_SCENE_S1.md           # S1 validation report (Chinese)
 │   ├── ORE_SCENE_S1_5.md         # SAM 2.1 offline MVE report (Chinese)
+│   ├── ORE_SCENE_S2.md           # visible-geometry MVE report (Chinese)
 │   └── adr/
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # provisional IDL (M2 promotes to jcheng-interfaces)
@@ -133,7 +134,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 97 ROS-free tests (77 existing + 20 ore scene)
+├── tests/                        # 99 ROS-free tests (77 existing + 22 ore scene/S2)
 └── capability.yaml
 ```
 
@@ -352,10 +353,18 @@ independent domain. A 2-image Rocks UAV scene-type check failed to transfer
 (AP50 0.301, precision 0.172, ~3.5x over-segmentation), so the tiling policy is
 not general. Real-ore accuracy remains Unverified.
 
+**S2 (2026-11-26, offline synthetic):** `visible_geometry` converts a mask +
+metric depth + K + base<-camera transform into visible point count, depth valid
+fraction, visible centroid, 3x3 sample covariance, AABB and PCA OBB. A 1 m
+synthetic plane, translation, zero-depth and empty-mask cases are tested. No
+real depth, calibrated covariance or schema v2 yet; visible geometry is not a
+true centroid/full extent/volume.
+
 Design and evidence:
 
 - [S1 validation report](docs/ORE_SCENE_S1.md)
 - [S1.5 SAM 2.1 offline MVE](docs/ORE_SCENE_S1_5.md)
+- [S2 visible geometry MVE](docs/ORE_SCENE_S2.md)
 - [Research](docs/ORE_SCENE_RESEARCH.md) ·
   [Architecture](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [Roadmap](docs/ORE_SCENE_ROADMAP.md) ·

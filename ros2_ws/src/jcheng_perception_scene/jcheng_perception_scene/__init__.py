@@ -9,6 +9,7 @@ grade.
 
 from .config import DEFAULT_CONFIG, config_sha256, load_config, validate_config
 from .dataset import import_coco_dataset, load_dataset, read_predictions
+from .geometry import GeometryParams, visible_geometry
 from .metrics import evaluate
 from .pipeline import run_dataset, run_unlabelled
 from .sam2_tiles import (
@@ -36,6 +37,7 @@ __all__ = [
     'DATASET_SCHEMA_VERSION',
     'DEFAULT_CONFIG',
     'EVALUATION_SCHEMA_VERSION',
+    'GeometryParams',
     'InstanceMask',
     'PREDICTION_SCHEMA_VERSION',
     'Relation',
@@ -58,4 +60,5 @@ __all__ = [
     'run_sam2_tiles',
     'run_unlabelled',
     'validate_config',
+    'visible_geometry',
 ]

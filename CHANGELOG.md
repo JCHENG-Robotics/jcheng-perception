@@ -8,6 +8,14 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Ore scene S2 visible geometry MVE (2026-11-26): new
+  `jcheng_perception_scene/geometry.py` computes visible point count, depth
+  valid fraction, visible centroid, 3x3 sample covariance, AABB and PCA OBB
+  from an instance mask + metric depth + K + base<-camera transform. Invalid
+  depth is never interpolated; empty masks/invalid depth return structured
+  statuses. Two new tests (99 total) cover a 1 m plane, a base translation,
+  zero depth, empty mask and shape mismatch. No real depth, no schema v2, no
+  runtime/device/motion change; real-ore geometry remains Unverified.
 - SAM2 tile converter (2026-11-26): new
   `jcheng_perception_scene/sam2_tiles.py` and `import-sam2-tiles` CLI convert
   exported SAM 2.1 tile masks (`result.json` + binary masks) into versioned
