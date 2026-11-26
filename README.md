@@ -368,10 +368,11 @@ extent/volume/mass fields. `build_relation_graph` adds evidence-backed
 `touching`/`near` edges (never `occludes` from one RGB view);
 `compare_relation_sets` scores a controlled 18-scene synthetic benchmark
 (6 contact / 6 near / 6 clear, GT masks, constructed truth) at P/R/F1 1.0,
-which is a sanity check — not real relation accuracy. With classical predicted
-masks on 39 synthetic scenes, only 43.5% of GT instances match at IoU>=0.5 and
-relation recall falls to 0.035 (precision 0.85), so segmentation/matching is
-the bottleneck. Multi-view identity and runtime integration remain planned.
+which is a sanity check — not real relation accuracy. On 39 synthetic scenes,
+classical predicted masks match 43.5% of GT instances and give relation
+P/R/F1 0.850/0.035/0.067; SAM2.1 masks match 76.3% and raise this to
+0.960/0.437/0.600, so segmentation/matching is the bottleneck. Multi-view
+identity and runtime integration remain planned.
 
 Design and evidence:
 

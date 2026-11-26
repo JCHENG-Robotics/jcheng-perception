@@ -1,0 +1,2712 @@
+{
+  "data_source": "synthetic",
+  "dataset_id": "synthetic_20261127",
+  "evaluated_scenes": 39,
+  "f1": 0.6002805049088359,
+  "failed_scenes": [],
+  "hardware_validation": false,
+  "instance_matching": {
+    "gt_instances": 600,
+    "match_iou": 0.5,
+    "match_rate": 0.7633333333333333,
+    "matched": 458,
+    "predicted_instances": 504
+  },
+  "limitations": [
+    "Synthetic data; GT edges are derived from GT masks, not independent human relation labels.",
+    "Greedy IoU matching, not Hungarian; unmatched predictions are excluded from relation scoring.",
+    "touching/near are collapsed to contact.",
+    "No real-ore or hardware validation."
+  ],
+  "per_scene": {
+    "syn-20261127-000": {
+      "f1": 0.7499999999999999,
+      "matches": [
+        {
+          "iou": 0.980668,
+          "predicted_id": "syn-20261127-000:0001",
+          "truth_id": "syn-20261127-000:0005"
+        },
+        {
+          "iou": 0.98124,
+          "predicted_id": "syn-20261127-000:0002",
+          "truth_id": "syn-20261127-000:0004"
+        },
+        {
+          "iou": 0.984134,
+          "predicted_id": "syn-20261127-000:0003",
+          "truth_id": "syn-20261127-000:0007"
+        },
+        {
+          "iou": 0.981292,
+          "predicted_id": "syn-20261127-000:0004",
+          "truth_id": "syn-20261127-000:0002"
+        },
+        {
+          "iou": 0.979773,
+          "predicted_id": "syn-20261127-000:0005",
+          "truth_id": "syn-20261127-000:0001"
+        },
+        {
+          "iou": 0.896248,
+          "predicted_id": "syn-20261127-000:0006",
+          "truth_id": "syn-20261127-000:0006"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 3,
+      "recall": 0.6,
+      "true_positive": 3,
+      "truth_edges": 5
+    },
+    "syn-20261127-001": {
+      "f1": 0.5333333333333333,
+      "matches": [
+        {
+          "iou": 0.987932,
+          "predicted_id": "syn-20261127-001:0001",
+          "truth_id": "syn-20261127-001:0006"
+        },
+        {
+          "iou": 0.986976,
+          "predicted_id": "syn-20261127-001:0002",
+          "truth_id": "syn-20261127-001:0003"
+        },
+        {
+          "iou": 0.954404,
+          "predicted_id": "syn-20261127-001:0003",
+          "truth_id": "syn-20261127-001:0001"
+        },
+        {
+          "iou": 0.954737,
+          "predicted_id": "syn-20261127-001:0004",
+          "truth_id": "syn-20261127-001:0005"
+        },
+        {
+          "iou": 0.953297,
+          "predicted_id": "syn-20261127-001:0005",
+          "truth_id": "syn-20261127-001:0004"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 4,
+      "recall": 0.36363636363636365,
+      "true_positive": 4,
+      "truth_edges": 11
+    },
+    "syn-20261127-002": {
+      "f1": 1.0,
+      "matches": [
+        {
+          "iou": 0.983899,
+          "predicted_id": "syn-20261127-002:0001",
+          "truth_id": "syn-20261127-002:0002"
+        },
+        {
+          "iou": 0.981908,
+          "predicted_id": "syn-20261127-002:0002",
+          "truth_id": "syn-20261127-002:0003"
+        },
+        {
+          "iou": 0.987179,
+          "predicted_id": "syn-20261127-002:0003",
+          "truth_id": "syn-20261127-002:0001"
+        },
+        {
+          "iou": 0.961564,
+          "predicted_id": "syn-20261127-002:0004",
+          "truth_id": "syn-20261127-002:0005"
+        },
+        {
+          "iou": 0.966086,
+          "predicted_id": "syn-20261127-002:0005",
+          "truth_id": "syn-20261127-002:0004"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "syn-20261127-003": {
+      "f1": 0.6666666666666666,
+      "matches": [
+        {
+          "iou": 0.989199,
+          "predicted_id": "syn-20261127-003:0001",
+          "truth_id": "syn-20261127-003:0006"
+        },
+        {
+          "iou": 0.984177,
+          "predicted_id": "syn-20261127-003:0002",
+          "truth_id": "syn-20261127-003:0004"
+        },
+        {
+          "iou": 0.980083,
+          "predicted_id": "syn-20261127-003:0003",
+          "truth_id": "syn-20261127-003:0003"
+        },
+        {
+          "iou": 0.98506,
+          "predicted_id": "syn-20261127-003:0004",
+          "truth_id": "syn-20261127-003:0005"
+        },
+        {
+          "iou": 0.98522,
+          "predicted_id": "syn-20261127-003:0005",
+          "truth_id": "syn-20261127-003:0001"
+        },
+        {
+          "iou": 0.985463,
+          "predicted_id": "syn-20261127-003:0006",
+          "truth_id": "syn-20261127-003:0002"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 0.5,
+      "true_positive": 1,
+      "truth_edges": 2
+    },
+    "syn-20261127-004": {
+      "f1": 0.8695652173913044,
+      "matches": [
+        {
+          "iou": 0.629514,
+          "predicted_id": "syn-20261127-004:0001",
+          "truth_id": "syn-20261127-004:0003"
+        },
+        {
+          "iou": 0.987564,
+          "predicted_id": "syn-20261127-004:0002",
+          "truth_id": "syn-20261127-004:0010"
+        },
+        {
+          "iou": 0.989986,
+          "predicted_id": "syn-20261127-004:0003",
+          "truth_id": "syn-20261127-004:0008"
+        },
+        {
+          "iou": 0.988166,
+          "predicted_id": "syn-20261127-004:0004",
+          "truth_id": "syn-20261127-004:0001"
+        },
+        {
+          "iou": 0.985181,
+          "predicted_id": "syn-20261127-004:0005",
+          "truth_id": "syn-20261127-004:0015"
+        },
+        {
+          "iou": 0.979324,
+          "predicted_id": "syn-20261127-004:0006",
+          "truth_id": "syn-20261127-004:0002"
+        },
+        {
+          "iou": 0.986918,
+          "predicted_id": "syn-20261127-004:0007",
+          "truth_id": "syn-20261127-004:0016"
+        },
+        {
+          "iou": 0.974677,
+          "predicted_id": "syn-20261127-004:0008",
+          "truth_id": "syn-20261127-004:0017"
+        },
+        {
+          "iou": 0.973139,
+          "predicted_id": "syn-20261127-004:0009",
+          "truth_id": "syn-20261127-004:0004"
+        },
+        {
+          "iou": 0.986609,
+          "predicted_id": "syn-20261127-004:0010",
+          "truth_id": "syn-20261127-004:0009"
+        },
+        {
+          "iou": 0.972028,
+          "predicted_id": "syn-20261127-004:0011",
+          "truth_id": "syn-20261127-004:0012"
+        },
+        {
+          "iou": 0.948622,
+          "predicted_id": "syn-20261127-004:0012",
+          "truth_id": "syn-20261127-004:0013"
+        },
+        {
+          "iou": 0.976143,
+          "predicted_id": "syn-20261127-004:0013",
+          "truth_id": "syn-20261127-004:0007"
+        },
+        {
+          "iou": 0.926842,
+          "predicted_id": "syn-20261127-004:0014",
+          "truth_id": "syn-20261127-004:0018"
+        },
+        {
+          "iou": 0.852941,
+          "predicted_id": "syn-20261127-004:0015",
+          "truth_id": "syn-20261127-004:0005"
+        },
+        {
+          "iou": 0.921865,
+          "predicted_id": "syn-20261127-004:0016",
+          "truth_id": "syn-20261127-004:0014"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 10,
+      "recall": 0.7692307692307693,
+      "true_positive": 10,
+      "truth_edges": 13
+    },
+    "syn-20261127-005": {
+      "f1": 0.888888888888889,
+      "matches": [
+        {
+          "iou": 0.851648,
+          "predicted_id": "syn-20261127-005:0001",
+          "truth_id": "syn-20261127-005:0005"
+        },
+        {
+          "iou": 0.991958,
+          "predicted_id": "syn-20261127-005:0002",
+          "truth_id": "syn-20261127-005:0008"
+        },
+        {
+          "iou": 0.983508,
+          "predicted_id": "syn-20261127-005:0003",
+          "truth_id": "syn-20261127-005:0003"
+        },
+        {
+          "iou": 0.979562,
+          "predicted_id": "syn-20261127-005:0004",
+          "truth_id": "syn-20261127-005:0009"
+        },
+        {
+          "iou": 0.991696,
+          "predicted_id": "syn-20261127-005:0005",
+          "truth_id": "syn-20261127-005:0012"
+        },
+        {
+          "iou": 0.982671,
+          "predicted_id": "syn-20261127-005:0006",
+          "truth_id": "syn-20261127-005:0006"
+        },
+        {
+          "iou": 0.971341,
+          "predicted_id": "syn-20261127-005:0007",
+          "truth_id": "syn-20261127-005:0004"
+        },
+        {
+          "iou": 0.976202,
+          "predicted_id": "syn-20261127-005:0008",
+          "truth_id": "syn-20261127-005:0002"
+        },
+        {
+          "iou": 0.975,
+          "predicted_id": "syn-20261127-005:0009",
+          "truth_id": "syn-20261127-005:0010"
+        },
+        {
+          "iou": 0.979385,
+          "predicted_id": "syn-20261127-005:0010",
+          "truth_id": "syn-20261127-005:0007"
+        },
+        {
+          "iou": 0.961404,
+          "predicted_id": "syn-20261127-005:0011",
+          "truth_id": "syn-20261127-005:0011"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 4,
+      "recall": 0.8,
+      "true_positive": 4,
+      "truth_edges": 5
+    },
+    "syn-20261127-006": {
+      "f1": 0.7407407407407407,
+      "matches": [
+        {
+          "iou": 0.992663,
+          "predicted_id": "syn-20261127-006:0001",
+          "truth_id": "syn-20261127-006:0007"
+        },
+        {
+          "iou": 0.986463,
+          "predicted_id": "syn-20261127-006:0002",
+          "truth_id": "syn-20261127-006:0015"
+        },
+        {
+          "iou": 0.988819,
+          "predicted_id": "syn-20261127-006:0003",
+          "truth_id": "syn-20261127-006:0006"
+        },
+        {
+          "iou": 0.987818,
+          "predicted_id": "syn-20261127-006:0004",
+          "truth_id": "syn-20261127-006:0001"
+        },
+        {
+          "iou": 0.982974,
+          "predicted_id": "syn-20261127-006:0005",
+          "truth_id": "syn-20261127-006:0011"
+        },
+        {
+          "iou": 0.974693,
+          "predicted_id": "syn-20261127-006:0006",
+          "truth_id": "syn-20261127-006:0004"
+        },
+        {
+          "iou": 0.956284,
+          "predicted_id": "syn-20261127-006:0007",
+          "truth_id": "syn-20261127-006:0014"
+        },
+        {
+          "iou": 0.972799,
+          "predicted_id": "syn-20261127-006:0008",
+          "truth_id": "syn-20261127-006:0005"
+        },
+        {
+          "iou": 0.96248,
+          "predicted_id": "syn-20261127-006:0009",
+          "truth_id": "syn-20261127-006:0002"
+        },
+        {
+          "iou": 0.976818,
+          "predicted_id": "syn-20261127-006:0010",
+          "truth_id": "syn-20261127-006:0016"
+        },
+        {
+          "iou": 0.970289,
+          "predicted_id": "syn-20261127-006:0011",
+          "truth_id": "syn-20261127-006:0003"
+        },
+        {
+          "iou": 0.951258,
+          "predicted_id": "syn-20261127-006:0012",
+          "truth_id": "syn-20261127-006:0009"
+        },
+        {
+          "iou": 0.94786,
+          "predicted_id": "syn-20261127-006:0013",
+          "truth_id": "syn-20261127-006:0012"
+        },
+        {
+          "iou": 0.74219,
+          "predicted_id": "syn-20261127-006:0014",
+          "truth_id": "syn-20261127-006:0010"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 10,
+      "recall": 0.5882352941176471,
+      "true_positive": 10,
+      "truth_edges": 17
+    },
+    "syn-20261127-007": {
+      "f1": 0.2857142857142857,
+      "matches": [
+        {
+          "iou": 0.988854,
+          "predicted_id": "syn-20261127-007:0001",
+          "truth_id": "syn-20261127-007:0005"
+        },
+        {
+          "iou": 0.97559,
+          "predicted_id": "syn-20261127-007:0002",
+          "truth_id": "syn-20261127-007:0009"
+        },
+        {
+          "iou": 0.985286,
+          "predicted_id": "syn-20261127-007:0003",
+          "truth_id": "syn-20261127-007:0012"
+        },
+        {
+          "iou": 0.982857,
+          "predicted_id": "syn-20261127-007:0004",
+          "truth_id": "syn-20261127-007:0008"
+        },
+        {
+          "iou": 0.978673,
+          "predicted_id": "syn-20261127-007:0005",
+          "truth_id": "syn-20261127-007:0010"
+        },
+        {
+          "iou": 0.986376,
+          "predicted_id": "syn-20261127-007:0006",
+          "truth_id": "syn-20261127-007:0004"
+        },
+        {
+          "iou": 0.984867,
+          "predicted_id": "syn-20261127-007:0007",
+          "truth_id": "syn-20261127-007:0011"
+        },
+        {
+          "iou": 0.972337,
+          "predicted_id": "syn-20261127-007:0008",
+          "truth_id": "syn-20261127-007:0006"
+        },
+        {
+          "iou": 0.949743,
+          "predicted_id": "syn-20261127-007:0009",
+          "truth_id": "syn-20261127-007:0003"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 0.16666666666666666,
+      "true_positive": 1,
+      "truth_edges": 6
+    },
+    "syn-20261127-008": {
+      "f1": 0.6923076923076923,
+      "matches": [
+        {
+          "iou": 0.982733,
+          "predicted_id": "syn-20261127-008:0001",
+          "truth_id": "syn-20261127-008:0008"
+        },
+        {
+          "iou": 0.978218,
+          "predicted_id": "syn-20261127-008:0002",
+          "truth_id": "syn-20261127-008:0016"
+        },
+        {
+          "iou": 0.981297,
+          "predicted_id": "syn-20261127-008:0003",
+          "truth_id": "syn-20261127-008:0026"
+        },
+        {
+          "iou": 0.978663,
+          "predicted_id": "syn-20261127-008:0004",
+          "truth_id": "syn-20261127-008:0005"
+        },
+        {
+          "iou": 0.976347,
+          "predicted_id": "syn-20261127-008:0005",
+          "truth_id": "syn-20261127-008:0002"
+        },
+        {
+          "iou": 0.980507,
+          "predicted_id": "syn-20261127-008:0006",
+          "truth_id": "syn-20261127-008:0017"
+        },
+        {
+          "iou": 0.981432,
+          "predicted_id": "syn-20261127-008:0007",
+          "truth_id": "syn-20261127-008:0023"
+        },
+        {
+          "iou": 0.975686,
+          "predicted_id": "syn-20261127-008:0008",
+          "truth_id": "syn-20261127-008:0021"
+        },
+        {
+          "iou": 0.971292,
+          "predicted_id": "syn-20261127-008:0009",
+          "truth_id": "syn-20261127-008:0006"
+        },
+        {
+          "iou": 0.968268,
+          "predicted_id": "syn-20261127-008:0010",
+          "truth_id": "syn-20261127-008:0019"
+        },
+        {
+          "iou": 0.979817,
+          "predicted_id": "syn-20261127-008:0011",
+          "truth_id": "syn-20261127-008:0007"
+        },
+        {
+          "iou": 0.99142,
+          "predicted_id": "syn-20261127-008:0012",
+          "truth_id": "syn-20261127-008:0020"
+        },
+        {
+          "iou": 0.967597,
+          "predicted_id": "syn-20261127-008:0013",
+          "truth_id": "syn-20261127-008:0003"
+        },
+        {
+          "iou": 0.979569,
+          "predicted_id": "syn-20261127-008:0014",
+          "truth_id": "syn-20261127-008:0015"
+        },
+        {
+          "iou": 0.630736,
+          "predicted_id": "syn-20261127-008:0015",
+          "truth_id": "syn-20261127-008:0024"
+        },
+        {
+          "iou": 0.960967,
+          "predicted_id": "syn-20261127-008:0016",
+          "truth_id": "syn-20261127-008:0018"
+        },
+        {
+          "iou": 0.958543,
+          "predicted_id": "syn-20261127-008:0017",
+          "truth_id": "syn-20261127-008:0010"
+        },
+        {
+          "iou": 0.716932,
+          "predicted_id": "syn-20261127-008:0018",
+          "truth_id": "syn-20261127-008:0022"
+        },
+        {
+          "iou": 0.568639,
+          "predicted_id": "syn-20261127-008:0019",
+          "truth_id": "syn-20261127-008:0014"
+        },
+        {
+          "iou": 0.943423,
+          "predicted_id": "syn-20261127-008:0020",
+          "truth_id": "syn-20261127-008:0012"
+        },
+        {
+          "iou": 0.963051,
+          "predicted_id": "syn-20261127-008:0021",
+          "truth_id": "syn-20261127-008:0025"
+        },
+        {
+          "iou": 0.950641,
+          "predicted_id": "syn-20261127-008:0022",
+          "truth_id": "syn-20261127-008:0004"
+        },
+        {
+          "iou": 0.953715,
+          "predicted_id": "syn-20261127-008:0023",
+          "truth_id": "syn-20261127-008:0011"
+        }
+      ],
+      "precision": 0.9,
+      "predicted_edges": 10,
+      "recall": 0.5625,
+      "true_positive": 9,
+      "truth_edges": 16
+    },
+    "syn-20261127-009": {
+      "f1": 0.24489795918367344,
+      "matches": [
+        {
+          "iou": 0.979036,
+          "predicted_id": "syn-20261127-009:0001",
+          "truth_id": "syn-20261127-009:0022"
+        },
+        {
+          "iou": 0.970655,
+          "predicted_id": "syn-20261127-009:0002",
+          "truth_id": "syn-20261127-009:0016"
+        },
+        {
+          "iou": 0.967692,
+          "predicted_id": "syn-20261127-009:0003",
+          "truth_id": "syn-20261127-009:0009"
+        },
+        {
+          "iou": 0.976401,
+          "predicted_id": "syn-20261127-009:0004",
+          "truth_id": "syn-20261127-009:0027"
+        },
+        {
+          "iou": 0.975217,
+          "predicted_id": "syn-20261127-009:0005",
+          "truth_id": "syn-20261127-009:0028"
+        },
+        {
+          "iou": 0.966667,
+          "predicted_id": "syn-20261127-009:0006",
+          "truth_id": "syn-20261127-009:0024"
+        },
+        {
+          "iou": 0.982109,
+          "predicted_id": "syn-20261127-009:0007",
+          "truth_id": "syn-20261127-009:0018"
+        },
+        {
+          "iou": 0.944159,
+          "predicted_id": "syn-20261127-009:0008",
+          "truth_id": "syn-20261127-009:0006"
+        },
+        {
+          "iou": 0.972917,
+          "predicted_id": "syn-20261127-009:0009",
+          "truth_id": "syn-20261127-009:0005"
+        },
+        {
+          "iou": 0.962678,
+          "predicted_id": "syn-20261127-009:0010",
+          "truth_id": "syn-20261127-009:0011"
+        },
+        {
+          "iou": 0.945817,
+          "predicted_id": "syn-20261127-009:0011",
+          "truth_id": "syn-20261127-009:0003"
+        },
+        {
+          "iou": 0.958993,
+          "predicted_id": "syn-20261127-009:0012",
+          "truth_id": "syn-20261127-009:0020"
+        },
+        {
+          "iou": 0.946063,
+          "predicted_id": "syn-20261127-009:0013",
+          "truth_id": "syn-20261127-009:0019"
+        },
+        {
+          "iou": 0.967626,
+          "predicted_id": "syn-20261127-009:0014",
+          "truth_id": "syn-20261127-009:0029"
+        },
+        {
+          "iou": 0.918312,
+          "predicted_id": "syn-20261127-009:0016",
+          "truth_id": "syn-20261127-009:0010"
+        },
+        {
+          "iou": 0.912266,
+          "predicted_id": "syn-20261127-009:0017",
+          "truth_id": "syn-20261127-009:0021"
+        }
+      ],
+      "precision": 0.8571428571428571,
+      "predicted_edges": 7,
+      "recall": 0.14285714285714285,
+      "true_positive": 6,
+      "truth_edges": 42
+    },
+    "syn-20261127-010": {
+      "f1": 0.17391304347826084,
+      "matches": [
+        {
+          "iou": 0.985287,
+          "predicted_id": "syn-20261127-010:0001",
+          "truth_id": "syn-20261127-010:0019"
+        },
+        {
+          "iou": 0.985959,
+          "predicted_id": "syn-20261127-010:0002",
+          "truth_id": "syn-20261127-010:0002"
+        },
+        {
+          "iou": 0.986137,
+          "predicted_id": "syn-20261127-010:0003",
+          "truth_id": "syn-20261127-010:0008"
+        },
+        {
+          "iou": 0.9847,
+          "predicted_id": "syn-20261127-010:0004",
+          "truth_id": "syn-20261127-010:0006"
+        },
+        {
+          "iou": 0.985999,
+          "predicted_id": "syn-20261127-010:0005",
+          "truth_id": "syn-20261127-010:0007"
+        },
+        {
+          "iou": 0.987336,
+          "predicted_id": "syn-20261127-010:0006",
+          "truth_id": "syn-20261127-010:0015"
+        },
+        {
+          "iou": 0.985612,
+          "predicted_id": "syn-20261127-010:0007",
+          "truth_id": "syn-20261127-010:0018"
+        },
+        {
+          "iou": 0.977113,
+          "predicted_id": "syn-20261127-010:0008",
+          "truth_id": "syn-20261127-010:0021"
+        },
+        {
+          "iou": 0.977485,
+          "predicted_id": "syn-20261127-010:0009",
+          "truth_id": "syn-20261127-010:0009"
+        },
+        {
+          "iou": 0.974074,
+          "predicted_id": "syn-20261127-010:0010",
+          "truth_id": "syn-20261127-010:0005"
+        },
+        {
+          "iou": 0.944444,
+          "predicted_id": "syn-20261127-010:0011",
+          "truth_id": "syn-20261127-010:0023"
+        },
+        {
+          "iou": 0.971513,
+          "predicted_id": "syn-20261127-010:0012",
+          "truth_id": "syn-20261127-010:0026"
+        },
+        {
+          "iou": 0.979955,
+          "predicted_id": "syn-20261127-010:0013",
+          "truth_id": "syn-20261127-010:0020"
+        },
+        {
+          "iou": 0.961019,
+          "predicted_id": "syn-20261127-010:0014",
+          "truth_id": "syn-20261127-010:0024"
+        },
+        {
+          "iou": 0.981006,
+          "predicted_id": "syn-20261127-010:0015",
+          "truth_id": "syn-20261127-010:0028"
+        },
+        {
+          "iou": 0.959124,
+          "predicted_id": "syn-20261127-010:0016",
+          "truth_id": "syn-20261127-010:0004"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 2,
+      "recall": 0.09523809523809523,
+      "true_positive": 2,
+      "truth_edges": 21
+    },
+    "syn-20261127-011": {
+      "f1": 0.631578947368421,
+      "matches": [
+        {
+          "iou": 0.990787,
+          "predicted_id": "syn-20261127-011:0001",
+          "truth_id": "syn-20261127-011:0023"
+        },
+        {
+          "iou": 0.988085,
+          "predicted_id": "syn-20261127-011:0002",
+          "truth_id": "syn-20261127-011:0009"
+        },
+        {
+          "iou": 0.987755,
+          "predicted_id": "syn-20261127-011:0003",
+          "truth_id": "syn-20261127-011:0027"
+        },
+        {
+          "iou": 0.986518,
+          "predicted_id": "syn-20261127-011:0004",
+          "truth_id": "syn-20261127-011:0007"
+        },
+        {
+          "iou": 0.982184,
+          "predicted_id": "syn-20261127-011:0005",
+          "truth_id": "syn-20261127-011:0002"
+        },
+        {
+          "iou": 0.973316,
+          "predicted_id": "syn-20261127-011:0006",
+          "truth_id": "syn-20261127-011:0030"
+        },
+        {
+          "iou": 0.980756,
+          "predicted_id": "syn-20261127-011:0007",
+          "truth_id": "syn-20261127-011:0024"
+        },
+        {
+          "iou": 0.973064,
+          "predicted_id": "syn-20261127-011:0008",
+          "truth_id": "syn-20261127-011:0013"
+        },
+        {
+          "iou": 0.975657,
+          "predicted_id": "syn-20261127-011:0009",
+          "truth_id": "syn-20261127-011:0025"
+        },
+        {
+          "iou": 0.968119,
+          "predicted_id": "syn-20261127-011:0010",
+          "truth_id": "syn-20261127-011:0003"
+        },
+        {
+          "iou": 0.968958,
+          "predicted_id": "syn-20261127-011:0011",
+          "truth_id": "syn-20261127-011:0005"
+        },
+        {
+          "iou": 0.968435,
+          "predicted_id": "syn-20261127-011:0012",
+          "truth_id": "syn-20261127-011:0011"
+        },
+        {
+          "iou": 0.986194,
+          "predicted_id": "syn-20261127-011:0013",
+          "truth_id": "syn-20261127-011:0001"
+        },
+        {
+          "iou": 0.97651,
+          "predicted_id": "syn-20261127-011:0014",
+          "truth_id": "syn-20261127-011:0016"
+        },
+        {
+          "iou": 0.986353,
+          "predicted_id": "syn-20261127-011:0015",
+          "truth_id": "syn-20261127-011:0004"
+        },
+        {
+          "iou": 0.95969,
+          "predicted_id": "syn-20261127-011:0016",
+          "truth_id": "syn-20261127-011:0019"
+        },
+        {
+          "iou": 0.967423,
+          "predicted_id": "syn-20261127-011:0017",
+          "truth_id": "syn-20261127-011:0018"
+        },
+        {
+          "iou": 0.962293,
+          "predicted_id": "syn-20261127-011:0018",
+          "truth_id": "syn-20261127-011:0008"
+        },
+        {
+          "iou": 0.974468,
+          "predicted_id": "syn-20261127-011:0019",
+          "truth_id": "syn-20261127-011:0017"
+        },
+        {
+          "iou": 0.960954,
+          "predicted_id": "syn-20261127-011:0020",
+          "truth_id": "syn-20261127-011:0014"
+        },
+        {
+          "iou": 0.957055,
+          "predicted_id": "syn-20261127-011:0021",
+          "truth_id": "syn-20261127-011:0029"
+        },
+        {
+          "iou": 0.715813,
+          "predicted_id": "syn-20261127-011:0022",
+          "truth_id": "syn-20261127-011:0021"
+        },
+        {
+          "iou": 0.942675,
+          "predicted_id": "syn-20261127-011:0023",
+          "truth_id": "syn-20261127-011:0020"
+        },
+        {
+          "iou": 0.727984,
+          "predicted_id": "syn-20261127-011:0024",
+          "truth_id": "syn-20261127-011:0010"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 6,
+      "recall": 0.46153846153846156,
+      "true_positive": 6,
+      "truth_edges": 13
+    },
+    "syn-20261127-012": {
+      "f1": 0.8571428571428571,
+      "matches": [
+        {
+          "iou": 0.981395,
+          "predicted_id": "syn-20261127-012:0001",
+          "truth_id": "syn-20261127-012:0004"
+        },
+        {
+          "iou": 0.978947,
+          "predicted_id": "syn-20261127-012:0002",
+          "truth_id": "syn-20261127-012:0001"
+        },
+        {
+          "iou": 0.993102,
+          "predicted_id": "syn-20261127-012:0003",
+          "truth_id": "syn-20261127-012:0006"
+        },
+        {
+          "iou": 0.990051,
+          "predicted_id": "syn-20261127-012:0004",
+          "truth_id": "syn-20261127-012:0005"
+        },
+        {
+          "iou": 0.97851,
+          "predicted_id": "syn-20261127-012:0005",
+          "truth_id": "syn-20261127-012:0002"
+        },
+        {
+          "iou": 0.988235,
+          "predicted_id": "syn-20261127-012:0006",
+          "truth_id": "syn-20261127-012:0003"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 3,
+      "recall": 0.75,
+      "true_positive": 3,
+      "truth_edges": 4
+    },
+    "syn-20261127-013": {
+      "f1": 1.0,
+      "matches": [
+        {
+          "iou": 0.988499,
+          "predicted_id": "syn-20261127-013:0001",
+          "truth_id": "syn-20261127-013:0001"
+        },
+        {
+          "iou": 0.981436,
+          "predicted_id": "syn-20261127-013:0002",
+          "truth_id": "syn-20261127-013:0004"
+        },
+        {
+          "iou": 0.992051,
+          "predicted_id": "syn-20261127-013:0003",
+          "truth_id": "syn-20261127-013:0005"
+        },
+        {
+          "iou": 0.977103,
+          "predicted_id": "syn-20261127-013:0004",
+          "truth_id": "syn-20261127-013:0006"
+        },
+        {
+          "iou": 0.965672,
+          "predicted_id": "syn-20261127-013:0005",
+          "truth_id": "syn-20261127-013:0002"
+        },
+        {
+          "iou": 0.987342,
+          "predicted_id": "syn-20261127-013:0007",
+          "truth_id": "syn-20261127-013:0003"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 2,
+      "recall": 1.0,
+      "true_positive": 2,
+      "truth_edges": 2
+    },
+    "syn-20261127-014": {
+      "f1": null,
+      "matches": [
+        {
+          "iou": 0.991684,
+          "predicted_id": "syn-20261127-014:0001",
+          "truth_id": "syn-20261127-014:0004"
+        },
+        {
+          "iou": 0.992585,
+          "predicted_id": "syn-20261127-014:0002",
+          "truth_id": "syn-20261127-014:0003"
+        },
+        {
+          "iou": 0.743811,
+          "predicted_id": "syn-20261127-014:0003",
+          "truth_id": "syn-20261127-014:0001"
+        }
+      ],
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": 0.0,
+      "true_positive": 0,
+      "truth_edges": 1
+    },
+    "syn-20261127-015": {
+      "f1": 1.0,
+      "matches": [
+        {
+          "iou": 0.987829,
+          "predicted_id": "syn-20261127-015:0001",
+          "truth_id": "syn-20261127-015:0002"
+        },
+        {
+          "iou": 0.969133,
+          "predicted_id": "syn-20261127-015:0002",
+          "truth_id": "syn-20261127-015:0003"
+        },
+        {
+          "iou": 0.987286,
+          "predicted_id": "syn-20261127-015:0003",
+          "truth_id": "syn-20261127-015:0004"
+        },
+        {
+          "iou": 0.959704,
+          "predicted_id": "syn-20261127-015:0004",
+          "truth_id": "syn-20261127-015:0001"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 2,
+      "recall": 1.0,
+      "true_positive": 2,
+      "truth_edges": 2
+    },
+    "syn-20261127-016": {
+      "f1": 0.8695652173913043,
+      "matches": [
+        {
+          "iou": 0.98287,
+          "predicted_id": "syn-20261127-016:0001",
+          "truth_id": "syn-20261127-016:0006"
+        },
+        {
+          "iou": 0.984658,
+          "predicted_id": "syn-20261127-016:0002",
+          "truth_id": "syn-20261127-016:0012"
+        },
+        {
+          "iou": 0.960667,
+          "predicted_id": "syn-20261127-016:0003",
+          "truth_id": "syn-20261127-016:0008"
+        },
+        {
+          "iou": 0.973513,
+          "predicted_id": "syn-20261127-016:0004",
+          "truth_id": "syn-20261127-016:0011"
+        },
+        {
+          "iou": 0.970169,
+          "predicted_id": "syn-20261127-016:0005",
+          "truth_id": "syn-20261127-016:0002"
+        },
+        {
+          "iou": 0.970091,
+          "predicted_id": "syn-20261127-016:0006",
+          "truth_id": "syn-20261127-016:0003"
+        },
+        {
+          "iou": 0.975627,
+          "predicted_id": "syn-20261127-016:0007",
+          "truth_id": "syn-20261127-016:0010"
+        },
+        {
+          "iou": 0.981944,
+          "predicted_id": "syn-20261127-016:0008",
+          "truth_id": "syn-20261127-016:0005"
+        },
+        {
+          "iou": 0.940028,
+          "predicted_id": "syn-20261127-016:0009",
+          "truth_id": "syn-20261127-016:0007"
+        },
+        {
+          "iou": 0.97431,
+          "predicted_id": "syn-20261127-016:0010",
+          "truth_id": "syn-20261127-016:0009"
+        },
+        {
+          "iou": 0.958609,
+          "predicted_id": "syn-20261127-016:0012",
+          "truth_id": "syn-20261127-016:0001"
+        }
+      ],
+      "precision": 0.9090909090909091,
+      "predicted_edges": 11,
+      "recall": 0.8333333333333334,
+      "true_positive": 10,
+      "truth_edges": 12
+    },
+    "syn-20261127-017": {
+      "f1": 0.7499999999999999,
+      "matches": [
+        {
+          "iou": 0.997607,
+          "predicted_id": "syn-20261127-017:0001",
+          "truth_id": "syn-20261127-017:0010"
+        },
+        {
+          "iou": 0.989481,
+          "predicted_id": "syn-20261127-017:0002",
+          "truth_id": "syn-20261127-017:0006"
+        },
+        {
+          "iou": 0.986875,
+          "predicted_id": "syn-20261127-017:0003",
+          "truth_id": "syn-20261127-017:0011"
+        },
+        {
+          "iou": 0.977439,
+          "predicted_id": "syn-20261127-017:0004",
+          "truth_id": "syn-20261127-017:0009"
+        },
+        {
+          "iou": 0.984191,
+          "predicted_id": "syn-20261127-017:0005",
+          "truth_id": "syn-20261127-017:0002"
+        },
+        {
+          "iou": 0.973703,
+          "predicted_id": "syn-20261127-017:0006",
+          "truth_id": "syn-20261127-017:0014"
+        },
+        {
+          "iou": 0.992655,
+          "predicted_id": "syn-20261127-017:0007",
+          "truth_id": "syn-20261127-017:0001"
+        },
+        {
+          "iou": 0.986024,
+          "predicted_id": "syn-20261127-017:0008",
+          "truth_id": "syn-20261127-017:0003"
+        },
+        {
+          "iou": 0.985294,
+          "predicted_id": "syn-20261127-017:0009",
+          "truth_id": "syn-20261127-017:0008"
+        },
+        {
+          "iou": 0.977444,
+          "predicted_id": "syn-20261127-017:0010",
+          "truth_id": "syn-20261127-017:0012"
+        },
+        {
+          "iou": 0.960832,
+          "predicted_id": "syn-20261127-017:0011",
+          "truth_id": "syn-20261127-017:0016"
+        },
+        {
+          "iou": 0.951267,
+          "predicted_id": "syn-20261127-017:0012",
+          "truth_id": "syn-20261127-017:0007"
+        },
+        {
+          "iou": 0.971256,
+          "predicted_id": "syn-20261127-017:0013",
+          "truth_id": "syn-20261127-017:0013"
+        },
+        {
+          "iou": 0.970508,
+          "predicted_id": "syn-20261127-017:0014",
+          "truth_id": "syn-20261127-017:0005"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 6,
+      "recall": 0.6,
+      "true_positive": 6,
+      "truth_edges": 10
+    },
+    "syn-20261127-018": {
+      "f1": 0.625,
+      "matches": [
+        {
+          "iou": 0.993792,
+          "predicted_id": "syn-20261127-018:0001",
+          "truth_id": "syn-20261127-018:0011"
+        },
+        {
+          "iou": 0.979208,
+          "predicted_id": "syn-20261127-018:0002",
+          "truth_id": "syn-20261127-018:0006"
+        },
+        {
+          "iou": 0.9265,
+          "predicted_id": "syn-20261127-018:0003",
+          "truth_id": "syn-20261127-018:0014"
+        },
+        {
+          "iou": 0.990213,
+          "predicted_id": "syn-20261127-018:0004",
+          "truth_id": "syn-20261127-018:0010"
+        },
+        {
+          "iou": 0.975288,
+          "predicted_id": "syn-20261127-018:0005",
+          "truth_id": "syn-20261127-018:0004"
+        },
+        {
+          "iou": 0.977804,
+          "predicted_id": "syn-20261127-018:0006",
+          "truth_id": "syn-20261127-018:0012"
+        },
+        {
+          "iou": 0.978405,
+          "predicted_id": "syn-20261127-018:0007",
+          "truth_id": "syn-20261127-018:0015"
+        },
+        {
+          "iou": 0.978576,
+          "predicted_id": "syn-20261127-018:0008",
+          "truth_id": "syn-20261127-018:0013"
+        },
+        {
+          "iou": 0.976317,
+          "predicted_id": "syn-20261127-018:0009",
+          "truth_id": "syn-20261127-018:0002"
+        },
+        {
+          "iou": 0.983749,
+          "predicted_id": "syn-20261127-018:0010",
+          "truth_id": "syn-20261127-018:0008"
+        },
+        {
+          "iou": 0.986498,
+          "predicted_id": "syn-20261127-018:0011",
+          "truth_id": "syn-20261127-018:0009"
+        },
+        {
+          "iou": 0.975898,
+          "predicted_id": "syn-20261127-018:0012",
+          "truth_id": "syn-20261127-018:0007"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 5,
+      "recall": 0.45454545454545453,
+      "true_positive": 5,
+      "truth_edges": 11
+    },
+    "syn-20261127-019": {
+      "f1": 0.6666666666666666,
+      "matches": [
+        {
+          "iou": 0.991387,
+          "predicted_id": "syn-20261127-019:0001",
+          "truth_id": "syn-20261127-019:0001"
+        },
+        {
+          "iou": 0.9801,
+          "predicted_id": "syn-20261127-019:0002",
+          "truth_id": "syn-20261127-019:0011"
+        },
+        {
+          "iou": 0.968178,
+          "predicted_id": "syn-20261127-019:0003",
+          "truth_id": "syn-20261127-019:0005"
+        },
+        {
+          "iou": 0.988074,
+          "predicted_id": "syn-20261127-019:0004",
+          "truth_id": "syn-20261127-019:0006"
+        },
+        {
+          "iou": 0.995902,
+          "predicted_id": "syn-20261127-019:0005",
+          "truth_id": "syn-20261127-019:0008"
+        },
+        {
+          "iou": 0.985923,
+          "predicted_id": "syn-20261127-019:0006",
+          "truth_id": "syn-20261127-019:0004"
+        },
+        {
+          "iou": 0.983391,
+          "predicted_id": "syn-20261127-019:0007",
+          "truth_id": "syn-20261127-019:0009"
+        },
+        {
+          "iou": 0.970999,
+          "predicted_id": "syn-20261127-019:0008",
+          "truth_id": "syn-20261127-019:0003"
+        },
+        {
+          "iou": 0.981504,
+          "predicted_id": "syn-20261127-019:0009",
+          "truth_id": "syn-20261127-019:0007"
+        },
+        {
+          "iou": 0.940568,
+          "predicted_id": "syn-20261127-019:0010",
+          "truth_id": "syn-20261127-019:0014"
+        },
+        {
+          "iou": 0.773158,
+          "predicted_id": "syn-20261127-019:0011",
+          "truth_id": "syn-20261127-019:0013"
+        },
+        {
+          "iou": 0.971231,
+          "predicted_id": "syn-20261127-019:0012",
+          "truth_id": "syn-20261127-019:0010"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 3,
+      "recall": 0.5,
+      "true_positive": 3,
+      "truth_edges": 6
+    },
+    "syn-20261127-020": {
+      "f1": 0.75,
+      "matches": [
+        {
+          "iou": 0.982176,
+          "predicted_id": "syn-20261127-020:0001",
+          "truth_id": "syn-20261127-020:0014"
+        },
+        {
+          "iou": 0.989723,
+          "predicted_id": "syn-20261127-020:0002",
+          "truth_id": "syn-20261127-020:0034"
+        },
+        {
+          "iou": 0.978228,
+          "predicted_id": "syn-20261127-020:0003",
+          "truth_id": "syn-20261127-020:0030"
+        },
+        {
+          "iou": 0.988576,
+          "predicted_id": "syn-20261127-020:0004",
+          "truth_id": "syn-20261127-020:0033"
+        },
+        {
+          "iou": 0.982581,
+          "predicted_id": "syn-20261127-020:0005",
+          "truth_id": "syn-20261127-020:0013"
+        },
+        {
+          "iou": 0.985116,
+          "predicted_id": "syn-20261127-020:0006",
+          "truth_id": "syn-20261127-020:0016"
+        },
+        {
+          "iou": 0.975093,
+          "predicted_id": "syn-20261127-020:0007",
+          "truth_id": "syn-20261127-020:0003"
+        },
+        {
+          "iou": 0.982408,
+          "predicted_id": "syn-20261127-020:0008",
+          "truth_id": "syn-20261127-020:0017"
+        },
+        {
+          "iou": 0.978286,
+          "predicted_id": "syn-20261127-020:0009",
+          "truth_id": "syn-20261127-020:0032"
+        },
+        {
+          "iou": 0.976806,
+          "predicted_id": "syn-20261127-020:0010",
+          "truth_id": "syn-20261127-020:0025"
+        },
+        {
+          "iou": 0.990606,
+          "predicted_id": "syn-20261127-020:0011",
+          "truth_id": "syn-20261127-020:0028"
+        },
+        {
+          "iou": 0.989654,
+          "predicted_id": "syn-20261127-020:0012",
+          "truth_id": "syn-20261127-020:0018"
+        },
+        {
+          "iou": 0.97683,
+          "predicted_id": "syn-20261127-020:0013",
+          "truth_id": "syn-20261127-020:0022"
+        },
+        {
+          "iou": 0.975717,
+          "predicted_id": "syn-20261127-020:0014",
+          "truth_id": "syn-20261127-020:0036"
+        },
+        {
+          "iou": 0.98456,
+          "predicted_id": "syn-20261127-020:0015",
+          "truth_id": "syn-20261127-020:0031"
+        },
+        {
+          "iou": 0.965824,
+          "predicted_id": "syn-20261127-020:0016",
+          "truth_id": "syn-20261127-020:0007"
+        },
+        {
+          "iou": 0.978426,
+          "predicted_id": "syn-20261127-020:0017",
+          "truth_id": "syn-20261127-020:0021"
+        },
+        {
+          "iou": 0.978365,
+          "predicted_id": "syn-20261127-020:0018",
+          "truth_id": "syn-20261127-020:0010"
+        },
+        {
+          "iou": 0.982505,
+          "predicted_id": "syn-20261127-020:0019",
+          "truth_id": "syn-20261127-020:0012"
+        },
+        {
+          "iou": 0.955268,
+          "predicted_id": "syn-20261127-020:0020",
+          "truth_id": "syn-20261127-020:0006"
+        },
+        {
+          "iou": 0.97086,
+          "predicted_id": "syn-20261127-020:0021",
+          "truth_id": "syn-20261127-020:0001"
+        },
+        {
+          "iou": 0.945578,
+          "predicted_id": "syn-20261127-020:0022",
+          "truth_id": "syn-20261127-020:0015"
+        },
+        {
+          "iou": 0.944643,
+          "predicted_id": "syn-20261127-020:0023",
+          "truth_id": "syn-20261127-020:0004"
+        },
+        {
+          "iou": 0.979094,
+          "predicted_id": "syn-20261127-020:0024",
+          "truth_id": "syn-20261127-020:0027"
+        },
+        {
+          "iou": 0.948762,
+          "predicted_id": "syn-20261127-020:0025",
+          "truth_id": "syn-20261127-020:0035"
+        },
+        {
+          "iou": 0.63688,
+          "predicted_id": "syn-20261127-020:0026",
+          "truth_id": "syn-20261127-020:0024"
+        },
+        {
+          "iou": 0.890295,
+          "predicted_id": "syn-20261127-020:0027",
+          "truth_id": "syn-20261127-020:0011"
+        }
+      ],
+      "precision": 0.8571428571428571,
+      "predicted_edges": 21,
+      "recall": 0.6666666666666666,
+      "true_positive": 18,
+      "truth_edges": 27
+    },
+    "syn-20261127-021": {
+      "f1": 0.5,
+      "matches": [
+        {
+          "iou": 0.981799,
+          "predicted_id": "syn-20261127-021:0001",
+          "truth_id": "syn-20261127-021:0018"
+        },
+        {
+          "iou": 0.983274,
+          "predicted_id": "syn-20261127-021:0002",
+          "truth_id": "syn-20261127-021:0014"
+        },
+        {
+          "iou": 0.972933,
+          "predicted_id": "syn-20261127-021:0003",
+          "truth_id": "syn-20261127-021:0004"
+        },
+        {
+          "iou": 0.985897,
+          "predicted_id": "syn-20261127-021:0004",
+          "truth_id": "syn-20261127-021:0007"
+        },
+        {
+          "iou": 0.965341,
+          "predicted_id": "syn-20261127-021:0005",
+          "truth_id": "syn-20261127-021:0019"
+        },
+        {
+          "iou": 0.976822,
+          "predicted_id": "syn-20261127-021:0006",
+          "truth_id": "syn-20261127-021:0008"
+        },
+        {
+          "iou": 0.976275,
+          "predicted_id": "syn-20261127-021:0007",
+          "truth_id": "syn-20261127-021:0009"
+        },
+        {
+          "iou": 0.981674,
+          "predicted_id": "syn-20261127-021:0008",
+          "truth_id": "syn-20261127-021:0011"
+        },
+        {
+          "iou": 0.982505,
+          "predicted_id": "syn-20261127-021:0009",
+          "truth_id": "syn-20261127-021:0016"
+        },
+        {
+          "iou": 0.974774,
+          "predicted_id": "syn-20261127-021:0010",
+          "truth_id": "syn-20261127-021:0022"
+        },
+        {
+          "iou": 0.970803,
+          "predicted_id": "syn-20261127-021:0011",
+          "truth_id": "syn-20261127-021:0015"
+        },
+        {
+          "iou": 0.978836,
+          "predicted_id": "syn-20261127-021:0012",
+          "truth_id": "syn-20261127-021:0023"
+        },
+        {
+          "iou": 0.682274,
+          "predicted_id": "syn-20261127-021:0013",
+          "truth_id": "syn-20261127-021:0001"
+        },
+        {
+          "iou": 0.978028,
+          "predicted_id": "syn-20261127-021:0014",
+          "truth_id": "syn-20261127-021:0021"
+        },
+        {
+          "iou": 0.983058,
+          "predicted_id": "syn-20261127-021:0015",
+          "truth_id": "syn-20261127-021:0025"
+        },
+        {
+          "iou": 0.687627,
+          "predicted_id": "syn-20261127-021:0016",
+          "truth_id": "syn-20261127-021:0012"
+        },
+        {
+          "iou": 0.963636,
+          "predicted_id": "syn-20261127-021:0017",
+          "truth_id": "syn-20261127-021:0026"
+        },
+        {
+          "iou": 0.956427,
+          "predicted_id": "syn-20261127-021:0018",
+          "truth_id": "syn-20261127-021:0006"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 9,
+      "recall": 0.3333333333333333,
+      "true_positive": 9,
+      "truth_edges": 27
+    },
+    "syn-20261127-022": {
+      "f1": 0.4444444444444445,
+      "matches": [
+        {
+          "iou": 0.989059,
+          "predicted_id": "syn-20261127-022:0001",
+          "truth_id": "syn-20261127-022:0023"
+        },
+        {
+          "iou": 0.988413,
+          "predicted_id": "syn-20261127-022:0002",
+          "truth_id": "syn-20261127-022:0009"
+        },
+        {
+          "iou": 0.976119,
+          "predicted_id": "syn-20261127-022:0003",
+          "truth_id": "syn-20261127-022:0008"
+        },
+        {
+          "iou": 0.966857,
+          "predicted_id": "syn-20261127-022:0004",
+          "truth_id": "syn-20261127-022:0001"
+        },
+        {
+          "iou": 0.988479,
+          "predicted_id": "syn-20261127-022:0005",
+          "truth_id": "syn-20261127-022:0003"
+        },
+        {
+          "iou": 0.981366,
+          "predicted_id": "syn-20261127-022:0006",
+          "truth_id": "syn-20261127-022:0007"
+        },
+        {
+          "iou": 0.98431,
+          "predicted_id": "syn-20261127-022:0007",
+          "truth_id": "syn-20261127-022:0016"
+        },
+        {
+          "iou": 0.98101,
+          "predicted_id": "syn-20261127-022:0008",
+          "truth_id": "syn-20261127-022:0010"
+        },
+        {
+          "iou": 0.969728,
+          "predicted_id": "syn-20261127-022:0009",
+          "truth_id": "syn-20261127-022:0002"
+        },
+        {
+          "iou": 0.981132,
+          "predicted_id": "syn-20261127-022:0010",
+          "truth_id": "syn-20261127-022:0017"
+        },
+        {
+          "iou": 0.976399,
+          "predicted_id": "syn-20261127-022:0011",
+          "truth_id": "syn-20261127-022:0006"
+        },
+        {
+          "iou": 0.95301,
+          "predicted_id": "syn-20261127-022:0012",
+          "truth_id": "syn-20261127-022:0022"
+        },
+        {
+          "iou": 0.975465,
+          "predicted_id": "syn-20261127-022:0013",
+          "truth_id": "syn-20261127-022:0019"
+        },
+        {
+          "iou": 0.98,
+          "predicted_id": "syn-20261127-022:0014",
+          "truth_id": "syn-20261127-022:0012"
+        },
+        {
+          "iou": 0.975883,
+          "predicted_id": "syn-20261127-022:0016",
+          "truth_id": "syn-20261127-022:0021"
+        },
+        {
+          "iou": 0.977087,
+          "predicted_id": "syn-20261127-022:0017",
+          "truth_id": "syn-20261127-022:0015"
+        },
+        {
+          "iou": 0.983258,
+          "predicted_id": "syn-20261127-022:0018",
+          "truth_id": "syn-20261127-022:0020"
+        },
+        {
+          "iou": 0.953782,
+          "predicted_id": "syn-20261127-022:0019",
+          "truth_id": "syn-20261127-022:0024"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 4,
+      "recall": 0.2857142857142857,
+      "true_positive": 4,
+      "truth_edges": 14
+    },
+    "syn-20261127-023": {
+      "f1": 0.6842105263157894,
+      "matches": [
+        {
+          "iou": 0.982079,
+          "predicted_id": "syn-20261127-023:0001",
+          "truth_id": "syn-20261127-023:0024"
+        },
+        {
+          "iou": 0.974138,
+          "predicted_id": "syn-20261127-023:0002",
+          "truth_id": "syn-20261127-023:0006"
+        },
+        {
+          "iou": 0.98811,
+          "predicted_id": "syn-20261127-023:0003",
+          "truth_id": "syn-20261127-023:0025"
+        },
+        {
+          "iou": 0.986782,
+          "predicted_id": "syn-20261127-023:0004",
+          "truth_id": "syn-20261127-023:0017"
+        },
+        {
+          "iou": 0.99265,
+          "predicted_id": "syn-20261127-023:0005",
+          "truth_id": "syn-20261127-023:0010"
+        },
+        {
+          "iou": 0.990136,
+          "predicted_id": "syn-20261127-023:0006",
+          "truth_id": "syn-20261127-023:0011"
+        },
+        {
+          "iou": 0.960674,
+          "predicted_id": "syn-20261127-023:0007",
+          "truth_id": "syn-20261127-023:0023"
+        },
+        {
+          "iou": 0.980983,
+          "predicted_id": "syn-20261127-023:0008",
+          "truth_id": "syn-20261127-023:0005"
+        },
+        {
+          "iou": 0.985618,
+          "predicted_id": "syn-20261127-023:0009",
+          "truth_id": "syn-20261127-023:0021"
+        },
+        {
+          "iou": 0.962552,
+          "predicted_id": "syn-20261127-023:0010",
+          "truth_id": "syn-20261127-023:0004"
+        },
+        {
+          "iou": 0.958937,
+          "predicted_id": "syn-20261127-023:0011",
+          "truth_id": "syn-20261127-023:0014"
+        },
+        {
+          "iou": 0.973054,
+          "predicted_id": "syn-20261127-023:0012",
+          "truth_id": "syn-20261127-023:0022"
+        },
+        {
+          "iou": 0.973999,
+          "predicted_id": "syn-20261127-023:0013",
+          "truth_id": "syn-20261127-023:0020"
+        },
+        {
+          "iou": 0.967632,
+          "predicted_id": "syn-20261127-023:0014",
+          "truth_id": "syn-20261127-023:0007"
+        },
+        {
+          "iou": 0.809929,
+          "predicted_id": "syn-20261127-023:0015",
+          "truth_id": "syn-20261127-023:0002"
+        },
+        {
+          "iou": 0.955635,
+          "predicted_id": "syn-20261127-023:0016",
+          "truth_id": "syn-20261127-023:0019"
+        },
+        {
+          "iou": 0.974824,
+          "predicted_id": "syn-20261127-023:0017",
+          "truth_id": "syn-20261127-023:0001"
+        },
+        {
+          "iou": 0.983017,
+          "predicted_id": "syn-20261127-023:0018",
+          "truth_id": "syn-20261127-023:0018"
+        },
+        {
+          "iou": 0.962906,
+          "predicted_id": "syn-20261127-023:0019",
+          "truth_id": "syn-20261127-023:0013"
+        },
+        {
+          "iou": 0.948252,
+          "predicted_id": "syn-20261127-023:0020",
+          "truth_id": "syn-20261127-023:0009"
+        },
+        {
+          "iou": 0.978998,
+          "predicted_id": "syn-20261127-023:0021",
+          "truth_id": "syn-20261127-023:0026"
+        }
+      ],
+      "precision": 0.9285714285714286,
+      "predicted_edges": 14,
+      "recall": 0.5416666666666666,
+      "true_positive": 13,
+      "truth_edges": 24
+    },
+    "syn-20261127-024": {
+      "f1": 1.0,
+      "matches": [
+        {
+          "iou": 0.986819,
+          "predicted_id": "syn-20261127-024:0001",
+          "truth_id": "syn-20261127-024:0002"
+        },
+        {
+          "iou": 0.990242,
+          "predicted_id": "syn-20261127-024:0002",
+          "truth_id": "syn-20261127-024:0004"
+        },
+        {
+          "iou": 0.977994,
+          "predicted_id": "syn-20261127-024:0003",
+          "truth_id": "syn-20261127-024:0005"
+        },
+        {
+          "iou": 0.981534,
+          "predicted_id": "syn-20261127-024:0004",
+          "truth_id": "syn-20261127-024:0001"
+        },
+        {
+          "iou": 0.9778,
+          "predicted_id": "syn-20261127-024:0005",
+          "truth_id": "syn-20261127-024:0003"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 1,
+      "recall": 1.0,
+      "true_positive": 1,
+      "truth_edges": 1
+    },
+    "syn-20261127-025": {
+      "f1": 1.0,
+      "matches": [
+        {
+          "iou": 0.991127,
+          "predicted_id": "syn-20261127-025:0001",
+          "truth_id": "syn-20261127-025:0003"
+        },
+        {
+          "iou": 0.983245,
+          "predicted_id": "syn-20261127-025:0003",
+          "truth_id": "syn-20261127-025:0001"
+        },
+        {
+          "iou": 0.984731,
+          "predicted_id": "syn-20261127-025:0004",
+          "truth_id": "syn-20261127-025:0004"
+        },
+        {
+          "iou": 0.979492,
+          "predicted_id": "syn-20261127-025:0005",
+          "truth_id": "syn-20261127-025:0005"
+        },
+        {
+          "iou": 0.989701,
+          "predicted_id": "syn-20261127-025:0006",
+          "truth_id": "syn-20261127-025:0006"
+        },
+        {
+          "iou": 0.957299,
+          "predicted_id": "syn-20261127-025:0007",
+          "truth_id": "syn-20261127-025:0002"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 5,
+      "recall": 1.0,
+      "true_positive": 5,
+      "truth_edges": 5
+    },
+    "syn-20261127-026": {
+      "f1": 1.0,
+      "matches": [
+        {
+          "iou": 0.987131,
+          "predicted_id": "syn-20261127-026:0001",
+          "truth_id": "syn-20261127-026:0002"
+        },
+        {
+          "iou": 0.990017,
+          "predicted_id": "syn-20261127-026:0002",
+          "truth_id": "syn-20261127-026:0004"
+        },
+        {
+          "iou": 0.974021,
+          "predicted_id": "syn-20261127-026:0004",
+          "truth_id": "syn-20261127-026:0003"
+        },
+        {
+          "iou": 0.946973,
+          "predicted_id": "syn-20261127-026:0007",
+          "truth_id": "syn-20261127-026:0001"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 2,
+      "recall": 1.0,
+      "true_positive": 2,
+      "truth_edges": 2
+    },
+    "syn-20261127-027": {
+      "f1": 1.0,
+      "matches": [
+        {
+          "iou": 0.98311,
+          "predicted_id": "syn-20261127-027:0001",
+          "truth_id": "syn-20261127-027:0002"
+        },
+        {
+          "iou": 0.986078,
+          "predicted_id": "syn-20261127-027:0002",
+          "truth_id": "syn-20261127-027:0005"
+        },
+        {
+          "iou": 0.979511,
+          "predicted_id": "syn-20261127-027:0003",
+          "truth_id": "syn-20261127-027:0006"
+        },
+        {
+          "iou": 0.985311,
+          "predicted_id": "syn-20261127-027:0004",
+          "truth_id": "syn-20261127-027:0004"
+        },
+        {
+          "iou": 0.963202,
+          "predicted_id": "syn-20261127-027:0005",
+          "truth_id": "syn-20261127-027:0001"
+        },
+        {
+          "iou": 0.982476,
+          "predicted_id": "syn-20261127-027:0006",
+          "truth_id": "syn-20261127-027:0003"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 3,
+      "recall": 1.0,
+      "true_positive": 3,
+      "truth_edges": 3
+    },
+    "syn-20261127-028": {
+      "f1": 0.923076923076923,
+      "matches": [
+        {
+          "iou": 0.984315,
+          "predicted_id": "syn-20261127-028:0001",
+          "truth_id": "syn-20261127-028:0016"
+        },
+        {
+          "iou": 0.984177,
+          "predicted_id": "syn-20261127-028:0002",
+          "truth_id": "syn-20261127-028:0002"
+        },
+        {
+          "iou": 0.976242,
+          "predicted_id": "syn-20261127-028:0003",
+          "truth_id": "syn-20261127-028:0003"
+        },
+        {
+          "iou": 0.984424,
+          "predicted_id": "syn-20261127-028:0004",
+          "truth_id": "syn-20261127-028:0015"
+        },
+        {
+          "iou": 0.982788,
+          "predicted_id": "syn-20261127-028:0005",
+          "truth_id": "syn-20261127-028:0009"
+        },
+        {
+          "iou": 0.995754,
+          "predicted_id": "syn-20261127-028:0006",
+          "truth_id": "syn-20261127-028:0008"
+        },
+        {
+          "iou": 0.98522,
+          "predicted_id": "syn-20261127-028:0007",
+          "truth_id": "syn-20261127-028:0011"
+        },
+        {
+          "iou": 0.983936,
+          "predicted_id": "syn-20261127-028:0008",
+          "truth_id": "syn-20261127-028:0013"
+        },
+        {
+          "iou": 0.979632,
+          "predicted_id": "syn-20261127-028:0009",
+          "truth_id": "syn-20261127-028:0010"
+        },
+        {
+          "iou": 0.970106,
+          "predicted_id": "syn-20261127-028:0010",
+          "truth_id": "syn-20261127-028:0001"
+        },
+        {
+          "iou": 0.973545,
+          "predicted_id": "syn-20261127-028:0011",
+          "truth_id": "syn-20261127-028:0006"
+        },
+        {
+          "iou": 0.963655,
+          "predicted_id": "syn-20261127-028:0012",
+          "truth_id": "syn-20261127-028:0005"
+        },
+        {
+          "iou": 0.979798,
+          "predicted_id": "syn-20261127-028:0013",
+          "truth_id": "syn-20261127-028:0004"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 6,
+      "recall": 0.8571428571428571,
+      "true_positive": 6,
+      "truth_edges": 7
+    },
+    "syn-20261127-029": {
+      "f1": 0.7999999999999999,
+      "matches": [
+        {
+          "iou": 0.992242,
+          "predicted_id": "syn-20261127-029:0001",
+          "truth_id": "syn-20261127-029:0001"
+        },
+        {
+          "iou": 0.990579,
+          "predicted_id": "syn-20261127-029:0002",
+          "truth_id": "syn-20261127-029:0002"
+        },
+        {
+          "iou": 0.995827,
+          "predicted_id": "syn-20261127-029:0003",
+          "truth_id": "syn-20261127-029:0010"
+        },
+        {
+          "iou": 0.993066,
+          "predicted_id": "syn-20261127-029:0004",
+          "truth_id": "syn-20261127-029:0012"
+        },
+        {
+          "iou": 0.986287,
+          "predicted_id": "syn-20261127-029:0005",
+          "truth_id": "syn-20261127-029:0013"
+        },
+        {
+          "iou": 0.987086,
+          "predicted_id": "syn-20261127-029:0006",
+          "truth_id": "syn-20261127-029:0007"
+        },
+        {
+          "iou": 0.968495,
+          "predicted_id": "syn-20261127-029:0007",
+          "truth_id": "syn-20261127-029:0004"
+        },
+        {
+          "iou": 0.972603,
+          "predicted_id": "syn-20261127-029:0008",
+          "truth_id": "syn-20261127-029:0015"
+        },
+        {
+          "iou": 0.96091,
+          "predicted_id": "syn-20261127-029:0009",
+          "truth_id": "syn-20261127-029:0014"
+        },
+        {
+          "iou": 0.973149,
+          "predicted_id": "syn-20261127-029:0010",
+          "truth_id": "syn-20261127-029:0011"
+        },
+        {
+          "iou": 0.944915,
+          "predicted_id": "syn-20261127-029:0011",
+          "truth_id": "syn-20261127-029:0003"
+        },
+        {
+          "iou": 0.972045,
+          "predicted_id": "syn-20261127-029:0012",
+          "truth_id": "syn-20261127-029:0016"
+        },
+        {
+          "iou": 0.65684,
+          "predicted_id": "syn-20261127-029:0013",
+          "truth_id": "syn-20261127-029:0009"
+        },
+        {
+          "iou": 0.954722,
+          "predicted_id": "syn-20261127-029:0014",
+          "truth_id": "syn-20261127-029:0006"
+        }
+      ],
+      "precision": 0.8888888888888888,
+      "predicted_edges": 9,
+      "recall": 0.7272727272727273,
+      "true_positive": 8,
+      "truth_edges": 11
+    },
+    "syn-20261127-030": {
+      "f1": 0.6363636363636364,
+      "matches": [
+        {
+          "iou": 0.987286,
+          "predicted_id": "syn-20261127-030:0001",
+          "truth_id": "syn-20261127-030:0009"
+        },
+        {
+          "iou": 0.984966,
+          "predicted_id": "syn-20261127-030:0002",
+          "truth_id": "syn-20261127-030:0002"
+        },
+        {
+          "iou": 0.985523,
+          "predicted_id": "syn-20261127-030:0003",
+          "truth_id": "syn-20261127-030:0008"
+        },
+        {
+          "iou": 0.989734,
+          "predicted_id": "syn-20261127-030:0004",
+          "truth_id": "syn-20261127-030:0006"
+        },
+        {
+          "iou": 0.977104,
+          "predicted_id": "syn-20261127-030:0005",
+          "truth_id": "syn-20261127-030:0010"
+        },
+        {
+          "iou": 0.982605,
+          "predicted_id": "syn-20261127-030:0006",
+          "truth_id": "syn-20261127-030:0014"
+        },
+        {
+          "iou": 0.979034,
+          "predicted_id": "syn-20261127-030:0007",
+          "truth_id": "syn-20261127-030:0004"
+        },
+        {
+          "iou": 0.971815,
+          "predicted_id": "syn-20261127-030:0008",
+          "truth_id": "syn-20261127-030:0011"
+        },
+        {
+          "iou": 0.954229,
+          "predicted_id": "syn-20261127-030:0009",
+          "truth_id": "syn-20261127-030:0003"
+        },
+        {
+          "iou": 0.730535,
+          "predicted_id": "syn-20261127-030:0010",
+          "truth_id": "syn-20261127-030:0005"
+        },
+        {
+          "iou": 0.976625,
+          "predicted_id": "syn-20261127-030:0015",
+          "truth_id": "syn-20261127-030:0007"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 7,
+      "recall": 0.4666666666666667,
+      "true_positive": 7,
+      "truth_edges": 15
+    },
+    "syn-20261127-031": {
+      "f1": 0.6,
+      "matches": [
+        {
+          "iou": 0.988808,
+          "predicted_id": "syn-20261127-031:0001",
+          "truth_id": "syn-20261127-031:0004"
+        },
+        {
+          "iou": 0.989145,
+          "predicted_id": "syn-20261127-031:0002",
+          "truth_id": "syn-20261127-031:0008"
+        },
+        {
+          "iou": 0.978061,
+          "predicted_id": "syn-20261127-031:0003",
+          "truth_id": "syn-20261127-031:0013"
+        },
+        {
+          "iou": 0.975866,
+          "predicted_id": "syn-20261127-031:0004",
+          "truth_id": "syn-20261127-031:0006"
+        },
+        {
+          "iou": 0.993312,
+          "predicted_id": "syn-20261127-031:0005",
+          "truth_id": "syn-20261127-031:0009"
+        },
+        {
+          "iou": 0.976536,
+          "predicted_id": "syn-20261127-031:0006",
+          "truth_id": "syn-20261127-031:0012"
+        },
+        {
+          "iou": 0.742588,
+          "predicted_id": "syn-20261127-031:0007",
+          "truth_id": "syn-20261127-031:0011"
+        },
+        {
+          "iou": 0.98996,
+          "predicted_id": "syn-20261127-031:0008",
+          "truth_id": "syn-20261127-031:0005"
+        },
+        {
+          "iou": 0.857143,
+          "predicted_id": "syn-20261127-031:0009",
+          "truth_id": "syn-20261127-031:0010"
+        },
+        {
+          "iou": 0.97708,
+          "predicted_id": "syn-20261127-031:0013",
+          "truth_id": "syn-20261127-031:0007"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 3,
+      "recall": 0.42857142857142855,
+      "true_positive": 3,
+      "truth_edges": 7
+    },
+    "syn-20261127-032": {
+      "f1": 0.5641025641025641,
+      "matches": [
+        {
+          "iou": 0.975647,
+          "predicted_id": "syn-20261127-032:0001",
+          "truth_id": "syn-20261127-032:0006"
+        },
+        {
+          "iou": 0.930638,
+          "predicted_id": "syn-20261127-032:0002",
+          "truth_id": "syn-20261127-032:0029"
+        },
+        {
+          "iou": 0.969671,
+          "predicted_id": "syn-20261127-032:0003",
+          "truth_id": "syn-20261127-032:0022"
+        },
+        {
+          "iou": 0.979565,
+          "predicted_id": "syn-20261127-032:0004",
+          "truth_id": "syn-20261127-032:0012"
+        },
+        {
+          "iou": 0.968454,
+          "predicted_id": "syn-20261127-032:0005",
+          "truth_id": "syn-20261127-032:0015"
+        },
+        {
+          "iou": 0.985326,
+          "predicted_id": "syn-20261127-032:0006",
+          "truth_id": "syn-20261127-032:0011"
+        },
+        {
+          "iou": 0.970874,
+          "predicted_id": "syn-20261127-032:0007",
+          "truth_id": "syn-20261127-032:0001"
+        },
+        {
+          "iou": 0.977018,
+          "predicted_id": "syn-20261127-032:0008",
+          "truth_id": "syn-20261127-032:0010"
+        },
+        {
+          "iou": 0.984105,
+          "predicted_id": "syn-20261127-032:0009",
+          "truth_id": "syn-20261127-032:0025"
+        },
+        {
+          "iou": 0.963074,
+          "predicted_id": "syn-20261127-032:0010",
+          "truth_id": "syn-20261127-032:0024"
+        },
+        {
+          "iou": 0.929283,
+          "predicted_id": "syn-20261127-032:0011",
+          "truth_id": "syn-20261127-032:0014"
+        },
+        {
+          "iou": 0.977977,
+          "predicted_id": "syn-20261127-032:0012",
+          "truth_id": "syn-20261127-032:0008"
+        },
+        {
+          "iou": 0.974843,
+          "predicted_id": "syn-20261127-032:0013",
+          "truth_id": "syn-20261127-032:0019"
+        },
+        {
+          "iou": 0.946792,
+          "predicted_id": "syn-20261127-032:0014",
+          "truth_id": "syn-20261127-032:0003"
+        },
+        {
+          "iou": 0.964608,
+          "predicted_id": "syn-20261127-032:0015",
+          "truth_id": "syn-20261127-032:0018"
+        },
+        {
+          "iou": 0.956305,
+          "predicted_id": "syn-20261127-032:0017",
+          "truth_id": "syn-20261127-032:0021"
+        },
+        {
+          "iou": 0.963976,
+          "predicted_id": "syn-20261127-032:0018",
+          "truth_id": "syn-20261127-032:0002"
+        },
+        {
+          "iou": 0.93646,
+          "predicted_id": "syn-20261127-032:0019",
+          "truth_id": "syn-20261127-032:0026"
+        },
+        {
+          "iou": 0.976269,
+          "predicted_id": "syn-20261127-032:0020",
+          "truth_id": "syn-20261127-032:0009"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 11,
+      "recall": 0.39285714285714285,
+      "true_positive": 11,
+      "truth_edges": 28
+    },
+    "syn-20261127-033": {
+      "f1": 0.5490196078431373,
+      "matches": [
+        {
+          "iou": 0.992795,
+          "predicted_id": "syn-20261127-033:0001",
+          "truth_id": "syn-20261127-033:0015"
+        },
+        {
+          "iou": 0.983773,
+          "predicted_id": "syn-20261127-033:0002",
+          "truth_id": "syn-20261127-033:0008"
+        },
+        {
+          "iou": 0.976693,
+          "predicted_id": "syn-20261127-033:0003",
+          "truth_id": "syn-20261127-033:0006"
+        },
+        {
+          "iou": 0.989142,
+          "predicted_id": "syn-20261127-033:0004",
+          "truth_id": "syn-20261127-033:0021"
+        },
+        {
+          "iou": 0.967275,
+          "predicted_id": "syn-20261127-033:0005",
+          "truth_id": "syn-20261127-033:0005"
+        },
+        {
+          "iou": 0.980946,
+          "predicted_id": "syn-20261127-033:0006",
+          "truth_id": "syn-20261127-033:0018"
+        },
+        {
+          "iou": 0.980357,
+          "predicted_id": "syn-20261127-033:0007",
+          "truth_id": "syn-20261127-033:0009"
+        },
+        {
+          "iou": 0.980983,
+          "predicted_id": "syn-20261127-033:0008",
+          "truth_id": "syn-20261127-033:0025"
+        },
+        {
+          "iou": 0.976716,
+          "predicted_id": "syn-20261127-033:0009",
+          "truth_id": "syn-20261127-033:0028"
+        },
+        {
+          "iou": 0.965024,
+          "predicted_id": "syn-20261127-033:0010",
+          "truth_id": "syn-20261127-033:0002"
+        },
+        {
+          "iou": 0.825641,
+          "predicted_id": "syn-20261127-033:0011",
+          "truth_id": "syn-20261127-033:0029"
+        },
+        {
+          "iou": 0.990467,
+          "predicted_id": "syn-20261127-033:0012",
+          "truth_id": "syn-20261127-033:0026"
+        },
+        {
+          "iou": 0.988166,
+          "predicted_id": "syn-20261127-033:0013",
+          "truth_id": "syn-20261127-033:0013"
+        },
+        {
+          "iou": 0.938389,
+          "predicted_id": "syn-20261127-033:0014",
+          "truth_id": "syn-20261127-033:0014"
+        },
+        {
+          "iou": 0.983176,
+          "predicted_id": "syn-20261127-033:0015",
+          "truth_id": "syn-20261127-033:0027"
+        },
+        {
+          "iou": 0.977122,
+          "predicted_id": "syn-20261127-033:0016",
+          "truth_id": "syn-20261127-033:0007"
+        },
+        {
+          "iou": 0.922034,
+          "predicted_id": "syn-20261127-033:0017",
+          "truth_id": "syn-20261127-033:0022"
+        },
+        {
+          "iou": 0.943662,
+          "predicted_id": "syn-20261127-033:0018",
+          "truth_id": "syn-20261127-033:0019"
+        },
+        {
+          "iou": 0.974096,
+          "predicted_id": "syn-20261127-033:0019",
+          "truth_id": "syn-20261127-033:0030"
+        },
+        {
+          "iou": 0.967073,
+          "predicted_id": "syn-20261127-033:0020",
+          "truth_id": "syn-20261127-033:0024"
+        },
+        {
+          "iou": 0.967866,
+          "predicted_id": "syn-20261127-033:0021",
+          "truth_id": "syn-20261127-033:0004"
+        },
+        {
+          "iou": 0.984723,
+          "predicted_id": "syn-20261127-033:0022",
+          "truth_id": "syn-20261127-033:0003"
+        }
+      ],
+      "precision": 0.9333333333333333,
+      "predicted_edges": 15,
+      "recall": 0.3888888888888889,
+      "true_positive": 14,
+      "truth_edges": 36
+    },
+    "syn-20261127-034": {
+      "f1": 0.456140350877193,
+      "matches": [
+        {
+          "iou": 0.968222,
+          "predicted_id": "syn-20261127-034:0001",
+          "truth_id": "syn-20261127-034:0016"
+        },
+        {
+          "iou": 0.979653,
+          "predicted_id": "syn-20261127-034:0002",
+          "truth_id": "syn-20261127-034:0033"
+        },
+        {
+          "iou": 0.987722,
+          "predicted_id": "syn-20261127-034:0003",
+          "truth_id": "syn-20261127-034:0024"
+        },
+        {
+          "iou": 0.976115,
+          "predicted_id": "syn-20261127-034:0004",
+          "truth_id": "syn-20261127-034:0008"
+        },
+        {
+          "iou": 0.983333,
+          "predicted_id": "syn-20261127-034:0005",
+          "truth_id": "syn-20261127-034:0005"
+        },
+        {
+          "iou": 0.980467,
+          "predicted_id": "syn-20261127-034:0006",
+          "truth_id": "syn-20261127-034:0037"
+        },
+        {
+          "iou": 0.979836,
+          "predicted_id": "syn-20261127-034:0007",
+          "truth_id": "syn-20261127-034:0029"
+        },
+        {
+          "iou": 0.961679,
+          "predicted_id": "syn-20261127-034:0008",
+          "truth_id": "syn-20261127-034:0032"
+        },
+        {
+          "iou": 0.978833,
+          "predicted_id": "syn-20261127-034:0009",
+          "truth_id": "syn-20261127-034:0002"
+        },
+        {
+          "iou": 0.96264,
+          "predicted_id": "syn-20261127-034:0010",
+          "truth_id": "syn-20261127-034:0004"
+        },
+        {
+          "iou": 0.985359,
+          "predicted_id": "syn-20261127-034:0011",
+          "truth_id": "syn-20261127-034:0017"
+        },
+        {
+          "iou": 0.984959,
+          "predicted_id": "syn-20261127-034:0012",
+          "truth_id": "syn-20261127-034:0013"
+        },
+        {
+          "iou": 0.988692,
+          "predicted_id": "syn-20261127-034:0013",
+          "truth_id": "syn-20261127-034:0026"
+        },
+        {
+          "iou": 0.945736,
+          "predicted_id": "syn-20261127-034:0014",
+          "truth_id": "syn-20261127-034:0025"
+        },
+        {
+          "iou": 0.930459,
+          "predicted_id": "syn-20261127-034:0015",
+          "truth_id": "syn-20261127-034:0010"
+        },
+        {
+          "iou": 0.971049,
+          "predicted_id": "syn-20261127-034:0016",
+          "truth_id": "syn-20261127-034:0036"
+        },
+        {
+          "iou": 0.973257,
+          "predicted_id": "syn-20261127-034:0017",
+          "truth_id": "syn-20261127-034:0027"
+        },
+        {
+          "iou": 0.947826,
+          "predicted_id": "syn-20261127-034:0018",
+          "truth_id": "syn-20261127-034:0035"
+        },
+        {
+          "iou": 0.957082,
+          "predicted_id": "syn-20261127-034:0019",
+          "truth_id": "syn-20261127-034:0019"
+        },
+        {
+          "iou": 0.968541,
+          "predicted_id": "syn-20261127-034:0020",
+          "truth_id": "syn-20261127-034:0020"
+        },
+        {
+          "iou": 0.966069,
+          "predicted_id": "syn-20261127-034:0021",
+          "truth_id": "syn-20261127-034:0028"
+        },
+        {
+          "iou": 0.960396,
+          "predicted_id": "syn-20261127-034:0022",
+          "truth_id": "syn-20261127-034:0023"
+        },
+        {
+          "iou": 0.952083,
+          "predicted_id": "syn-20261127-034:0023",
+          "truth_id": "syn-20261127-034:0031"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 13,
+      "recall": 0.29545454545454547,
+      "true_positive": 13,
+      "truth_edges": 44
+    },
+    "syn-20261127-035": {
+      "f1": 0.375,
+      "matches": [
+        {
+          "iou": 0.985881,
+          "predicted_id": "syn-20261127-035:0001",
+          "truth_id": "syn-20261127-035:0031"
+        },
+        {
+          "iou": 0.984711,
+          "predicted_id": "syn-20261127-035:0002",
+          "truth_id": "syn-20261127-035:0002"
+        },
+        {
+          "iou": 0.991041,
+          "predicted_id": "syn-20261127-035:0003",
+          "truth_id": "syn-20261127-035:0005"
+        },
+        {
+          "iou": 0.971053,
+          "predicted_id": "syn-20261127-035:0004",
+          "truth_id": "syn-20261127-035:0036"
+        },
+        {
+          "iou": 0.977999,
+          "predicted_id": "syn-20261127-035:0005",
+          "truth_id": "syn-20261127-035:0009"
+        },
+        {
+          "iou": 0.961929,
+          "predicted_id": "syn-20261127-035:0006",
+          "truth_id": "syn-20261127-035:0032"
+        },
+        {
+          "iou": 0.984478,
+          "predicted_id": "syn-20261127-035:0007",
+          "truth_id": "syn-20261127-035:0026"
+        },
+        {
+          "iou": 0.967914,
+          "predicted_id": "syn-20261127-035:0008",
+          "truth_id": "syn-20261127-035:0012"
+        },
+        {
+          "iou": 0.951282,
+          "predicted_id": "syn-20261127-035:0009",
+          "truth_id": "syn-20261127-035:0020"
+        },
+        {
+          "iou": 0.95574,
+          "predicted_id": "syn-20261127-035:0010",
+          "truth_id": "syn-20261127-035:0008"
+        },
+        {
+          "iou": 0.973222,
+          "predicted_id": "syn-20261127-035:0011",
+          "truth_id": "syn-20261127-035:0038"
+        },
+        {
+          "iou": 0.972647,
+          "predicted_id": "syn-20261127-035:0012",
+          "truth_id": "syn-20261127-035:0030"
+        },
+        {
+          "iou": 0.726716,
+          "predicted_id": "syn-20261127-035:0013",
+          "truth_id": "syn-20261127-035:0015"
+        },
+        {
+          "iou": 0.97282,
+          "predicted_id": "syn-20261127-035:0014",
+          "truth_id": "syn-20261127-035:0029"
+        },
+        {
+          "iou": 0.965854,
+          "predicted_id": "syn-20261127-035:0015",
+          "truth_id": "syn-20261127-035:0017"
+        },
+        {
+          "iou": 0.972947,
+          "predicted_id": "syn-20261127-035:0016",
+          "truth_id": "syn-20261127-035:0027"
+        },
+        {
+          "iou": 0.699923,
+          "predicted_id": "syn-20261127-035:0017",
+          "truth_id": "syn-20261127-035:0033"
+        },
+        {
+          "iou": 0.981585,
+          "predicted_id": "syn-20261127-035:0018",
+          "truth_id": "syn-20261127-035:0021"
+        },
+        {
+          "iou": 0.962605,
+          "predicted_id": "syn-20261127-035:0019",
+          "truth_id": "syn-20261127-035:0035"
+        },
+        {
+          "iou": 0.947047,
+          "predicted_id": "syn-20261127-035:0020",
+          "truth_id": "syn-20261127-035:0019"
+        },
+        {
+          "iou": 0.970923,
+          "predicted_id": "syn-20261127-035:0021",
+          "truth_id": "syn-20261127-035:0023"
+        },
+        {
+          "iou": 0.967295,
+          "predicted_id": "syn-20261127-035:0023",
+          "truth_id": "syn-20261127-035:0004"
+        }
+      ],
+      "precision": 1.0,
+      "predicted_edges": 9,
+      "recall": 0.23076923076923078,
+      "true_positive": 9,
+      "truth_edges": 39
+    },
+    "syn-20261127-036": {
+      "f1": null,
+      "matches": [],
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": null,
+      "true_positive": 0,
+      "truth_edges": 0
+    },
+    "syn-20261127-037": {
+      "f1": null,
+      "matches": [],
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": null,
+      "true_positive": 0,
+      "truth_edges": 0
+    },
+    "syn-20261127-038": {
+      "f1": null,
+      "matches": [],
+      "precision": null,
+      "predicted_edges": 0,
+      "recall": null,
+      "true_positive": 0,
+      "truth_edges": 0
+    }
+  },
+  "precision": 0.9596412556053812,
+  "predicted_edges": 223,
+  "real_ore_validation": false,
+  "recall": 0.43673469387755104,
+  "relation_params": {
+    "adjacency_px": 5,
+    "max_instances": 128,
+    "touching_min_px": 8
+  },
+  "schema_version": "jcheng.relation_predicted_eval.v1",
+  "true_positive": 214,
+  "truth_edges": 490
+}

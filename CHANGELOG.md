@@ -8,6 +8,11 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S3 SAM2 predicted-mask relation evaluation (2026-11-26): same 39 synthetic
+  scenes, SAM2.1 Tiny masks match 76.3% of GT instances (vs 43.5% classical) and
+  raise relation P/R/F1 from 0.850/0.035/0.067 to **0.960/0.437/0.600**
+  (223/490 edges). This quantifies the segmentation-to-relation dependency;
+  still synthetic with GT-mask-derived edges, not real-ore labels.
 - S3 predicted-mask relation evaluation (2026-11-26): on 39 synthetic scenes
   with the classical baseline, only 43.5% of GT instances match at IoU>=0.5;
   relation precision 0.850 but recall 0.035 / F1 0.067. The relation rule is
