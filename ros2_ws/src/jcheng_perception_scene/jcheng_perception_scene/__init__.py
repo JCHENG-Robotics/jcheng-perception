@@ -19,6 +19,12 @@ from .sam2_tiles import (
     run_sam2_tiles,
 )
 from .scene import build_scene_state
+from .scene_v2 import (
+    SCENE_V2_SCHEMA_VERSION,
+    build_scene_v2,
+    geometry_for_mask,
+    validate_scene_v2,
+)
 from .types import (
     DATASET_SCHEMA_VERSION,
     EVALUATION_SCHEMA_VERSION,
@@ -42,6 +48,7 @@ __all__ = [
     'PREDICTION_SCHEMA_VERSION',
     'Relation',
     'SCENE_SCHEMA_VERSION',
+    'SCENE_V2_SCHEMA_VERSION',
     'SceneError',
     'SceneState',
     'TileSet',
@@ -49,8 +56,10 @@ __all__ = [
     'UNKNOWNS',
     '__version__',
     'build_scene_state',
+    'build_scene_v2',
     'config_sha256',
     'evaluate',
+    'geometry_for_mask',
     'import_coco_dataset',
     'load_config',
     'load_dataset',
@@ -60,5 +69,6 @@ __all__ = [
     'run_sam2_tiles',
     'run_unlabelled',
     'validate_config',
+    'validate_scene_v2',
     'visible_geometry',
 ]

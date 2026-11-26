@@ -547,7 +547,7 @@ python3 -m pytest tests -q
   mask 在仓库外）。
 - 转换器：`python3 scripts/ore_scene.py import-sam2-tiles`（无 torch/SAM2
   导入）复现独立 4 图 1008 AP50 0.5681 与混合 AP50 0.6375 / AP50-95 0.3909；
-  新增 4 个测试，总计 **99 passed**（含 S2 geometry）。
+  新增 4 个测试，总计 **100 passed**（含 S2 geometry / S3 v2）。
 - 设计与限制：`docs/ORE_SCENE_S1_5.md`。
 
 ### 6.5 S2 可见几何 MVE（2026-11-26）
@@ -568,4 +568,16 @@ D435i/Aurora 噪声与空洞未覆盖。可见中心/尺寸/OBB 不是真实质�
 体积；这些字段保持 `unknown`。
 
 - 设计与限制：`docs/ORE_SCENE_S2.md`。
-- 测试：99 passed（含 2 个几何测试）。
+- 测试：100 passed（含 2 个几何测试）。
+
+### 6.6 Scene State v2 几何原型（2026-11-26）
+
+范围：离线 schema/builder/validator；不接运行时。
+
+- 新增 `jcheng.scene_state.v2` schema、`build_scene_v2`、`validate_scene_v2`；
+- v1 记录保持不变；缺失几何写 `not_computed`，不填 0；
+- 校验器拒绝 `true_centroid`/`full_extent`/`volume`/`mass` 等字段；
+- 1 个测试；总计 **100 passed**；Scene Graph 关系、多视角身份仍待做；
+- 设计与兼容：`docs/SCENE_REPRESENTATION.md` §8/§9。
+
+真实深度、NEES、关系图和运行时均未验证。

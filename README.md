@@ -134,7 +134,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 99 ROS-free tests (77 existing + 22 ore scene/S2)
+├── tests/                        # 100 ROS-free tests (77 existing + 23 ore scene/S2/S3)
 └── capability.yaml
 ```
 
@@ -357,8 +357,14 @@ not general. Real-ore accuracy remains Unverified.
 metric depth + K + base<-camera transform into visible point count, depth valid
 fraction, visible centroid, 3x3 sample covariance, AABB and PCA OBB. A 1 m
 synthetic plane, translation, zero-depth and empty-mask cases are tested. No
-real depth, calibrated covariance or schema v2 yet; visible geometry is not a
-true centroid/full extent/volume.
+real depth or calibrated covariance yet; visible geometry is not a true
+centroid/full extent/volume.
+
+**S3 prototype (2026-11-26, offline):** `jcheng.scene_state.v2` attaches that
+visible geometry to a frozen v1 record via `build_scene_v2`; missing geometry is
+explicit `not_computed`, and `validate_scene_v2` rejects true-centroid/full-
+extent/volume/mass fields. Scene Graph relations and multi-view identity are
+still planned; no runtime/DDS/device change.
 
 Design and evidence:
 

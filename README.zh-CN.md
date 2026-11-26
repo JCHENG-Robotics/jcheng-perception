@@ -118,7 +118,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 99 项 ROS-free 测试（77 原有 + 22 矿石场景/S2）
+├── tests/                        # 100 项 ROS-free 测试（77 原有 + 23 矿石场景/S2/S3）
 └── capability.yaml
 ```
 
@@ -317,7 +317,12 @@ AP50-95 0.3909；仍是同一公开数据集，不是独立域。另用 2 张 Ro
 **S2（2026-11-26，离线合成）**：`visible_geometry` 从 mask + 米制深度 +
 K + `base<-camera` 变换计算可见点数、深度有效率、可见中心、3×3 样本协方差、
 AABB 与 PCA OBB；已测 1 m 合成平面、平移、零深度和空 mask。尚无真实深度、
-校准协方差或 schema v2；可见几何不是真实质心/完整尺寸/体积。
+校准协方差；可见几何不是真实质心/完整尺寸/体积。
+
+**S3 原型（2026-11-26，离线）**：`jcheng.scene_state.v2` 通过
+`build_scene_v2` 把可见几何附加到冻结的 v1 记录；缺失几何写
+`not_computed`，`validate_scene_v2` 拒绝真实质心/完整尺寸/体积/质量字段。
+Scene Graph 关系与多视角身份仍待做；无运行时/DDS/设备改动。
 
 设计与证据：
 

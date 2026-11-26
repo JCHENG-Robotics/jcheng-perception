@@ -38,6 +38,11 @@ from jcheng_perception_scene.sam2_tiles import (
     run_sam2_tiles,
 )
 from jcheng_perception_scene.scene import build_scene_state
+from jcheng_perception_scene.scene_v2 import (
+    build_scene_v2,
+    geometry_for_mask,
+    validate_scene_v2,
+)
 from jcheng_perception_scene.synthetic import generate_dataset
 from jcheng_perception_scene.types import (
     ERROR_MASK_OVERLAP,
@@ -274,6 +279,36 @@ def test_visible_geometry_transform_and_failure_paths():
 
     with pytest.raises(ValueError):
         visible_geometry(mask, depth[:, :-1], camera, np.eye(4))
+
+
+def test_scene_v2_attaches_visible_geometry():
+    image = np.zeros((64, 64, 3), dtype=np.uint8)
+    mask = np.zeros((64, 64), dtype=bool)
+    mask[20:40, 20:40] = True
+    instance = InstanceMask('v2:0001', mask, SEMANTIC_LABEL, 0.9)
+    scene_v1 = build_scene_state(
+        'v2', 0, 'base_link', image, None, None, [instance],
+        load_config(), ClassicalWatershedBackend.info, {})
+    camera = np.array([[100.0, 0.0, 32.0],
+                       [0.0, 100.0, 32.0],
+                       [0.0, 0.0, 1.0]])
+    geometry = geometry_for_mask(
+        mask, np.ones((64, 64), dtype=np.float64), camera, np.eye(4),
+        frame_id='base_link')
+    v2 = build_scene_v2(
+        scene_v1.to_dict(), {'v2:0001': geometry})
+    assert v2['schema_version'] == 'jcheng.scene_state.v2'
+    assert scene_v1.to_dict()['schema_version'] == 'jcheng.scene_state.v1'
+    assert v2['instances'][0]['geometry']['status'] == 'computed'
+    assert validate_scene_v2(v2) == []
+
+    missing = build_scene_v2(scene_v1.to_dict(), {})
+    assert missing['instances'][0]['geometry']['status'] == 'not_computed'
+    assert validate_scene_v2(missing) == []
+
+    tampered = json.loads(json.dumps(v2))
+    tampered['instances'][0]['true_centroid'] = [0.0, 0.0, 0.0]
+    assert validate_scene_v2(tampered)
 
 
 def test_bad_image_produces_structured_failure(tmp_path):

@@ -1,0 +1,463 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jcheng-robotics.github.io/schemas/jcheng.scene_state.v2.schema.json",
+  "title": "JCHENG scene state v2 (offline geometry prototype)",
+  "description": "v2 attaches visible-only geometry to each instance. True centroid, full extent, volume, mass, material and grade remain unknown. Relations and scene graphs are S3 work.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scene_id",
+    "timestamp_ns",
+    "frame_id",
+    "image",
+    "observation_source",
+    "backend",
+    "instances",
+    "relations",
+    "field_status",
+    "validity",
+    "errors",
+    "timing"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "jcheng.scene_state.v2"
+    },
+    "scene_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp_ns": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "frame_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "observation_source": {
+      "type": "object",
+      "required": [
+        "kind",
+        "annotation_method",
+        "license"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataset_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "annotation_method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataset_manifest_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "backend": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "family",
+        "calibrated"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "family": {
+          "type": "string"
+        },
+        "calibrated": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "instances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "instance_id",
+          "semantic_label",
+          "detection_confidence",
+          "confidence_kind",
+          "bbox_xyxy",
+          "mask_path",
+          "mask_sha256",
+          "mask_index",
+          "mask_area_px",
+          "visible_centroid_px",
+          "visible_extent_px",
+          "geometry",
+          "attributes"
+        ],
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "semantic_label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "detection_confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "confidence_kind": {
+            "type": "string"
+          },
+          "bbox_xyxy": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "mask_path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mask_sha256": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mask_index": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "mask_area_px": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "visible_centroid_px": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number"
+            }
+          },
+          "visible_extent_px": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "geometry": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "reason",
+              "frame_id",
+              "visible_point_count",
+              "depth_valid_fraction",
+              "visible_centroid_base",
+              "visible_centroid_covariance",
+              "visible_aabb",
+              "visible_obb",
+              "field_status",
+              "unknowns"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "computed",
+                  "insufficient_depth",
+                  "invalid_mask",
+                  "not_computed"
+                ]
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "frame_id": {
+                "type": "string"
+              },
+              "visible_point_count": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "depth_valid_fraction": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 1
+              },
+              "visible_centroid_base": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "visible_centroid_covariance": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "visible_aabb": {
+                "oneOf": [
+                  {
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "visible_obb": {
+                "oneOf": [
+                  {
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "field_status": {
+                "type": "object"
+              },
+              "unknowns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "attributes": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject_id",
+          "predicate",
+          "object_id",
+          "confidence",
+          "evidence",
+          "source"
+        ],
+        "properties": {
+          "subject_id": {
+            "type": "string"
+          },
+          "predicate": {
+            "enum": [
+              "adjacent"
+            ]
+          },
+          "object_id": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidence": {
+            "type": "object"
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "field_status": {
+      "type": "object",
+      "additionalProperties": {
+        "enum": [
+          "direct_observation",
+          "algorithm_estimate",
+          "unknown",
+          "not_computed_in_s1",
+          "not_computed_density_limit"
+        ]
+      }
+    },
+    "validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "valid",
+        "empty_scene",
+        "missing_fields",
+        "failure_reason",
+        "unknowns"
+      ],
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "empty_scene": {
+          "type": "boolean"
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "failure_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unknowns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "stage",
+          "recoverable"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string"
+          },
+          "recoverable": {
+            "type": "boolean"
+          },
+          "context": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    }
+  }
+}

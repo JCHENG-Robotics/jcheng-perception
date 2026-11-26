@@ -8,6 +8,13 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Scene State v2 geometry prototype (2026-11-26): `jcheng.scene_state.v2`
+  schema, `build_scene_v2` and `validate_scene_v2` attach visible-only
+  geometry to a frozen v1 record without changing v1. Missing geometry becomes
+  explicit `not_computed`, and the validator rejects `true_centroid`,
+  `full_extent`, `volume`, `mass` and grade/value fields. One new test
+  (100 total); Scene Graph relations and multi-view identity remain planned.
+  No runtime, DDS, device or motion change.
 - Ore scene S2 visible geometry MVE (2026-11-26): new
   `jcheng_perception_scene/geometry.py` computes visible point count, depth
   valid fraction, visible centroid, 3x3 sample covariance, AABB and PCA OBB

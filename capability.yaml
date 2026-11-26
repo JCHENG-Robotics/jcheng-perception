@@ -75,7 +75,7 @@ safety:
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 99
+  unit_tests: 100
   ore_scene_s1:
     passed: 2026-11-26 (offline only; no DDS/device/depth/motion)
     evidence: evidence/ore_scene_s1_20261126/
@@ -92,7 +92,7 @@ verification:
     passed: 2026-11-26 (offline converter only; no torch/SAM2 import)
     evidence: evidence/ore_scene_sam2_20261126/
     result: >-
-      4 converter tests; 99 total pass. The converter reproduces the frozen
+      4 converter tests; 100 total pass. The converter reproduces the frozen
       independent hybrid AP50 0.6375 / AP50-95 0.3909. SAM2 1008 fixed gives
       0.508 on 8 held-out images; Rocks UAV scene type failed to transfer
       (AP50 0.301).
@@ -109,7 +109,17 @@ verification:
       translation, zero depth, empty mask and shape mismatch.
     caveats: >-
       No real depth/NEES; covariance is uncalibrated. Visible fields are not
-      true centroid/full extent/volume. No runtime or schema v2.
+      true centroid/full extent/volume. No runtime.
+  ore_scene_s3_scene_v2:
+    passed: 2026-11-26 (offline schema/builder/validator only)
+    evidence: docs/SCENE_REPRESENTATION.md
+    result: >-
+      `jcheng.scene_state.v2` attaches visible geometry to a frozen v1 record;
+      missing geometry is explicit not_computed and forbidden true/full fields
+      are rejected. One test; 100 total pass.
+    caveats: >-
+      Scene Graph relations, multi-view identity and real-depth validation are
+      still planned. No runtime/interfaces change.
   reference_point_backend:
     passed: 2026-11-24 (unit test + real hardware static run)
     config: config/gpu_tag.yaml (AprilTag 36h11, 60 mm, id 0)

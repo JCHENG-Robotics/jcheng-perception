@@ -225,28 +225,56 @@ mask_index = 7                         # 仅在该 label image 内有效
 }
 ```
 
-## 8. S2 几何扩展草案（未实现）
+## 8. S2 几何 v2 原型（已实现，离线合成）
 
-在 `instances[].geometry` 内增加：
+`jcheng.scene_state.v2` 的原型已实现：
+
+```python
+from jcheng_perception_scene.scene_v2 import (
+    build_scene_v2, geometry_for_mask, validate_scene_v2,
+)
+
+v2 = build_scene_v2(
+    v1_record,
+    {instance_id: geometry_for_mask(
+        mask, depth_m, camera_matrix, transform_base_camera)},
+)
+errors = validate_scene_v2(v2)
+```
+
+实现文件：
+
+- `jcheng_perception_scene/geometry.py`：可见几何计算；
+- `jcheng_perception_scene/scene_v2.py`：v1→v2 附加/校验；
+- `schemas/jcheng.scene_state.v2.schema.json`。
+
+v2 的 `instances[].geometry` 实际字段：
 
 | 字段 | 类型 | 语义 |
 |---|---|---|
-| `status` | enum | `computed`/`insufficient_depth`/`tf_unavailable`/`not_computed_in_s2` |
-| `visible_points_uri` | string/null | 可见点云文件引用（不内嵌大数组） |
-| `visible_point_count` | int | 有效可见点数 |
-| `visible_centroid_base` | float[3] | 可见点云质心，**不是真实质心** |
-| `visible_centroid_covariance` | float[9] | 3×3 协方差 |
-| `visible_aabb` | object | `center`/`extent`/`frame_id` |
-| `visible_obb` | object | `center`/`quaternion`/`extent`/`frame_id` |
-| `depth_valid_fraction` | float [0,1] | mask ROI 内有效深度比例 |
-| `depth_frame_id` | string | 深度坐标系 |
-| `support_plane` | object/null | 支撑面法向/偏移/内点率（若可估） |
+| `status` | enum | `computed`/`insufficient_depth`/`invalid_mask`/`not_computed` |
+| `reason` | string/null | 失败/未计算原因 |
+| `frame_id` | string | 输出坐标系（默认 `base_link`） |
+| `visible_point_count` | int/null | stride 采样后的有效点数 |
+| `depth_valid_fraction` | float/null | 采样点有效深度比例 |
+| `visible_centroid_base` | float[3]/null | 可见点云均值，**不是真实质心** |
+| `visible_centroid_covariance` | float[3][3]/null | 样本协方差，未校准 |
+| `visible_aabb` | object/null | `center`/`extent`/`frame_id` |
+| `visible_obb` | object/null | `center`/`quaternion_xyzw`/`extent`/`axes`/`frame_id` |
+| `field_status` | object | 可见字段 `algorithm_estimate`，真实量 `unknown` |
+| `unknowns` | string[] | 真实质心/完整尺寸/体积/质量/成分/品位/价值 |
+
+未实现（后续 S2/S3）：
+
+- `visible_points_uri` / 点云文件导出；
+- `depth_frame_id`、`support_plane`、遮挡方向；
+- 真实深度/NEES、多视角融合、Scene Graph 关系。
 
 约束：
 
 - 所有 `visible_*` 字段只描述可见部分。
-- `full_extent`/`volume`/`mass` 仍为 `unknown`，除非 S4 多视角 + 先验 + 明确
-  证据；即使估计，也必须 `field_status=algorithm_estimate` 并给区间。
+- `full_extent`/`volume`/`mass` 仍为 `unknown`；v2 校验器拒绝实例上的
+  `true_centroid`/`full_extent`/`volume`/`mass` 等字段。
 - 深度点必须来自与图像 capture time 匹配的帧；不得取最新帧。
 
 ## 9. 版本与兼容
@@ -256,7 +284,7 @@ mask_index = 7                         # 仅在该 label image 内有效
 | `jcheng.scene_state.v1` | S1 已实现，待 Board 评审 | 新增可选字段可升 minor；删除/改语义升 major；读取方必须检查 `schema_version` |
 | `jcheng.ore_dataset.v1` | S1 已实现 | 同上 |
 | `jcheng.ore_evaluation.v1` | S1 已实现 | 同上 |
-| `jcheng.scene_state.v2` | S2 设计草案 | 不破坏 v1 读取；迁移工具在 S3 提供 |
+| `jcheng.scene_state.v2` | S2 几何原型已实现（2026-11-26） | 不破坏 v1 读取；`build_scene_v2`/`validate_scene_v2`；Scene Graph 关系仍在 S3 |
 
 跨仓库契约：
 
