@@ -8,6 +8,11 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S3 predicted-mask relation evaluation (2026-11-26): on 39 synthetic scenes
+  with the classical baseline, only 43.5% of GT instances match at IoU>=0.5;
+  relation precision 0.850 but recall 0.035 / F1 0.067. The relation rule is
+  not the bottleneck; segmentation and instance matching dominate. One new
+  test (104 total). No runtime/DDS/device/motion change.
 - S3 relation benchmark (2026-11-26): controlled 18-scene synthetic benchmark
   (6 contact / 6 near / 6 clear) with pair truth defined by construction gaps,
   evaluated on GT masks. `generate-relation-benchmark` and

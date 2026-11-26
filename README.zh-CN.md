@@ -119,7 +119,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 103 项 ROS-free 测试（77 原有 + 26 矿石场景/S2/S3）
+├── tests/                        # 104 项 ROS-free 测试（77 原有 + 27 矿石场景/S2/S3）
 └── capability.yaml
 ```
 
@@ -326,7 +326,9 @@ AABB 与 PCA OBB；已测 1 m 合成平面、平移、零深度和空 mask。尚
 `build_relation_graph` 增加有证据的 `touching`/`near` 边（单视角不发
 `occludes`）；`compare_relation_sets` 在 18 个受控合成场景（6 contact /
 6 near / 6 clear，GT mask，构造真值）上得到 P/R/F1 1.0，这是 sanity check，
-不是真实关系精度。多视角身份与运行时集成仍待做。
+不是真实关系精度。用经典预测 mask 在 39 个合成场景上，仅 43.5% 的 GT 实例
+在 IoU≥0.5 匹配，关系 recall 降到 0.035（precision 0.85）；瓶颈是分割/匹配。
+多视角身份与运行时集成仍待做。
 
 设计与证据：
 

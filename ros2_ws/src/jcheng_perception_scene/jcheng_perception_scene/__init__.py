@@ -15,6 +15,7 @@ from .relation_benchmark import (
     evaluate_relation_benchmark,
     generate_relation_benchmark,
 )
+from .relation_eval import RelationEvalParams, evaluate_predicted_relations
 from .relations import (
     RelationParams,
     build_relation_graph,
@@ -56,6 +57,7 @@ __all__ = [
     'InstanceMask',
     'PREDICTION_SCHEMA_VERSION',
     'Relation',
+    'RelationEvalParams',
     'RelationParams',
     'SCENE_SCHEMA_VERSION',
     'SCENE_V2_SCHEMA_VERSION',
@@ -71,6 +73,7 @@ __all__ = [
     'compare_relation_sets',
     'config_sha256',
     'evaluate',
+    'evaluate_predicted_relations',
     'evaluate_relation_benchmark',
     'generate_relation_benchmark',
     'geometry_for_mask',

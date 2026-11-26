@@ -61,6 +61,28 @@
 定义清楚的场景上不产生假边/漏边，但不能外推到真实矿石堆、分割误差或真实
 标注。
 
+### 3.1 端到端预测 mask（负结果）
+
+用 S1 经典 baseline 在 39 个合成场景（600 GT 实例）上的预测 mask：
+
+- GT 关系边由 GT mask 构图得到（490 条）；
+- 预测实例按 mask IoU ≥0.5 与 GT 贪心匹配；
+- 预测 mask 构图、映射到 GT ID 后与 GT 边比较。
+
+| 指标 | 结果 |
+|---|---|
+| 实例匹配 | 261 / 600（**43.5%**） |
+| 预测 / 真值关系边 | 20 / 490 |
+| Precision | **0.850** |
+| Recall | **0.035** |
+| F1 | **0.067** |
+
+**解读**：保留下来的预测边精度尚可（0.85），但召回极低；主要瓶颈是**分割/
+实例匹配**（43.5% match rate）和 GT 图规模，不是关系规则本身。这也是为什么
+下一步必须用预测 mask 做端到端关系评测，而不能只看 GT mask 上的 1.0。
+
+该结果仍是合成数据，GT 边由 GT mask 推导，不是独立人工关系标注。
+
 ## 4. 复现
 
 ```bash
@@ -71,9 +93,16 @@ python3 scripts/ore_scene.py evaluate-relations \
   --truth /tmp/relation-benchmark/relations_truth.json \
   --out /tmp/relation-benchmark/metrics.json \
   --adjacency-px 5 --touching-min-px 8
+
+# 端到端 predicted-mask 关系评测
+python3 scripts/ore_scene.py evaluate-relations-predicted \
+  --dataset <synthetic-dataset> --scenes <run>/scenes.jsonl \
+  --prediction-root <run> --out <run>/relation_metrics.json \
+  --adjacency-px 5 --touching-min-px 8 --match-iou 0.5
 ```
 
-证据：`evidence/ore_scene_s3_relations_20261126/`。
+证据：`evidence/ore_scene_s3_relations_20261126/`（`metrics.json` 为受控
+基准，`e2e_classical_metrics.json` 为经典预测 mask 端到端负结果）。
 
 ## 5. 限制
 

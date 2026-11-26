@@ -599,6 +599,16 @@ D435i/Aurora 噪声与空洞未覆盖。可见中心/尺寸/OBB 不是真实质�
 | 场景 | 18/18 无错误 |
 
 这是**sanity benchmark**：矩形、固定间距、GT mask；不能外推到真实矿石、
-预测 mask 误差或真实关系标注。证据：
-`evidence/ore_scene_s3_relations_20261126/`；设计与限制：
-`docs/ORE_SCENE_S3.md`。
+预测 mask 误差或真实关系标注。
+
+**端到端预测 mask（负结果）**：S1 经典 baseline，39 合成场景 / 600 GT：
+
+| 指标 | 结果 |
+|---|---|
+| 实例匹配率（IoU≥0.5） | **43.5%**（261/600） |
+| 预测 / 真值关系边 | 20 / 490 |
+| Precision / Recall / F1 | **0.850 / 0.035 / 0.067** |
+
+结论：保留下来的关系边精度尚可，但召回被分割/匹配瓶颈压死；关系规则不是
+主要瓶颈。证据：`e2e_classical_metrics.json`；设计/限制：
+`docs/ORE_SCENE_S3.md`。总计 **104 passed**。

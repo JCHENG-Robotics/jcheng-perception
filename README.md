@@ -135,7 +135,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 103 ROS-free tests (77 existing + 26 ore scene/S2/S3)
+├── tests/                        # 104 ROS-free tests (77 existing + 27 ore scene/S2/S3)
 └── capability.yaml
 ```
 
@@ -368,8 +368,10 @@ extent/volume/mass fields. `build_relation_graph` adds evidence-backed
 `touching`/`near` edges (never `occludes` from one RGB view);
 `compare_relation_sets` scores a controlled 18-scene synthetic benchmark
 (6 contact / 6 near / 6 clear, GT masks, constructed truth) at P/R/F1 1.0,
-which is a sanity check — not real relation accuracy. Multi-view identity and
-runtime integration remain planned.
+which is a sanity check — not real relation accuracy. With classical predicted
+masks on 39 synthetic scenes, only 43.5% of GT instances match at IoU>=0.5 and
+relation recall falls to 0.035 (precision 0.85), so segmentation/matching is
+the bottleneck. Multi-view identity and runtime integration remain planned.
 
 Design and evidence:
 

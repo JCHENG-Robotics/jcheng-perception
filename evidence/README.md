@@ -16,7 +16,7 @@
 | `ore_scene_sam2_20261126/` | 2026-11-26 | Offline SAM 2.1 Tiny S1.5: 8-image AP50 0.508 (1008) / 0.637 (adaptive 504); 4-image independent split 0.6375; Rocks UAV AP50 0.301 (negative transfer); converter reproduces 0.6375; no DDS/device/depth/motion | **No** |
 | `ore_scene_s2_20261126/` | 2026-11-26 | Offline S2 visible-geometry MVE on synthetic depth: 2500 points from a 1 m plane, visible centroid/AABB/OBB, zero-depth/empty-mask failures; 103 tests; no real depth/hardware | **No** |
 | `ore_scene_s3_20261126/` | 2026-11-26 | Offline Scene State v2 prototype: v1->v2 geometry + touching/near relation edges, not_computed for missing geometry, forbidden true fields/reference/duplicate checks; no independent relation labels | **No** |
-| `ore_scene_s3_relations_20261126/` | 2026-11-26 | Controlled 18-scene relation benchmark (6 contact / 6 near / 6 clear), constructed truth, GT masks: 12/12 edges, P/R/F1 1.0; sanity only, no real-ore relation accuracy | **No** |
+| `ore_scene_s3_relations_20261126/` | 2026-11-26 | Controlled 18-scene relation benchmark: 12/12 edges, P/R/F1 1.0 (GT masks, constructed truth); e2e classical predicted masks on 39 synthetic scenes: match rate 43.5%, relation P 0.85 / R 0.035 / F1 0.067 (negative); no real-ore relation accuracy | **No** |
 
 The synthetic bundle proves the data path and logic, not robot accuracy. See
 [`docs/EVIDENCE.md`](../docs/EVIDENCE.md) for the full narrative and the list of

@@ -28,6 +28,7 @@ from .relation_benchmark import (
     evaluate_relation_benchmark,
     generate_relation_benchmark,
 )
+from .relation_eval import RelationEvalParams, evaluate_predicted_relations
 from .relations import RelationParams
 from .sam2_tiles import load_tiles_config, run_sam2_tiles
 from .synthetic import generate_dataset
@@ -242,6 +243,36 @@ def _command_evaluate_relations(args):
     return EXIT_OK
 
 
+def _command_evaluate_relations_predicted(args):
+    dataset = load_dataset(args.dataset)
+    records = read_predictions(args.scenes)
+    params = RelationEvalParams(
+        relation=RelationParams(
+            adjacency_px=args.adjacency_px,
+            touching_min_px=args.touching_min_px,
+            max_instances=args.max_instances),
+        match_iou=args.match_iou,
+    )
+    result = evaluate_predicted_relations(
+        dataset, records, args.prediction_root or os.path.dirname(
+            os.path.abspath(args.scenes)), params)
+    with open(args.out, 'w', encoding='utf-8') as handle:
+        json.dump(result, handle, indent=2, sort_keys=True)
+        handle.write('\n')
+    _print_json({
+        'metrics': os.path.abspath(args.out),
+        'precision': result['precision'],
+        'recall': result['recall'],
+        'f1': result['f1'],
+        'predicted_edges': result['predicted_edges'],
+        'truth_edges': result['truth_edges'],
+        'match_rate': result['instance_matching']['match_rate'],
+        'data_source': dataset.source,
+        'hardware_validation': False,
+    })
+    return EXIT_OK
+
+
 def _command_evaluate(args):
     config = _load_config(args.config)
     dataset = load_dataset(args.dataset)
@@ -446,6 +477,19 @@ def build_parser():
     relation_eval.add_argument('--touching-min-px', type=int, default=8)
     relation_eval.add_argument('--max-instances', type=int, default=128)
     relation_eval.set_defaults(func=_command_evaluate_relations)
+
+    relation_pred = subparsers.add_parser(
+        'evaluate-relations-predicted',
+        help='evaluate predicted-mask relation edges against GT-mask edges')
+    relation_pred.add_argument('--dataset', required=True)
+    relation_pred.add_argument('--scenes', required=True)
+    relation_pred.add_argument('--prediction-root')
+    relation_pred.add_argument('--out', required=True)
+    relation_pred.add_argument('--adjacency-px', type=int, default=5)
+    relation_pred.add_argument('--touching-min-px', type=int, default=8)
+    relation_pred.add_argument('--max-instances', type=int, default=128)
+    relation_pred.add_argument('--match-iou', type=float, default=0.5)
+    relation_pred.set_defaults(func=_command_evaluate_relations_predicted)
 
     sam2 = subparsers.add_parser(
         'import-sam2-tiles',

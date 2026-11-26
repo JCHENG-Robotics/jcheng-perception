@@ -34,6 +34,10 @@ from jcheng_perception_scene.relation_benchmark import (
     evaluate_relation_benchmark,
     generate_relation_benchmark,
 )
+from jcheng_perception_scene.relation_eval import (
+    RelationEvalParams,
+    evaluate_predicted_relations,
+)
 from jcheng_perception_scene.relations import (
     RelationParams,
     build_relation_graph,
@@ -369,6 +373,54 @@ def test_relation_benchmark_generate_and_evaluate(tmp_path):
     assert result['data_source'] == 'synthetic'
     assert result['hardware_validation'] is False
     assert result['real_ore_validation'] is False
+
+
+def test_predicted_relation_evaluation_with_perfect_masks(tmp_path):
+    root = tmp_path / 'relation-pred'
+    generate_relation_benchmark(
+        str(root), per_class=1, seed=11, created_at=CREATED_AT)
+    dataset = load_dataset(str(root))
+    prediction_root = root / 'pred'
+    (prediction_root / 'masks').mkdir(parents=True)
+    records = []
+    for scene in dataset.scenes:
+        shutil.copyfile(
+            scene.mask_path,
+            prediction_root / 'masks' / (scene.scene_id + '.png'))
+        records.append({
+            'schema_version': 'jcheng.scene_state.v1',
+            'scene_id': scene.scene_id,
+            'image': {
+                'path': scene.image_path,
+                'width': scene.width,
+                'height': scene.height,
+            },
+            'instances': [{
+                'instance_id': item['instance_id'],
+                'mask_index': item['mask_index'],
+                'mask_path': 'masks/%s.png' % scene.scene_id,
+                'bbox_xyxy': item['bbox_xyxy'],
+                'detection_confidence': 1.0,
+            } for item in scene.instances],
+            'relations': [],
+            'validity': {
+                'valid': True,
+                'empty_scene': False,
+                'missing_fields': [],
+                'failure_reason': None,
+                'unknowns': [],
+            },
+            'timing': {},
+        })
+    result = evaluate_predicted_relations(
+        dataset, records, str(prediction_root),
+        RelationEvalParams(RelationParams(5, 8, 128), 0.5))
+    assert result['precision'] == pytest.approx(1.0)
+    assert result['recall'] == pytest.approx(1.0)
+    assert result['evaluated_scenes'] == 3
+    assert result['instance_matching']['matched'] == 6
+    assert result['instance_matching']['match_rate'] == pytest.approx(1.0)
+    assert result['truth_edges'] == 2
 
 
 def test_scene_v2_attaches_visible_geometry():
