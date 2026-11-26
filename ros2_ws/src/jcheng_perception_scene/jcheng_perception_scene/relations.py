@@ -13,9 +13,42 @@ proximity alone.
 """
 
 import dataclasses
+from typing import Tuple
 
-from .maskops import boundary_pixels, contact_pixels, mask_iou
+import numpy as np
+
+from .maskops import (
+    boundary_pixels,
+    boundary_pixels_local,
+    bbox_intersects,
+    contact_pixels,
+    contact_pixels_local,
+    iou_local,
+    mask_iou,
+)
 from .types import Relation
+
+
+@dataclasses.dataclass(frozen=True)
+class LocalInstance:
+    """An instance stored as a tight bbox plus a local boolean mask."""
+
+    instance_id: str
+    bbox_xyxy: Tuple[int, int, int, int]
+    mask: np.ndarray
+
+    def __post_init__(self):
+        """Validate the local mask and bbox."""
+        mask = np.asarray(self.mask).astype(bool, copy=False)
+        if mask.ndim != 2 or not np.any(mask):
+            raise ValueError('local instance mask must be non-empty 2-D')
+        if len(self.bbox_xyxy) != 4:
+            raise ValueError('bbox_xyxy must have four values')
+        if mask.shape != (
+                self.bbox_xyxy[3] - self.bbox_xyxy[1] + 1,
+                self.bbox_xyxy[2] - self.bbox_xyxy[0] + 1):
+            raise ValueError('local mask shape does not match bbox')
+        object.__setattr__(self, 'mask', mask)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -80,6 +113,67 @@ def build_relation_graph(instances, params=None):
                     'search_radius_px': int(params.adjacency_px),
                     'touching_min_px': int(params.touching_min_px),
                     'mask_iou': mask_iou(first.mask, second.mask),
+                    'depth_order': 'unknown',
+                    'directed': False,
+                    'note': (
+                        'undirected 2-D contact; no occlusion direction'),
+                },
+                source='2d_mask',
+            ))
+    return edges
+
+
+def build_relation_graph_local(instances, params=None):
+    """Dense-scene variant: bbox prefilter plus local mask operations.
+
+    ``instances`` must be :class:`LocalInstance` objects. The full-image
+    variant is kept for small/simple inputs and existing tests.
+    """
+    params = params or RelationParams()
+    if len(instances) > int(params.max_instances):
+        return []
+    boundary = {
+        instance.instance_id: boundary_pixels_local(
+            instance.bbox_xyxy, instance.mask)
+        for instance in instances
+    }
+    edges = []
+    for first_index in range(len(instances)):
+        first = instances[first_index]
+        for second_index in range(first_index + 1, len(instances)):
+            second = instances[second_index]
+            if not bbox_intersects(
+                    first.bbox_xyxy, second.bbox_xyxy,
+                    margin=int(params.adjacency_px)):
+                continue
+            contact = contact_pixels_local(
+                first.bbox_xyxy, first.mask,
+                second.bbox_xyxy, second.mask,
+                radius=int(params.adjacency_px))
+            if contact <= 0:
+                continue
+            smaller_boundary = max(
+                1, min(boundary[first.instance_id],
+                       boundary[second.instance_id]))
+            contact_ratio = contact / float(smaller_boundary)
+            predicate = (
+                'touching'
+                if contact >= int(params.touching_min_px) else 'near')
+            edges.append(Relation(
+                subject_id=first.instance_id,
+                predicate=predicate,
+                object_id=second.instance_id,
+                confidence=min(1.0, 2.0 * contact_ratio),
+                evidence={
+                    'contact_px': int(contact),
+                    'subject_boundary_px': boundary[first.instance_id],
+                    'object_boundary_px': boundary[second.instance_id],
+                    'contact_ratio': round(contact_ratio, 6),
+                    'search_radius_px': int(params.adjacency_px),
+                    'touching_min_px': int(params.touching_min_px),
+                    'mask_iou': iou_local(
+                        first.bbox_xyxy, first.mask,
+                        second.bbox_xyxy, second.mask),
                     'depth_order': 'unknown',
                     'directed': False,
                     'note': (

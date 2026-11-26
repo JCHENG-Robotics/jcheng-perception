@@ -1,0 +1,4925 @@
+{
+  "data_source": "public",
+  "dataset_id": "mendeley_40_70mm_test",
+  "evaluated_scenes": 8,
+  "f1": 0.030098420691233693,
+  "failed_scenes": [],
+  "hardware_validation": false,
+  "instance_matching": {
+    "gt_instances": 9208,
+    "match_iou": 0.5,
+    "match_rate": 0.10447437011294526,
+    "matched": 962,
+    "predicted_instances": 2860
+  },
+  "limitations": [
+    "Synthetic data; GT edges are derived from GT masks, not independent human relation labels.",
+    "Greedy IoU matching, not Hungarian; unmatched predictions are excluded from relation scoring.",
+    "touching/near are collapsed to contact.",
+    "No real-ore or hardware validation."
+  ],
+  "per_scene": {
+    "mendeley_40_70mm_test-40_10": {
+      "f1": 0.003397027600849257,
+      "matches": [
+        {
+          "iou": 0.510368,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0028",
+          "truth_id": "3:0433"
+        },
+        {
+          "iou": 0.573902,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0038",
+          "truth_id": "3:0016"
+        },
+        {
+          "iou": 0.728231,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0042",
+          "truth_id": "3:0902"
+        },
+        {
+          "iou": 0.508995,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0046",
+          "truth_id": "3:1106"
+        },
+        {
+          "iou": 0.72161,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0048",
+          "truth_id": "3:0314"
+        },
+        {
+          "iou": 0.608358,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0060",
+          "truth_id": "3:0744"
+        },
+        {
+          "iou": 0.774725,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0066",
+          "truth_id": "3:0887"
+        },
+        {
+          "iou": 0.626636,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0072",
+          "truth_id": "3:0719"
+        },
+        {
+          "iou": 0.546292,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0076",
+          "truth_id": "3:0732"
+        },
+        {
+          "iou": 0.688911,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0077",
+          "truth_id": "3:0119"
+        },
+        {
+          "iou": 0.69616,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0080",
+          "truth_id": "3:1059"
+        },
+        {
+          "iou": 0.641621,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0081",
+          "truth_id": "3:0722"
+        },
+        {
+          "iou": 0.510758,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0082",
+          "truth_id": "3:0285"
+        },
+        {
+          "iou": 0.687819,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0083",
+          "truth_id": "3:1093"
+        },
+        {
+          "iou": 0.66761,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0085",
+          "truth_id": "3:0050"
+        },
+        {
+          "iou": 0.701938,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0087",
+          "truth_id": "3:0152"
+        },
+        {
+          "iou": 0.669907,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0088",
+          "truth_id": "3:0460"
+        },
+        {
+          "iou": 0.820325,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0090",
+          "truth_id": "3:1034"
+        },
+        {
+          "iou": 0.89959,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0092",
+          "truth_id": "3:0069"
+        },
+        {
+          "iou": 0.680023,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0094",
+          "truth_id": "3:0231"
+        },
+        {
+          "iou": 0.536883,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0095",
+          "truth_id": "3:0945"
+        },
+        {
+          "iou": 0.505423,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0096",
+          "truth_id": "3:0246"
+        },
+        {
+          "iou": 0.519603,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0097",
+          "truth_id": "3:0213"
+        },
+        {
+          "iou": 0.645438,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0098",
+          "truth_id": "3:0038"
+        },
+        {
+          "iou": 0.627362,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0100",
+          "truth_id": "3:0451"
+        },
+        {
+          "iou": 0.550138,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0101",
+          "truth_id": "3:0430"
+        },
+        {
+          "iou": 0.569811,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0103",
+          "truth_id": "3:0283"
+        },
+        {
+          "iou": 0.620799,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0104",
+          "truth_id": "3:0892"
+        },
+        {
+          "iou": 0.60319,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0107",
+          "truth_id": "3:0248"
+        },
+        {
+          "iou": 0.824799,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0109",
+          "truth_id": "3:0097"
+        },
+        {
+          "iou": 0.66304,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0110",
+          "truth_id": "3:0697"
+        },
+        {
+          "iou": 0.704287,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0111",
+          "truth_id": "3:0125"
+        },
+        {
+          "iou": 0.72919,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0117",
+          "truth_id": "3:0114"
+        },
+        {
+          "iou": 0.795577,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0118",
+          "truth_id": "3:0028"
+        },
+        {
+          "iou": 0.784946,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0119",
+          "truth_id": "3:0946"
+        },
+        {
+          "iou": 0.661025,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0121",
+          "truth_id": "3:0975"
+        },
+        {
+          "iou": 0.804084,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0122",
+          "truth_id": "3:0302"
+        },
+        {
+          "iou": 0.832449,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0124",
+          "truth_id": "3:0001"
+        },
+        {
+          "iou": 0.769565,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0125",
+          "truth_id": "3:1107"
+        },
+        {
+          "iou": 0.535994,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0127",
+          "truth_id": "3:0922"
+        },
+        {
+          "iou": 0.516112,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0128",
+          "truth_id": "3:0247"
+        },
+        {
+          "iou": 0.556011,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0129",
+          "truth_id": "3:0413"
+        },
+        {
+          "iou": 0.689967,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0132",
+          "truth_id": "3:0573"
+        },
+        {
+          "iou": 0.850094,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0133",
+          "truth_id": "3:1051"
+        },
+        {
+          "iou": 0.847691,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0134",
+          "truth_id": "3:0044"
+        },
+        {
+          "iou": 0.833512,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0135",
+          "truth_id": "3:0225"
+        },
+        {
+          "iou": 0.597727,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0138",
+          "truth_id": "3:1063"
+        },
+        {
+          "iou": 0.741147,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0139",
+          "truth_id": "3:0111"
+        },
+        {
+          "iou": 0.702467,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0142",
+          "truth_id": "3:0860"
+        },
+        {
+          "iou": 0.7928,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0143",
+          "truth_id": "3:1081"
+        },
+        {
+          "iou": 0.80674,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0144",
+          "truth_id": "3:0212"
+        },
+        {
+          "iou": 0.570133,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0145",
+          "truth_id": "3:0147"
+        },
+        {
+          "iou": 0.777845,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0147",
+          "truth_id": "3:0132"
+        },
+        {
+          "iou": 0.798411,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0148",
+          "truth_id": "3:0223"
+        },
+        {
+          "iou": 0.696822,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0151",
+          "truth_id": "3:0107"
+        },
+        {
+          "iou": 0.530724,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0153",
+          "truth_id": "3:0904"
+        },
+        {
+          "iou": 0.610423,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0158",
+          "truth_id": "3:0202"
+        },
+        {
+          "iou": 0.735677,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0160",
+          "truth_id": "3:0758"
+        },
+        {
+          "iou": 0.744168,
+          "predicted_id": "mendeley_40_70mm_test-40_10:0166",
+          "truth_id": "3:1054"
+        }
+      ],
+      "precision": 0.5714285714285714,
+      "predicted_edges": 7,
+      "recall": 0.0017035775127768314,
+      "true_positive": 4,
+      "truth_edges": 2348
+    },
+    "mendeley_40_70mm_test-40_11": {
+      "f1": 0.06484018264840183,
+      "matches": [
+        {
+          "iou": 0.537466,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0017",
+          "truth_id": "4:0832"
+        },
+        {
+          "iou": 0.66548,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0023",
+          "truth_id": "4:0403"
+        },
+        {
+          "iou": 0.660159,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0026",
+          "truth_id": "4:0465"
+        },
+        {
+          "iou": 0.679036,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0030",
+          "truth_id": "4:1059"
+        },
+        {
+          "iou": 0.60556,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0038",
+          "truth_id": "4:0232"
+        },
+        {
+          "iou": 0.855553,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0043",
+          "truth_id": "4:0008"
+        },
+        {
+          "iou": 0.67603,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0044",
+          "truth_id": "4:0629"
+        },
+        {
+          "iou": 0.644938,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0045",
+          "truth_id": "4:0625"
+        },
+        {
+          "iou": 0.56973,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0046",
+          "truth_id": "4:0503"
+        },
+        {
+          "iou": 0.524214,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0054",
+          "truth_id": "4:0210"
+        },
+        {
+          "iou": 0.736521,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0056",
+          "truth_id": "4:0063"
+        },
+        {
+          "iou": 0.770584,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0057",
+          "truth_id": "4:0219"
+        },
+        {
+          "iou": 0.681546,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0063",
+          "truth_id": "4:0115"
+        },
+        {
+          "iou": 0.565217,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0064",
+          "truth_id": "4:0002"
+        },
+        {
+          "iou": 0.530796,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0069",
+          "truth_id": "4:1151"
+        },
+        {
+          "iou": 0.780557,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0072",
+          "truth_id": "4:1135"
+        },
+        {
+          "iou": 0.5005,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0078",
+          "truth_id": "4:0310"
+        },
+        {
+          "iou": 0.587744,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0080",
+          "truth_id": "4:0806"
+        },
+        {
+          "iou": 0.652952,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0082",
+          "truth_id": "4:0387"
+        },
+        {
+          "iou": 0.501022,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0084",
+          "truth_id": "4:0060"
+        },
+        {
+          "iou": 0.760845,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0090",
+          "truth_id": "4:0953"
+        },
+        {
+          "iou": 0.658717,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0092",
+          "truth_id": "4:0780"
+        },
+        {
+          "iou": 0.834653,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0097",
+          "truth_id": "4:0213"
+        },
+        {
+          "iou": 0.654044,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0101",
+          "truth_id": "4:0478"
+        },
+        {
+          "iou": 0.790279,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0102",
+          "truth_id": "4:0410"
+        },
+        {
+          "iou": 0.597222,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0105",
+          "truth_id": "4:1004"
+        },
+        {
+          "iou": 0.869701,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0108",
+          "truth_id": "4:0335"
+        },
+        {
+          "iou": 0.704776,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0116",
+          "truth_id": "4:0056"
+        },
+        {
+          "iou": 0.591613,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0117",
+          "truth_id": "4:0071"
+        },
+        {
+          "iou": 0.638117,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0118",
+          "truth_id": "4:0016"
+        },
+        {
+          "iou": 0.624575,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0119",
+          "truth_id": "4:0326"
+        },
+        {
+          "iou": 0.661164,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0120",
+          "truth_id": "4:0590"
+        },
+        {
+          "iou": 0.796543,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0123",
+          "truth_id": "4:1036"
+        },
+        {
+          "iou": 0.751285,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0129",
+          "truth_id": "4:1031"
+        },
+        {
+          "iou": 0.787004,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0131",
+          "truth_id": "4:0502"
+        },
+        {
+          "iou": 0.606502,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0132",
+          "truth_id": "4:0031"
+        },
+        {
+          "iou": 0.590093,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0133",
+          "truth_id": "4:0563"
+        },
+        {
+          "iou": 0.711524,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0134",
+          "truth_id": "4:0349"
+        },
+        {
+          "iou": 0.556883,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0135",
+          "truth_id": "4:0257"
+        },
+        {
+          "iou": 0.616771,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0137",
+          "truth_id": "4:0887"
+        },
+        {
+          "iou": 0.592252,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0138",
+          "truth_id": "4:0470"
+        },
+        {
+          "iou": 0.738636,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0140",
+          "truth_id": "4:0764"
+        },
+        {
+          "iou": 0.617105,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0144",
+          "truth_id": "4:0032"
+        },
+        {
+          "iou": 0.754974,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0146",
+          "truth_id": "4:0022"
+        },
+        {
+          "iou": 0.539183,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0148",
+          "truth_id": "4:0452"
+        },
+        {
+          "iou": 0.784277,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0149",
+          "truth_id": "4:1019"
+        },
+        {
+          "iou": 0.668151,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0150",
+          "truth_id": "4:0605"
+        },
+        {
+          "iou": 0.520372,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0154",
+          "truth_id": "4:0897"
+        },
+        {
+          "iou": 0.774011,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0158",
+          "truth_id": "4:1155"
+        },
+        {
+          "iou": 0.766806,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0159",
+          "truth_id": "4:0050"
+        },
+        {
+          "iou": 0.592973,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0160",
+          "truth_id": "4:0536"
+        },
+        {
+          "iou": 0.808498,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0161",
+          "truth_id": "4:0540"
+        },
+        {
+          "iou": 0.766917,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0162",
+          "truth_id": "4:0400"
+        },
+        {
+          "iou": 0.512786,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0163",
+          "truth_id": "4:0520"
+        },
+        {
+          "iou": 0.541975,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0165",
+          "truth_id": "4:0548"
+        },
+        {
+          "iou": 0.667986,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0167",
+          "truth_id": "4:0454"
+        },
+        {
+          "iou": 0.630812,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0170",
+          "truth_id": "4:1121"
+        },
+        {
+          "iou": 0.701305,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0171",
+          "truth_id": "4:0284"
+        },
+        {
+          "iou": 0.566473,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0172",
+          "truth_id": "4:0479"
+        },
+        {
+          "iou": 0.522876,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0174",
+          "truth_id": "4:0984"
+        },
+        {
+          "iou": 0.519266,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0176",
+          "truth_id": "4:0038"
+        },
+        {
+          "iou": 0.547305,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0177",
+          "truth_id": "4:0561"
+        },
+        {
+          "iou": 0.773819,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0178",
+          "truth_id": "4:1042"
+        },
+        {
+          "iou": 0.726562,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0181",
+          "truth_id": "4:0224"
+        },
+        {
+          "iou": 0.612832,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0182",
+          "truth_id": "4:0174"
+        },
+        {
+          "iou": 0.721359,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0183",
+          "truth_id": "4:1034"
+        },
+        {
+          "iou": 0.667017,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0184",
+          "truth_id": "4:0705"
+        },
+        {
+          "iou": 0.660815,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0191",
+          "truth_id": "4:0024"
+        },
+        {
+          "iou": 0.540123,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0192",
+          "truth_id": "4:0404"
+        },
+        {
+          "iou": 0.552862,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0194",
+          "truth_id": "4:0814"
+        },
+        {
+          "iou": 0.563071,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0195",
+          "truth_id": "4:1148"
+        },
+        {
+          "iou": 0.531743,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0196",
+          "truth_id": "4:0299"
+        },
+        {
+          "iou": 0.608161,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0197",
+          "truth_id": "4:0438"
+        },
+        {
+          "iou": 0.664545,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0199",
+          "truth_id": "4:0523"
+        },
+        {
+          "iou": 0.561525,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0202",
+          "truth_id": "4:0103"
+        },
+        {
+          "iou": 0.590273,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0205",
+          "truth_id": "4:0725"
+        },
+        {
+          "iou": 0.831549,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0206",
+          "truth_id": "4:0464"
+        },
+        {
+          "iou": 0.511029,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0213",
+          "truth_id": "4:0209"
+        },
+        {
+          "iou": 0.641779,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0216",
+          "truth_id": "4:0021"
+        },
+        {
+          "iou": 0.567469,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0217",
+          "truth_id": "4:1147"
+        },
+        {
+          "iou": 0.66047,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0223",
+          "truth_id": "4:0182"
+        },
+        {
+          "iou": 0.706728,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0227",
+          "truth_id": "4:0527"
+        },
+        {
+          "iou": 0.78393,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0229",
+          "truth_id": "4:0271"
+        },
+        {
+          "iou": 0.747222,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0233",
+          "truth_id": "4:0266"
+        },
+        {
+          "iou": 0.814793,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0235",
+          "truth_id": "4:0167"
+        },
+        {
+          "iou": 0.754386,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0238",
+          "truth_id": "4:1039"
+        },
+        {
+          "iou": 0.543413,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0239",
+          "truth_id": "4:0095"
+        },
+        {
+          "iou": 0.663976,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0241",
+          "truth_id": "4:0732"
+        },
+        {
+          "iou": 0.748691,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0242",
+          "truth_id": "4:0621"
+        },
+        {
+          "iou": 0.690971,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0243",
+          "truth_id": "4:0124"
+        },
+        {
+          "iou": 0.515095,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0244",
+          "truth_id": "4:0986"
+        },
+        {
+          "iou": 0.686003,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0248",
+          "truth_id": "4:0361"
+        },
+        {
+          "iou": 0.651914,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0250",
+          "truth_id": "4:0753"
+        },
+        {
+          "iou": 0.690025,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0251",
+          "truth_id": "4:0245"
+        },
+        {
+          "iou": 0.823663,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0253",
+          "truth_id": "4:0443"
+        },
+        {
+          "iou": 0.630396,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0255",
+          "truth_id": "4:0665"
+        },
+        {
+          "iou": 0.516729,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0257",
+          "truth_id": "4:1029"
+        },
+        {
+          "iou": 0.527406,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0259",
+          "truth_id": "4:0489"
+        },
+        {
+          "iou": 0.518682,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0260",
+          "truth_id": "4:0358"
+        },
+        {
+          "iou": 0.61749,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0261",
+          "truth_id": "4:0290"
+        },
+        {
+          "iou": 0.502277,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0262",
+          "truth_id": "4:0970"
+        },
+        {
+          "iou": 0.507457,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0263",
+          "truth_id": "4:0687"
+        },
+        {
+          "iou": 0.724888,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0264",
+          "truth_id": "4:0969"
+        },
+        {
+          "iou": 0.734411,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0268",
+          "truth_id": "4:0989"
+        },
+        {
+          "iou": 0.909926,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0269",
+          "truth_id": "4:0243"
+        },
+        {
+          "iou": 0.697273,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0271",
+          "truth_id": "4:0391"
+        },
+        {
+          "iou": 0.569231,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0272",
+          "truth_id": "4:0979"
+        },
+        {
+          "iou": 0.597826,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0273",
+          "truth_id": "4:0109"
+        },
+        {
+          "iou": 0.651095,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0274",
+          "truth_id": "4:0184"
+        },
+        {
+          "iou": 0.724767,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0277",
+          "truth_id": "4:0429"
+        },
+        {
+          "iou": 0.65026,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0285",
+          "truth_id": "4:0096"
+        },
+        {
+          "iou": 0.557254,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0287",
+          "truth_id": "4:0086"
+        },
+        {
+          "iou": 0.784358,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0289",
+          "truth_id": "4:0950"
+        },
+        {
+          "iou": 0.614574,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0291",
+          "truth_id": "4:0379"
+        },
+        {
+          "iou": 0.642477,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0293",
+          "truth_id": "4:0401"
+        },
+        {
+          "iou": 0.838185,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0296",
+          "truth_id": "4:0252"
+        },
+        {
+          "iou": 0.780083,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0298",
+          "truth_id": "4:0158"
+        },
+        {
+          "iou": 0.642926,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0299",
+          "truth_id": "4:0010"
+        },
+        {
+          "iou": 0.581164,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0303",
+          "truth_id": "4:1021"
+        },
+        {
+          "iou": 0.772011,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0304",
+          "truth_id": "4:0020"
+        },
+        {
+          "iou": 0.637427,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0305",
+          "truth_id": "4:0076"
+        },
+        {
+          "iou": 0.661282,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0310",
+          "truth_id": "4:0735"
+        },
+        {
+          "iou": 0.757541,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0311",
+          "truth_id": "4:0246"
+        },
+        {
+          "iou": 0.770223,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0319",
+          "truth_id": "4:0355"
+        },
+        {
+          "iou": 0.728337,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0326",
+          "truth_id": "4:0475"
+        },
+        {
+          "iou": 0.662814,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0327",
+          "truth_id": "4:1061"
+        },
+        {
+          "iou": 0.514149,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0328",
+          "truth_id": "4:0891"
+        },
+        {
+          "iou": 0.774321,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0330",
+          "truth_id": "4:0005"
+        },
+        {
+          "iou": 0.694569,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0338",
+          "truth_id": "4:0118"
+        },
+        {
+          "iou": 0.802945,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0342",
+          "truth_id": "4:0070"
+        },
+        {
+          "iou": 0.732682,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0343",
+          "truth_id": "4:0120"
+        },
+        {
+          "iou": 0.608886,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0344",
+          "truth_id": "4:0079"
+        },
+        {
+          "iou": 0.725365,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0345",
+          "truth_id": "4:0202"
+        },
+        {
+          "iou": 0.564183,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0346",
+          "truth_id": "4:0803"
+        },
+        {
+          "iou": 0.706023,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0347",
+          "truth_id": "4:0233"
+        },
+        {
+          "iou": 0.755849,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0348",
+          "truth_id": "4:1023"
+        },
+        {
+          "iou": 0.678867,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0350",
+          "truth_id": "4:0471"
+        },
+        {
+          "iou": 0.762405,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0351",
+          "truth_id": "4:0091"
+        },
+        {
+          "iou": 0.697248,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0354",
+          "truth_id": "4:1030"
+        },
+        {
+          "iou": 0.62711,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0355",
+          "truth_id": "4:0900"
+        },
+        {
+          "iou": 0.622283,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0363",
+          "truth_id": "4:0680"
+        },
+        {
+          "iou": 0.747555,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0368",
+          "truth_id": "4:0083"
+        },
+        {
+          "iou": 0.539627,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0370",
+          "truth_id": "4:1117"
+        },
+        {
+          "iou": 0.519153,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0372",
+          "truth_id": "4:1112"
+        },
+        {
+          "iou": 0.848218,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0378",
+          "truth_id": "4:1002"
+        },
+        {
+          "iou": 0.827374,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0380",
+          "truth_id": "4:0568"
+        },
+        {
+          "iou": 0.612934,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0382",
+          "truth_id": "4:0765"
+        },
+        {
+          "iou": 0.675712,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0386",
+          "truth_id": "4:1035"
+        },
+        {
+          "iou": 0.60492,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0388",
+          "truth_id": "4:1025"
+        },
+        {
+          "iou": 0.885215,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0390",
+          "truth_id": "4:1143"
+        },
+        {
+          "iou": 0.613321,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0391",
+          "truth_id": "4:0399"
+        },
+        {
+          "iou": 0.768338,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0396",
+          "truth_id": "4:0197"
+        },
+        {
+          "iou": 0.627451,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0399",
+          "truth_id": "4:1073"
+        },
+        {
+          "iou": 0.726229,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0403",
+          "truth_id": "4:0565"
+        },
+        {
+          "iou": 0.504399,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0404",
+          "truth_id": "4:0030"
+        },
+        {
+          "iou": 0.615614,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0405",
+          "truth_id": "4:0783"
+        },
+        {
+          "iou": 0.505651,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0413",
+          "truth_id": "4:0154"
+        },
+        {
+          "iou": 0.71822,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0415",
+          "truth_id": "4:1011"
+        },
+        {
+          "iou": 0.526064,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0416",
+          "truth_id": "4:0885"
+        },
+        {
+          "iou": 0.590504,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0417",
+          "truth_id": "4:0230"
+        },
+        {
+          "iou": 0.722253,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0420",
+          "truth_id": "4:0606"
+        },
+        {
+          "iou": 0.809414,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0422",
+          "truth_id": "4:0386"
+        },
+        {
+          "iou": 0.525927,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0424",
+          "truth_id": "4:0199"
+        },
+        {
+          "iou": 0.654762,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0426",
+          "truth_id": "4:0515"
+        },
+        {
+          "iou": 0.652819,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0427",
+          "truth_id": "4:0240"
+        },
+        {
+          "iou": 0.648365,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0432",
+          "truth_id": "4:0518"
+        },
+        {
+          "iou": 0.756577,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0437",
+          "truth_id": "4:0458"
+        },
+        {
+          "iou": 0.765442,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0439",
+          "truth_id": "4:0396"
+        },
+        {
+          "iou": 0.606693,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0447",
+          "truth_id": "4:0114"
+        },
+        {
+          "iou": 0.795875,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0450",
+          "truth_id": "4:0529"
+        },
+        {
+          "iou": 0.59476,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0452",
+          "truth_id": "4:0129"
+        },
+        {
+          "iou": 0.784662,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0454",
+          "truth_id": "4:0186"
+        },
+        {
+          "iou": 0.644706,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0457",
+          "truth_id": "4:0833"
+        },
+        {
+          "iou": 0.79269,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0458",
+          "truth_id": "4:1182"
+        },
+        {
+          "iou": 0.530955,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0460",
+          "truth_id": "4:0993"
+        },
+        {
+          "iou": 0.519008,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0462",
+          "truth_id": "4:0717"
+        },
+        {
+          "iou": 0.524891,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0471",
+          "truth_id": "4:0537"
+        },
+        {
+          "iou": 0.582556,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0479",
+          "truth_id": "4:0312"
+        },
+        {
+          "iou": 0.501735,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0480",
+          "truth_id": "4:0954"
+        },
+        {
+          "iou": 0.735245,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0485",
+          "truth_id": "4:0152"
+        },
+        {
+          "iou": 0.630141,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0486",
+          "truth_id": "4:0991"
+        },
+        {
+          "iou": 0.761694,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0487",
+          "truth_id": "4:0140"
+        },
+        {
+          "iou": 0.808115,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0489",
+          "truth_id": "4:0784"
+        },
+        {
+          "iou": 0.645161,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0490",
+          "truth_id": "4:1050"
+        },
+        {
+          "iou": 0.800948,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0492",
+          "truth_id": "4:0164"
+        },
+        {
+          "iou": 0.810632,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0496",
+          "truth_id": "4:0347"
+        },
+        {
+          "iou": 0.542363,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0498",
+          "truth_id": "4:0345"
+        },
+        {
+          "iou": 0.800677,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0500",
+          "truth_id": "4:0237"
+        },
+        {
+          "iou": 0.733749,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0504",
+          "truth_id": "4:0923"
+        },
+        {
+          "iou": 0.658967,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0506",
+          "truth_id": "4:1118"
+        },
+        {
+          "iou": 0.714733,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0507",
+          "truth_id": "4:0448"
+        },
+        {
+          "iou": 0.76046,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0515",
+          "truth_id": "4:1062"
+        },
+        {
+          "iou": 0.733766,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0516",
+          "truth_id": "4:0940"
+        },
+        {
+          "iou": 0.76386,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0520",
+          "truth_id": "4:0166"
+        },
+        {
+          "iou": 0.792818,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0527",
+          "truth_id": "4:0638"
+        },
+        {
+          "iou": 0.518976,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0528",
+          "truth_id": "4:0195"
+        },
+        {
+          "iou": 0.653239,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0535",
+          "truth_id": "4:0862"
+        },
+        {
+          "iou": 0.778046,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0542",
+          "truth_id": "4:0943"
+        },
+        {
+          "iou": 0.75717,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0546",
+          "truth_id": "4:1140"
+        },
+        {
+          "iou": 0.576923,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0553",
+          "truth_id": "4:0098"
+        },
+        {
+          "iou": 0.514629,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0557",
+          "truth_id": "4:0883"
+        },
+        {
+          "iou": 0.689575,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0559",
+          "truth_id": "4:0389"
+        },
+        {
+          "iou": 0.820513,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0571",
+          "truth_id": "4:0292"
+        },
+        {
+          "iou": 0.552827,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0572",
+          "truth_id": "4:0362"
+        },
+        {
+          "iou": 0.801675,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0574",
+          "truth_id": "4:0628"
+        },
+        {
+          "iou": 0.603146,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0579",
+          "truth_id": "4:0263"
+        },
+        {
+          "iou": 0.693994,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0580",
+          "truth_id": "4:0956"
+        },
+        {
+          "iou": 0.69987,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0581",
+          "truth_id": "4:1092"
+        },
+        {
+          "iou": 0.669413,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0582",
+          "truth_id": "4:1072"
+        },
+        {
+          "iou": 0.692414,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0591",
+          "truth_id": "4:0421"
+        },
+        {
+          "iou": 0.774791,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0593",
+          "truth_id": "4:0463"
+        },
+        {
+          "iou": 0.708578,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0599",
+          "truth_id": "4:0672"
+        },
+        {
+          "iou": 0.71805,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0600",
+          "truth_id": "4:0644"
+        },
+        {
+          "iou": 0.526733,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0602",
+          "truth_id": "4:0857"
+        },
+        {
+          "iou": 0.547221,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0612",
+          "truth_id": "4:0229"
+        },
+        {
+          "iou": 0.589011,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0619",
+          "truth_id": "4:0044"
+        },
+        {
+          "iou": 0.72279,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0623",
+          "truth_id": "4:0526"
+        },
+        {
+          "iou": 0.640951,
+          "predicted_id": "mendeley_40_70mm_test-40_11:0625",
+          "truth_id": "4:0409"
+        }
+      ],
+      "precision": 0.7553191489361702,
+      "predicted_edges": 94,
+      "recall": 0.03387404580152672,
+      "true_positive": 71,
+      "truth_edges": 2096
+    },
+    "mendeley_40_70mm_test-40_13": {
+      "f1": 0.03649310191366266,
+      "matches": [
+        {
+          "iou": 0.605375,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0026",
+          "truth_id": "5:0404"
+        },
+        {
+          "iou": 0.626556,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0028",
+          "truth_id": "5:0574"
+        },
+        {
+          "iou": 0.55838,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0040",
+          "truth_id": "5:0022"
+        },
+        {
+          "iou": 0.648433,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0047",
+          "truth_id": "5:0776"
+        },
+        {
+          "iou": 0.690162,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0049",
+          "truth_id": "5:0007"
+        },
+        {
+          "iou": 0.617179,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0059",
+          "truth_id": "5:0685"
+        },
+        {
+          "iou": 0.589077,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0060",
+          "truth_id": "5:1061"
+        },
+        {
+          "iou": 0.591535,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0061",
+          "truth_id": "5:1149"
+        },
+        {
+          "iou": 0.796466,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0062",
+          "truth_id": "5:0238"
+        },
+        {
+          "iou": 0.764622,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0063",
+          "truth_id": "5:0180"
+        },
+        {
+          "iou": 0.643648,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0070",
+          "truth_id": "5:0097"
+        },
+        {
+          "iou": 0.608457,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0071",
+          "truth_id": "5:0100"
+        },
+        {
+          "iou": 0.666667,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0073",
+          "truth_id": "5:0111"
+        },
+        {
+          "iou": 0.688746,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0074",
+          "truth_id": "5:0285"
+        },
+        {
+          "iou": 0.838926,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0076",
+          "truth_id": "5:0329"
+        },
+        {
+          "iou": 0.702939,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0078",
+          "truth_id": "5:0644"
+        },
+        {
+          "iou": 0.629108,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0082",
+          "truth_id": "5:0819"
+        },
+        {
+          "iou": 0.725503,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0084",
+          "truth_id": "5:0384"
+        },
+        {
+          "iou": 0.573628,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0087",
+          "truth_id": "5:0589"
+        },
+        {
+          "iou": 0.822345,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0088",
+          "truth_id": "5:0592"
+        },
+        {
+          "iou": 0.803488,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0094",
+          "truth_id": "5:0339"
+        },
+        {
+          "iou": 0.672414,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0096",
+          "truth_id": "5:0055"
+        },
+        {
+          "iou": 0.831498,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0098",
+          "truth_id": "5:0427"
+        },
+        {
+          "iou": 0.620865,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0099",
+          "truth_id": "5:0621"
+        },
+        {
+          "iou": 0.539503,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0102",
+          "truth_id": "5:0163"
+        },
+        {
+          "iou": 0.521754,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0103",
+          "truth_id": "5:0295"
+        },
+        {
+          "iou": 0.508501,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0105",
+          "truth_id": "5:0738"
+        },
+        {
+          "iou": 0.817765,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0106",
+          "truth_id": "5:0697"
+        },
+        {
+          "iou": 0.721694,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0107",
+          "truth_id": "5:0899"
+        },
+        {
+          "iou": 0.582723,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0109",
+          "truth_id": "5:0488"
+        },
+        {
+          "iou": 0.592019,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0110",
+          "truth_id": "5:0331"
+        },
+        {
+          "iou": 0.560193,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0111",
+          "truth_id": "5:0406"
+        },
+        {
+          "iou": 0.747856,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0120",
+          "truth_id": "5:0083"
+        },
+        {
+          "iou": 0.540323,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0122",
+          "truth_id": "5:0638"
+        },
+        {
+          "iou": 0.506243,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0123",
+          "truth_id": "5:0814"
+        },
+        {
+          "iou": 0.71995,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0130",
+          "truth_id": "5:1065"
+        },
+        {
+          "iou": 0.813668,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0134",
+          "truth_id": "5:1208"
+        },
+        {
+          "iou": 0.615244,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0137",
+          "truth_id": "5:0315"
+        },
+        {
+          "iou": 0.573357,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0139",
+          "truth_id": "5:0231"
+        },
+        {
+          "iou": 0.723779,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0144",
+          "truth_id": "5:0661"
+        },
+        {
+          "iou": 0.802326,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0145",
+          "truth_id": "5:0246"
+        },
+        {
+          "iou": 0.561787,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0147",
+          "truth_id": "5:0812"
+        },
+        {
+          "iou": 0.718954,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0149",
+          "truth_id": "5:0336"
+        },
+        {
+          "iou": 0.734694,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0152",
+          "truth_id": "5:0076"
+        },
+        {
+          "iou": 0.501443,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0155",
+          "truth_id": "5:0258"
+        },
+        {
+          "iou": 0.697098,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0156",
+          "truth_id": "5:0035"
+        },
+        {
+          "iou": 0.708804,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0159",
+          "truth_id": "5:0139"
+        },
+        {
+          "iou": 0.796274,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0163",
+          "truth_id": "5:0352"
+        },
+        {
+          "iou": 0.741906,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0165",
+          "truth_id": "5:0050"
+        },
+        {
+          "iou": 0.635139,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0170",
+          "truth_id": "5:0772"
+        },
+        {
+          "iou": 0.56507,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0173",
+          "truth_id": "5:0184"
+        },
+        {
+          "iou": 0.560227,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0175",
+          "truth_id": "5:0242"
+        },
+        {
+          "iou": 0.78874,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0179",
+          "truth_id": "5:0325"
+        },
+        {
+          "iou": 0.585319,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0183",
+          "truth_id": "5:0183"
+        },
+        {
+          "iou": 0.71501,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0184",
+          "truth_id": "5:0500"
+        },
+        {
+          "iou": 0.669218,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0187",
+          "truth_id": "5:0677"
+        },
+        {
+          "iou": 0.585781,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0190",
+          "truth_id": "5:0393"
+        },
+        {
+          "iou": 0.807359,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0191",
+          "truth_id": "5:0069"
+        },
+        {
+          "iou": 0.853523,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0194",
+          "truth_id": "5:0614"
+        },
+        {
+          "iou": 0.791743,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0195",
+          "truth_id": "5:0365"
+        },
+        {
+          "iou": 0.588689,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0197",
+          "truth_id": "5:0327"
+        },
+        {
+          "iou": 0.707528,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0198",
+          "truth_id": "5:0301"
+        },
+        {
+          "iou": 0.760417,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0205",
+          "truth_id": "5:0438"
+        },
+        {
+          "iou": 0.539031,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0206",
+          "truth_id": "5:1164"
+        },
+        {
+          "iou": 0.583947,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0210",
+          "truth_id": "5:0038"
+        },
+        {
+          "iou": 0.578879,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0214",
+          "truth_id": "5:0450"
+        },
+        {
+          "iou": 0.552971,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0215",
+          "truth_id": "5:0568"
+        },
+        {
+          "iou": 0.599652,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0216",
+          "truth_id": "5:1195"
+        },
+        {
+          "iou": 0.635807,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0217",
+          "truth_id": "5:0332"
+        },
+        {
+          "iou": 0.62093,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0219",
+          "truth_id": "5:0952"
+        },
+        {
+          "iou": 0.819929,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0222",
+          "truth_id": "5:0273"
+        },
+        {
+          "iou": 0.729972,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0224",
+          "truth_id": "5:0099"
+        },
+        {
+          "iou": 0.667381,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0228",
+          "truth_id": "5:0090"
+        },
+        {
+          "iou": 0.529747,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0230",
+          "truth_id": "5:1256"
+        },
+        {
+          "iou": 0.860529,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0240",
+          "truth_id": "5:0342"
+        },
+        {
+          "iou": 0.796296,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0241",
+          "truth_id": "5:0900"
+        },
+        {
+          "iou": 0.682747,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0244",
+          "truth_id": "5:1085"
+        },
+        {
+          "iou": 0.747126,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0246",
+          "truth_id": "5:0147"
+        },
+        {
+          "iou": 0.808181,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0247",
+          "truth_id": "5:0121"
+        },
+        {
+          "iou": 0.773888,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0249",
+          "truth_id": "5:0366"
+        },
+        {
+          "iou": 0.640052,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0251",
+          "truth_id": "5:0230"
+        },
+        {
+          "iou": 0.823042,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0255",
+          "truth_id": "5:0102"
+        },
+        {
+          "iou": 0.788479,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0256",
+          "truth_id": "5:0153"
+        },
+        {
+          "iou": 0.84801,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0260",
+          "truth_id": "5:0297"
+        },
+        {
+          "iou": 0.841326,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0262",
+          "truth_id": "5:1111"
+        },
+        {
+          "iou": 0.517381,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0264",
+          "truth_id": "5:0789"
+        },
+        {
+          "iou": 0.691338,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0272",
+          "truth_id": "5:1228"
+        },
+        {
+          "iou": 0.659828,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0273",
+          "truth_id": "5:0599"
+        },
+        {
+          "iou": 0.852608,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0278",
+          "truth_id": "5:0203"
+        },
+        {
+          "iou": 0.754261,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0279",
+          "truth_id": "5:0034"
+        },
+        {
+          "iou": 0.542503,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0281",
+          "truth_id": "5:0241"
+        },
+        {
+          "iou": 0.78601,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0288",
+          "truth_id": "5:0252"
+        },
+        {
+          "iou": 0.557686,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0290",
+          "truth_id": "5:0088"
+        },
+        {
+          "iou": 0.800109,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0301",
+          "truth_id": "5:0309"
+        },
+        {
+          "iou": 0.611403,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0302",
+          "truth_id": "5:0675"
+        },
+        {
+          "iou": 0.720568,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0305",
+          "truth_id": "5:0480"
+        },
+        {
+          "iou": 0.758904,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0308",
+          "truth_id": "5:0353"
+        },
+        {
+          "iou": 0.622837,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0310",
+          "truth_id": "5:1093"
+        },
+        {
+          "iou": 0.538696,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0311",
+          "truth_id": "5:0322"
+        },
+        {
+          "iou": 0.610085,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0312",
+          "truth_id": "5:0409"
+        },
+        {
+          "iou": 0.571157,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0317",
+          "truth_id": "5:1213"
+        },
+        {
+          "iou": 0.741532,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0321",
+          "truth_id": "5:0857"
+        },
+        {
+          "iou": 0.678632,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0322",
+          "truth_id": "5:1108"
+        },
+        {
+          "iou": 0.648321,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0326",
+          "truth_id": "5:0631"
+        },
+        {
+          "iou": 0.54855,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0327",
+          "truth_id": "5:0077"
+        },
+        {
+          "iou": 0.756982,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0328",
+          "truth_id": "5:0234"
+        },
+        {
+          "iou": 0.743519,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0334",
+          "truth_id": "5:0124"
+        },
+        {
+          "iou": 0.737288,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0335",
+          "truth_id": "5:0208"
+        },
+        {
+          "iou": 0.507104,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0339",
+          "truth_id": "5:0765"
+        },
+        {
+          "iou": 0.623939,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0340",
+          "truth_id": "5:0421"
+        },
+        {
+          "iou": 0.800129,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0343",
+          "truth_id": "5:0312"
+        },
+        {
+          "iou": 0.786531,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0346",
+          "truth_id": "5:0323"
+        },
+        {
+          "iou": 0.837717,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0347",
+          "truth_id": "5:0477"
+        },
+        {
+          "iou": 0.684333,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0350",
+          "truth_id": "5:0469"
+        },
+        {
+          "iou": 0.621176,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0351",
+          "truth_id": "5:0104"
+        },
+        {
+          "iou": 0.595861,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0352",
+          "truth_id": "5:0122"
+        },
+        {
+          "iou": 0.738869,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0354",
+          "truth_id": "5:1167"
+        },
+        {
+          "iou": 0.676883,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0358",
+          "truth_id": "5:0603"
+        },
+        {
+          "iou": 0.75137,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0359",
+          "truth_id": "5:0407"
+        },
+        {
+          "iou": 0.596285,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0363",
+          "truth_id": "5:0415"
+        },
+        {
+          "iou": 0.907468,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0366",
+          "truth_id": "5:0302"
+        },
+        {
+          "iou": 0.657689,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0371",
+          "truth_id": "5:0842"
+        },
+        {
+          "iou": 0.55075,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0375",
+          "truth_id": "5:0525"
+        },
+        {
+          "iou": 0.643959,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0376",
+          "truth_id": "5:0114"
+        },
+        {
+          "iou": 0.647773,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0377",
+          "truth_id": "5:0807"
+        },
+        {
+          "iou": 0.706986,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0379",
+          "truth_id": "5:0245"
+        },
+        {
+          "iou": 0.823782,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0380",
+          "truth_id": "5:0420"
+        },
+        {
+          "iou": 0.732692,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0389",
+          "truth_id": "5:1006"
+        },
+        {
+          "iou": 0.697191,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0391",
+          "truth_id": "5:0135"
+        },
+        {
+          "iou": 0.651435,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0392",
+          "truth_id": "5:0024"
+        },
+        {
+          "iou": 0.522423,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0395",
+          "truth_id": "5:0156"
+        },
+        {
+          "iou": 0.789038,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0398",
+          "truth_id": "5:0573"
+        },
+        {
+          "iou": 0.751674,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0402",
+          "truth_id": "5:0558"
+        },
+        {
+          "iou": 0.516332,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0408",
+          "truth_id": "5:0243"
+        },
+        {
+          "iou": 0.52286,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0409",
+          "truth_id": "5:1122"
+        },
+        {
+          "iou": 0.561118,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0410",
+          "truth_id": "5:0351"
+        },
+        {
+          "iou": 0.710345,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0415",
+          "truth_id": "5:0296"
+        },
+        {
+          "iou": 0.607633,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0418",
+          "truth_id": "5:0891"
+        },
+        {
+          "iou": 0.735781,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0419",
+          "truth_id": "5:0105"
+        },
+        {
+          "iou": 0.658791,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0423",
+          "truth_id": "5:0605"
+        },
+        {
+          "iou": 0.564434,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0427",
+          "truth_id": "5:0937"
+        },
+        {
+          "iou": 0.586535,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0429",
+          "truth_id": "5:0522"
+        },
+        {
+          "iou": 0.508652,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0433",
+          "truth_id": "5:0762"
+        },
+        {
+          "iou": 0.663274,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0435",
+          "truth_id": "5:0367"
+        },
+        {
+          "iou": 0.655016,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0437",
+          "truth_id": "5:0646"
+        },
+        {
+          "iou": 0.585424,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0438",
+          "truth_id": "5:0569"
+        },
+        {
+          "iou": 0.71,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0439",
+          "truth_id": "5:0057"
+        },
+        {
+          "iou": 0.776083,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0440",
+          "truth_id": "5:0160"
+        },
+        {
+          "iou": 0.799631,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0441",
+          "truth_id": "5:0625"
+        },
+        {
+          "iou": 0.691687,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0443",
+          "truth_id": "5:0978"
+        },
+        {
+          "iou": 0.672482,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0449",
+          "truth_id": "5:0615"
+        },
+        {
+          "iou": 0.581425,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0453",
+          "truth_id": "5:0990"
+        },
+        {
+          "iou": 0.528302,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0455",
+          "truth_id": "5:0442"
+        },
+        {
+          "iou": 0.78912,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0456",
+          "truth_id": "5:0517"
+        },
+        {
+          "iou": 0.731343,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0457",
+          "truth_id": "5:0927"
+        },
+        {
+          "iou": 0.577864,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0458",
+          "truth_id": "5:0141"
+        },
+        {
+          "iou": 0.840909,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0459",
+          "truth_id": "5:0236"
+        },
+        {
+          "iou": 0.782154,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0460",
+          "truth_id": "5:0349"
+        },
+        {
+          "iou": 0.573472,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0463",
+          "truth_id": "5:1249"
+        },
+        {
+          "iou": 0.637838,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0464",
+          "truth_id": "5:0453"
+        },
+        {
+          "iou": 0.684451,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0465",
+          "truth_id": "5:0983"
+        },
+        {
+          "iou": 0.621297,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0466",
+          "truth_id": "5:1100"
+        },
+        {
+          "iou": 0.880558,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0468",
+          "truth_id": "5:0528"
+        },
+        {
+          "iou": 0.767843,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0469",
+          "truth_id": "5:0527"
+        },
+        {
+          "iou": 0.757805,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0471",
+          "truth_id": "5:0036"
+        },
+        {
+          "iou": 0.792472,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0472",
+          "truth_id": "5:0843"
+        },
+        {
+          "iou": 0.770892,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0474",
+          "truth_id": "5:0618"
+        },
+        {
+          "iou": 0.519727,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0475",
+          "truth_id": "5:0530"
+        },
+        {
+          "iou": 0.812779,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0476",
+          "truth_id": "5:0740"
+        },
+        {
+          "iou": 0.53125,
+          "predicted_id": "mendeley_40_70mm_test-40_13:0481",
+          "truth_id": "5:0575"
+        }
+      ],
+      "precision": 0.7454545454545455,
+      "predicted_edges": 55,
+      "recall": 0.018704379562043797,
+      "true_positive": 41,
+      "truth_edges": 2192
+    },
+    "mendeley_40_70mm_test-40_14": {
+      "f1": null,
+      "matches": [
+        {
+          "iou": 0.51464,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0026",
+          "truth_id": "6:0917"
+        },
+        {
+          "iou": 0.650567,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0030",
+          "truth_id": "6:0420"
+        },
+        {
+          "iou": 0.543245,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0036",
+          "truth_id": "6:0712"
+        },
+        {
+          "iou": 0.730662,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0041",
+          "truth_id": "6:0386"
+        },
+        {
+          "iou": 0.509178,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0042",
+          "truth_id": "6:0833"
+        },
+        {
+          "iou": 0.744406,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0043",
+          "truth_id": "6:0396"
+        },
+        {
+          "iou": 0.667182,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0048",
+          "truth_id": "6:0249"
+        },
+        {
+          "iou": 0.559208,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0050",
+          "truth_id": "6:0748"
+        },
+        {
+          "iou": 0.788374,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0054",
+          "truth_id": "6:0638"
+        },
+        {
+          "iou": 0.796989,
+          "predicted_id": "mendeley_40_70mm_test-40_14:0057",
+          "truth_id": "6:0667"
+        }
+      ],
+      "precision": 0.0,
+      "predicted_edges": 2,
+      "recall": 0.0,
+      "true_positive": 0,
+      "truth_edges": 1802
+    },
+    "mendeley_40_70mm_test-40_15": {
+      "f1": 0.03054101221640489,
+      "matches": [
+        {
+          "iou": 0.541835,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0020",
+          "truth_id": "7:0492"
+        },
+        {
+          "iou": 0.761208,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0030",
+          "truth_id": "7:1129"
+        },
+        {
+          "iou": 0.556106,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0043",
+          "truth_id": "7:0384"
+        },
+        {
+          "iou": 0.659018,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0058",
+          "truth_id": "7:1092"
+        },
+        {
+          "iou": 0.665579,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0064",
+          "truth_id": "7:0052"
+        },
+        {
+          "iou": 0.695727,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0075",
+          "truth_id": "7:0763"
+        },
+        {
+          "iou": 0.575243,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0076",
+          "truth_id": "7:0937"
+        },
+        {
+          "iou": 0.507009,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0077",
+          "truth_id": "7:0282"
+        },
+        {
+          "iou": 0.626582,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0079",
+          "truth_id": "7:0480"
+        },
+        {
+          "iou": 0.798077,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0083",
+          "truth_id": "7:0847"
+        },
+        {
+          "iou": 0.548274,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0087",
+          "truth_id": "7:0720"
+        },
+        {
+          "iou": 0.734633,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0090",
+          "truth_id": "7:1056"
+        },
+        {
+          "iou": 0.767299,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0091",
+          "truth_id": "7:0009"
+        },
+        {
+          "iou": 0.730975,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0093",
+          "truth_id": "7:0095"
+        },
+        {
+          "iou": 0.567027,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0095",
+          "truth_id": "7:0794"
+        },
+        {
+          "iou": 0.594418,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0096",
+          "truth_id": "7:1099"
+        },
+        {
+          "iou": 0.68,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0097",
+          "truth_id": "7:0441"
+        },
+        {
+          "iou": 0.793562,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0099",
+          "truth_id": "7:0640"
+        },
+        {
+          "iou": 0.792464,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0100",
+          "truth_id": "7:0066"
+        },
+        {
+          "iou": 0.534846,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0105",
+          "truth_id": "7:0205"
+        },
+        {
+          "iou": 0.638865,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0106",
+          "truth_id": "7:0131"
+        },
+        {
+          "iou": 0.726431,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0107",
+          "truth_id": "7:0126"
+        },
+        {
+          "iou": 0.505456,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0110",
+          "truth_id": "7:0006"
+        },
+        {
+          "iou": 0.535433,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0116",
+          "truth_id": "7:0623"
+        },
+        {
+          "iou": 0.798615,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0120",
+          "truth_id": "7:0054"
+        },
+        {
+          "iou": 0.789344,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0123",
+          "truth_id": "7:0137"
+        },
+        {
+          "iou": 0.515287,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0125",
+          "truth_id": "7:0102"
+        },
+        {
+          "iou": 0.549713,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0126",
+          "truth_id": "7:1048"
+        },
+        {
+          "iou": 0.61245,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0130",
+          "truth_id": "7:0157"
+        },
+        {
+          "iou": 0.746468,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0133",
+          "truth_id": "7:0849"
+        },
+        {
+          "iou": 0.792528,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0136",
+          "truth_id": "7:0140"
+        },
+        {
+          "iou": 0.576742,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0137",
+          "truth_id": "7:1041"
+        },
+        {
+          "iou": 0.819746,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0139",
+          "truth_id": "7:0028"
+        },
+        {
+          "iou": 0.63788,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0140",
+          "truth_id": "7:0085"
+        },
+        {
+          "iou": 0.770308,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0141",
+          "truth_id": "7:0546"
+        },
+        {
+          "iou": 0.554752,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0144",
+          "truth_id": "7:0133"
+        },
+        {
+          "iou": 0.588918,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0145",
+          "truth_id": "7:0805"
+        },
+        {
+          "iou": 0.751989,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0147",
+          "truth_id": "7:0817"
+        },
+        {
+          "iou": 0.560095,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0149",
+          "truth_id": "7:0106"
+        },
+        {
+          "iou": 0.710801,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0151",
+          "truth_id": "7:0811"
+        },
+        {
+          "iou": 0.620474,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0153",
+          "truth_id": "7:0074"
+        },
+        {
+          "iou": 0.830779,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0159",
+          "truth_id": "7:0324"
+        },
+        {
+          "iou": 0.566876,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0160",
+          "truth_id": "7:0493"
+        },
+        {
+          "iou": 0.700637,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0162",
+          "truth_id": "7:0489"
+        },
+        {
+          "iou": 0.793841,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0163",
+          "truth_id": "7:0094"
+        },
+        {
+          "iou": 0.67731,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0166",
+          "truth_id": "7:1137"
+        },
+        {
+          "iou": 0.644888,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0167",
+          "truth_id": "7:0856"
+        },
+        {
+          "iou": 0.588073,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0168",
+          "truth_id": "7:0575"
+        },
+        {
+          "iou": 0.612838,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0169",
+          "truth_id": "7:0744"
+        },
+        {
+          "iou": 0.761145,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0173",
+          "truth_id": "7:0634"
+        },
+        {
+          "iou": 0.523882,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0177",
+          "truth_id": "7:0654"
+        },
+        {
+          "iou": 0.70062,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0178",
+          "truth_id": "7:0073"
+        },
+        {
+          "iou": 0.812587,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0179",
+          "truth_id": "7:0099"
+        },
+        {
+          "iou": 0.560337,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0184",
+          "truth_id": "7:0915"
+        },
+        {
+          "iou": 0.551585,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0185",
+          "truth_id": "7:0026"
+        },
+        {
+          "iou": 0.501117,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0187",
+          "truth_id": "7:0083"
+        },
+        {
+          "iou": 0.686164,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0190",
+          "truth_id": "7:1084"
+        },
+        {
+          "iou": 0.58575,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0191",
+          "truth_id": "7:0878"
+        },
+        {
+          "iou": 0.693488,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0193",
+          "truth_id": "7:0371"
+        },
+        {
+          "iou": 0.846111,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0195",
+          "truth_id": "7:0899"
+        },
+        {
+          "iou": 0.545233,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0197",
+          "truth_id": "7:0617"
+        },
+        {
+          "iou": 0.787032,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0201",
+          "truth_id": "7:1061"
+        },
+        {
+          "iou": 0.722772,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0207",
+          "truth_id": "7:0027"
+        },
+        {
+          "iou": 0.867738,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0209",
+          "truth_id": "7:1072"
+        },
+        {
+          "iou": 0.720876,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0210",
+          "truth_id": "7:0890"
+        },
+        {
+          "iou": 0.507673,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0212",
+          "truth_id": "7:0948"
+        },
+        {
+          "iou": 0.550584,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0217",
+          "truth_id": "7:0029"
+        },
+        {
+          "iou": 0.526433,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0219",
+          "truth_id": "7:0109"
+        },
+        {
+          "iou": 0.624878,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0220",
+          "truth_id": "7:0688"
+        },
+        {
+          "iou": 0.695833,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0222",
+          "truth_id": "7:0127"
+        },
+        {
+          "iou": 0.688239,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0224",
+          "truth_id": "7:0119"
+        },
+        {
+          "iou": 0.722034,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0227",
+          "truth_id": "7:0922"
+        },
+        {
+          "iou": 0.589869,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0228",
+          "truth_id": "7:0865"
+        },
+        {
+          "iou": 0.673729,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0229",
+          "truth_id": "7:0726"
+        },
+        {
+          "iou": 0.627612,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0231",
+          "truth_id": "7:0631"
+        },
+        {
+          "iou": 0.726804,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0234",
+          "truth_id": "7:0116"
+        },
+        {
+          "iou": 0.710496,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0235",
+          "truth_id": "7:0105"
+        },
+        {
+          "iou": 0.622325,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0236",
+          "truth_id": "7:0056"
+        },
+        {
+          "iou": 0.843328,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0238",
+          "truth_id": "7:0943"
+        },
+        {
+          "iou": 0.534286,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0239",
+          "truth_id": "7:0815"
+        },
+        {
+          "iou": 0.561022,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0241",
+          "truth_id": "7:0760"
+        },
+        {
+          "iou": 0.867832,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0245",
+          "truth_id": "7:0025"
+        },
+        {
+          "iou": 0.808191,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0246",
+          "truth_id": "7:0792"
+        },
+        {
+          "iou": 0.85125,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0249",
+          "truth_id": "7:0840"
+        },
+        {
+          "iou": 0.682043,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0250",
+          "truth_id": "7:0636"
+        },
+        {
+          "iou": 0.542075,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0252",
+          "truth_id": "7:0022"
+        },
+        {
+          "iou": 0.643027,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0253",
+          "truth_id": "7:0929"
+        },
+        {
+          "iou": 0.500634,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0257",
+          "truth_id": "7:0092"
+        },
+        {
+          "iou": 0.532508,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0260",
+          "truth_id": "7:1133"
+        },
+        {
+          "iou": 0.569301,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0263",
+          "truth_id": "7:0464"
+        },
+        {
+          "iou": 0.754178,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0264",
+          "truth_id": "7:0200"
+        },
+        {
+          "iou": 0.503054,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0265",
+          "truth_id": "7:0017"
+        },
+        {
+          "iou": 0.754664,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0269",
+          "truth_id": "7:0749"
+        },
+        {
+          "iou": 0.598989,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0271",
+          "truth_id": "7:1119"
+        },
+        {
+          "iou": 0.737564,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0272",
+          "truth_id": "7:0087"
+        },
+        {
+          "iou": 0.675403,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0276",
+          "truth_id": "7:1031"
+        },
+        {
+          "iou": 0.566798,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0277",
+          "truth_id": "7:0829"
+        },
+        {
+          "iou": 0.670539,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0282",
+          "truth_id": "7:1026"
+        },
+        {
+          "iou": 0.679147,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0286",
+          "truth_id": "7:1007"
+        },
+        {
+          "iou": 0.78475,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0288",
+          "truth_id": "7:0451"
+        },
+        {
+          "iou": 0.578574,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0289",
+          "truth_id": "7:0662"
+        },
+        {
+          "iou": 0.574719,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0290",
+          "truth_id": "7:0454"
+        },
+        {
+          "iou": 0.732558,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0291",
+          "truth_id": "7:0236"
+        },
+        {
+          "iou": 0.815508,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0294",
+          "truth_id": "7:0677"
+        },
+        {
+          "iou": 0.660764,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0300",
+          "truth_id": "7:0609"
+        },
+        {
+          "iou": 0.635734,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0301",
+          "truth_id": "7:0297"
+        },
+        {
+          "iou": 0.850141,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0303",
+          "truth_id": "7:0487"
+        },
+        {
+          "iou": 0.715534,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0304",
+          "truth_id": "7:0265"
+        },
+        {
+          "iou": 0.717246,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0306",
+          "truth_id": "7:0018"
+        },
+        {
+          "iou": 0.677548,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0307",
+          "truth_id": "7:1069"
+        },
+        {
+          "iou": 0.615694,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0312",
+          "truth_id": "7:0388"
+        },
+        {
+          "iou": 0.797529,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0314",
+          "truth_id": "7:1018"
+        },
+        {
+          "iou": 0.724401,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0315",
+          "truth_id": "7:1127"
+        },
+        {
+          "iou": 0.591328,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0332",
+          "truth_id": "7:0978"
+        },
+        {
+          "iou": 0.510724,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0334",
+          "truth_id": "7:0836"
+        },
+        {
+          "iou": 0.537012,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0335",
+          "truth_id": "7:0381"
+        },
+        {
+          "iou": 0.627373,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0338",
+          "truth_id": "7:0322"
+        },
+        {
+          "iou": 0.572532,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0342",
+          "truth_id": "7:1110"
+        },
+        {
+          "iou": 0.626163,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0352",
+          "truth_id": "7:0544"
+        },
+        {
+          "iou": 0.770781,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0353",
+          "truth_id": "7:0349"
+        },
+        {
+          "iou": 0.558989,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0355",
+          "truth_id": "7:0992"
+        },
+        {
+          "iou": 0.518943,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0357",
+          "truth_id": "7:1104"
+        },
+        {
+          "iou": 0.587725,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0358",
+          "truth_id": "7:0455"
+        },
+        {
+          "iou": 0.6352,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0359",
+          "truth_id": "7:0414"
+        },
+        {
+          "iou": 0.571468,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0360",
+          "truth_id": "7:0725"
+        },
+        {
+          "iou": 0.865979,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0361",
+          "truth_id": "7:0812"
+        },
+        {
+          "iou": 0.552734,
+          "predicted_id": "mendeley_40_70mm_test-40_15:0362",
+          "truth_id": "7:0661"
+        }
+      ],
+      "precision": 0.8536585365853658,
+      "predicted_edges": 41,
+      "recall": 0.015548645046645935,
+      "true_positive": 35,
+      "truth_edges": 2251
+    },
+    "mendeley_40_70mm_test-40_16": {
+      "f1": 0.01999048072346502,
+      "matches": [
+        {
+          "iou": 0.612193,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0012",
+          "truth_id": "8:0645"
+        },
+        {
+          "iou": 0.62743,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0025",
+          "truth_id": "8:0146"
+        },
+        {
+          "iou": 0.771182,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0030",
+          "truth_id": "8:0342"
+        },
+        {
+          "iou": 0.684903,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0033",
+          "truth_id": "8:1032"
+        },
+        {
+          "iou": 0.686823,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0050",
+          "truth_id": "8:1133"
+        },
+        {
+          "iou": 0.658743,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0051",
+          "truth_id": "8:0959"
+        },
+        {
+          "iou": 0.592458,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0063",
+          "truth_id": "8:1066"
+        },
+        {
+          "iou": 0.525761,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0065",
+          "truth_id": "8:0418"
+        },
+        {
+          "iou": 0.684177,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0071",
+          "truth_id": "8:1029"
+        },
+        {
+          "iou": 0.522178,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0075",
+          "truth_id": "8:1136"
+        },
+        {
+          "iou": 0.528214,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0081",
+          "truth_id": "8:0351"
+        },
+        {
+          "iou": 0.52107,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0084",
+          "truth_id": "8:0919"
+        },
+        {
+          "iou": 0.803796,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0086",
+          "truth_id": "8:0344"
+        },
+        {
+          "iou": 0.58135,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0088",
+          "truth_id": "8:0137"
+        },
+        {
+          "iou": 0.69764,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0095",
+          "truth_id": "8:0830"
+        },
+        {
+          "iou": 0.690789,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0098",
+          "truth_id": "8:0266"
+        },
+        {
+          "iou": 0.725642,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0100",
+          "truth_id": "8:0399"
+        },
+        {
+          "iou": 0.802853,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0102",
+          "truth_id": "8:0636"
+        },
+        {
+          "iou": 0.762636,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0103",
+          "truth_id": "8:0900"
+        },
+        {
+          "iou": 0.747082,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0104",
+          "truth_id": "8:0199"
+        },
+        {
+          "iou": 0.635214,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0105",
+          "truth_id": "8:0216"
+        },
+        {
+          "iou": 0.63634,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0108",
+          "truth_id": "8:0008"
+        },
+        {
+          "iou": 0.72393,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0109",
+          "truth_id": "8:0450"
+        },
+        {
+          "iou": 0.57767,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0112",
+          "truth_id": "8:0388"
+        },
+        {
+          "iou": 0.76132,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0113",
+          "truth_id": "8:0314"
+        },
+        {
+          "iou": 0.867673,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0114",
+          "truth_id": "8:0432"
+        },
+        {
+          "iou": 0.815153,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0115",
+          "truth_id": "8:1134"
+        },
+        {
+          "iou": 0.778555,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0116",
+          "truth_id": "8:1046"
+        },
+        {
+          "iou": 0.690887,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0119",
+          "truth_id": "8:0390"
+        },
+        {
+          "iou": 0.553768,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0120",
+          "truth_id": "8:0426"
+        },
+        {
+          "iou": 0.645153,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0123",
+          "truth_id": "8:0437"
+        },
+        {
+          "iou": 0.664042,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0127",
+          "truth_id": "8:0641"
+        },
+        {
+          "iou": 0.74031,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0128",
+          "truth_id": "8:0937"
+        },
+        {
+          "iou": 0.80857,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0129",
+          "truth_id": "8:0412"
+        },
+        {
+          "iou": 0.656734,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0131",
+          "truth_id": "8:0929"
+        },
+        {
+          "iou": 0.817451,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0135",
+          "truth_id": "8:0453"
+        },
+        {
+          "iou": 0.824376,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0136",
+          "truth_id": "8:0366"
+        },
+        {
+          "iou": 0.557227,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0138",
+          "truth_id": "8:1124"
+        },
+        {
+          "iou": 0.726097,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0139",
+          "truth_id": "8:0294"
+        },
+        {
+          "iou": 0.780229,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0144",
+          "truth_id": "8:0050"
+        },
+        {
+          "iou": 0.694043,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0145",
+          "truth_id": "8:0406"
+        },
+        {
+          "iou": 0.770136,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0148",
+          "truth_id": "8:0642"
+        },
+        {
+          "iou": 0.563891,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0149",
+          "truth_id": "8:0585"
+        },
+        {
+          "iou": 0.695851,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0150",
+          "truth_id": "8:0310"
+        },
+        {
+          "iou": 0.703619,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0152",
+          "truth_id": "8:0419"
+        },
+        {
+          "iou": 0.665477,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0154",
+          "truth_id": "8:0535"
+        },
+        {
+          "iou": 0.761157,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0155",
+          "truth_id": "8:0307"
+        },
+        {
+          "iou": 0.7557,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0156",
+          "truth_id": "8:0013"
+        },
+        {
+          "iou": 0.824679,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0158",
+          "truth_id": "8:0164"
+        },
+        {
+          "iou": 0.650696,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0162",
+          "truth_id": "8:0675"
+        },
+        {
+          "iou": 0.583759,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0166",
+          "truth_id": "8:1145"
+        },
+        {
+          "iou": 0.844807,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0167",
+          "truth_id": "8:1159"
+        },
+        {
+          "iou": 0.681996,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0168",
+          "truth_id": "8:0415"
+        },
+        {
+          "iou": 0.807953,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0173",
+          "truth_id": "8:0360"
+        },
+        {
+          "iou": 0.735714,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0177",
+          "truth_id": "8:0420"
+        },
+        {
+          "iou": 0.612989,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0178",
+          "truth_id": "8:1138"
+        },
+        {
+          "iou": 0.827573,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0179",
+          "truth_id": "8:0397"
+        },
+        {
+          "iou": 0.766436,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0180",
+          "truth_id": "8:0972"
+        },
+        {
+          "iou": 0.685505,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0182",
+          "truth_id": "8:0167"
+        },
+        {
+          "iou": 0.766563,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0183",
+          "truth_id": "8:1157"
+        },
+        {
+          "iou": 0.589769,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0185",
+          "truth_id": "8:0925"
+        },
+        {
+          "iou": 0.674235,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0189",
+          "truth_id": "8:0130"
+        },
+        {
+          "iou": 0.673551,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0190",
+          "truth_id": "8:0705"
+        },
+        {
+          "iou": 0.755886,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0192",
+          "truth_id": "8:0626"
+        },
+        {
+          "iou": 0.802942,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0195",
+          "truth_id": "8:0887"
+        },
+        {
+          "iou": 0.628399,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0196",
+          "truth_id": "8:0616"
+        },
+        {
+          "iou": 0.627465,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0198",
+          "truth_id": "8:1173"
+        },
+        {
+          "iou": 0.688564,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0200",
+          "truth_id": "8:0719"
+        },
+        {
+          "iou": 0.569631,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0201",
+          "truth_id": "8:0052"
+        },
+        {
+          "iou": 0.596154,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0204",
+          "truth_id": "8:0416"
+        },
+        {
+          "iou": 0.73301,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0211",
+          "truth_id": "8:0192"
+        },
+        {
+          "iou": 0.522349,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0212",
+          "truth_id": "8:0781"
+        },
+        {
+          "iou": 0.659966,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0218",
+          "truth_id": "8:0031"
+        },
+        {
+          "iou": 0.82529,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0221",
+          "truth_id": "8:0259"
+        },
+        {
+          "iou": 0.721837,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0222",
+          "truth_id": "8:0365"
+        },
+        {
+          "iou": 0.51196,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0226",
+          "truth_id": "8:0765"
+        },
+        {
+          "iou": 0.689435,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0231",
+          "truth_id": "8:1049"
+        },
+        {
+          "iou": 0.573604,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0237",
+          "truth_id": "8:0837"
+        },
+        {
+          "iou": 0.772358,
+          "predicted_id": "mendeley_40_70mm_test-40_16:0241",
+          "truth_id": "8:0425"
+        }
+      ],
+      "precision": 0.875,
+      "predicted_edges": 24,
+      "recall": 0.010110736639383727,
+      "true_positive": 21,
+      "truth_edges": 2077
+    },
+    "mendeley_40_70mm_test-40_17": {
+      "f1": 0.07287449392712551,
+      "matches": [
+        {
+          "iou": 0.792014,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0008",
+          "truth_id": "9:0526"
+        },
+        {
+          "iou": 0.801986,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0036",
+          "truth_id": "9:0994"
+        },
+        {
+          "iou": 0.632101,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0038",
+          "truth_id": "9:0225"
+        },
+        {
+          "iou": 0.737116,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0040",
+          "truth_id": "9:0428"
+        },
+        {
+          "iou": 0.662147,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0041",
+          "truth_id": "9:0361"
+        },
+        {
+          "iou": 0.516257,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0043",
+          "truth_id": "9:0487"
+        },
+        {
+          "iou": 0.686384,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0044",
+          "truth_id": "9:0586"
+        },
+        {
+          "iou": 0.640814,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0057",
+          "truth_id": "9:0865"
+        },
+        {
+          "iou": 0.776232,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0062",
+          "truth_id": "9:1142"
+        },
+        {
+          "iou": 0.649649,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0075",
+          "truth_id": "9:0080"
+        },
+        {
+          "iou": 0.586182,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0078",
+          "truth_id": "9:0209"
+        },
+        {
+          "iou": 0.590856,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0081",
+          "truth_id": "9:0897"
+        },
+        {
+          "iou": 0.827836,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0085",
+          "truth_id": "9:0960"
+        },
+        {
+          "iou": 0.7932,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0087",
+          "truth_id": "9:0021"
+        },
+        {
+          "iou": 0.502929,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0090",
+          "truth_id": "9:0093"
+        },
+        {
+          "iou": 0.776128,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0091",
+          "truth_id": "9:0598"
+        },
+        {
+          "iou": 0.607765,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0094",
+          "truth_id": "9:0762"
+        },
+        {
+          "iou": 0.587648,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0096",
+          "truth_id": "9:0905"
+        },
+        {
+          "iou": 0.595386,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0099",
+          "truth_id": "9:0160"
+        },
+        {
+          "iou": 0.556049,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0102",
+          "truth_id": "9:0530"
+        },
+        {
+          "iou": 0.685264,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0103",
+          "truth_id": "9:0696"
+        },
+        {
+          "iou": 0.551196,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0107",
+          "truth_id": "9:0376"
+        },
+        {
+          "iou": 0.677419,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0108",
+          "truth_id": "9:1107"
+        },
+        {
+          "iou": 0.535964,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0115",
+          "truth_id": "9:0619"
+        },
+        {
+          "iou": 0.5581,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0118",
+          "truth_id": "9:0020"
+        },
+        {
+          "iou": 0.658759,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0123",
+          "truth_id": "9:0964"
+        },
+        {
+          "iou": 0.704865,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0129",
+          "truth_id": "9:0938"
+        },
+        {
+          "iou": 0.521402,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0130",
+          "truth_id": "9:0465"
+        },
+        {
+          "iou": 0.500777,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0132",
+          "truth_id": "9:1004"
+        },
+        {
+          "iou": 0.57469,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0137",
+          "truth_id": "9:0426"
+        },
+        {
+          "iou": 0.662237,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0138",
+          "truth_id": "9:1039"
+        },
+        {
+          "iou": 0.77594,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0139",
+          "truth_id": "9:1178"
+        },
+        {
+          "iou": 0.593737,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0140",
+          "truth_id": "9:0161"
+        },
+        {
+          "iou": 0.767148,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0141",
+          "truth_id": "9:1010"
+        },
+        {
+          "iou": 0.655572,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0142",
+          "truth_id": "9:1188"
+        },
+        {
+          "iou": 0.695352,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0144",
+          "truth_id": "9:0948"
+        },
+        {
+          "iou": 0.538514,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0145",
+          "truth_id": "9:0416"
+        },
+        {
+          "iou": 0.578081,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0148",
+          "truth_id": "9:0514"
+        },
+        {
+          "iou": 0.594056,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0150",
+          "truth_id": "9:0926"
+        },
+        {
+          "iou": 0.71974,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0151",
+          "truth_id": "9:0527"
+        },
+        {
+          "iou": 0.693958,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0156",
+          "truth_id": "9:0772"
+        },
+        {
+          "iou": 0.649394,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0157",
+          "truth_id": "9:1062"
+        },
+        {
+          "iou": 0.738686,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0160",
+          "truth_id": "9:0004"
+        },
+        {
+          "iou": 0.501934,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0161",
+          "truth_id": "9:0604"
+        },
+        {
+          "iou": 0.653864,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0165",
+          "truth_id": "9:1127"
+        },
+        {
+          "iou": 0.63682,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0166",
+          "truth_id": "9:0272"
+        },
+        {
+          "iou": 0.73856,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0167",
+          "truth_id": "9:0206"
+        },
+        {
+          "iou": 0.522403,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0168",
+          "truth_id": "9:0940"
+        },
+        {
+          "iou": 0.609586,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0169",
+          "truth_id": "9:0881"
+        },
+        {
+          "iou": 0.699697,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0170",
+          "truth_id": "9:1137"
+        },
+        {
+          "iou": 0.609659,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0172",
+          "truth_id": "9:1155"
+        },
+        {
+          "iou": 0.79139,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0176",
+          "truth_id": "9:0978"
+        },
+        {
+          "iou": 0.689598,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0177",
+          "truth_id": "9:0151"
+        },
+        {
+          "iou": 0.802079,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0178",
+          "truth_id": "9:1156"
+        },
+        {
+          "iou": 0.818578,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0179",
+          "truth_id": "9:1053"
+        },
+        {
+          "iou": 0.792883,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0180",
+          "truth_id": "9:0970"
+        },
+        {
+          "iou": 0.820856,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0183",
+          "truth_id": "9:0013"
+        },
+        {
+          "iou": 0.690275,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0184",
+          "truth_id": "9:0541"
+        },
+        {
+          "iou": 0.613504,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0185",
+          "truth_id": "9:1076"
+        },
+        {
+          "iou": 0.799544,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0186",
+          "truth_id": "9:0797"
+        },
+        {
+          "iou": 0.553816,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0188",
+          "truth_id": "9:1199"
+        },
+        {
+          "iou": 0.511067,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0190",
+          "truth_id": "9:0464"
+        },
+        {
+          "iou": 0.699115,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0191",
+          "truth_id": "9:0952"
+        },
+        {
+          "iou": 0.715029,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0192",
+          "truth_id": "9:1133"
+        },
+        {
+          "iou": 0.622894,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0193",
+          "truth_id": "9:0765"
+        },
+        {
+          "iou": 0.854392,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0196",
+          "truth_id": "9:0058"
+        },
+        {
+          "iou": 0.540141,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0197",
+          "truth_id": "9:0163"
+        },
+        {
+          "iou": 0.718052,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0198",
+          "truth_id": "9:0916"
+        },
+        {
+          "iou": 0.5371,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0199",
+          "truth_id": "9:0087"
+        },
+        {
+          "iou": 0.701408,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0200",
+          "truth_id": "9:1071"
+        },
+        {
+          "iou": 0.623181,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0202",
+          "truth_id": "9:1045"
+        },
+        {
+          "iou": 0.535631,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0206",
+          "truth_id": "9:0919"
+        },
+        {
+          "iou": 0.784132,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0208",
+          "truth_id": "9:0920"
+        },
+        {
+          "iou": 0.69486,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0214",
+          "truth_id": "9:0927"
+        },
+        {
+          "iou": 0.634788,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0215",
+          "truth_id": "9:0005"
+        },
+        {
+          "iou": 0.562193,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0220",
+          "truth_id": "9:0372"
+        },
+        {
+          "iou": 0.816437,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0222",
+          "truth_id": "9:0033"
+        },
+        {
+          "iou": 0.645833,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0224",
+          "truth_id": "9:0928"
+        },
+        {
+          "iou": 0.630901,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0226",
+          "truth_id": "9:0326"
+        },
+        {
+          "iou": 0.74912,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0230",
+          "truth_id": "9:0348"
+        },
+        {
+          "iou": 0.680189,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0231",
+          "truth_id": "9:0606"
+        },
+        {
+          "iou": 0.793828,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0235",
+          "truth_id": "9:0055"
+        },
+        {
+          "iou": 0.62698,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0238",
+          "truth_id": "9:1087"
+        },
+        {
+          "iou": 0.520316,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0239",
+          "truth_id": "9:0476"
+        },
+        {
+          "iou": 0.594315,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0245",
+          "truth_id": "9:0816"
+        },
+        {
+          "iou": 0.642376,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0246",
+          "truth_id": "9:0634"
+        },
+        {
+          "iou": 0.739991,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0248",
+          "truth_id": "9:1032"
+        },
+        {
+          "iou": 0.51339,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0250",
+          "truth_id": "9:0984"
+        },
+        {
+          "iou": 0.650267,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0263",
+          "truth_id": "9:1209"
+        },
+        {
+          "iou": 0.54602,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0264",
+          "truth_id": "9:0388"
+        },
+        {
+          "iou": 0.819508,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0265",
+          "truth_id": "9:0036"
+        },
+        {
+          "iou": 0.727633,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0267",
+          "truth_id": "9:0201"
+        },
+        {
+          "iou": 0.657874,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0268",
+          "truth_id": "9:1019"
+        },
+        {
+          "iou": 0.540893,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0269",
+          "truth_id": "9:0241"
+        },
+        {
+          "iou": 0.57248,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0270",
+          "truth_id": "9:0729"
+        },
+        {
+          "iou": 0.728814,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0274",
+          "truth_id": "9:0721"
+        },
+        {
+          "iou": 0.683985,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0277",
+          "truth_id": "9:0766"
+        },
+        {
+          "iou": 0.520974,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0278",
+          "truth_id": "9:0583"
+        },
+        {
+          "iou": 0.753852,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0279",
+          "truth_id": "9:0116"
+        },
+        {
+          "iou": 0.750542,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0280",
+          "truth_id": "9:0010"
+        },
+        {
+          "iou": 0.651127,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0281",
+          "truth_id": "9:0904"
+        },
+        {
+          "iou": 0.653724,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0284",
+          "truth_id": "9:0023"
+        },
+        {
+          "iou": 0.767327,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0288",
+          "truth_id": "9:0027"
+        },
+        {
+          "iou": 0.808563,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0289",
+          "truth_id": "9:1130"
+        },
+        {
+          "iou": 0.598437,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0290",
+          "truth_id": "9:1025"
+        },
+        {
+          "iou": 0.522466,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0296",
+          "truth_id": "9:0903"
+        },
+        {
+          "iou": 0.609465,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0298",
+          "truth_id": "9:0949"
+        },
+        {
+          "iou": 0.608115,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0299",
+          "truth_id": "9:0028"
+        },
+        {
+          "iou": 0.630482,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0300",
+          "truth_id": "9:1097"
+        },
+        {
+          "iou": 0.549859,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0303",
+          "truth_id": "9:1088"
+        },
+        {
+          "iou": 0.6493,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0304",
+          "truth_id": "9:1072"
+        },
+        {
+          "iou": 0.82382,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0307",
+          "truth_id": "9:0038"
+        },
+        {
+          "iou": 0.77839,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0308",
+          "truth_id": "9:1014"
+        },
+        {
+          "iou": 0.526762,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0311",
+          "truth_id": "9:0645"
+        },
+        {
+          "iou": 0.65134,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0313",
+          "truth_id": "9:0303"
+        },
+        {
+          "iou": 0.66594,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0317",
+          "truth_id": "9:1144"
+        },
+        {
+          "iou": 0.676776,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0318",
+          "truth_id": "9:0966"
+        },
+        {
+          "iou": 0.755175,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0320",
+          "truth_id": "9:0738"
+        },
+        {
+          "iou": 0.551274,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0321",
+          "truth_id": "9:1166"
+        },
+        {
+          "iou": 0.665731,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0324",
+          "truth_id": "9:0054"
+        },
+        {
+          "iou": 0.612545,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0331",
+          "truth_id": "9:0743"
+        },
+        {
+          "iou": 0.505818,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0332",
+          "truth_id": "9:1006"
+        },
+        {
+          "iou": 0.74009,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0334",
+          "truth_id": "9:1068"
+        },
+        {
+          "iou": 0.561884,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0335",
+          "truth_id": "9:1190"
+        },
+        {
+          "iou": 0.645161,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0337",
+          "truth_id": "9:0873"
+        },
+        {
+          "iou": 0.755625,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0338",
+          "truth_id": "9:0673"
+        },
+        {
+          "iou": 0.816955,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0342",
+          "truth_id": "9:0022"
+        },
+        {
+          "iou": 0.595484,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0343",
+          "truth_id": "9:0188"
+        },
+        {
+          "iou": 0.716454,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0344",
+          "truth_id": "9:0921"
+        },
+        {
+          "iou": 0.765306,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0345",
+          "truth_id": "9:0732"
+        },
+        {
+          "iou": 0.615061,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0346",
+          "truth_id": "9:0538"
+        },
+        {
+          "iou": 0.546048,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0347",
+          "truth_id": "9:0452"
+        },
+        {
+          "iou": 0.714932,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0348",
+          "truth_id": "9:0827"
+        },
+        {
+          "iou": 0.522943,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0352",
+          "truth_id": "9:0713"
+        },
+        {
+          "iou": 0.54374,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0355",
+          "truth_id": "9:0574"
+        },
+        {
+          "iou": 0.894645,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0358",
+          "truth_id": "9:0032"
+        },
+        {
+          "iou": 0.773585,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0360",
+          "truth_id": "9:1161"
+        },
+        {
+          "iou": 0.70743,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0364",
+          "truth_id": "9:0309"
+        },
+        {
+          "iou": 0.590077,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0365",
+          "truth_id": "9:0430"
+        },
+        {
+          "iou": 0.828932,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0366",
+          "truth_id": "9:0886"
+        },
+        {
+          "iou": 0.602986,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0368",
+          "truth_id": "9:1196"
+        },
+        {
+          "iou": 0.600242,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0369",
+          "truth_id": "9:0641"
+        },
+        {
+          "iou": 0.631515,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0372",
+          "truth_id": "9:0327"
+        },
+        {
+          "iou": 0.598943,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0377",
+          "truth_id": "9:0737"
+        },
+        {
+          "iou": 0.633017,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0378",
+          "truth_id": "9:0727"
+        },
+        {
+          "iou": 0.661549,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0379",
+          "truth_id": "9:0620"
+        },
+        {
+          "iou": 0.664371,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0381",
+          "truth_id": "9:1027"
+        },
+        {
+          "iou": 0.831942,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0387",
+          "truth_id": "9:0203"
+        },
+        {
+          "iou": 0.740361,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0388",
+          "truth_id": "9:1063"
+        },
+        {
+          "iou": 0.772883,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0389",
+          "truth_id": "9:0605"
+        },
+        {
+          "iou": 0.677192,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0390",
+          "truth_id": "9:0985"
+        },
+        {
+          "iou": 0.796958,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0391",
+          "truth_id": "9:0777"
+        },
+        {
+          "iou": 0.746335,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0392",
+          "truth_id": "9:0072"
+        },
+        {
+          "iou": 0.755712,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0399",
+          "truth_id": "9:0292"
+        },
+        {
+          "iou": 0.545488,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0401",
+          "truth_id": "9:0440"
+        },
+        {
+          "iou": 0.589852,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0402",
+          "truth_id": "9:0341"
+        },
+        {
+          "iou": 0.780263,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0403",
+          "truth_id": "9:0354"
+        },
+        {
+          "iou": 0.528238,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0405",
+          "truth_id": "9:0368"
+        },
+        {
+          "iou": 0.810449,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0407",
+          "truth_id": "9:0953"
+        },
+        {
+          "iou": 0.669972,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0408",
+          "truth_id": "9:0700"
+        },
+        {
+          "iou": 0.634908,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0409",
+          "truth_id": "9:1207"
+        },
+        {
+          "iou": 0.544755,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0410",
+          "truth_id": "9:0495"
+        },
+        {
+          "iou": 0.598809,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0414",
+          "truth_id": "9:0857"
+        },
+        {
+          "iou": 0.679107,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0419",
+          "truth_id": "9:1205"
+        },
+        {
+          "iou": 0.737777,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0423",
+          "truth_id": "9:0329"
+        },
+        {
+          "iou": 0.624088,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0426",
+          "truth_id": "9:0414"
+        },
+        {
+          "iou": 0.63173,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0431",
+          "truth_id": "9:0771"
+        },
+        {
+          "iou": 0.632081,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0432",
+          "truth_id": "9:1120"
+        },
+        {
+          "iou": 0.834254,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0433",
+          "truth_id": "9:0790"
+        },
+        {
+          "iou": 0.723423,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0434",
+          "truth_id": "9:0418"
+        },
+        {
+          "iou": 0.743863,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0437",
+          "truth_id": "9:0789"
+        },
+        {
+          "iou": 0.755281,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0438",
+          "truth_id": "9:0961"
+        },
+        {
+          "iou": 0.735277,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0439",
+          "truth_id": "9:0731"
+        },
+        {
+          "iou": 0.635249,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0440",
+          "truth_id": "9:0736"
+        },
+        {
+          "iou": 0.592937,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0442",
+          "truth_id": "9:0990"
+        },
+        {
+          "iou": 0.820536,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0443",
+          "truth_id": "9:1077"
+        },
+        {
+          "iou": 0.636276,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0444",
+          "truth_id": "9:0442"
+        },
+        {
+          "iou": 0.789903,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0447",
+          "truth_id": "9:1011"
+        },
+        {
+          "iou": 0.862319,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0448",
+          "truth_id": "9:1123"
+        },
+        {
+          "iou": 0.730261,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0451",
+          "truth_id": "9:0624"
+        },
+        {
+          "iou": 0.548046,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0457",
+          "truth_id": "9:0257"
+        },
+        {
+          "iou": 0.610735,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0458",
+          "truth_id": "9:1179"
+        },
+        {
+          "iou": 0.653272,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0459",
+          "truth_id": "9:0701"
+        },
+        {
+          "iou": 0.807058,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0460",
+          "truth_id": "9:0924"
+        },
+        {
+          "iou": 0.611916,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0464",
+          "truth_id": "9:0720"
+        },
+        {
+          "iou": 0.851366,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0465",
+          "truth_id": "9:0795"
+        },
+        {
+          "iou": 0.682564,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0468",
+          "truth_id": "9:0035"
+        },
+        {
+          "iou": 0.724479,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0470",
+          "truth_id": "9:1211"
+        },
+        {
+          "iou": 0.551709,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0471",
+          "truth_id": "9:0652"
+        },
+        {
+          "iou": 0.623126,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0472",
+          "truth_id": "9:1050"
+        },
+        {
+          "iou": 0.685535,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0476",
+          "truth_id": "9:1154"
+        },
+        {
+          "iou": 0.739006,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0477",
+          "truth_id": "9:0229"
+        },
+        {
+          "iou": 0.639672,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0478",
+          "truth_id": "9:0749"
+        },
+        {
+          "iou": 0.743787,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0486",
+          "truth_id": "9:1183"
+        },
+        {
+          "iou": 0.634921,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0488",
+          "truth_id": "9:0039"
+        },
+        {
+          "iou": 0.795714,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0489",
+          "truth_id": "9:0842"
+        },
+        {
+          "iou": 0.584537,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0490",
+          "truth_id": "9:0436"
+        },
+        {
+          "iou": 0.746027,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0492",
+          "truth_id": "9:0525"
+        },
+        {
+          "iou": 0.617169,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0493",
+          "truth_id": "9:1187"
+        },
+        {
+          "iou": 0.504442,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0497",
+          "truth_id": "9:0695"
+        },
+        {
+          "iou": 0.63922,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0499",
+          "truth_id": "9:0989"
+        },
+        {
+          "iou": 0.681507,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0500",
+          "truth_id": "9:1015"
+        },
+        {
+          "iou": 0.827307,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0501",
+          "truth_id": "9:1116"
+        },
+        {
+          "iou": 0.754717,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0502",
+          "truth_id": "9:0902"
+        },
+        {
+          "iou": 0.668401,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0503",
+          "truth_id": "9:1035"
+        },
+        {
+          "iou": 0.845653,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0507",
+          "truth_id": "9:1103"
+        },
+        {
+          "iou": 0.796883,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0508",
+          "truth_id": "9:1081"
+        },
+        {
+          "iou": 0.712871,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0511",
+          "truth_id": "9:1198"
+        },
+        {
+          "iou": 0.85028,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0513",
+          "truth_id": "9:1024"
+        },
+        {
+          "iou": 0.564563,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0514",
+          "truth_id": "9:0112"
+        },
+        {
+          "iou": 0.533742,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0517",
+          "truth_id": "9:1066"
+        },
+        {
+          "iou": 0.55767,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0520",
+          "truth_id": "9:0835"
+        },
+        {
+          "iou": 0.833333,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0524",
+          "truth_id": "9:1146"
+        },
+        {
+          "iou": 0.607858,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0525",
+          "truth_id": "9:0191"
+        },
+        {
+          "iou": 0.705299,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0526",
+          "truth_id": "9:1051"
+        },
+        {
+          "iou": 0.81129,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0527",
+          "truth_id": "9:1070"
+        },
+        {
+          "iou": 0.666179,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0528",
+          "truth_id": "9:0401"
+        },
+        {
+          "iou": 0.739899,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0537",
+          "truth_id": "9:0779"
+        },
+        {
+          "iou": 0.689017,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0546",
+          "truth_id": "9:0914"
+        },
+        {
+          "iou": 0.708689,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0550",
+          "truth_id": "9:1001"
+        },
+        {
+          "iou": 0.505308,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0551",
+          "truth_id": "9:0396"
+        },
+        {
+          "iou": 0.699926,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0552",
+          "truth_id": "9:1160"
+        },
+        {
+          "iou": 0.783524,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0554",
+          "truth_id": "9:1005"
+        },
+        {
+          "iou": 0.690141,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0557",
+          "truth_id": "9:0912"
+        },
+        {
+          "iou": 0.65708,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0562",
+          "truth_id": "9:0284"
+        },
+        {
+          "iou": 0.812367,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0568",
+          "truth_id": "9:1074"
+        },
+        {
+          "iou": 0.836139,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0571",
+          "truth_id": "9:0002"
+        },
+        {
+          "iou": 0.820154,
+          "predicted_id": "mendeley_40_70mm_test-40_17:0573",
+          "truth_id": "9:0755"
+        }
+      ],
+      "precision": 0.8350515463917526,
+      "predicted_edges": 97,
+      "recall": 0.0380997177798683,
+      "true_positive": 81,
+      "truth_edges": 2126
+    },
+    "mendeley_40_70mm_test-40_18": {
+      "f1": 0.008833922261484098,
+      "matches": [
+        {
+          "iou": 0.584663,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0022",
+          "truth_id": "10:1085"
+        },
+        {
+          "iou": 0.727229,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0024",
+          "truth_id": "10:0665"
+        },
+        {
+          "iou": 0.506922,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0031",
+          "truth_id": "10:0590"
+        },
+        {
+          "iou": 0.525308,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0033",
+          "truth_id": "10:0485"
+        },
+        {
+          "iou": 0.515426,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0034",
+          "truth_id": "10:0597"
+        },
+        {
+          "iou": 0.748302,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0038",
+          "truth_id": "10:0614"
+        },
+        {
+          "iou": 0.543425,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0040",
+          "truth_id": "10:0619"
+        },
+        {
+          "iou": 0.705978,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0067",
+          "truth_id": "10:0837"
+        },
+        {
+          "iou": 0.527552,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0073",
+          "truth_id": "10:0527"
+        },
+        {
+          "iou": 0.586019,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0079",
+          "truth_id": "10:0984"
+        },
+        {
+          "iou": 0.525434,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0084",
+          "truth_id": "10:0680"
+        },
+        {
+          "iou": 0.540189,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0087",
+          "truth_id": "10:0852"
+        },
+        {
+          "iou": 0.534159,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0089",
+          "truth_id": "10:0476"
+        },
+        {
+          "iou": 0.749147,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0093",
+          "truth_id": "10:0711"
+        },
+        {
+          "iou": 0.568291,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0094",
+          "truth_id": "10:0733"
+        },
+        {
+          "iou": 0.65224,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0095",
+          "truth_id": "10:0811"
+        },
+        {
+          "iou": 0.635332,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0096",
+          "truth_id": "10:0453"
+        },
+        {
+          "iou": 0.61414,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0097",
+          "truth_id": "10:0796"
+        },
+        {
+          "iou": 0.678288,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0104",
+          "truth_id": "10:0695"
+        },
+        {
+          "iou": 0.870944,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0109",
+          "truth_id": "10:0801"
+        },
+        {
+          "iou": 0.79085,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0111",
+          "truth_id": "10:0769"
+        },
+        {
+          "iou": 0.512584,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0121",
+          "truth_id": "10:0500"
+        },
+        {
+          "iou": 0.802424,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0130",
+          "truth_id": "10:0628"
+        },
+        {
+          "iou": 0.90363,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0134",
+          "truth_id": "10:0668"
+        },
+        {
+          "iou": 0.671132,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0138",
+          "truth_id": "10:0471"
+        },
+        {
+          "iou": 0.514875,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0142",
+          "truth_id": "10:0370"
+        },
+        {
+          "iou": 0.861467,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0144",
+          "truth_id": "10:0682"
+        },
+        {
+          "iou": 0.742304,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0145",
+          "truth_id": "10:0897"
+        },
+        {
+          "iou": 0.641288,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0146",
+          "truth_id": "10:0437"
+        },
+        {
+          "iou": 0.687479,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0148",
+          "truth_id": "10:0830"
+        },
+        {
+          "iou": 0.689823,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0149",
+          "truth_id": "10:0716"
+        },
+        {
+          "iou": 0.544337,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0154",
+          "truth_id": "10:0686"
+        },
+        {
+          "iou": 0.720999,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0156",
+          "truth_id": "10:0720"
+        },
+        {
+          "iou": 0.520102,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0158",
+          "truth_id": "10:0303"
+        },
+        {
+          "iou": 0.832215,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0162",
+          "truth_id": "10:0983"
+        },
+        {
+          "iou": 0.567832,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0164",
+          "truth_id": "10:0874"
+        },
+        {
+          "iou": 0.521892,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0167",
+          "truth_id": "10:0540"
+        },
+        {
+          "iou": 0.791017,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0169",
+          "truth_id": "10:1032"
+        },
+        {
+          "iou": 0.576633,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0171",
+          "truth_id": "10:0595"
+        },
+        {
+          "iou": 0.511815,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0175",
+          "truth_id": "10:0301"
+        },
+        {
+          "iou": 0.682018,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0181",
+          "truth_id": "10:0760"
+        },
+        {
+          "iou": 0.60009,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0183",
+          "truth_id": "10:0699"
+        },
+        {
+          "iou": 0.73676,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0184",
+          "truth_id": "10:0080"
+        },
+        {
+          "iou": 0.664277,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0188",
+          "truth_id": "10:0822"
+        },
+        {
+          "iou": 0.650994,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0189",
+          "truth_id": "10:0163"
+        },
+        {
+          "iou": 0.871622,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0190",
+          "truth_id": "10:0788"
+        },
+        {
+          "iou": 0.694936,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0196",
+          "truth_id": "10:0831"
+        },
+        {
+          "iou": 0.520842,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0199",
+          "truth_id": "10:0013"
+        },
+        {
+          "iou": 0.691242,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0207",
+          "truth_id": "10:0770"
+        },
+        {
+          "iou": 0.835979,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0208",
+          "truth_id": "10:0715"
+        },
+        {
+          "iou": 0.572327,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0209",
+          "truth_id": "10:0390"
+        },
+        {
+          "iou": 0.776639,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0211",
+          "truth_id": "10:0838"
+        },
+        {
+          "iou": 0.720955,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0218",
+          "truth_id": "10:0560"
+        },
+        {
+          "iou": 0.50947,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0219",
+          "truth_id": "10:0820"
+        },
+        {
+          "iou": 0.723085,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0222",
+          "truth_id": "10:0048"
+        },
+        {
+          "iou": 0.81879,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0223",
+          "truth_id": "10:0312"
+        },
+        {
+          "iou": 0.631424,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0224",
+          "truth_id": "10:1012"
+        },
+        {
+          "iou": 0.797739,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0233",
+          "truth_id": "10:0502"
+        },
+        {
+          "iou": 0.659151,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0234",
+          "truth_id": "10:0057"
+        },
+        {
+          "iou": 0.577255,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0239",
+          "truth_id": "10:0810"
+        },
+        {
+          "iou": 0.774762,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0241",
+          "truth_id": "10:0388"
+        },
+        {
+          "iou": 0.76082,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0242",
+          "truth_id": "10:0851"
+        },
+        {
+          "iou": 0.709008,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0244",
+          "truth_id": "10:0139"
+        },
+        {
+          "iou": 0.601512,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0253",
+          "truth_id": "10:0132"
+        },
+        {
+          "iou": 0.557958,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0256",
+          "truth_id": "10:0558"
+        },
+        {
+          "iou": 0.813498,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0258",
+          "truth_id": "10:0102"
+        },
+        {
+          "iou": 0.516504,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0261",
+          "truth_id": "10:0266"
+        },
+        {
+          "iou": 0.631343,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0263",
+          "truth_id": "10:0263"
+        },
+        {
+          "iou": 0.721249,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0266",
+          "truth_id": "10:0623"
+        },
+        {
+          "iou": 0.569615,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0267",
+          "truth_id": "10:0918"
+        },
+        {
+          "iou": 0.697173,
+          "predicted_id": "mendeley_40_70mm_test-40_18:0268",
+          "truth_id": "10:0546"
+        }
+      ],
+      "precision": 0.7142857142857143,
+      "predicted_edges": 14,
+      "recall": 0.0044444444444444444,
+      "true_positive": 10,
+      "truth_edges": 2250
+    }
+  },
+  "precision": 0.7874251497005988,
+  "predicted_edges": 334,
+  "real_ore_validation": false,
+  "recall": 0.015342433788356084,
+  "relation_params": {
+    "adjacency_px": 5,
+    "max_instances": 3000,
+    "touching_min_px": 8
+  },
+  "schema_version": "jcheng.relation_predicted_eval.v1",
+  "true_positive": 263,
+  "truth_edges": 17142
+}

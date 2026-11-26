@@ -112,6 +112,62 @@ def boundary_pixels(mask):
     return int(np.count_nonzero(mask & (eroded == 0)))
 
 
+def _place_in_region(bbox, local_mask, region):
+    """Place a local mask into an inclusive global ``region`` array."""
+    x0 = max(bbox[0], region[0])
+    y0 = max(bbox[1], region[1])
+    x1 = min(bbox[2], region[2])
+    y1 = min(bbox[3], region[3])
+    height = region[3] - region[1] + 1
+    width = region[2] - region[0] + 1
+    if x1 < x0 or y1 < y0:
+        return None
+    placed = np.zeros((height, width), dtype=bool)
+    placed[
+        y0 - region[1]:y1 - region[1] + 1,
+        x0 - region[0]:x1 - region[0] + 1,
+    ] = local_mask[
+        y0 - bbox[1]:y1 - bbox[1] + 1,
+        x0 - bbox[0]:x1 - bbox[0] + 1,
+    ]
+    return placed
+
+
+def boundary_pixels_local(bbox, local_mask):
+    """Boundary pixel count for a local mask with a tight bbox."""
+    mask = np.asarray(local_mask).astype(bool, copy=False)
+    if not np.any(mask):
+        return 0
+    eroded = cv2.erode(mask.astype(np.uint8), np.ones((3, 3), np.uint8))
+    return int(np.count_nonzero(mask & (eroded == 0)))
+
+
+def contact_pixels_local(first_bbox, first_mask, second_bbox, second_mask,
+                         radius=3):
+    """Contact count for two local masks, avoiding full-image allocations.
+
+    Only second-mask pixels within ``radius`` of the first mask are counted.
+    The first mask is cropped to the second bbox expanded by ``radius``; pixels
+    outside that region cannot contribute, so the local dilation is exact.
+    """
+    radius = max(1, int(radius))
+    region = (
+        second_bbox[0] - radius, second_bbox[1] - radius,
+        second_bbox[2] + radius, second_bbox[3] + radius,
+    )
+    first_region = _place_in_region(first_bbox, first_mask, region)
+    second_region = _place_in_region(second_bbox, second_mask, region)
+    if first_region is None or second_region is None:
+        return 0
+    if not np.any(first_region) or not np.any(second_region):
+        return 0
+    size = 2 * radius + 1
+    dilated = cv2.dilate(
+        first_region.astype(np.uint8),
+        np.ones((size, size), np.uint8)) > 0
+    return int(np.count_nonzero(dilated & second_region))
+
+
 def contact_pixels(first, second, radius=3):
     """Return how many pixels of ``second`` lie within ``radius`` of ``first``.
 

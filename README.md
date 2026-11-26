@@ -135,7 +135,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 104 ROS-free tests (77 existing + 27 ore scene/S2/S3)
+├── tests/                        # 105 ROS-free tests (77 existing + 28 ore scene/S2/S3)
 └── capability.yaml
 ```
 
@@ -371,7 +371,10 @@ extent/volume/mass fields. `build_relation_graph` adds evidence-backed
 which is a sanity check — not real relation accuracy. On 39 synthetic scenes,
 classical predicted masks match 43.5% of GT instances and give relation
 P/R/F1 0.850/0.035/0.067; SAM2.1 masks match 76.3% and raise this to
-0.960/0.437/0.600, so segmentation/matching is the bottleneck. Multi-view
+0.960/0.437/0.600, so segmentation/matching is the bottleneck. On the 8-image
+public `40_70mm` set (9,208 GT instances) a bbox/local-mask relation graph
+scales to dense scenes: classical match 10.4% gives P/R/F1
+0.787/0.015/0.030, SAM2.1 match 59.1% gives 0.957/0.394/0.558. Multi-view
 identity and runtime integration remain planned.
 
 Design and evidence:

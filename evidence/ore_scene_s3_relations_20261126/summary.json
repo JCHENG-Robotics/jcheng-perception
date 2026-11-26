@@ -42,9 +42,9 @@
   ],
   "tests": {
     "command": "python3 -m pytest tests -q",
-    "passed": 104,
+    "passed": 105,
     "failed": 0,
-    "s3_tests": 5
+    "s3_tests": 6
   },
   "e2e_classical": {
     "dataset": "S1 synthetic 39 scenes / 600 GT",

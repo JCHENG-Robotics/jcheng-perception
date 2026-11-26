@@ -62,7 +62,7 @@ above and adds no DDS, device, depth or motion path.
 | S1 | Offline ore instance segmentation baseline | Complete, offline (2026-11-26) | 93 tests; selftest; synthetic AP50 0.368; public 40_70mm AP50 0.043 (domain-gap baseline) |
 | S1.5 | SAM 2.1 Tiny off-line comparison and tiling MVE | In progress, offline (2026-11-26) | Apache-2.0; isolated Orin venv; 8 held-out AP50 0.508 (1008) / 0.637 (adaptive 504); frozen policy on 4 independent images: 0.6375; Rocks UAV: 0.301 (negative transfer); `import-sam2-tiles` converter + tests in repo |
 | S2 | Visible 3D geometry (depth + TF) | In progress, offline synthetic MVE (2026-11-26) | `visible_geometry` module + 2 tests (99 total); visible centroid/AABB/OBB; no real depth yet; thresholds TBD by Board |
-| S3 | Scene graph / scene state v2 | In progress, offline prototype (2026-11-26) | v2 geometry + touching/near edges; controlled benchmark P/R/F1 1.0 (sanity); e2e relation F1 0.067 (classical, 43.5% match) → 0.600 (SAM2, 76.3% match); segmentation is the bottleneck |
+| S3 | Scene graph / scene state v2 | In progress, offline prototype (2026-11-26) | v2 geometry + touching/near edges; controlled benchmark P/R/F1 1.0 (sanity); e2e relation F1 0.067 (classical, 43.5% match) → 0.600 (SAM2, 76.3% match); dense public 40_70mm (9,208 GT): F1 0.030 → 0.558; segmentation is the bottleneck |
 | S4 | Multi-view instance association | Planned | Association P/R/F1 with ambiguity, no forced IDs |
 | S5 | Active perception / NBV | Planned | Simulation/offline first; advisory only |
 | S6 | Grasp affordance | Planned | Offline/simulation; 5-DoF constraints; no motion |

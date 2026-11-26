@@ -39,8 +39,10 @@ from jcheng_perception_scene.relation_eval import (
     evaluate_predicted_relations,
 )
 from jcheng_perception_scene.relations import (
+    LocalInstance,
     RelationParams,
     build_relation_graph,
+    build_relation_graph_local,
     compare_relation_sets,
 )
 from jcheng_perception_scene.sam2_tiles import (
@@ -328,6 +330,29 @@ def test_relation_graph_touching_near_and_density_cap():
         instances, RelationParams(adjacency_px=5, touching_min_px=8,
                                   max_instances=1))
     assert capped == []
+
+
+def test_local_relation_graph_matches_full_graph():
+    instances = _relation_instances()[:2]
+    params = RelationParams(adjacency_px=5, touching_min_px=8,
+                            max_instances=10)
+    full = build_relation_graph(instances, params)
+    local = []
+    for instance in instances:
+        rows, columns = np.nonzero(instance.mask)
+        bbox = (int(columns.min()), int(rows.min()),
+                int(columns.max()), int(rows.max()))
+        local.append(LocalInstance(
+            instance.instance_id, bbox,
+            instance.mask[bbox[1]:bbox[3] + 1,
+                          bbox[0]:bbox[2] + 1]))
+    compact = build_relation_graph_local(local, params)
+    assert len(compact) == len(full) == 1
+    assert compact[0].predicate == full[0].predicate == 'touching'
+    assert compact[0].evidence['contact_px'] == \
+        full[0].evidence['contact_px']
+    assert compact[0].evidence['mask_iou'] == pytest.approx(
+        full[0].evidence['mask_iou'])
 
 
 def test_relation_set_comparison_and_v2_attachment():

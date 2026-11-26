@@ -16,7 +16,7 @@
 | S1 | 离线矿石实例分割 baseline | **Complete（离线验证，2026-11-26）** | **Partially verified**：合成闭环 Verified；公开真实数据 baseline 已测；真实矿石验收 Unverified | 无 | `evidence/ore_scene_s1_20261126/` |
 | S1.5 | 深度分割后端对照（SAM 2.1） | In progress（离线 MVE，2026-11-26） | Partially verified（40–70 mm）；UAV 负迁移 | 无（远端 Orin） | `evidence/ore_scene_sam2_20261126/` |
 | S2 | 实例级 3D 可见几何 | In progress（离线合成 MVE，2026-11-26） | Partially verified（仅公式/失败路径） | 中（离线录制/仿真；真机只读） | `docs/ORE_SCENE_S2.md`；2 个几何测试 |
-| S3 | 结构化 Scene Graph / Scene State | In progress（schema v2 几何+关系原型，2026-11-26） | Partially verified（受控合成） | 无（离线） | 18 场景受控基准 P/R/F1 1.0；e2e relation F1 0.067（经典）→0.600（SAM2）；无真实/独立关系标注 |
+| S3 | 结构化 Scene Graph / Scene State | In progress（schema v2 几何+关系原型，2026-11-26） | Partially verified（受控合成 + 公开 8 图稠密评测） | 无（离线） | 18 场景受控基准 P/R/F1 1.0；e2e relation F1 0.067（经典）→0.600（SAM2）；公开 40_70mm 8 图（9,208 GT）F1 0.030→0.558；无真实/独立关系标注 |
 | S4 | 多视角实例关联与场景融合 | Planned | Unverified | 中（双摄录制/静态真机，只读） | 待立 |
 | S5 | 主动感知 / NBV | Planned | Unverified | 高（仿真先行，真机需授权） | 待立 |
 | S6 | 抓取可操作性评估 | Planned | Unverified | 高（仿真/离线，真机需授权） | 待立 |
@@ -232,7 +232,7 @@ edge/fusion、不改 `jcheng-interfaces`、不碰冻结基线。
 
 **实机依赖**：中。需要静态双摄录制/只读真机；每次需操作员授权；不得运动。
 
-## 7. S3 — 结构化 Scene Graph / Scene State（Planned）
+## 7. S3 — 结构化 Scene Graph / Scene State（In progress，原型）
 
 **目标**：在 Scene State v2 中表达实例、可见几何、邻近/接触/遮挡证据、
 不确定性与缺失字段；为 S4/S7 提供稳定结构。

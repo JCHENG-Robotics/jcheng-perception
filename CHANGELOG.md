@@ -8,6 +8,14 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S3 dense-scene relation evaluation (2026-11-26): added bbox + local-mask
+  relation graph and matching, so public 5 MP / ~1000-instance scenes no longer
+  need full-image boolean masks. On the 8-image Mendeley 40_70mm test split
+  (9,208 GT, 17,142 GT edges), classical match 10.4% gives relation
+  P/R/F1 0.787/0.015/0.030, while SAM2.1 (1008 tiling) match 59.1% gives
+  **0.957/0.394/0.558**. Public annotations' human-review status is unverified;
+  GT edges are mask-derived, not independent labels. One new test (105 total);
+  no runtime/DDS/device/motion change.
 - S3 SAM2 predicted-mask relation evaluation (2026-11-26): same 39 synthetic
   scenes, SAM2.1 Tiny masks match 76.3% of GT instances (vs 43.5% classical) and
   raise relation P/R/F1 from 0.850/0.035/0.067 to **0.960/0.437/0.600**

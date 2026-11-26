@@ -14,9 +14,13 @@ import cv2
 import numpy as np
 
 from .dataset import load_ground_truth
-from .maskops import mask_iou
-from .relations import RelationParams, build_relation_graph, compare_relation_sets
-from .types import InstanceMask, SEMANTIC_LABEL
+from .maskops import bbox_intersects, iou_local
+from .relations import (
+    LocalInstance,
+    RelationParams,
+    build_relation_graph_local,
+    compare_relation_sets,
+)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -34,22 +38,29 @@ class RelationEvalParams:
 
 
 def _instances_from_label(label, items):
+    height, width = label.shape[:2]
     instances = []
     for item in items:
-        mask = label == int(item['mask_index'])
-        if not np.any(mask):
+        bbox = item.get('bbox_xyxy')
+        if bbox is None or len(bbox) != 4:
             continue
-        instances.append(InstanceMask(
+        x0 = max(0, min(width - 1, int(bbox[0])))
+        y0 = max(0, min(height - 1, int(bbox[1])))
+        x1 = max(x0, min(width - 1, int(bbox[2])))
+        y1 = max(y0, min(height - 1, int(bbox[3])))
+        local = label[y0:y1 + 1, x0:x1 + 1] == int(item['mask_index'])
+        if not np.any(local):
+            continue
+        instances.append(LocalInstance(
             instance_id=str(item['instance_id']),
-            mask=mask,
-            semantic_label=SEMANTIC_LABEL,
-            score=float(item.get('detection_confidence', 1.0)),
+            bbox_xyxy=(x0, y0, x1, y1),
+            mask=local,
         ))
     return instances
 
 
 def _match_instances(predicted, truth, threshold):
-    """Greedy one-to-one matching by mask IoU; returns predicted->truth ids."""
+    """Greedy one-to-one matching by local mask IoU."""
     used = [False] * len(truth)
     mapping = {}
     matches = []
@@ -59,7 +70,10 @@ def _match_instances(predicted, truth, threshold):
         for index, gt in enumerate(truth):
             if used[index]:
                 continue
-            value = mask_iou(pred.mask, gt.mask)
+            if not bbox_intersects(pred.bbox_xyxy, gt.bbox_xyxy):
+                continue
+            value = iou_local(
+                pred.bbox_xyxy, pred.mask, gt.bbox_xyxy, gt.mask)
             if value > best_iou:
                 best_iou = value
                 best_index = index
@@ -135,9 +149,10 @@ def evaluate_predicted_relations(dataset, records, prediction_root,
             continue
         mapping, matches = _match_instances(
             pred_instances, gt_instances, params.match_iou)
-        predicted_edges = build_relation_graph(
+        predicted_edges = build_relation_graph_local(
             pred_instances, params.relation)
-        truth_edges = build_relation_graph(gt_instances, params.relation)
+        truth_edges = build_relation_graph_local(
+            gt_instances, params.relation)
         predicted_contact = _contact_edges(predicted_edges, mapping)
         truth_contact = _contact_edges(truth_edges)
         predicted_all.extend(predicted_contact)
