@@ -1,5 +1,7 @@
 # JCHENG Perception
 
+**English** | [简体中文](README.zh-CN.md)
+
 **Distributed robot perception (design D).** The Raspberry Pi 5 acquires images,
 decodes depth, maintains TF, keeps timestamp-indexed rings, back-projects 3D
 points, associates targets and runs the Kalman fusion; the laptop GPU runs two
@@ -17,7 +19,7 @@ target pose for the arm planner.
 > integration are not.
 > This repository contains no model weights, no vendor code and publishes no
 > motion command.
-> English canonical; see [README.zh-CN.md](README.zh-CN.md) for the Chinese translation.
+> English canonical; the Chinese README is a translation.
 
 ---
 
