@@ -60,7 +60,7 @@ their original narrative order.
   the external colour topic with Fast DDS while the camera and edge use
   CycloneDDS; large image samples across RMWs wedged the edge's external RGB
   reader. The run script and `/etc/armpi-gateway/gateway.env` now force
-  CycloneDDS (backups in `/home/pi/armpi-gateway-rwm-20261124/`). The 8766
+  CycloneDDS (backups in `/home/<user>/armpi-gateway-rwm-20261124/`). The 8766
   motion gateway was an orphan PPID-0 process still consuming the wrist
   pointcloud and blocking Aurora depth; killing it recovered the wrist depth
   reader. Run 9 then delivered the **dual-view** result: 240 external + 195
