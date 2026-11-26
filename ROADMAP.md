@@ -24,7 +24,7 @@
 | Motion integration through `jcheng-system` | Not started | — |
 | Ore scene understanding S0 (research/architecture/interface) | Complete (2026-11-26) | `docs/ORE_SCENE_*.md`, `docs/SCENE_REPRESENTATION.md` |
 | Ore scene understanding S1 (offline instance segmentation) | Complete, offline only (2026-11-26) | `evidence/ore_scene_s1_20261126/`; synthetic verified, real-ore accuracy Unverified |
-| Ore S1.5 deep segmentation backend (SAM 2.1) | In progress, offline MVE (2026-11-26) | `evidence/ore_scene_sam2_20261126/`; fixed 1008 AP50 0.508, adaptive 504 fallback AP50 0.637; no independent validation yet |
+| Ore S1.5 deep segmentation backend (SAM 2.1) | In progress, offline MVE (2026-11-26) | `evidence/ore_scene_sam2_20261126/`; fixed 1008 AP50 0.508, adaptive 504 fallback AP50 0.637; 4-image independent split reproduced 0.6375 (same dataset, not independent domain) |
 | Real-ore accuracy / depth / multi-view / grasp | Not started | — |
 
 ## Milestones
@@ -59,7 +59,7 @@ above and adds no DDS, device, depth or motion path.
 |---|---|---|---|
 | S0 | Research, architecture, scene representation, interface design | Complete (2026-11-26) | Five Chinese design docs + S1 report; no contract change |
 | S1 | Offline ore instance segmentation baseline | Complete, offline (2026-11-26) | 93 tests; selftest; synthetic AP50 0.368; public 40_70mm AP50 0.043 (domain-gap baseline) |
-| S1.5 | SAM 2.1 Tiny off-line comparison and tiling MVE | In progress, offline (2026-11-26) | Apache-2.0; isolated Orin venv; 8 held-out AP50 0.508 (1008) / 0.637 (adaptive 504); thresholds fitted on the same 8, independent validation pending |
+| S1.5 | SAM 2.1 Tiny off-line comparison and tiling MVE | In progress, offline (2026-11-26) | Apache-2.0; isolated Orin venv; 8 held-out AP50 0.508 (1008) / 0.637 (adaptive 504); frozen policy on 4 independent images: 0.6375 (same dataset, not independent domain) |
 | S2 | Visible 3D geometry (depth + TF) | Planned | Depth alignment + geometry repeatability; thresholds TBD by Board |
 | S3 | Scene graph / scene state v2 | Planned | Evidence-backed relations, schema v2, density-safe runtime |
 | S4 | Multi-view instance association | Planned | Association P/R/F1 with ambiguity, no forced IDs |

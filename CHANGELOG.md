@@ -14,8 +14,11 @@ their original narrative order.
   mask AP50 0.508 / AP50-95 0.328; a 504-px fallback for low-count images
   raises the aggregate to AP50 0.637 / AP50-95 0.387 (P 0.617 / R 0.775,
   count MAE 335.5) but costs ~2.5-4.8 min/image and over-segments. The
-  fallback threshold and tiling parameters were fitted on the same 8 images,
-  so this is **not** independent validation; real-ore accuracy is Unverified.
+  fallback threshold and tiling parameters were fitted on those 8 images; a
+  4-image independent split (selected before inference) reproduced AP50
+  0.6375 / AP50-95 0.3909 (P 0.649 / R 0.745, MAE 246.3), but it is the same
+  public dataset/annotation source, not an independent domain. Real-ore
+  accuracy is Unverified.
   No DDS, device, depth, motion, weight or `jcheng-interfaces` change.
   Evidence: `evidence/ore_scene_sam2_20261126/`; design/limits:
   `docs/ORE_SCENE_S1_5.md`.

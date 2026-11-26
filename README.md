@@ -337,11 +337,12 @@ result is a **domain-gap baseline** (the classical baseline under-segments dense
 real piles) and is not an acceptance result. No real-ore accuracy is claimed.
 
 **S1.5 (2026-11-26, offline):** SAM 2.1 Hiera Tiny (Apache-2.0) on the remote
-AGX Orin. On the same 8 public held-out images, fixed 1008 tiles reach mask AP50
-0.508 / AP50-95 0.328; a 504-px fallback for low-count images raises this to
-AP50 0.637 / AP50-95 0.387, but the fallback threshold and tiling parameters
-were fitted on the same 8 images and over-segment. Not independent validation;
-real-ore accuracy remains Unverified.
+AGX Orin. On 8 public held-out images, fixed 1008 tiles reach mask AP50 0.508 /
+AP50-95 0.328; a 504-px fallback for low-count images raises this to AP50 0.637
+/ AP50-95 0.387, but the threshold/merge parameters were fitted on those 8
+images and over-segment. A 4-image independent split (selected before inference)
+reproduced AP50 0.6375 / AP50-95 0.3909; it is the same public dataset, not an
+independent domain. Real-ore accuracy remains Unverified.
 
 Design and evidence:
 

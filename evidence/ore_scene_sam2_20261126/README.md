@@ -44,6 +44,19 @@ Failure-image recovery with 504 tiles:
 Synthetic subset (sparse + dense): SAM2 AP50 0.879 / AP50-95 0.793 vs
 classical 0.389 / 0.213.
 
+Independent image split (selected before inference; not used in tuning or the
+8-image test): `40_2, 40_19, 40_20, 40_21`, 4,585 GT. The `<500` policy was
+frozen before this run.
+
+| Strategy | AP50 | AP50-95 | P | R | Pred/GT | Count MAE |
+|---|---|---|---|---|---|---|
+| Fixed 1008 | 0.568 | 0.359 | 0.726 | 0.637 | 4026/4585 | 282.3 |
+| **Frozen 1008 + 504 fallback** | **0.6375** | **0.3909** | 0.649 | 0.745 | 5262/4585 | 246.3 |
+
+Only `40_2` triggered the fallback: 0.245 → **0.546**. Same public dataset and
+annotation source; this is an independent image split, not an independent
+domain.
+
 ## Files
 
 | File | Content |
@@ -54,8 +67,13 @@ classical 0.389 / 0.213.
 | `per_image_504_40_10_15.json` | per-image 504 metrics |
 | `metrics_504_40_14.json` | 504 evaluation for `40_14` |
 | `metrics_hybrid500_8image.json` | adaptive hybrid evaluation |
+| `metrics_independent_1008.json` | fixed-1008 on the independent 4-image split |
+| `metrics_independent_504_40_2.json` | 504 fallback for `40_2` |
+| `metrics_independent_hybrid.json` | frozen-policy hybrid on the independent split |
+| `per_image_independent_hybrid.json` | per-image independent hybrid metrics |
 | `summary_1008.json` | method, host, weight hash, limitations |
 | `summary_hybrid500.json` | adaptive policy, results, limitations |
+| `summary_independent_hybrid.json` | independent-split policy/results/limits |
 
 ## Reproduce
 
@@ -75,10 +93,12 @@ S1; full label maps live in
 
 ## Limits
 
-- Threshold 500 and tile/merge parameters were chosen after observing the same
-  8 held-out images; **not independently validated**.
-- 504 fallback over-segments (11,564 predictions / 9,208 GT) and costs
-  ~2.5–4.8 min/image; not an online path.
-- Only 8 of 49 public images; no real-ore data.
+- Threshold 500 and tile/merge parameters were chosen on the earlier 8 images.
+  A separate 4-image split (selected before inference) reproduced AP50 0.6375,
+  but it is the same public dataset/annotation source, not an independent
+  domain.
+- 504 fallback over-segments (11,564 predictions / 9,208 GT on the 8-image set;
+  5,262 / 4,585 on the independent set) and costs ~2.5–4.8 min/image.
+- Only 12 of 49 public images across both splits; no real-ore data.
 - No depth, 3D, multi-view, grasp or runtime integration.
 - `_C` post-processing is skipped; verify before production.

@@ -1,0 +1,110 @@
+{
+  "schema_version": "jcheng.ore_s1_5_independent.v1",
+  "created_at": "2026-11-26T12:24:33+00:00",
+  "hardware_claimed": false,
+  "real_ore_validation": false,
+  "offline_only": true,
+  "dataset": {
+    "name": "Mendeley 40-70mm independent image split",
+    "license": "CC BY 4.0",
+    "doi": "10.17632/v9grvgsrh9.1",
+    "images": [
+      "40_2",
+      "40_19",
+      "40_20",
+      "40_21"
+    ],
+    "gt_instances": 4585,
+    "note": "selected before inference, not used in tuning or the previous 8-image test; same public dataset/annotation source, so not an independent domain"
+  },
+  "policy": {
+    "stage1": "1008 tiles, points 32",
+    "fallback": "504 tiles if stage1 predicted instances <500",
+    "frozen": true,
+    "note": "threshold and merge parameters came from the earlier 8-image MVE; no tuning on this independent split"
+  },
+  "results": {
+    "fixed_1008": {
+      "mask_ap50": 0.5680826480531784,
+      "mask_ap50_95": 0.3587778625357854,
+      "precision_at_operating_point": 0.7257824143070045,
+      "recall_at_operating_point": 0.6372955288985823,
+      "predicted_instances": 4026,
+      "gt_instances": 4585,
+      "instance_count_mae": 282.25,
+      "latency_ms": {
+        "p50": 47720.8,
+        "p95": 68939.555,
+        "max": 72065.9,
+        "n": 4
+      }
+    },
+    "40_2_504": {
+      "mask_ap50": 0.5463591059853122,
+      "mask_ap50_95": 0.2953723005506004,
+      "predicted_instances": 1590,
+      "gt_instances": 1044,
+      "instance_count_mae": 546.0
+    },
+    "hybrid": {
+      "mask_ap50": 0.6375446755292085,
+      "mask_ap50_95": 0.39093520080269867,
+      "precision_at_operating_point": 0.6491828202204485,
+      "recall_at_operating_point": 0.7450381679389313,
+      "predicted_instances": 5262,
+      "gt_instances": 4585,
+      "instance_count_mae": 246.25,
+      "latency_ms": {
+        "max": 286165.10000000003,
+        "n": 4,
+        "p50": 47720.8,
+        "p95": 250923.87499999994
+      }
+    },
+    "per_image_hybrid": {
+      "40_19": {
+        "gt_instances": 1226,
+        "instance_count_mae": 254.0,
+        "mask_ap50": 0.6507384119810896,
+        "mask_ap50_95": 0.39394822584305744,
+        "predicted_instances": 1480
+      },
+      "40_2": {
+        "gt_instances": 1044,
+        "instance_count_mae": 546.0,
+        "mask_ap50": 0.5463591059853122,
+        "mask_ap50_95": 0.2953723005506004,
+        "predicted_instances": 1590
+      },
+      "40_20": {
+        "gt_instances": 1105,
+        "instance_count_mae": 31.0,
+        "mask_ap50": 0.7137940752550914,
+        "mask_ap50_95": 0.4513882606292216,
+        "predicted_instances": 1136
+      },
+      "40_21": {
+        "gt_instances": 1210,
+        "instance_count_mae": 154.0,
+        "mask_ap50": 0.6529388814524918,
+        "mask_ap50_95": 0.44699496309944,
+        "predicted_instances": 1056
+      }
+    }
+  },
+  "limitations": [
+    "Four images from the same public dataset; not an independent domain or real ore.",
+    "The fallback threshold/merge policy were fitted on the earlier 8 images; this split validates the frozen policy but is not a full independent hyperparameter search.",
+    "504 fallback over-segments (5262 predictions vs 4585 GT).",
+    "P95 latency 251 s due to one 504 fallback; not online.",
+    "Public annotations' human-review status unverified.",
+    "No runtime/Interfaces/depth/3D integration."
+  ],
+  "artifacts": {
+    "metrics_1008": "../sam2_independent_1008_eval/metrics.json",
+    "metrics_504_40_2": "../sam2_504_40_2_eval/metrics.json",
+    "metrics_hybrid": "metrics.json",
+    "per_image": "per_image.json",
+    "masks": "masks/"
+  }
+}
