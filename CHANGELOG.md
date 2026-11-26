@@ -8,6 +8,15 @@ their original narrative order.
 
 ## [Unreleased]
 
+- SAM2 tile converter (2026-11-26): new
+  `jcheng_perception_scene/sam2_tiles.py` and `import-sam2-tiles` CLI convert
+  exported SAM 2.1 tile masks (`result.json` + binary masks) into versioned
+  scene-state JSONL without importing torch/SAM2. A YAML policy makes the tile
+  size, area filter, merge threshold and per-image 504 override explicit.
+  Four new tests (97 total) cover exact-partition replay, duplicate-mask
+  skipping, config rejection and the CLI. On the independent 4-image split the
+  converter reproduces AP50 0.6375 / AP50-95 0.3909 (P 0.649 / R 0.745,
+  MAE 246.2). No runtime, DDS, device, depth or motion change.
 - Ore scene understanding S1.5 / SAM 2.1 MVE (2026-11-26): off-line
   SAM 2.1 Hiera Tiny (Apache-2.0) on the remote AGX Orin, isolated from the
   SAM3/Qwen environment. Fixed 1008 tiles on 8 public held-out images:

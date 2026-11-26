@@ -86,7 +86,8 @@ jcheng-perception/
 │   ├── gpu_tag.yaml              # AprilTag 参考点模式（定义点）
 │   ├── gpu_shadow.example.yaml   # 影子模型模板
 │   ├── ore_scene.yaml            # 离线矿石 S1（合成默认）
-│   └── ore_scene_public_40_70mm.yaml  # 离线矿石 S1（公开 5 MP 配置）
+│   ├── ore_scene_public_40_70mm.yaml  # 离线矿石 S1（公开 5 MP 配置）
+│   └── sam2_tiles.example.yaml   # SAM2 tile 合并 / 单图覆盖策略
 ├── docs/
 │   ├── ARCHITECTURE.md           # 节点职责、进程/线程、数据流
 │   ├── TOPICS.md                 # 话题/QoS/字段语义
@@ -116,7 +117,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 93 项 ROS-free 测试（77 原有 + 16 矿石 S1）
+├── tests/                        # 97 项 ROS-free 测试（77 原有 + 20 矿石场景）
 └── capability.yaml
 ```
 
@@ -287,6 +288,11 @@ python3 scripts/ore_scene.py generate-synthetic --out /tmp/ore-data \
 python3 scripts/ore_scene.py run --dataset /tmp/ore-data --out /tmp/ore-run \
   --config config/ore_scene.yaml
 python3 scripts/ore_scene.py selftest --out /tmp/ore-selftest
+
+# SAM2 tile 导出 -> 场景状态（离线；不导入 torch/SAM2）
+python3 scripts/ore_scene.py import-sam2-tiles \
+  --dataset /tmp/ore-data --out /tmp/ore-sam2 \
+  --tiles config/sam2_tiles.example.yaml --metrics
 ```
 
 S1 结果（2026-11-26，仅 CPU）：

@@ -184,6 +184,38 @@ SAM3 的文本概念提示在密集矿石堆上不可用；SAM2 的类无关 mas
   --points-per-side 32
 ```
 
+### 5.1 离线转换器（仓库内，无 torch）
+
+新增 `jcheng_perception_scene/sam2_tiles.py`：只读取远端导出的
+`<image>_xNNNN_yNNNN/result.json` + `masks/*.png`，按配置合并成全图 label map，
+输出 `scenes.jsonl` / `instances.jsonl` / `summary.json`。它不导入 SAM 2、
+torch 或 CUDA，不接运行时。
+
+```bash
+python3 scripts/ore_scene.py import-sam2-tiles \
+  --dataset <dataset> --out <out> \
+  --tiles config/sam2_tiles.example.yaml \
+  --metrics
+```
+
+配置显式区分场景类型（示例：`config/sam2_tiles.example.yaml`）：
+
+- `default`：默认 tile root、`tile_size`、`max_area_fraction`；
+- `overrides.<image_stem>`：单图回退（例如小石块图改用 504 tile / 10% 面积）；
+- `backend.score_field`：`predicted_iou`；
+- `min_area_px`、`min_new_fraction`、`mask_threshold`：合并过滤；
+- 未知键、缺失 root、坏 mask 均 fail closed。
+
+**复现校验**（同一批独立 4 图）：
+
+| 输入 | AP50 | AP50-95 | 预测 / GT | 计数 MAE |
+|---|---|---|---|---|
+| 1008 转换器 | 0.5681 | 0.3588 | 4026 / 4585 | 282.2 |
+| 1008 + 504 override | **0.6375** | **0.3909** | 5262 / 4585 | 246.2 |
+
+与手工合并结果一致（AP50 0.6375、P 0.649 / R 0.745）。测试从 93 增至
+**97 passed**（新增 4 个转换器测试）。
+
 ## 6. 限制与风险
 
 1. **独立验证有限**：4 张独立图像集（`40_2/19/20/21`）在推理前选定并验证了

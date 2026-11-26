@@ -90,6 +90,8 @@ trained model is required.
 | `metrics_uav_1008.json` | Rocks UAV fixed-1008 evaluation (negative result) |
 | `per_image_uav_1008.json` | per-image UAV metrics |
 | `summary_uav_1008.json` | UAV scene-type method/results/limits |
+| `metrics_converter_independent_1008.json` | converter replay of the independent 1008 result |
+| `metrics_converter_independent_hybrid.json` | converter replay of the frozen hybrid result |
 
 ## Reproduce
 
@@ -115,6 +117,9 @@ S1; full label maps live in
   domain.
 - 504 fallback over-segments (11,564 predictions / 9,208 GT on the 8-image set;
   5,262 / 4,585 on the independent set) and costs ~2.5–4.8 min/image.
+- The in-repo converter reproduces the independent hybrid metrics exactly
+  (AP50 0.6375 / AP50-95 0.3909); it reads exported tiles only and imports no
+  torch/SAM2.
 - Only 14 of 49 public images across all splits; no real-ore data.
 - The 2-image Rocks UAV check (different scene type) failed to transfer:
   AP50 0.301, precision 0.172, ~3.5× over-segmentation. This is a negative

@@ -24,6 +24,7 @@ from .dataset import (
 )
 from .metrics import evaluate
 from .pipeline import run_dataset, run_unlabelled
+from .sam2_tiles import load_tiles_config, run_sam2_tiles
 from .synthetic import generate_dataset
 from .types import (
     EVALUATION_SCHEMA_VERSION,
@@ -177,6 +178,25 @@ def _command_run(args):
     })
     if summary['failed_scene_count'] and not args.allow_failures:
         return EXIT_BACKEND
+    return EXIT_OK
+
+
+def _command_import_sam2_tiles(args):
+    dataset = load_dataset(args.dataset)
+    tiles_config = load_tiles_config(args.tiles)
+    scene_config = _load_config(args.scene_config)
+    summary = run_sam2_tiles(
+        dataset, tiles_config, args.out, scene_config=scene_config,
+        limit=args.limit, write_metrics=args.metrics)
+    _print_json({
+        'scenes': summary['scene_records'],
+        'instances': summary['instance_records'],
+        'output': os.path.abspath(args.out),
+        'metrics': os.path.join(os.path.abspath(args.out), 'metrics.json')
+        if args.metrics else None,
+        'data_source': dataset.source,
+        'hardware_validation': False,
+    })
     return EXIT_OK
 
 
@@ -365,6 +385,18 @@ def build_parser():
     run.add_argument('--allow-failures', action='store_true')
     run.add_argument('--allow-dataset-errors', action='store_true')
     run.set_defaults(func=_command_run)
+
+    sam2 = subparsers.add_parser(
+        'import-sam2-tiles',
+        help='convert exported SAM2 tile masks into scene-state JSONL')
+    sam2.add_argument('--dataset', required=True)
+    sam2.add_argument('--out', required=True)
+    sam2.add_argument('--tiles', required=True,
+                      help='SAM2 tile-set YAML configuration')
+    sam2.add_argument('--scene-config')
+    sam2.add_argument('--limit', type=int)
+    sam2.add_argument('--metrics', action='store_true')
+    sam2.set_defaults(func=_command_import_sam2_tiles)
 
     evaluate_parser = subparsers.add_parser(
         'evaluate', help='evaluate an existing scenes.jsonl')

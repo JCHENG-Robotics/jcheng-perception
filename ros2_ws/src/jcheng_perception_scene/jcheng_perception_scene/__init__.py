@@ -11,6 +11,12 @@ from .config import DEFAULT_CONFIG, config_sha256, load_config, validate_config
 from .dataset import import_coco_dataset, load_dataset, read_predictions
 from .metrics import evaluate
 from .pipeline import run_dataset, run_unlabelled
+from .sam2_tiles import (
+    TileSet,
+    TilesConfig,
+    load_tiles_config,
+    run_sam2_tiles,
+)
 from .scene import build_scene_state
 from .types import (
     DATASET_SCHEMA_VERSION,
@@ -36,6 +42,8 @@ __all__ = [
     'SCENE_SCHEMA_VERSION',
     'SceneError',
     'SceneState',
+    'TileSet',
+    'TilesConfig',
     'UNKNOWNS',
     '__version__',
     'build_scene_state',
@@ -44,8 +52,10 @@ __all__ = [
     'import_coco_dataset',
     'load_config',
     'load_dataset',
+    'load_tiles_config',
     'read_predictions',
     'run_dataset',
+    'run_sam2_tiles',
     'run_unlabelled',
     'validate_config',
 ]

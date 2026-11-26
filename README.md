@@ -102,7 +102,8 @@ jcheng-perception/
 │   ├── gpu_tag.yaml              # AprilTag reference-point mode
 │   ├── gpu_shadow.example.yaml   # shadow-model template
 │   ├── ore_scene.yaml            # offline ore S1 (synthetic defaults)
-│   └── ore_scene_public_40_70mm.yaml  # offline ore S1 (public 5 MP profile)
+│   ├── ore_scene_public_40_70mm.yaml  # offline ore S1 (public 5 MP profile)
+│   └── sam2_tiles.example.yaml   # SAM2 tile merge / per-image override policy
 ├── docs/
 │   ├── ARCHITECTURE.md           # node roles, processes/threads, data flow
 │   ├── TOPICS.md                 # topics/QoS/field semantics
@@ -132,7 +133,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 93 ROS-free tests (77 existing + 16 ore S1)
+├── tests/                        # 97 ROS-free tests (77 existing + 20 ore scene)
 └── capability.yaml
 ```
 
@@ -323,6 +324,11 @@ python3 scripts/ore_scene.py generate-synthetic --out /tmp/ore-data \
 python3 scripts/ore_scene.py run --dataset /tmp/ore-data --out /tmp/ore-run \
   --config config/ore_scene.yaml
 python3 scripts/ore_scene.py selftest --out /tmp/ore-selftest
+
+# SAM2 tile export -> scene state (offline; no torch/SAM2 import)
+python3 scripts/ore_scene.py import-sam2-tiles \
+  --dataset /tmp/ore-data --out /tmp/ore-sam2 \
+  --tiles config/sam2_tiles.example.yaml --metrics
 ```
 
 S1 results (2026-11-26, CPU only):

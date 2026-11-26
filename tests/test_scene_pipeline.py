@@ -20,6 +20,7 @@ from jcheng_perception_scene.backends.classical import (
 from jcheng_perception_scene.cli import main
 from jcheng_perception_scene.config import load_config, validate_config
 from jcheng_perception_scene.dataset import (
+    Dataset,
     import_coco_dataset,
     load_dataset,
     load_ground_truth,
@@ -28,6 +29,13 @@ from jcheng_perception_scene.dataset import (
 )
 from jcheng_perception_scene.metrics import evaluate
 from jcheng_perception_scene.pipeline import run_dataset, run_unlabelled
+from jcheng_perception_scene.sam2_tiles import (
+    TileSet,
+    TilesConfig,
+    load_tiles_config,
+    merge_tile_set,
+    run_sam2_tiles,
+)
 from jcheng_perception_scene.scene import build_scene_state
 from jcheng_perception_scene.synthetic import generate_dataset
 from jcheng_perception_scene.types import (
@@ -343,6 +351,141 @@ def test_coco_import_preserves_visible_partition(tmp_path):
     # The second polygon overwrites the overlap; the visible partition is
     # still consistent with the manifest areas.
     assert visible == sum(instance['area_px'] for instance in scene.instances)
+
+
+def _write_sam2_tiles(tile_root, scene, label):
+    """Create one SAM2-style tile result from a synthetic GT label image."""
+    stem = os.path.splitext(os.path.basename(scene.image_path))[0]
+    tile_dir = os.path.join(tile_root, '%s_x0000_y0000' % stem)
+    masks_dir = os.path.join(tile_dir, 'masks')
+    os.makedirs(masks_dir)
+    entries = []
+    for order, instance in enumerate(scene.instances):
+        mask = (label == int(instance['mask_index'])).astype(np.uint8) * 255
+        name = '%02d_ore.png' % order
+        assert cv2.imwrite(os.path.join(masks_dir, name), mask)
+        entries.append({
+            'mask': name,
+            'predicted_iou': 0.9,
+            'stability_score': 0.9,
+        })
+    # Duplicate the first mask at a lower score; the converter must skip it.
+    if entries:
+        entries.append(dict(entries[0], predicted_iou=0.8))
+    with open(os.path.join(tile_dir, 'result.json'), 'w',
+              encoding='utf-8') as handle:
+        json.dump({
+            'image': scene.image_path,
+            'shape': [scene.height, scene.width],
+            'wall_seconds': 1.0,
+            'masks': entries,
+        }, handle)
+    return tile_root
+
+
+def test_sam2_tile_conversion_reconstructs_partition(dataset, tmp_path):
+    scene = dataset.scenes[0]
+    label = cv2.imread(scene.mask_path, cv2.IMREAD_UNCHANGED)
+    tile_root = _write_sam2_tiles(
+        str(tmp_path / 'tiles'), scene, label)
+    config = TilesConfig(
+        default=TileSet(tile_root, tile_size=max(scene.width, scene.height),
+                        max_area_fraction=1.0),
+        overrides={},
+    )
+    out = str(tmp_path / 'sam2-out')
+    summary = run_sam2_tiles(
+        dataset, config, out, scene_config=load_config(), limit=1)
+    assert summary['scene_records'] == 1
+    assert summary['instance_records'] == len(scene.instances)
+    records = read_predictions(os.path.join(out, 'scenes.jsonl'))
+    assert len(records) == 1
+    assert len(records[0]['instances']) == len(scene.instances)
+    subset = Dataset(dataset.root, dataset.manifest_path, dataset.manifest,
+                     [scene])
+    metrics = evaluate(
+        subset, records, out, load_config())
+    assert metrics['mask_ap50'] == pytest.approx(1.0, abs=1e-9)
+    assert metrics['instance_count_mae'] == pytest.approx(0.0)
+
+
+def test_sam2_tiles_config_and_override(tmp_path):
+    config_path = tmp_path / 'tiles.yaml'
+    config_path.write_text(
+        'schema_version: 1\n'
+        'backend:\n'
+        '  id: sam2.test\n'
+        '  version: "1"\n'
+        '  score_field: predicted_iou\n'
+        '  min_area_px: 10\n'
+        '  min_new_fraction: 0.3\n'
+        '  mask_threshold: 127\n'
+        'tile_sets:\n'
+        '  default:\n'
+        '    root: /tmp/default\n'
+        '    tile_size: 1008\n'
+        '    max_area_fraction: 0.05\n'
+        '  overrides:\n'
+        '    "40_2":\n'
+        '      root: /tmp/small\n'
+        '      tile_size: 504\n'
+        '      max_area_fraction: 0.10\n',
+        encoding='utf-8')
+    config = load_tiles_config(str(config_path))
+    assert config.backend_id == 'sam2.test'
+    assert config.for_image('40_2').tile_size == 504
+    assert config.for_image('40_3').tile_size == 1008
+
+    config_path.write_text(
+        'schema_version: 1\n'
+        'tile_sets:\n'
+        '  default:\n'
+        '    root: /tmp/default\n'
+        '    tile_size: 1008\n'
+        '    typo: 1\n',
+        encoding='utf-8')
+    with pytest.raises(ValueError):
+        load_tiles_config(str(config_path))
+
+
+def test_sam2_tiles_missing_root_fails(dataset, tmp_path):
+    config = TilesConfig(
+        default=TileSet(str(tmp_path / 'missing'), tile_size=64,
+                        max_area_fraction=0.5),
+        overrides={},
+    )
+    scene = dataset.scenes[0]
+    label = cv2.imread(scene.mask_path, cv2.IMREAD_UNCHANGED)
+    with pytest.raises(ValueError):
+        merge_tile_set(
+            config.default,
+            os.path.splitext(os.path.basename(scene.image_path))[0],
+            scene.width, scene.height, config)
+    assert label is not None
+
+
+def test_sam2_tiles_cli(dataset, tmp_path):
+    scene = dataset.scenes[0]
+    label = cv2.imread(scene.mask_path, cv2.IMREAD_UNCHANGED)
+    tile_root = _write_sam2_tiles(
+        str(tmp_path / 'tiles'), scene, label)
+    config_path = tmp_path / 'tiles.yaml'
+    config_path.write_text(
+        'schema_version: 1\n'
+        'tile_sets:\n'
+        '  default:\n'
+        '    root: "%s"\n'
+        '    tile_size: %d\n'
+        '    max_area_fraction: 1.0\n' % (
+            tile_root, max(scene.width, scene.height)),
+        encoding='utf-8')
+    code = main([
+        'import-sam2-tiles', '--dataset', dataset.root,
+        '--out', str(tmp_path / 'cli-out'), '--tiles', str(config_path),
+        '--limit', '1', '--metrics',
+    ])
+    assert code == 0
+    assert os.path.isfile(tmp_path / 'cli-out' / 'metrics.json')
 
 
 def test_backend_registry():

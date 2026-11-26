@@ -1,0 +1,27 @@
+# Example SAM2 tile export -> scene-state conversion policy.
+# Copy outside the repo and replace <run-root> with the remote export path.
+# Tile directory names must match: <image-stem>_x<offset>_y<offset>/
+schema_version: 1
+
+backend:
+  id: sam2.1_hiera_tiny_tiled
+  version: "1.0.0"
+  score_field: predicted_iou
+  min_area_px: 50
+  min_new_fraction: 0.30
+  mask_threshold: 127
+
+tile_sets:
+  # Default scene type: 40-70 mm crushed stone on a 5 MP image (3x2 tiles).
+  default:
+    root: /path/to/<run-root>/out_1008
+    tile_size: 1008
+    max_area_fraction: 0.05
+
+  # Explicit per-image override, e.g. small-stone scenes that need 504 tiles.
+  # Keys are image stems (file name without extension), not scene ids.
+  overrides:
+    "40_2":
+      root: /path/to/<run-root>/out_504_40_2
+      tile_size: 504
+      max_area_fraction: 0.10

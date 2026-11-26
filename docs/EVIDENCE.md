@@ -545,4 +545,7 @@ python3 -m pytest tests -q
 
 - Bundle：`evidence/ore_scene_sam2_20261126/`（轻量 metrics/summary；完整
   mask 在仓库外）。
+- 转换器：`python3 scripts/ore_scene.py import-sam2-tiles`（无 torch/SAM2
+  导入）复现独立 4 图 1008 AP50 0.5681 与混合 AP50 0.6375 / AP50-95 0.3909；
+  新增 4 个测试，总计 **97 passed**。
 - 设计与限制：`docs/ORE_SCENE_S1_5.md`。
