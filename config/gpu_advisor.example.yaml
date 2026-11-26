@@ -1,0 +1,39 @@
+# Example GPU-host configuration using the SAM3 + Qwen advisory service.
+# Copy over gpu.yaml, or merge the camera entry into the existing file.
+#
+# The service runs on the AGX Orin at 192.168.5.31:8090 (manual start). The
+# laptop relays between the robot subnet (10.42.0.x) and the Orin. See
+# docs/ADVISOR.md for the failure behavior and boundaries.
+
+node:
+  stats_interval_s: 2.0
+  debug_publish: false
+  debug_interval_s: 1.0
+  queue_size: 2
+
+cameras:
+  d435i_ext:
+    input_topic: /perception/uplink/d435i_ext/image_compressed
+    detections_topic: /perception/detections/d435i_ext
+    debug_topic: /perception/debug/d435i_ext
+    hot_reload: false
+    model:
+      backend: sam3_advisor
+      endpoint: http://192.168.5.31:8090/infer
+      prompt: bottle
+      timeout_s: 10.0
+      jpeg_quality: 90
+      min_score: 0.0
+
+  aurora_wrist:
+    input_topic: /perception/uplink/aurora_wrist/image_compressed
+    detections_topic: /perception/detections/aurora_wrist
+    debug_topic: /perception/debug/aurora_wrist
+    hot_reload: false
+    model:
+      backend: sam3_advisor
+      endpoint: http://192.168.5.31:8090/infer
+      prompt: bottle
+      timeout_s: 10.0
+      jpeg_quality: 90
+      min_score: 0.0

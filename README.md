@@ -292,6 +292,7 @@ Full fields: [TOPICS.md](docs/TOPICS.md).
 - [Timestamp and TF contract](docs/TIMESTAMP_AND_TF.md)
 - [Fusion and filtering](docs/FUSION.md)
 - [Deployment](docs/DEPLOYMENT.md)
+- [SAM3 + Qwen advisory client](docs/ADVISOR.md)
 - [Model iteration](docs/MODEL_ITERATION.md)
 - [Calibration](docs/CALIBRATION.md)
 - [Failure modes](docs/FAILURE_MODES.md)

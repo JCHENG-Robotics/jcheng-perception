@@ -11,8 +11,11 @@ The mock detector is a colour threshold. It exists so the complete two-machine
 pipeline can be exercised without a model file, and so CI never needs a GPU.
 """
 
+import base64
+import json
 import math
 import os
+import urllib.request
 
 import cv2
 import numpy as np
@@ -673,6 +676,100 @@ class OnnxRuntimeDetector(BaseDetector):
             width, height, self.max_detections)
 
 
+class AdvisorDetector(BaseDetector):
+    """SAM3 + Qwen advisory service detector over HTTP.
+
+    The remote service (AGX Orin) returns the best mask after the fixed
+    ``T1 + SAM3 score >= 0.8`` policy. Only a ``JUDGE`` reply becomes a
+    detection; ``SKIP`` and ``NO_MASK`` are successful empty results. Any
+    transport, protocol or malformed-reply error raises ``DetectorError`` so the
+    camera worker counts a failed frame and never publishes a fabricated box.
+
+    The mask itself is not exposed: ``Detection2D`` carries boxes only. Adding a
+    mask field is a contract change for ``jcheng-interfaces``.
+    """
+
+    def __init__(self, config, transport=None):
+        """Validate the endpoint and prompt; keep the transport injectable."""
+        endpoint = str(config.get('endpoint', '')).strip()
+        if not endpoint:
+            raise DetectorError('advisor.endpoint is empty')
+        if not endpoint.startswith(('http://', 'https://')):
+            raise DetectorError(
+                'advisor.endpoint must be http(s): {}'.format(endpoint))
+        self.endpoint = endpoint
+        self.prompt = str(config.get('prompt', '')).strip()
+        if not self.prompt:
+            raise DetectorError('advisor.prompt is empty')
+        self.timeout_s = float(config.get('timeout_s', 10.0))
+        if self.timeout_s <= 0:
+            raise DetectorError('advisor.timeout_s must be positive')
+        self.jpeg_quality = int(config.get('jpeg_quality', 90))
+        if not 1 <= self.jpeg_quality <= 100:
+            raise DetectorError('advisor.jpeg_quality must be 1..100')
+        self.min_score = float(config.get('min_score', 0.0))
+        self._transport = transport or self._post
+        self.model_id = 'sam3_advisor:{}:{}'.format(endpoint, self.prompt)
+
+    def describe(self):
+        """Return a stable identity for logs and status messages."""
+        return self.model_id
+
+    @staticmethod
+    def _post(endpoint, payload, timeout_s):
+        """POST JSON and return the decoded reply."""
+        request = urllib.request.Request(
+            endpoint,
+            data=json.dumps(payload).encode('utf-8'),
+            headers={'Content-Type': 'application/json'})
+        with urllib.request.urlopen(request, timeout=timeout_s) as response:
+            return json.load(response)
+
+    def detect(self, image_bgr):
+        """Return at most one judged detection for the configured prompt."""
+        encoded_ok, encoded = cv2.imencode(
+            '.jpg', image_bgr,
+            [int(cv2.IMWRITE_JPEG_QUALITY), self.jpeg_quality])
+        if not encoded_ok:
+            raise DetectorError('advisor failed to encode the frame as JPEG')
+        payload = {
+            'image_b64': base64.b64encode(encoded.tobytes()).decode('ascii'),
+            'image_format': 'jpg',
+            'prompt': self.prompt,
+        }
+        try:
+            reply = self._transport(self.endpoint, payload, self.timeout_s)
+        except Exception as error:  # noqa: BLE001 - transport dependent
+            raise DetectorError(
+                'advisor request failed: {}'.format(error)) from error
+        if not isinstance(reply, dict) or reply.get('ok') is not True:
+            raise DetectorError(
+                'advisor returned an error reply: {!r}'.format(reply))
+        gate = str(reply.get('gate', '')).upper()
+        if gate in ('SKIP', 'NO_MASK'):
+            return []
+        if gate != 'JUDGE':
+            raise DetectorError(
+                'advisor returned an unknown gate: {!r}'.format(gate))
+        try:
+            score = float(reply['score'])
+            x0, y0, x1, y1 = (float(value) for value in reply['bbox'])
+        except (KeyError, TypeError, ValueError) as error:
+            raise DetectorError(
+                'advisor JUDGE reply has no valid score/bbox: {!r}'.format(
+                    reply)) from error
+        if not all(math.isfinite(value) for value in (score, x0, y0, x1, y1)):
+            raise DetectorError('advisor returned non-finite score/bbox')
+        if x1 < x0 or y1 < y0:
+            raise DetectorError('advisor returned an inverted bbox')
+        if score < self.min_score:
+            return []
+        return [Detection(
+            label='sam3:{}'.format(self.prompt),
+            score=score,
+            bbox_xyxy=(x0, y0, x1, y1))]
+
+
 class HotReloadingDetector:
     """Reload a detector when its model file changes on disk."""
 
@@ -702,6 +799,8 @@ class HotReloadingDetector:
             return OpenCvDnnDetector(self.config)
         if backend == 'onnxruntime':
             return OnnxRuntimeDetector(self.config)
+        if backend == 'sam3_advisor':
+            return AdvisorDetector(self.config)
         raise DetectorError('unknown backend: {}'.format(backend))
 
     def _load(self):
