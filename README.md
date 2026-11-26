@@ -134,7 +134,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 100 ROS-free tests (77 existing + 23 ore scene/S2/S3)
+├── tests/                        # 102 ROS-free tests (77 existing + 25 ore scene/S2/S3)
 └── capability.yaml
 ```
 
@@ -363,8 +363,10 @@ centroid/full extent/volume.
 **S3 prototype (2026-11-26, offline):** `jcheng.scene_state.v2` attaches that
 visible geometry to a frozen v1 record via `build_scene_v2`; missing geometry is
 explicit `not_computed`, and `validate_scene_v2` rejects true-centroid/full-
-extent/volume/mass fields. Scene Graph relations and multi-view identity are
-still planned; no runtime/DDS/device change.
+extent/volume/mass fields. `build_relation_graph` adds evidence-backed
+`touching`/`near` edges (never `occludes` from one RGB view);
+`compare_relation_sets` is ready for independent pair labels, which do not
+exist yet. Multi-view identity and runtime integration remain planned.
 
 Design and evidence:
 

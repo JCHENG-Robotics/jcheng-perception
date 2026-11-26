@@ -354,7 +354,9 @@
           },
           "predicate": {
             "enum": [
-              "adjacent"
+              "adjacent",
+              "touching",
+              "near"
             ]
           },
           "object_id": {

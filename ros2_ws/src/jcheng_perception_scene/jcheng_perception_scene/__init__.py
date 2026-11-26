@@ -11,6 +11,11 @@ from .config import DEFAULT_CONFIG, config_sha256, load_config, validate_config
 from .dataset import import_coco_dataset, load_dataset, read_predictions
 from .geometry import GeometryParams, visible_geometry
 from .metrics import evaluate
+from .relations import (
+    RelationParams,
+    build_relation_graph,
+    compare_relation_sets,
+)
 from .pipeline import run_dataset, run_unlabelled
 from .sam2_tiles import (
     TileSet,
@@ -47,6 +52,7 @@ __all__ = [
     'InstanceMask',
     'PREDICTION_SCHEMA_VERSION',
     'Relation',
+    'RelationParams',
     'SCENE_SCHEMA_VERSION',
     'SCENE_V2_SCHEMA_VERSION',
     'SceneError',
@@ -55,8 +61,10 @@ __all__ = [
     'TilesConfig',
     'UNKNOWNS',
     '__version__',
+    'build_relation_graph',
     'build_scene_state',
     'build_scene_v2',
+    'compare_relation_sets',
     'config_sha256',
     'evaluate',
     'geometry_for_mask',

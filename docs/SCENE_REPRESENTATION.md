@@ -100,6 +100,24 @@
   `field_status.adjacency = not_computed_density_limit`。这是性能边界，不是
   “没有关系”的证据。
 
+### 4.1 v2 关系图原型（S3）
+
+`jcheng.scene_state.v2` 允许 `adjacent` / `touching` / `near` 三种谓词，
+由 `jcheng_perception_scene.relations.build_relation_graph` 生成：
+
+- `touching`：在 `adjacency_px` 搜索半径内接触像素 ≥ `touching_min_px`；
+- `near`：有接触证据但低于阈值；
+- 不发 `occludes`/支撑关系：单视角 RGB 没有可靠深度顺序。
+
+每条边仍带 `contact_px`、`contact_ratio`、双方边界像素、搜索半径、
+`mask_iou`、`depth_order=unknown`、`directed=false`。`RelationParams`
+还设 `max_instances`；超过则不计算并需要上层显式标注，不能解释为“无关系”。
+
+`build_scene_v2(..., relations=edges)` 会校验引用/自环/重复边；
+`validate_scene_v2` 同样检查谓词与重复。`compare_relation_sets` 提供按
+无序实例对+谓词的 precision/recall/F1 工具，但**当前没有独立配对标注**，
+不能把合成集上自洽的 P/R 当真实关系精度。
+
 ## 5. 不确定性表达
 
 | 量 | S1 | S2/S4 设计 |

@@ -62,7 +62,7 @@ above and adds no DDS, device, depth or motion path.
 | S1 | Offline ore instance segmentation baseline | Complete, offline (2026-11-26) | 93 tests; selftest; synthetic AP50 0.368; public 40_70mm AP50 0.043 (domain-gap baseline) |
 | S1.5 | SAM 2.1 Tiny off-line comparison and tiling MVE | In progress, offline (2026-11-26) | Apache-2.0; isolated Orin venv; 8 held-out AP50 0.508 (1008) / 0.637 (adaptive 504); frozen policy on 4 independent images: 0.6375; Rocks UAV: 0.301 (negative transfer); `import-sam2-tiles` converter + tests in repo |
 | S2 | Visible 3D geometry (depth + TF) | In progress, offline synthetic MVE (2026-11-26) | `visible_geometry` module + 2 tests (99 total); visible centroid/AABB/OBB; no real depth yet; thresholds TBD by Board |
-| S3 | Scene graph / scene state v2 | In progress, offline geometry prototype (2026-11-26) | v2 schema/builder/validator with visible geometry; relations/graph still planned |
+| S3 | Scene graph / scene state v2 | In progress, offline prototype (2026-11-26) | v2 schema/builder/validator with visible geometry and touching/near relation edges; no occludes/independent labels yet |
 | S4 | Multi-view instance association | Planned | Association P/R/F1 with ambiguity, no forced IDs |
 | S5 | Active perception / NBV | Planned | Simulation/offline first; advisory only |
 | S6 | Grasp affordance | Planned | Offline/simulation; 5-DoF constraints; no motion |

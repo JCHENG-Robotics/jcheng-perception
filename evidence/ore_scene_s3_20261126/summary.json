@@ -11,19 +11,22 @@
   ],
   "tests": {
     "command": "python3 -m pytest tests -q",
-    "passed": 100,
+    "passed": 102,
     "failed": 0,
-    "v2_tests": 1
+    "s3_tests": 3
   },
   "checks": [
     "v1 record remains unchanged",
     "computed geometry attached",
     "missing geometry -> not_computed",
-    "true_centroid/forbidden fields rejected"
+    "true_centroid/forbidden fields rejected",
+    "build_relation_graph touching/near edges with contact evidence",
+    "v2 relation references/self/duplicate validation"
   ],
   "limitations": [
     "Synthetic depth only; no real depth/NEES.",
     "Scene Graph relations and multi-view identity still planned.",
-    "No runtime/DDS/device/motion or jcheng-interfaces change."
+    "No runtime/DDS/device/motion or jcheng-interfaces change.",
+    "No independent relation-pair labels; compare_relation_sets is a utility only."
   ]
 }

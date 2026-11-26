@@ -118,7 +118,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 100 项 ROS-free 测试（77 原有 + 23 矿石场景/S2/S3）
+├── tests/                        # 102 项 ROS-free 测试（77 原有 + 25 矿石场景/S2/S3）
 └── capability.yaml
 ```
 
@@ -322,7 +322,9 @@ AABB 与 PCA OBB；已测 1 m 合成平面、平移、零深度和空 mask。尚
 **S3 原型（2026-11-26，离线）**：`jcheng.scene_state.v2` 通过
 `build_scene_v2` 把可见几何附加到冻结的 v1 记录；缺失几何写
 `not_computed`，`validate_scene_v2` 拒绝真实质心/完整尺寸/体积/质量字段。
-Scene Graph 关系与多视角身份仍待做；无运行时/DDS/设备改动。
+`build_relation_graph` 增加有证据的 `touching`/`near` 边（单视角不发
+`occludes`）；`compare_relation_sets` 已为独立配对标注准备好，但该标注尚不
+存在。多视角身份与运行时集成仍待做。
 
 设计与证据：
 

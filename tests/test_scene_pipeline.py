@@ -30,6 +30,11 @@ from jcheng_perception_scene.dataset import (
 from jcheng_perception_scene.geometry import GeometryParams, visible_geometry
 from jcheng_perception_scene.metrics import evaluate
 from jcheng_perception_scene.pipeline import run_dataset, run_unlabelled
+from jcheng_perception_scene.relations import (
+    RelationParams,
+    build_relation_graph,
+    compare_relation_sets,
+)
 from jcheng_perception_scene.sam2_tiles import (
     TileSet,
     TilesConfig,
@@ -279,6 +284,68 @@ def test_visible_geometry_transform_and_failure_paths():
 
     with pytest.raises(ValueError):
         visible_geometry(mask, depth[:, :-1], camera, np.eye(4))
+
+
+def _relation_instances():
+    first = np.zeros((32, 48), dtype=bool)
+    second = np.zeros((32, 48), dtype=bool)
+    third = np.zeros((32, 48), dtype=bool)
+    first[8:18, 8:18] = True
+    second[8:18, 18:28] = True
+    third[8:18, 40:48] = True
+    return [
+        InstanceMask('rel:1', first, SEMANTIC_LABEL, 0.9),
+        InstanceMask('rel:2', second, SEMANTIC_LABEL, 0.9),
+        InstanceMask('rel:3', third, SEMANTIC_LABEL, 0.9),
+    ]
+
+
+def test_relation_graph_touching_near_and_density_cap():
+    instances = _relation_instances()
+    edges = build_relation_graph(
+        instances, RelationParams(adjacency_px=5, touching_min_px=8,
+                                  max_instances=10))
+    assert len(edges) == 1
+    assert edges[0].predicate == 'touching'
+    assert edges[0].evidence['contact_px'] > 0
+    assert edges[0].evidence['depth_order'] == 'unknown'
+
+    near = build_relation_graph(
+        instances[:2], RelationParams(adjacency_px=5, touching_min_px=1000,
+                                      max_instances=10))
+    assert len(near) == 1
+    assert near[0].predicate == 'near'
+
+    capped = build_relation_graph(
+        instances, RelationParams(adjacency_px=5, touching_min_px=8,
+                                  max_instances=1))
+    assert capped == []
+
+
+def test_relation_set_comparison_and_v2_attachment():
+    instances = _relation_instances()[:2]
+    edges = build_relation_graph(
+        instances, RelationParams(adjacency_px=5, touching_min_px=8,
+                                  max_instances=10))
+    same = compare_relation_sets(edges, edges)
+    assert same['precision'] == pytest.approx(1.0)
+    assert same['recall'] == pytest.approx(1.0)
+    extra = edges + [type(edges[0])(
+        subject_id='rel:1', predicate='near', object_id='rel:2',
+        confidence=0.1, evidence={})]
+    worse = compare_relation_sets(extra, edges)
+    assert worse['precision'] == pytest.approx(0.5)
+
+    image = np.zeros((32, 48, 3), dtype=np.uint8)
+    scene_v1 = build_scene_state(
+        'rel', 0, 'base_link', image, None, None, instances,
+        load_config(), ClassicalWatershedBackend.info, {})
+    v2 = build_scene_v2(scene_v1.to_dict(), {}, relations=edges)
+    assert validate_scene_v2(v2) == []
+    assert v2['relations'][0]['predicate'] == 'touching'
+    with pytest.raises(ValueError):
+        build_scene_v2(
+            scene_v1.to_dict(), {}, relations=edges + edges)
 
 
 def test_scene_v2_attaches_visible_geometry():

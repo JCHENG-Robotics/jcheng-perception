@@ -10,6 +10,7 @@ scene graph.
 import copy
 
 from .geometry import visible_geometry
+from .relations import relation_key
 
 SCENE_V2_SCHEMA_VERSION = 'jcheng.scene_state.v2'
 
@@ -54,12 +55,15 @@ def geometry_for_mask(mask, depth_m, camera_matrix, transform_base_camera,
         params=params, frame_id=frame_id)
 
 
-def build_scene_v2(scene_v1, geometry_by_instance, frame_id='base_link'):
-    """Return a v2 copy with geometry attached per instance.
+def build_scene_v2(scene_v1, geometry_by_instance, relations=None,
+                   frame_id='base_link'):
+    """Return a v2 copy with geometry and optional relation edges attached.
 
     ``geometry_by_instance`` maps instance_id -> the output of
     :func:`visible_geometry`. Missing instances get an explicit
-    ``not_computed`` geometry, never zeros.
+    ``not_computed`` geometry, never zeros. ``relations`` accepts
+    :class:`Relation` objects or already-serialised dictionaries; when omitted
+    the v1 adjacency edges are preserved.
     """
     if not isinstance(scene_v1, dict):
         raise TypeError('scene_v1 must be a mapping')
@@ -69,13 +73,36 @@ def build_scene_v2(scene_v1, geometry_by_instance, frame_id='base_link'):
         raise TypeError('geometry_by_instance must be a mapping')
     record = copy.deepcopy(scene_v1)
     record['schema_version'] = SCENE_V2_SCHEMA_VERSION
+    instance_ids = set()
     for instance in record.get('instances', []):
         instance_id = instance.get('instance_id')
+        instance_ids.add(instance_id)
         geometry = geometry_by_instance.get(instance_id)
         if geometry is None:
             geometry = not_computed_geometry(
                 frame_id=frame_id, reason='no_geometry_for_instance')
         instance['geometry'] = copy.deepcopy(geometry)
+    if relations is not None:
+        serialized = []
+        seen = set()
+        for edge in relations:
+            value = edge.to_dict() if hasattr(edge, 'to_dict') else dict(edge)
+            subject = value.get('subject_id')
+            obj = value.get('object_id')
+            predicate = value.get('predicate')
+            if subject not in instance_ids or obj not in instance_ids:
+                raise ValueError('relation references unknown instance')
+            if subject == obj:
+                raise ValueError('self-relations are not allowed')
+            if predicate not in ('adjacent', 'touching', 'near'):
+                raise ValueError('unsupported relation predicate: %r' %
+                                 predicate)
+            key = relation_key(value)
+            if key in seen:
+                raise ValueError('duplicate relation edge: %r' % (key,))
+            seen.add(key)
+            serialized.append(value)
+        record['relations'] = serialized
     record.setdefault('field_status', {})['geometry'] = 'algorithm_estimate'
     return record
 
@@ -126,4 +153,22 @@ def validate_scene_v2(record):
             if geometry.get('visible_centroid_base') is not None:
                 errors.append('%s: non-computed geometry has centroid' %
                               instance_id)
+    relation_keys = set()
+    for relation in record.get('relations', []):
+        if not isinstance(relation, dict):
+            errors.append('relation must be an object')
+            continue
+        subject = relation.get('subject_id')
+        obj = relation.get('object_id')
+        predicate = relation.get('predicate')
+        if subject not in seen or obj not in seen:
+            errors.append('relation references unknown instance')
+        if subject == obj:
+            errors.append('self-relation is not allowed')
+        if predicate not in ('adjacent', 'touching', 'near'):
+            errors.append('unsupported relation predicate: %r' % predicate)
+        key = relation_key(relation)
+        if key in relation_keys:
+            errors.append('duplicate relation edge: %r' % (key,))
+        relation_keys.add(key)
     return errors

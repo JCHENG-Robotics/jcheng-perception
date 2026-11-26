@@ -577,7 +577,11 @@ D435i/Aurora 噪声与空洞未覆盖。可见中心/尺寸/OBB 不是真实质�
 - 新增 `jcheng.scene_state.v2` schema、`build_scene_v2`、`validate_scene_v2`；
 - v1 记录保持不变；缺失几何写 `not_computed`，不填 0；
 - 校验器拒绝 `true_centroid`/`full_extent`/`volume`/`mass` 等字段；
-- 1 个测试；总计 **100 passed**；Scene Graph 关系、多视角身份仍待做；
-- 设计与兼容：`docs/SCENE_REPRESENTATION.md` §8/§9。
+- 新增 `relations.py`：`touching`/`near` 两类证据边，含 contact/boundary/
+  search radius/`depth_order=unknown`；不发单视角 `occludes`；
+- `build_scene_v2(..., relations=...)` 校验引用/自环/重复；
+  `compare_relation_sets` 提供 P/R/F1 工具，但**无独立配对标注**；
+- 3 个测试；总计 **102 passed**；多视角身份仍待做；
+- 设计与兼容：`docs/SCENE_REPRESENTATION.md` §4.1/§8/§9。
 
-真实深度、NEES、关系图和运行时均未验证。
+真实深度、NEES、独立关系标注和运行时均未验证。

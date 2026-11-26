@@ -8,6 +8,13 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Scene State v2 relation graph prototype (2026-11-26):
+  `build_relation_graph` emits evidence-backed `touching`/`near` edges (never
+  `occludes` from a single RGB view); `build_scene_v2(..., relations=...)`
+  validates references, self-edges and duplicates, and
+  `compare_relation_sets` provides pair/predicate P/R/F1. Two new tests
+  (102 total); independent relation labels are still missing, so no
+  relation-accuracy claim.
 - Scene State v2 geometry prototype (2026-11-26): `jcheng.scene_state.v2`
   schema, `build_scene_v2` and `validate_scene_v2` attach visible-only
   geometry to a frozen v1 record without changing v1. Missing geometry becomes

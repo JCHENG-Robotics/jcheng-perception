@@ -14,8 +14,8 @@
 | `hardware_20261124_split_edge/` | 2026-11-24 | Per-camera ingress + fusion processes with 4 s watchdog/respawn; static 60 s: external 134 + wrist 226, cross-view 1.55 mm, fusion max 2.14 / p95 1.64 / final 1.96 mm; external ingress restarted at 25 s without losing the track | **Yes, static only** |
 | `ore_scene_s1_20261126/` | 2026-11-26 | Offline ore S1: 93 tests, selftest (empty/bad/overlap), synthetic AP50 0.368 / AP50-95 0.211, public Mendeley 40_70mm held-out AP50 0.043 (domain-gap baseline); no DDS/device/depth/motion | **No** |
 | `ore_scene_sam2_20261126/` | 2026-11-26 | Offline SAM 2.1 Tiny S1.5: 8-image AP50 0.508 (1008) / 0.637 (adaptive 504); 4-image independent split 0.6375; Rocks UAV AP50 0.301 (negative transfer); converter reproduces 0.6375; no DDS/device/depth/motion | **No** |
-| `ore_scene_s2_20261126/` | 2026-11-26 | Offline S2 visible-geometry MVE on synthetic depth: 2500 points from a 1 m plane, visible centroid/AABB/OBB, zero-depth/empty-mask failures; 100 tests; no real depth/hardware | **No** |
-| `ore_scene_s3_20261126/` | 2026-11-26 | Offline Scene State v2 prototype: v1->v2 geometry attach/validate, not_computed for missing geometry, forbidden true fields rejected; relations/graph still planned | **No** |
+| `ore_scene_s2_20261126/` | 2026-11-26 | Offline S2 visible-geometry MVE on synthetic depth: 2500 points from a 1 m plane, visible centroid/AABB/OBB, zero-depth/empty-mask failures; 102 tests; no real depth/hardware | **No** |
+| `ore_scene_s3_20261126/` | 2026-11-26 | Offline Scene State v2 prototype: v1->v2 geometry + touching/near relation edges, not_computed for missing geometry, forbidden true fields/reference/duplicate checks; no independent relation labels | **No** |
 
 The synthetic bundle proves the data path and logic, not robot accuracy. See
 [`docs/EVIDENCE.md`](../docs/EVIDENCE.md) for the full narrative and the list of
