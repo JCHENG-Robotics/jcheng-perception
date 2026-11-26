@@ -8,6 +8,18 @@ their original narrative order.
 
 ## [Unreleased]
 
+- SAM3 + Qwen advisory detector client (2026-11-26): new `sam3_advisor`
+  backend in `jcheng_perception_gpu` that sends a captured frame as base64
+  JPEG to the Orin advisory HTTP service and turns only a `JUDGE` reply into a
+  `sam3:<prompt>` box. `SKIP`/`NO_MASK` are empty results; transport/protocol
+  errors raise `DetectorError`, so the existing camera worker counts a failed
+  frame and publishes no fabricated box. Uses the existing bounded queue and
+  capture-timestamp contract; no device, DDS domain, depth/TF or motion change.
+  Offline unit tests with a fake transport (26 detector tests total) plus a
+  two-frame live HTTP smoke over the laptop -> Orin Wi-Fi path (front
+  `green soda bottle` score 0.961 in 3.39 s; wrist `bottle` score 0.973 in
+  2.24 s). Deployment in the running perception pipeline and hardware
+  validation remain **Unverified**. Docs: `docs/ADVISOR.md`.
 - Ore scene understanding S0/S1 (2026-11-26): new ROS-free
   `jcheng_perception_scene` package (Ament Python) with a deterministic
   synthetic ore-pile generator, COCO polygon adapter, classical
