@@ -1,0 +1,84 @@
+# SAM 2.1 ore S1.5 MVE evidence (2026-11-26)
+
+**Scope**: offline only. `hardware_claimed: false`, `real_ore_validation: false`.
+No DDS, device, depth, motion or runtime change. Full masks are outside git.
+
+## Model and host
+
+| Item | Value |
+|---|---|
+| Model | SAM 2.1 Hiera Tiny, Apache-2.0 |
+| Checkpoint | `sam2.1_hiera_tiny.pt`, 156,008,466 B |
+| SHA-256 | `7402e0d864fa82708a20fbd15bc84245c2f26dff0eb43a4b5b93452deb34be69` |
+| Host | AGX Orin 64 GB, `192.168.5.31` |
+| Workspace | `/home/ti5robot/jcheng-s1.5` (separate from `~/shelf_sam3_orin`) |
+| Python / torch | 3.10.19 / 2.8.0 |
+| Peak GPU | ~2.5 GB per 1008 tile; ~5.7 GB for a 5 MP image at 1008 |
+| Coexistence | Qwen3-VL llama-server stayed alive; SAM3 environment untouched |
+| Known issue | SAM2 `_C` extension missing; post-processing skipped (masks still full size) |
+
+## Data
+
+Mendeley `benchmark for rock blasting`, `40_70mm` subset, CC BY 4.0,
+DOI `10.17632/v9grvgsrh9.1`. Held-out: `40_10, 40_11, 40_13, 40_14,
+40_15, 40_16, 40_17, 40_18` — 8 images, 9,208 visible GT instances.
+Annotations' human-review/SAM-assist status is unverified; overlapping polygons
+are flattened in the internal label maps.
+
+## Results
+
+| Strategy | AP50 | AP50-95 | P | R | Pred/GT | Count MAE | Latency P50/P95 |
+|---|---|---|---|---|---|---|---|
+| Fixed 1008 tiles | 0.508 | 0.328 | 0.705 | 0.591 | 7723/9208 | 443.4 | 43.2/46.1 s |
+| **1008 + 504 fallback (<500 preds)** | **0.637** | **0.387** | 0.617 | 0.775 | 11564/9208 | 335.5 | 45.6/287.8 s |
+| Classical watershed (S1) | 0.043 | 0.012 | 0.275 | 0.028 | 2860/9208 | 793.5 | 4.7/8.5 s |
+
+Failure-image recovery with 504 tiles:
+
+| Image | 1008 AP50 | 504 AP50 |
+|---|---|---|
+| `40_10` | 0.141 | 0.567 |
+| `40_14` | 0.320 | 0.477 |
+| `40_15` | 0.089 | 0.549 |
+
+Synthetic subset (sparse + dense): SAM2 AP50 0.879 / AP50-95 0.793 vs
+classical 0.389 / 0.213.
+
+## Files
+
+| File | Content |
+|---|---|
+| `metrics_1008_8image.json` | fixed-1008 evaluation on 8 held-out images |
+| `per_image_1008_8image.json` | per-image fixed-1008 metrics |
+| `metrics_504_40_10_15.json` | 504 evaluation for `40_10`/`40_15` |
+| `per_image_504_40_10_15.json` | per-image 504 metrics |
+| `metrics_504_40_14.json` | 504 evaluation for `40_14` |
+| `metrics_hybrid500_8image.json` | adaptive hybrid evaluation |
+| `summary_1008.json` | method, host, weight hash, limitations |
+| `summary_hybrid500.json` | adaptive policy, results, limitations |
+
+## Reproduce
+
+Remote inference:
+
+```bash
+cd ~/jcheng-s1.5
+~/jcheng-s1.5/sam2-venv/bin/python jobs/run_sam2_auto.py \
+  --images-dir <tiles> --out <out> \
+  --checkpoint ~/jcheng-s1.5/weights/sam2.1_hiera_tiny.pt \
+  --points-per-side 32
+```
+
+Local merge/evaluation uses the same `jcheng_perception_scene` mask-AP code as
+S1; full label maps live in
+`/home/jerichocheng/jcheng/perception_datasets/ore_s1_20261126/`.
+
+## Limits
+
+- Threshold 500 and tile/merge parameters were chosen after observing the same
+  8 held-out images; **not independently validated**.
+- 504 fallback over-segments (11,564 predictions / 9,208 GT) and costs
+  ~2.5–4.8 min/image; not an online path.
+- Only 8 of 49 public images; no real-ore data.
+- No depth, 3D, multi-view, grasp or runtime integration.
+- `_C` post-processing is skipped; verify before production.

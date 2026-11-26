@@ -1,0 +1,72 @@
+{
+  "schema_version": "jcheng.ore_s1_5_adaptive.v2",
+  "created_at": "2026-11-26T10:21:40+00:00",
+  "hardware_claimed": false,
+  "real_ore_validation": false,
+  "offline_only": true,
+  "model": "SAM 2.1 Hiera Tiny (Apache-2.0), remote AGX Orin 192.168.5.31",
+  "policy": {
+    "stage1": "1008x1008 tiles, 3x2, points_per_side=32",
+    "stage2_fallback": "504x504 tiles, 6x4, points_per_side=32, if stage1 predicted instances < 500",
+    "merge": "greedy predicted_iou; max area 5% (1008)/10% (504); >=30% new pixels"
+  },
+  "dataset": {
+    "name": "Mendeley 40-70mm held-out",
+    "license": "CC BY 4.0",
+    "doi": "10.17632/v9grvgsrh9.1",
+    "images": 8,
+    "gt_instances": 9208
+  },
+  "results": {
+    "aggregate": {
+      "mask_ap50": 0.6366936544155577,
+      "mask_ap50_95": 0.3868063613702867,
+      "precision_at_operating_point": 0.6170875129712902,
+      "recall_at_operating_point": 0.7749782797567333,
+      "predicted_instances": 11564,
+      "gt_instances": 9208,
+      "instance_count_mae": 335.5,
+      "latency_ms": {
+        "max": 292127.0,
+        "n": 8,
+        "p50": 45600.299999999996,
+        "p95": 287767.54000000004
+      }
+    },
+    "stage1_1008_only": {
+      "mask_ap50": 0.508,
+      "mask_ap50_95": 0.3283,
+      "predicted_instances": 7723,
+      "instance_count_mae": 443.4
+    },
+    "fallback_images": {
+      "40_10": {
+        "stage1": 0.1414,
+        "stage2": 0.5673
+      },
+      "40_14": {
+        "stage1": 0.3197,
+        "stage2": 0.4769
+      },
+      "40_15": {
+        "stage1": 0.0887,
+        "stage2": 0.5488
+      }
+    }
+  },
+  "limitations": [
+    "Threshold 500 was chosen after observing the same 8 held-out images; it is not an independent validation.",
+    "504 tiles over-segment (11,564 predictions vs 9,208 GT).",
+    "Fallback images cost ~4.8 min each; P95 latency 288 s.",
+    "Public annotations' human-review status unverified.",
+    "No runtime/Interfaces/depth/3D integration."
+  ],
+  "artifacts": {
+    "hybrid_metrics": "metrics.json",
+    "hybrid_scenes": "scenes.jsonl",
+    "masks": "masks/",
+    "stage1": "../sam2_s1_5_eval/",
+    "stage2_504": "../sam2_504_eval/",
+    "stage2_504_40_14": "../sam2_504_40_14_eval/"
+  }
+}

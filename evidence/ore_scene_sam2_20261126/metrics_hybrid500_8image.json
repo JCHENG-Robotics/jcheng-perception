@@ -1,0 +1,65 @@
+{
+  "annotation_method": "dataset_provided_coco_polygons",
+  "by_density": {},
+  "by_illumination": {},
+  "by_occlusion": {},
+  "data_source": "public",
+  "dataset_id": "mendeley_40_70mm_test",
+  "dataset_license": "CC-BY-4.0",
+  "dataset_manifest_sha256": "c57ebc0d0fb83eb1734f03fcca96f14aeba3db4b4d3e972ad268b3ea72df0965",
+  "failed_scenes": [],
+  "gt_instances": 9208,
+  "hardware_validation": false,
+  "instance_count_mae": 335.5,
+  "instance_count_relative_mae": 0.291485664639444,
+  "iou_thresholds": [
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9,
+    0.95
+  ],
+  "latency_ms": {
+    "max": 292127.0,
+    "n": 8,
+    "p50": 45600.299999999996,
+    "p95": 287767.54000000004
+  },
+  "limitations": [
+    "Synthetic ground truth measures pipeline mechanics, not real-ore accuracy.",
+    "Scores are heuristic and uncalibrated; precision/recall at a fixed score threshold are not operating-point guarantees.",
+    "Occlusion strata are scene-level labels supplied by the synthetic generator; public datasets without such labels are not stratified.",
+    "Fully occluded zero-area instances are excluded from the ground-truth count because they have no observable mask."
+  ],
+  "mask_ap50": 0.6366936544155577,
+  "mask_ap50_95": 0.3868063613702867,
+  "mask_ap_by_threshold": {
+    "0.50": 0.6366936544155577,
+    "0.55": 0.6091349764803269,
+    "0.60": 0.5782593448729767,
+    "0.65": 0.5411180454379372,
+    "0.70": 0.4894506387686609,
+    "0.75": 0.4262070806214123,
+    "0.80": 0.3378597104797974,
+    "0.85": 0.19902520262639126,
+    "0.90": 0.05009786703702424,
+    "0.95": 0.0002170929627820046
+  },
+  "missing_prediction_scenes": [],
+  "operating_point": {
+    "iou": 0.5,
+    "score_threshold": 0.5
+  },
+  "precision_at_operating_point": 0.6170875129712902,
+  "predicted_instances": 11564,
+  "real_ore_validation": false,
+  "recall_at_operating_point": 0.7749782797567333,
+  "scenes": 8,
+  "schema_version": "jcheng.ore_evaluation.v1",
+  "score_threshold_for_ap": 0.05
+}

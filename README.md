@@ -119,6 +119,7 @@ jcheng-perception/
 │   ├── SCENE_REPRESENTATION.md   # scene state v1 design (Chinese)
 │   ├── ORE_SCENE_EVALUATION.md   # evaluation protocol (Chinese)
 │   ├── ORE_SCENE_S1.md           # S1 validation report (Chinese)
+│   ├── ORE_SCENE_S1_5.md         # SAM 2.1 offline MVE report (Chinese)
 │   └── adr/
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # provisional IDL (M2 promotes to jcheng-interfaces)
@@ -335,9 +336,17 @@ The synthetic result verifies the pipeline, not real-ore accuracy. The public
 result is a **domain-gap baseline** (the classical baseline under-segments dense
 real piles) and is not an acceptance result. No real-ore accuracy is claimed.
 
+**S1.5 (2026-11-26, offline):** SAM 2.1 Hiera Tiny (Apache-2.0) on the remote
+AGX Orin. On the same 8 public held-out images, fixed 1008 tiles reach mask AP50
+0.508 / AP50-95 0.328; a 504-px fallback for low-count images raises this to
+AP50 0.637 / AP50-95 0.387, but the fallback threshold and tiling parameters
+were fitted on the same 8 images and over-segment. Not independent validation;
+real-ore accuracy remains Unverified.
+
 Design and evidence:
 
 - [S1 validation report](docs/ORE_SCENE_S1.md)
+- [S1.5 SAM 2.1 offline MVE](docs/ORE_SCENE_S1_5.md)
 - [Research](docs/ORE_SCENE_RESEARCH.md) ·
   [Architecture](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [Roadmap](docs/ORE_SCENE_ROADMAP.md) ·

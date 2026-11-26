@@ -1,0 +1,74 @@
+{
+  "40_10": {
+    "gt_instances": 1136,
+    "instance_count_mae": 879.0,
+    "mask_ap50": 0.14139250481431312,
+    "mask_ap50_95": 0.08554097798775465,
+    "precision_at_operating_point": 0.7665369649805448,
+    "predicted_instances": 257,
+    "recall_at_operating_point": 0.17341549295774647
+  },
+  "40_11": {
+    "gt_instances": 1197,
+    "instance_count_mae": 508.0,
+    "mask_ap50": 0.7722441135470024,
+    "mask_ap50_95": 0.5304790050583333,
+    "precision_at_operating_point": 0.6299120234604105,
+    "predicted_instances": 1705,
+    "recall_at_operating_point": 0.8972431077694235
+  },
+  "40_13": {
+    "gt_instances": 1257,
+    "instance_count_mae": 260.0,
+    "mask_ap50": 0.7873968169761718,
+    "mask_ap50_95": 0.5281243962821062,
+    "precision_at_operating_point": 0.7073170731707317,
+    "predicted_instances": 1517,
+    "recall_at_operating_point": 0.8536197295147175
+  },
+  "40_14": {
+    "gt_instances": 921,
+    "instance_count_mae": 505.0,
+    "mask_ap50": 0.3196774335108896,
+    "mask_ap50_95": 0.19265894892238647,
+    "precision_at_operating_point": 0.8028846153846154,
+    "predicted_instances": 416,
+    "recall_at_operating_point": 0.36264929424538545
+  },
+  "40_15": {
+    "gt_instances": 1162,
+    "instance_count_mae": 968.0,
+    "mask_ap50": 0.08874814648982578,
+    "mask_ap50_95": 0.05165819757993512,
+    "precision_at_operating_point": 0.7164948453608248,
+    "predicted_instances": 194,
+    "recall_at_operating_point": 0.11962134251290878
+  },
+  "40_16": {
+    "gt_instances": 1177,
+    "instance_count_mae": 129.0,
+    "mask_ap50": 0.5883195706246785,
+    "mask_ap50_95": 0.36985760537632417,
+    "precision_at_operating_point": 0.7557251908396947,
+    "predicted_instances": 1048,
+    "recall_at_operating_point": 0.6728971962616822
+  },
+  "40_17": {
+    "gt_instances": 1211,
+    "instance_count_mae": 263.0,
+    "mask_ap50": 0.7413691935507885,
+    "mask_ap50_95": 0.5029318331484467,
+    "precision_at_operating_point": 0.7028493894165536,
+    "predicted_instances": 1474,
+    "recall_at_operating_point": 0.8554913294797688
+  },
+  "40_18": {
+    "gt_instances": 1147,
+    "instance_count_mae": 35.0,
+    "mask_ap50": 0.594815001558896,
+    "mask_ap50_95": 0.34030818301594656,
+    "precision_at_operating_point": 0.7176258992805755,
+    "predicted_instances": 1112,
+    "recall_at_operating_point": 0.6957279860505667
+  }
+}

@@ -8,6 +8,17 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Ore scene understanding S1.5 / SAM 2.1 MVE (2026-11-26): off-line
+  SAM 2.1 Hiera Tiny (Apache-2.0) on the remote AGX Orin, isolated from the
+  SAM3/Qwen environment. Fixed 1008 tiles on 8 public held-out images:
+  mask AP50 0.508 / AP50-95 0.328; a 504-px fallback for low-count images
+  raises the aggregate to AP50 0.637 / AP50-95 0.387 (P 0.617 / R 0.775,
+  count MAE 335.5) but costs ~2.5-4.8 min/image and over-segments. The
+  fallback threshold and tiling parameters were fitted on the same 8 images,
+  so this is **not** independent validation; real-ore accuracy is Unverified.
+  No DDS, device, depth, motion, weight or `jcheng-interfaces` change.
+  Evidence: `evidence/ore_scene_sam2_20261126/`; design/limits:
+  `docs/ORE_SCENE_S1_5.md`.
 - Ore scene understanding S0/S1 (2026-11-26): new ROS-free
   `jcheng_perception_scene` package (Ament Python) with a deterministic
   synthetic ore-pile generator, COCO polygon adapter, classical
@@ -23,6 +34,15 @@ their original narrative order.
   model weight or `jcheng-interfaces` change. Evidence:
   `evidence/ore_scene_s1_20261126/`; design: `docs/ORE_SCENE_*.md`,
   `docs/SCENE_REPRESENTATION.md`.
+- Dataset and training pipeline for the real models:
+  `scripts/capture_dataset.py` records the perception uplink JPEGs into session
+  directories (manifest + provenance), `check_dataset.py` validates detect/pose
+  labels, `split_dataset.py` splits whole sessions into train/val,
+  `train_yolo.py` trains `yolov8n` detect or `yolov8n-pose` and can install
+  `best.pt`, and `export_model.py` exports ONNX/OpenVINO. `docs/DATASET.md`
+  defines the proposed five object classes and the two-contact-point wrist
+  keypoint convention. An 8 s pilot capture (57 external + 51 wrist frames)
+  validated the recorder; no labeled dataset or weights are committed.
 - D435i depth-missing recovery (2026-11-25): a container restart can leave the
   depth unit closed (`uvcvideo -71`) while colour still streams, so the ingress
   exits on `depth=0` until the systemd start limit. Recovery: restart

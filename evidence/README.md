@@ -12,7 +12,8 @@
 | `hardware_20261124_drift_verify/` | 2026-11-24 | Deployed `eed1ca9` to the Pi and ran two bounded static dual-view captures (90 s / 60 s, no motion); worst required-label drift 4.7 mm / 8.1 mm vs 448-696 mm pre-fix; one 67 mm first-pair reference step documented | **Yes, static only** |
 | `hardware_20261124_tag_verify/` | 2026-11-24 | Defined-point (AprilTag 36h11) static run: two-view tag centre 3.77 mm; fixed-point 5 mm gate 3.67 mm depth / 3.07 mm PnP after chain correction; no 67 mm first-pair step; velocity min-dt fix from the tag data | **Yes, static only** |
 | `hardware_20261124_split_edge/` | 2026-11-24 | Per-camera ingress + fusion processes with 4 s watchdog/respawn; static 60 s: external 134 + wrist 226, cross-view 1.55 mm, fusion max 2.14 / p95 1.64 / final 1.96 mm; external ingress restarted at 25 s without losing the track | **Yes, static only** |
-| `ore_scene_s1_20261126/` | 2026-11-26 | Offline ore S1: 92 tests, selftest (empty/bad/overlap), synthetic AP50 0.368 / AP50-95 0.211, public Mendeley 40_70mm held-out AP50 0.043 (domain-gap baseline); no DDS/device/depth/motion | **No** |
+| `ore_scene_s1_20261126/` | 2026-11-26 | Offline ore S1: 93 tests, selftest (empty/bad/overlap), synthetic AP50 0.368 / AP50-95 0.211, public Mendeley 40_70mm held-out AP50 0.043 (domain-gap baseline); no DDS/device/depth/motion | **No** |
+| `ore_scene_sam2_20261126/` | 2026-11-26 | Offline SAM 2.1 Tiny S1.5: 8-image held-out AP50 0.508 (1008 tiles), 0.637 (adaptive 504 fallback); failure images 40_10/40_14/40_15 recovered to 0.477–0.567; thresholds fitted on the same 8; no independent validation; no DDS/device/depth/motion | **No** |
 
 The synthetic bundle proves the data path and logic, not robot accuracy. See
 [`docs/EVIDENCE.md`](../docs/EVIDENCE.md) for the full narrative and the list of

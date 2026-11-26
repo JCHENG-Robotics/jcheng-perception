@@ -1,0 +1,174 @@
+{
+  "schema_version": "jcheng.ore_s1_5_mve.v1",
+  "created_at": "2026-11-26T09:46:01+00:00",
+  "hardware_claimed": false,
+  "real_ore_validation": false,
+  "offline_only": true,
+  "model": {
+    "name": "SAM 2.1 Hiera Tiny",
+    "license": "Apache-2.0",
+    "checkpoint": "sam2.1_hiera_tiny.pt",
+    "checkpoint_bytes": 156008466,
+    "checkpoint_sha256": "7402e0d864fa82708a20fbd15bc84245c2f26dff0eb43a4b5b93452deb34be69"
+  },
+  "remote": {
+    "host": "192.168.5.31",
+    "workspace": "/home/ti5robot/jcheng-s1.5",
+    "venv": "/home/ti5robot/jcheng-s1.5/sam2-venv",
+    "torch": "2.8.0",
+    "python": "3.10.19",
+    "arch": "aarch64",
+    "isolation": "separate repo/venv/weights; ~/shelf_sam3_orin untouched; Qwen llama-server stayed alive"
+  },
+  "method": {
+    "backend": "SAM2AutomaticMaskGenerator",
+    "points_per_side": 32,
+    "pred_iou_thresh": 0.8,
+    "stability_score_thresh": 0.9,
+    "crop_layers": 0,
+    "tile_size": 1008,
+    "tile_grid": "3x2 with x=[0,792,1584], y=[0,936]",
+    "max_mask_area_fraction_of_tile": 0.05,
+    "min_new_pixel_fraction": 0.3,
+    "score": "predicted_iou",
+    "note": "greedy cross-tile partition; exploratory merge policy, not tuned on the held-out split"
+  },
+  "dataset": {
+    "name": "Mendeley benchmark for rock blasting, 40-70mm",
+    "license": "CC BY 4.0",
+    "doi": "10.17632/v9grvgsrh9.1",
+    "split": "pre-registered held-out 40_10, 40_11, 40_13, 40_14, 40_15, 40_16, 40_17, 40_18",
+    "images": 8,
+    "gt_instances": 9208,
+    "annotation_note": "dataset-provided COCO polygons; human-review/SAM-assist status unverified; overlapping polygons flattened"
+  },
+  "results": {
+    "aggregate": {
+      "mask_ap50": 0.5080188990795518,
+      "mask_ap50_95": 0.3282843365035355,
+      "precision_at_operating_point": 0.7047779360352194,
+      "recall_at_operating_point": 0.5911164205039097,
+      "predicted_instances": 7723,
+      "gt_instances": 9208,
+      "instance_count_mae": 443.375,
+      "instance_count_relative_mae": 0.3852085143353606,
+      "latency_ms": {
+        "max": 47204.299999999996,
+        "n": 8,
+        "p50": 43166.25,
+        "p95": 46081.49999999999
+      }
+    },
+    "per_image": {
+      "40_10": {
+        "gt_instances": 1136,
+        "instance_count_mae": 879.0,
+        "mask_ap50": 0.14139250481431312,
+        "mask_ap50_95": 0.08554097798775465,
+        "precision_at_operating_point": 0.7665369649805448,
+        "predicted_instances": 257,
+        "recall_at_operating_point": 0.17341549295774647
+      },
+      "40_11": {
+        "gt_instances": 1197,
+        "instance_count_mae": 508.0,
+        "mask_ap50": 0.7722441135470024,
+        "mask_ap50_95": 0.5304790050583333,
+        "precision_at_operating_point": 0.6299120234604105,
+        "predicted_instances": 1705,
+        "recall_at_operating_point": 0.8972431077694235
+      },
+      "40_13": {
+        "gt_instances": 1257,
+        "instance_count_mae": 260.0,
+        "mask_ap50": 0.7873968169761718,
+        "mask_ap50_95": 0.5281243962821062,
+        "precision_at_operating_point": 0.7073170731707317,
+        "predicted_instances": 1517,
+        "recall_at_operating_point": 0.8536197295147175
+      },
+      "40_14": {
+        "gt_instances": 921,
+        "instance_count_mae": 505.0,
+        "mask_ap50": 0.3196774335108896,
+        "mask_ap50_95": 0.19265894892238647,
+        "precision_at_operating_point": 0.8028846153846154,
+        "predicted_instances": 416,
+        "recall_at_operating_point": 0.36264929424538545
+      },
+      "40_15": {
+        "gt_instances": 1162,
+        "instance_count_mae": 968.0,
+        "mask_ap50": 0.08874814648982578,
+        "mask_ap50_95": 0.05165819757993512,
+        "precision_at_operating_point": 0.7164948453608248,
+        "predicted_instances": 194,
+        "recall_at_operating_point": 0.11962134251290878
+      },
+      "40_16": {
+        "gt_instances": 1177,
+        "instance_count_mae": 129.0,
+        "mask_ap50": 0.5883195706246785,
+        "mask_ap50_95": 0.36985760537632417,
+        "precision_at_operating_point": 0.7557251908396947,
+        "predicted_instances": 1048,
+        "recall_at_operating_point": 0.6728971962616822
+      },
+      "40_17": {
+        "gt_instances": 1211,
+        "instance_count_mae": 263.0,
+        "mask_ap50": 0.7413691935507885,
+        "mask_ap50_95": 0.5029318331484467,
+        "precision_at_operating_point": 0.7028493894165536,
+        "predicted_instances": 1474,
+        "recall_at_operating_point": 0.8554913294797688
+      },
+      "40_18": {
+        "gt_instances": 1147,
+        "instance_count_mae": 35.0,
+        "mask_ap50": 0.594815001558896,
+        "mask_ap50_95": 0.34030818301594656,
+        "precision_at_operating_point": 0.7176258992805755,
+        "predicted_instances": 1112,
+        "recall_at_operating_point": 0.6957279860505667
+      }
+    },
+    "classical_baseline_8_image": {
+      "mask_ap50": 0.042856993060773806,
+      "mask_ap50_95": 0.012220271212906116,
+      "precision_at_operating_point": 0.2750809061488673,
+      "recall_at_operating_point": 0.02769331016507385,
+      "predicted_instances": 2860,
+      "gt_instances": 9208,
+      "instance_count_mae": 793.5,
+      "latency_p50_ms": 4678.82645,
+      "latency_p95_ms": 8532.04224
+    }
+  },
+  "failure_analysis": {
+    "40_10": {
+      "ap50": 0.1414,
+      "note": "small stones / wide truck-bed scene; 257 predictions vs 1136 GT"
+    },
+    "40_15": {
+      "ap50": 0.0887,
+      "note": "small dark stones; 194 vs 1162 GT"
+    },
+    "hypothesis": "fixed 1008 tile + points_per_side 32 under-samples very small stones; 504-px tiles upscaled to 1024 should be the next experiment"
+  },
+  "limitations": [
+    "Only 8 public images; not the full 49-image subset.",
+    "Merge parameters were selected on the tuning image 40_0; held-out images were not used for tuning, but the policy is exploratory.",
+    "Two of eight held-out images fail (AP50 < 0.15) due to small/very dense stones; aggregate hides this variance.",
+    "SAM2 install lacks the _C extension; post-processing is skipped (masks still original size).",
+    "Latency ~43-47 s per 5 MP image (6 tiles) on Orin; not online.",
+    "No depth, 3D, multi-view, grasp or runtime integration.",
+    "Public annotations' human-review status is unverified."
+  ],
+  "artifacts": {
+    "metrics": "metrics.json",
+    "per_image": "per_image.json",
+    "scenes": "scenes.jsonl",
+    "masks": "masks/ (8 full-resolution label PNGs)"
+  }
+}

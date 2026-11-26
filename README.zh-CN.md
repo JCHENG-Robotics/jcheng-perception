@@ -103,6 +103,7 @@ jcheng-perception/
 │   ├── SCENE_REPRESENTATION.md   # Scene State v1 设计
 │   ├── ORE_SCENE_EVALUATION.md   # 评测协议
 │   ├── ORE_SCENE_S1.md           # S1 验证报告
+│   ├── ORE_SCENE_S1_5.md         # SAM 2.1 离线 MVE 报告
 │   └── adr/
 ├── ros2_ws/src/
 │   ├── jcheng_perception_msgs/   # 临时 IDL（M2 提升到 jcheng-interfaces）
@@ -298,9 +299,16 @@ S1 结果（2026-11-26，仅 CPU）：
 合成结果只验证管线，不证明真实矿石精度。公开结果是一个**域差距 baseline**
 （经典方法在密集真实堆上严重欠分割），不是验收结论；本轮不宣称真实矿石精度。
 
+**S1.5（2026-11-26，离线）**：SAM 2.1 Hiera Tiny（Apache-2.0）在远端 AGX Orin
+上，同样 8 张公开 held-out 图：固定 1008 tile AP50 0.508 / AP50-95 0.328；
+低召回图回退 504 tile 后 AP50 0.637 / AP50-95 0.387，但回退阈值与分块参数是
+在同一批 8 张图上拟合的，且出现过分割。不是独立验证；真实矿石精度仍为
+Unverified。
+
 设计与证据：
 
 - [S1 验证报告](docs/ORE_SCENE_S1.md)
+- [S1.5 SAM 2.1 离线 MVE](docs/ORE_SCENE_S1_5.md)
 - [调研](docs/ORE_SCENE_RESEARCH.md) ·
   [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [路线图](docs/ORE_SCENE_ROADMAP.md) ·

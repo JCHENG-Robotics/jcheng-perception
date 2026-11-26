@@ -153,6 +153,12 @@ CPU 后端的模板。
 
 ## 6. 数据采集
 
+完整的采集 → 标注 → 划分 → 训练 → 导出流程见
+[`docs/DATASET.md`](DATASET.md)：`scripts/capture_dataset.py` 记录上行
+JPEG，`check_dataset.py` 校验标签，`split_dataset.py` 按 session 划分，
+`train_yolo.py` 训练 detect/pose，`export_model.py` 导出。下面是最小 bag
+记录建议（用于延迟/关联分析）：
+
 短窗口（10–30 s）足够调试：
 
 ```bash

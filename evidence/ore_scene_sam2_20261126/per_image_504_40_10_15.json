@@ -1,0 +1,20 @@
+{
+  "40_10": {
+    "gt_instances": 1136,
+    "instance_count_mae": 583.0,
+    "mask_ap50": 0.5673422771119654,
+    "mask_ap50_95": 0.29223665261843695,
+    "precision_at_operating_point": 0.4956369982547993,
+    "predicted_instances": 1719,
+    "recall_at_operating_point": 0.75
+  },
+  "40_15": {
+    "gt_instances": 1162,
+    "instance_count_mae": 601.0,
+    "mask_ap50": 0.5487561271350073,
+    "mask_ap50_95": 0.28842867913965986,
+    "precision_at_operating_point": 0.5082246171298922,
+    "predicted_instances": 1763,
+    "recall_at_operating_point": 0.7710843373493976
+  }
+}

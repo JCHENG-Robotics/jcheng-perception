@@ -1,0 +1,65 @@
+{
+  "annotation_method": "dataset_provided_coco_polygons",
+  "by_density": {},
+  "by_illumination": {},
+  "by_occlusion": {},
+  "data_source": "public",
+  "dataset_id": "mendeley_40_70mm_test",
+  "dataset_license": "CC-BY-4.0",
+  "dataset_manifest_sha256": "c57ebc0d0fb83eb1734f03fcca96f14aeba3db4b4d3e972ad268b3ea72df0965",
+  "failed_scenes": [],
+  "gt_instances": 921,
+  "hardware_validation": false,
+  "instance_count_mae": 305.0,
+  "instance_count_relative_mae": 0.3311617806731813,
+  "iou_thresholds": [
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9,
+    0.95
+  ],
+  "latency_ms": {
+    "max": 151487.30000000008,
+    "n": 1,
+    "p50": 151487.30000000008,
+    "p95": 151487.30000000008
+  },
+  "limitations": [
+    "Synthetic ground truth measures pipeline mechanics, not real-ore accuracy.",
+    "Scores are heuristic and uncalibrated; precision/recall at a fixed score threshold are not operating-point guarantees.",
+    "Occlusion strata are scene-level labels supplied by the synthetic generator; public datasets without such labels are not stratified.",
+    "Fully occluded zero-area instances are excluded from the ground-truth count because they have no observable mask."
+  ],
+  "mask_ap50": 0.4768707845975496,
+  "mask_ap50_95": 0.24631607109869186,
+  "mask_ap_by_threshold": {
+    "0.50": 0.4768707845975496,
+    "0.55": 0.43430283852671586,
+    "0.60": 0.4065126207144919,
+    "0.65": 0.36144401098823586,
+    "0.70": 0.2988988132992575,
+    "0.75": 0.23636356779224335,
+    "0.80": 0.16852752754603115,
+    "0.85": 0.07207126327498942,
+    "0.90": 0.007952128981388785,
+    "0.95": 0.00021715526601520088
+  },
+  "missing_prediction_scenes": [],
+  "operating_point": {
+    "iou": 0.5,
+    "score_threshold": 0.5
+  },
+  "precision_at_operating_point": 0.50163132137031,
+  "predicted_instances": 1226,
+  "real_ore_validation": false,
+  "recall_at_operating_point": 0.6677524429967426,
+  "scenes": 1,
+  "schema_version": "jcheng.ore_evaluation.v1",
+  "score_threshold_for_ap": 0.05
+}
