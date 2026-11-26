@@ -75,13 +75,25 @@ safety:
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 77
+  unit_tests: 93
+  ore_scene_s1:
+    passed: 2026-11-26 (offline only; no DDS/device/depth/motion)
+    evidence: evidence/ore_scene_s1_20261126/
+    result: >-
+      16 new tests; 93 total pass; selftest covers empty/bad/overlap. Synthetic
+      test (39 scenes / 600 GT) mask AP50 0.368 / AP50-95 0.211; public
+      Mendeley 40_70mm held-out (8 images / 9,208 GT) AP50 0.043, reported as a
+      domain-gap baseline.
+    caveats: >-
+      Synthetic metrics verify pipeline mechanics, not real-ore accuracy.
+      Public annotations' human-review status is unverified. Scores are
+      heuristic and uncalibrated. Real-ore accuracy is Unverified.
   reference_point_backend:
     passed: 2026-11-24 (unit test + real hardware static run)
     config: config/gpu_tag.yaml (AprilTag 36h11, 60 mm, id 0)
     hardware: external-wrist tag centre 3.77 mm; fixed-point 5 mm gate 3.67 mm (depth) / 3.07 mm (PnP) after view_bias.yaml; no 67 mm first-pair step
     dual_view_run9: external 240 + wrist 195 observations over 60 s; cross-view 3.37 mm; fused p95 3.78 / final 1.19 / max 10.03 mm (one 12.4 mm view-switch transient); aux gateway Fast DDS was fixed. Run 10 repeat gave only 7.5 s of wrist (external 267 continuous, fused 6.36/2.53/0.27); the motion gateway was not the trigger, so the remaining wrist-depth DDS reader needs per-camera ingress/participant isolation
-    rerun_min_dt: deployed f90b5d5; same-distro Humble GPU + uplink clock-jump/worker fixes + aux-gateway CycloneDDS + killing the orphan motion gateway produced the dual-view run9: external+wrist continuous, cross-view 3.37 mm, fused p95 3.78 / final 1.19 / max 10.03 mm
+    rerun_min_dt: deployed f90b5d5; same-distro Humble GPU + uplink clock-jump/worker fixes + aux-gateway CycloneDDS + killing the orphan motion gateway produced the dual-view run9 - external+wrist continuous, cross-view 3.37 mm, fused p95 3.78 / final 1.19 / max 10.03 mm
     evidence: evidence/hardware_20261124_tag_verify/
     caveats: one static pose, tag sheet curls ~7 mm; GPU external uplink reader wedge needed an edge-first/GPU-restart order
   drift_regression:
@@ -100,7 +112,7 @@ verification:
     result: per-camera ingress + fusion; external 134 + wrist 226 continuous, cross-view 1.55 mm, fusion max 2.14 / p95 1.64 / final 1.96 mm; external ingress watchdog restarted at 25 s without losing the fusion track
     safety_bounds: max_track_speed_mps 0.5, max_target_distance_m 1.0; touch all core/edge sources after an archive deploy (colcon mtime skipped stale tracking/config once)
   uplink_robustness:
-    passed: 2026-11-24 (tests/test_uplink_rate.py: normal gap, rate limit, backwards clock jump, long gap)
+    passed: 2026-11-24 (tests/test_uplink_rate.py - normal gap, rate limit, backwards clock jump, long gap)
     deployed: Pi core+edge via tar; status notes expose encode_failures/rate_limited; UplinkWorker catches publish exceptions
     effect: same-distro Humble run kept the edge at 468 frames/60 s (previous stalled at 88) and external GPU frames rose 3 -> 42
     watchdog_diagnostic: subscription recreation after a 4 s stall did not recover the external RGB (stuck at 5 frames while depth advanced) or wrist depth (stuck at 7 while RGB advanced); wedge is at the DDS participant/reader level and the watchdog was reverted

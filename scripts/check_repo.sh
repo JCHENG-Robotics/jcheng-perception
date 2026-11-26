@@ -27,6 +27,10 @@ echo "ok"
 echo "== simulation =="
 python3 scripts/simulate_pipeline.py
 
+echo "== ore scene selftest =="
+python3 scripts/ore_scene.py selftest > /dev/null
+echo "ok"
+
 echo "== no model weights in the tree =="
 if find . -path ./.git -prune -o \
     \( -name '*.pt' -o -name '*.onnx' -o -name '*.engine' \

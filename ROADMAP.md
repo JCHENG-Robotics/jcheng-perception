@@ -22,6 +22,10 @@
 | D435i depth-missing recovery | Documented (2026-11-25) | `docs/FAILURE_MODES.md` §4.1 |
 | Multi-pose and moving-target accuracy | Not started | — |
 | Motion integration through `jcheng-system` | Not started | — |
+| Ore scene understanding S0 (research/architecture/interface) | Complete (2026-11-26) | `docs/ORE_SCENE_*.md`, `docs/SCENE_REPRESENTATION.md` |
+| Ore scene understanding S1 (offline instance segmentation) | Complete, offline only (2026-11-26) | `evidence/ore_scene_s1_20261126/`; synthetic verified, real-ore accuracy Unverified |
+| Ore S1.5 deep segmentation backend (SAM 2 / MobileSAM) | Planned | — |
+| Real-ore accuracy / depth / multi-view / grasp | Not started | — |
 
 ## Milestones
 
@@ -45,6 +49,27 @@
    several arm poses before any motion integration.
 3. **M6 — motion integration.** Route the advisory pose through
    `jcheng_safety`/`jcheng_motion`; this repository never commands motion.
+
+## Ore scene understanding track
+
+This is a separate offline track; it does not change the M0–M6 runtime milestones
+above and adds no DDS, device, depth or motion path.
+
+| Stage | Scope | State | Exit criterion / evidence |
+|---|---|---|---|
+| S0 | Research, architecture, scene representation, interface design | Complete (2026-11-26) | Five Chinese design docs + S1 report; no contract change |
+| S1 | Offline ore instance segmentation baseline | Complete, offline (2026-11-26) | 92 tests; selftest; synthetic AP50 0.368; public 40_70mm AP50 0.043 (domain-gap baseline) |
+| S1.5 | SAM 2 / MobileSAM comparison on 6 GB | Planned | License/VRAM/AP parity; no weights in git |
+| S2 | Visible 3D geometry (depth + TF) | Planned | Depth alignment + geometry repeatability; thresholds TBD by Board |
+| S3 | Scene graph / scene state v2 | Planned | Evidence-backed relations, schema v2, density-safe runtime |
+| S4 | Multi-view instance association | Planned | Association P/R/F1 with ambiguity, no forced IDs |
+| S5 | Active perception / NBV | Planned | Simulation/offline first; advisory only |
+| S6 | Grasp affordance | Planned | Offline/simulation; 5-DoF constraints; no motion |
+| S7 | Applications / Learning / Benchmark integration | Planned | Contract proposal approved; offline end-to-end |
+| S8 | Real ore sorting closed loop | Not started | Safety review + per-session authorization; `ExecuteMotion` only |
+
+Start here: [`docs/ORE_SCENE_S1.md`](docs/ORE_SCENE_S1.md), then
+[`docs/ORE_SCENE_ROADMAP.md`](docs/ORE_SCENE_ROADMAP.md).
 
 ## Out of scope
 

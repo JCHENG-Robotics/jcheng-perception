@@ -1,0 +1,59 @@
+# Offline ore scene understanding (S1).
+# This file only configures an offline, weight-free baseline. It is not a
+# runtime perception configuration and it does not enable any robot path.
+schema_version: 1
+
+scene:
+  frame_id: camera_color_optical_frame
+  semantic_label: ore
+
+backend:
+  id: classical_watershed
+  version: "1.0.0"
+  foreground:
+    # `otsu_gray` was the better of the two foreground modes on the synthetic
+    # 2026-11-26 set. `border_color` (Lab distance from the top/bottom border)
+    # is kept as an ablation; it lost 4-6 AP50 points on medium/dense scenes.
+    mode: otsu_gray
+    border_fraction: 0.05
+    border_mad_max: 18.0
+    # 0.85 lowers the Otsu threshold so darker ore is not discarded; it was
+    # selected once on a tuning seed (20261126) before the evidence run.
+    threshold_scale: 0.85
+    # Ore is assumed brighter than a dark conveyor belt. A light background
+    # needs `polarity: dark` and is not validated yet.
+    polarity: bright
+    clahe_clip_limit: 2.0
+    clahe_tile_grid: 8
+    blur_kernel: 5
+    open_kernel: 3
+    close_kernel: 7
+    min_area_px: 120
+    max_area_fraction: 0.20
+    min_foreground_fraction: 0.01
+    min_contrast: 10.0
+  watershed:
+    # `global` beat `local` on the tuning set: local peaks oversegmented
+    # single stones and dropped AP50 from ~0.37 to ~0.21.
+    peak_mode: global
+    peak_ratio: 0.25
+    peak_window: 7
+    min_peak_px: 1.5
+    gradient_blur: 5
+    adjacency_px: 5
+    # Dense public scenes exceed this count; adjacency is then omitted and
+    # field_status says so instead of paying an O(N^2) full-resolution cost.
+    adjacency_max_instances: 64
+  score:
+    area_reference_fraction: 0.01
+
+evaluation:
+  iou_min: 0.50
+  iou_max: 0.95
+  iou_step: 0.05
+  score_threshold: 0.05
+  pr_score_threshold: 0.50
+  pr_iou: 0.50
+
+output:
+  overlays: true

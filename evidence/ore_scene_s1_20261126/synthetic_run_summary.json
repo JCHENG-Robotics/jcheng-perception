@@ -1,0 +1,41 @@
+{
+  "backend": {
+    "calibrated": false,
+    "description": "Otsu foreground, distance-transform markers, watershed split; heuristic score, no learned weights",
+    "family": "classical_cv",
+    "id": "classical_watershed",
+    "version": "1.0.0"
+  },
+  "config_sha256": "ad42e8832ea5dd652783e84d51402021684413796fced3ba95e169287f9cc3ef",
+  "created_at": "2026-11-26T07:19:07+00:00",
+  "dataset": {
+    "annotation_method": "procedural_ground_truth",
+    "dataset_id": "synthetic_20261127",
+    "license": "CC0-1.0",
+    "manifest_sha256": "fca2a1f9c02915d58d1ea6ef627da04593e512d2d4d414ace6b7a4df6b89b918",
+    "scenes": 39,
+    "source": "synthetic"
+  },
+  "elapsed_s": 1.8717,
+  "empty_scenes": 3,
+  "environment": {
+    "numpy": "1.26.4",
+    "opencv": "4.6.0",
+    "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3"
+  },
+  "failed_scene_count": 0,
+  "failed_scenes": [],
+  "hardware_validation": false,
+  "instance_records": 346,
+  "outputs": {
+    "instances": "/home/jerichocheng/jcheng/perception_datasets/ore_s1_20261126/run_synthetic/instances.jsonl",
+    "masks": "/home/jerichocheng/jcheng/perception_datasets/ore_s1_20261126/run_synthetic/masks",
+    "overlays": "/home/jerichocheng/jcheng/perception_datasets/ore_s1_20261126/run_synthetic/overlays",
+    "scenes": "/home/jerichocheng/jcheng/perception_datasets/ore_s1_20261126/run_synthetic/scenes.jsonl"
+  },
+  "real_ore_validation": false,
+  "run_id": "synthetic_20261127-20261126T071907Z",
+  "scene_records": 39,
+  "schema_version": "jcheng.ore_run.v1"
+}

@@ -8,6 +8,21 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Ore scene understanding S0/S1 (2026-11-26): new ROS-free
+  `jcheng_perception_scene` package (Ament Python) with a deterministic
+  synthetic ore-pile generator, COCO polygon adapter, classical
+  watershed/connected-component backends, versioned `jcheng.scene_state.v1`
+  records, 2-D adjacency evidence, mask AP/PR/count/latency evaluation and a
+  seven-command CLI (`scripts/ore_scene.py`). 16 new tests; 93 total pass;
+  selftest covers empty scenes, truncated images and overlapping masks.
+  Synthetic test (seed 20261127, 39 scenes / 600 GT): mask AP50 0.368,
+  AP50-95 0.211, count MAE 6.51, latency P50 14.4 ms at 640x480. Public
+  Mendeley `40_70mm` held-out (8 images / 9,208 GT, CC BY 4.0): AP50 0.043,
+  count MAE 793.5 — reported as a domain-gap baseline, not an acceptance
+  result. Real-ore accuracy is **Unverified**. No DDS, device, depth, motion,
+  model weight or `jcheng-interfaces` change. Evidence:
+  `evidence/ore_scene_s1_20261126/`; design: `docs/ORE_SCENE_*.md`,
+  `docs/SCENE_REPRESENTATION.md`.
 - D435i depth-missing recovery (2026-11-25): a container restart can leave the
   depth unit closed (`uvcvideo -71`) while colour still streams, so the ingress
   exits on `depth=0` until the systemd start limit. Recovery: restart

@@ -1,0 +1,49 @@
+# Profile for the public Mendeley "40-70mm crushed stone" subset.
+# It is a separate profile because the real images are 2592x1944 with ~1100
+# small stones per image; the synthetic defaults are not meant for that scale.
+# Parameters were selected on images 40_0/40_1 (tuning split) only.
+schema_version: 1
+
+scene:
+  frame_id: camera_color_optical_frame
+  semantic_label: ore
+
+backend:
+  id: classical_watershed
+  version: "1.0.0"
+  foreground:
+    mode: otsu_gray
+    polarity: bright
+    border_fraction: 0.05
+    border_mad_max: 18.0
+    threshold_scale: 0.85
+    clahe_clip_limit: 2.0
+    clahe_tile_grid: 8
+    blur_kernel: 5
+    open_kernel: 3
+    close_kernel: 7
+    min_area_px: 50
+    max_area_fraction: 0.20
+    min_foreground_fraction: 0.01
+    min_contrast: 10.0
+  watershed:
+    peak_mode: global
+    peak_ratio: 0.12
+    peak_window: 7
+    min_peak_px: 1.5
+    gradient_blur: 5
+    adjacency_px: 5
+    adjacency_max_instances: 64
+  score:
+    area_reference_fraction: 0.01
+
+evaluation:
+  iou_min: 0.50
+  iou_max: 0.95
+  iou_step: 0.05
+  score_threshold: 0.05
+  pr_score_threshold: 0.50
+  pr_iou: 0.50
+
+output:
+  overlays: true
