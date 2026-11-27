@@ -18,8 +18,11 @@ their original narrative order.
   Offline unit tests with a fake transport (26 detector tests total) plus a
   two-frame live HTTP smoke over the laptop -> Orin Wi-Fi path (front
   `green soda bottle` score 0.961 in 3.39 s; wrist `bottle` score 0.973 in
-  2.24 s). Deployment in the running perception pipeline and hardware
-  validation remain **Unverified**. Docs: `docs/ADVISOR.md`.
+  2.24 s). Capacity, 2026-11-27: two cameras at 1 Hz with queue depth 2
+  processed only 36/120 (30%) at 0.519 requests/s, p50 4.44 s — plan
+  ≤0.2–0.3 Hz per camera or one camera. Deployment in the running perception
+  pipeline and hardware validation remain **Unverified**. Docs:
+  `docs/ADVISOR.md`.
 - Ore scene understanding S0/S1 (2026-11-26): new ROS-free
   `jcheng_perception_scene` package (Ament Python) with a deterministic
   synthetic ore-pile generator, COCO polygon adapter, classical
