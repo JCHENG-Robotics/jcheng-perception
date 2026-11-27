@@ -119,7 +119,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 110 项 ROS-free 测试（77 原有 + 33 矿石场景/S2/S3/S4）
+├── tests/                        # 114 项 ROS-free 测试（77 原有 + 37 矿石场景/S2/S3/S4）
 └── capability.yaml
 ```
 
@@ -332,7 +332,9 @@ AABB 与 PCA OBB；已测 1 m 合成平面、平移、零深度和空 mask。尚
 实例）上，bbox + 局部 mask 关系图可扩展到稠密场景：经典匹配 10.4%，
 P/R/F1 0.787/0.015/0.030；SAM2.1 匹配 59.1%，P/R/F1 0.957/0.394/0.558。
 S4.1 离线双视角生成器已实现（RGB + z-depth + 实例 label + 构造真值对）；
-关联匹配器仍未实现，因此暂无 association 指标。
+S4.2 匹配器在 8 个稠密合成场景（125 条构造对）上：互相投影 + 匈牙利
+P/R/F1 = 1.000/0.944/0.971，仅可见质心 baseline 为 0.973/0.872/0.920。
+真实矿石关联精度 **Unverified**。
 
 设计与证据：
 
@@ -342,6 +344,7 @@ S4.1 离线双视角生成器已实现（RGB + z-depth + 实例 label + 构造�
 - [S3 关系图 MVE](docs/ORE_SCENE_S3.md)
 - [S4 多视角关联设计稿](docs/ORE_SCENE_S4.md)（设计）
 - [S4.1 双视角生成器](docs/ORE_SCENE_S4_1.md)（仅离线合成数据）
+- [S4.2 关联匹配器](docs/ORE_SCENE_S4_2.md)（仅合成稠密场景）
 - [调研](docs/ORE_SCENE_RESEARCH.md) ·
   [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [路线图](docs/ORE_SCENE_ROADMAP.md) ·

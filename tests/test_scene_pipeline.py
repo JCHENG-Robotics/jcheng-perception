@@ -13,6 +13,15 @@ import cv2
 import numpy as np
 import pytest
 
+from jcheng_perception_scene.association import (
+    AssociationInstance,
+    AssociationParams,
+    AssociationScene,
+    ViewFrame,
+    associate_scene,
+    evaluate_association,
+    load_dual_view_dataset,
+)
 from jcheng_perception_scene.backends.classical import (
     ClassicalWatershedBackend,
     build_backend,
@@ -896,4 +905,121 @@ def test_dual_view_rejects_invalid_ranges(tmp_path):
         generate_dual_view_dataset(
             str(tmp_path / 'bad-size'), scene_count=1, width=32, height=32)
     with pytest.raises(ValueError):
+        generate_dual_view_dataset(
+            str(tmp_path / 'bad-radius'), scene_count=1, scene_radius_m=0.0)
+    with pytest.raises(ValueError):
         look_at_camera('ext', (0.0, 0.0, 0.0), (0.0, 0.0, 0.0), 64, 64)
+
+
+def test_association_recovers_synthetic_pairs(tmp_path):
+    root = str(tmp_path / 'assoc-data')
+    generate_dual_view_dataset(
+        root, scene_count=3, empty_count=1, seed=20261127,
+        width=192, height=144, min_instances=5, max_instances=8,
+        created_at=CREATED_AT)
+    dataset = load_dual_view_dataset(root)
+    result = evaluate_association(dataset)
+    metrics = result['results']
+    assert metrics['truth_pairs'] > 0
+    assert metrics['predicted_pairs'] > 0
+    assert metrics['forced_id_errors'] == 0
+    assert metrics['precision'] >= 0.9
+    assert metrics['recall'] >= 0.8
+    assert metrics['f1'] >= 0.85
+    for record in result['scenes']:
+        for cluster in record['clusters']:
+            assert len(cluster['members']) == 2
+            if cluster['status'] == 'ambiguous':
+                assert cluster['global_id'] is None
+                assert len(cluster['candidates']) >= 2
+
+
+def test_association_ambiguous_does_not_force_ids():
+    camera_ext = look_at_camera(
+        'ext', (0.5, -0.4, 0.4), (0.0, 0.0, 0.0), 32, 32)
+    camera_wrist = look_at_camera(
+        'wrist', (0.4, 0.4, 0.4), (0.0, 0.0, 0.0), 32, 32)
+    rows, columns = np.mgrid[0:4, 0:4]
+    points = np.column_stack([
+        columns.ravel() * 0.005,
+        rows.ravel() * 0.005,
+        np.full(16, 0.05),
+    ])
+
+    def fake(view_id, instance_id):
+        centroid = points.mean(axis=0)
+        covariance = np.cov(points.T, bias=True) + np.eye(3) * 1e-8
+        return AssociationInstance(
+            view_id=view_id,
+            instance_id=instance_id,
+            mask_index=1,
+            bbox_xyxy=(0, 0, 1, 1),
+            points_base=points,
+            centroid_base=centroid,
+            covariance_base=covariance,
+            aabb_min=points.min(axis=0),
+            aabb_max=points.max(axis=0),
+            visible_area_px=len(points),
+            occlusion_ratio=0.0,
+        )
+
+    scene = AssociationScene(
+        scene_id='symmetric',
+        frames={
+            'ext': ViewFrame('ext', camera_ext, np.zeros((32, 32), np.uint16),
+                             np.zeros((32, 32)), [
+                                 fake('ext', 'ext:1'), fake('ext', 'ext:2')]),
+            'wrist': ViewFrame('wrist', camera_wrist,
+                               np.zeros((32, 32), np.uint16),
+                               np.zeros((32, 32)), [
+                                   fake('wrist', 'wrist:1'),
+                                   fake('wrist', 'wrist:2')]),
+        },
+        attributes={'n_instances': 2},
+    )
+    record = associate_scene(
+        scene, AssociationParams(strategy='centroid', ambiguity_margin=0.05))
+    assert len(record['clusters']) == 2
+    assert all(cluster['status'] == 'ambiguous'
+               for cluster in record['clusters'])
+    assert all(cluster['global_id'] is None
+               for cluster in record['clusters'])
+    assert not record['singletons']
+
+
+def test_association_permutation_and_empty(tmp_path):
+    root = str(tmp_path / 'assoc-permute')
+    generate_dual_view_dataset(
+        root, scene_count=2, empty_count=1, seed=20261127,
+        width=128, height=96, min_instances=4, max_instances=6,
+        created_at=CREATED_AT)
+    dataset = load_dual_view_dataset(root)
+    first = evaluate_association(dataset, first_view='ext')
+    second = evaluate_association(dataset, first_view='wrist')
+    assert first['results']['correct_pairs'] == \
+        second['results']['correct_pairs']
+    assert first['results']['predicted_pairs'] == \
+        second['results']['predicted_pairs']
+    assert first['results']['truth_pairs'] == \
+        second['results']['truth_pairs']
+    empty = next(scene for scene in dataset.scenes
+                 if scene.attributes.get('empty'))
+    empty_record = associate_scene(empty)
+    assert not empty_record['clusters']
+    assert not empty_record['singletons']
+
+
+def test_association_cli(tmp_path):
+    root = str(tmp_path / 'assoc-cli-data')
+    generate_dual_view_dataset(
+        root, scene_count=1, empty_count=0, seed=20261127,
+        width=128, height=96, min_instances=4, max_instances=4,
+        created_at=CREATED_AT)
+    out = str(tmp_path / 'assoc-cli' / 'metrics.json')
+    code = main([
+        'evaluate-association', '--dataset', root, '--out', out,
+    ])
+    assert code == 0
+    assert os.path.isfile(out)
+    assert os.path.isfile(
+        os.path.join(os.path.dirname(out), 'associations.jsonl'))

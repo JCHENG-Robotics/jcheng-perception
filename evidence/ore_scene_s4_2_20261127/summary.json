@@ -1,0 +1,149 @@
+{
+  "checks": {
+    "ambiguous_never_has_unique_global_id": true,
+    "deterministic_repeat": true,
+    "forced_id_errors": true,
+    "view_order_permutation": true
+  },
+  "created_at": "2026-11-27T01:24:52+00:00",
+  "dataset": {
+    "dataset_id": "dual_view_20261127",
+    "empty_scenes": 1,
+    "generator": {
+      "empty_count": 1,
+      "height": 360,
+      "max_instances": 24,
+      "min_instances": 16,
+      "name": "jcheng_perception_scene.synthetic_dual",
+      "scene_count": 8,
+      "scene_radius_m": 0.1,
+      "seed": 20261127,
+      "version": "1.0.0",
+      "width": 480
+    },
+    "instances_total": 165,
+    "license": "CC0-1.0",
+    "scenes": 9,
+    "source": "synthetic",
+    "truth_pairs": 125
+  },
+  "hardware_claimed": false,
+  "limitations": [
+    "Ellipsoid proxies and fixed synthetic cameras; no real ore/calibration error.",
+    "Dense synthetic set (scene_radius 0.10 m, 16-24 instances) is still not a real pile.",
+    "One mutual-projection candidate had no candidate; recall is 0.944, not 1.0.",
+    "Centroid baseline has 10 ambiguous clusters; mutual projection had 0 on this set.",
+    "No real-ore/hardware/runtime validation; no interfaces change."
+  ],
+  "method": {
+    "evaluation": "associated clusters only; GT pairs from pairs.jsonl; ambiguous/singleton not counted as predicted pairs",
+    "matching": "Hungarian on gated cost; ambiguous if top-2 margin < ambiguity_margin",
+    "params": {
+      "ambiguity_margin": 0.05,
+      "association_margin_m": 0.02,
+      "depth_tolerance_m": 0.01,
+      "max_candidates": 512,
+      "max_chamfer_ratio": 1.0,
+      "max_points": 300,
+      "min_mutual_support": 0.15,
+      "min_support_pixels": 8,
+      "size_ratio_max": 2.5,
+      "strategy": "mutual_projection",
+      "weight_chamfer": 0.35,
+      "weight_prior": 0.1,
+      "weight_size": 0.15,
+      "weight_support": 1.0
+    },
+    "strategy": "mutual_projection"
+  },
+  "real_ore_validation": false,
+  "results": {
+    "centroid_baseline": {
+      "ambiguous_clusters": 10,
+      "correct_pairs": 109,
+      "f1": 0.919831,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 418.586,
+        "p50": 360.259,
+        "p95": 411.157
+      },
+      "per_density": {
+        "dense": {
+          "correct": 109,
+          "f1": 0.919831,
+          "precision": 0.973214,
+          "predicted": 112,
+          "recall": 0.872,
+          "scenes": 8,
+          "truth": 125
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        }
+      },
+      "precision": 0.973214,
+      "predicted_pairs": 112,
+      "recall": 0.872,
+      "singleton_reason_counts": {
+        "ambiguous_elsewhere": 4,
+        "matched_elsewhere": 10,
+        "no_candidate": 1
+      },
+      "truth_pairs": 125
+    },
+    "mutual_projection": {
+      "ambiguous_clusters": 0,
+      "correct_pairs": 118,
+      "f1": 0.971193,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 430.001,
+        "p50": 384.986,
+        "p95": 424.22
+      },
+      "per_density": {
+        "dense": {
+          "correct": 118,
+          "f1": 0.971193,
+          "precision": 1.0,
+          "predicted": 118,
+          "recall": 0.944,
+          "scenes": 8,
+          "truth": 125
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 118,
+      "recall": 0.944,
+      "singleton_reason_counts": {
+        "matched_elsewhere": 22,
+        "no_candidate": 1
+      },
+      "truth_pairs": 125
+    }
+  },
+  "schema_version": "jcheng.ore_s4_2_mve.v1",
+  "scope": "S4.2 offline dual-view association matcher on synthetic dense scenes",
+  "tests": {
+    "command": "python3 -m pytest tests -q",
+    "failed": 0,
+    "passed": 114,
+    "s4_2_tests": 4
+  }
+}

@@ -7,6 +7,12 @@ only. S1 is RGB-only and does not estimate 3-D geometry, mass, material or ore
 grade.
 """
 
+from .association import (
+    AssociationParams,
+    associate_scene,
+    evaluate_association,
+    load_dual_view_dataset,
+)
 from .config import DEFAULT_CONFIG, config_sha256, load_config, validate_config
 from .dataset import import_coco_dataset, load_dataset, read_predictions
 from .geometry import GeometryParams, visible_geometry
@@ -63,6 +69,7 @@ __all__ = [
     'DUAL_VIEW_DATASET_SCHEMA_VERSION',
     'EVALUATION_SCHEMA_VERSION',
     'GeometryParams',
+    'AssociationParams',
     'Camera',
     'Ellipsoid',
     'InstanceMask',
@@ -83,7 +90,9 @@ __all__ = [
     'build_scene_v2',
     'compare_relation_sets',
     'config_sha256',
+    'associate_scene',
     'evaluate',
+    'evaluate_association',
     'evaluate_predicted_relations',
     'evaluate_relation_benchmark',
     'generate_dual_view_dataset',
@@ -93,6 +102,7 @@ __all__ = [
     'import_coco_dataset',
     'load_config',
     'load_dataset',
+    'load_dual_view_dataset',
     'load_tiles_config',
     'read_predictions',
     'render_view',

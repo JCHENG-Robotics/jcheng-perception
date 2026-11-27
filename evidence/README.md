@@ -18,6 +18,7 @@
 | `ore_scene_s3_20261126/` | 2026-11-26 | Offline Scene State v2 prototype: v1->v2 geometry + touching/near relation edges, not_computed for missing geometry, forbidden true fields/reference/duplicate checks; no independent relation labels | **No** |
 | `ore_scene_s3_relations_20261126/` | 2026-11-26 | Controlled 18-scene relation benchmark P/R/F1 1.0; e2e 39 synthetic scenes: classical match 43.5% / relation F1 0.067, SAM2.1 match 76.3% / F1 0.600; dense public 40_70mm 8 images (9,208 GT): classical match 10.4% / F1 0.030, SAM2.1 match 59.1% / F1 0.558; no real-ore relation accuracy | **No** |
 | `ore_scene_s4_1_20261127/` | 2026-11-27 | Offline S4.1 dual-view generator: 4 scenes + 1 empty, RGB/z-depth/uint16 labels, 61 constructed cross-view pairs, 2 singletons; deterministic regeneration and mask/depth/pair consistency checks pass; no matcher/association metrics | **No** |
+| `ore_scene_s4_2_20261127/` | 2026-11-27 | Offline S4.2 matcher on 8 dense synthetic scenes / 125 pairs: mutual projection P/R/F1 1.000/0.944/0.971 vs centroid baseline 0.973/0.864/0.915; 0 vs 11 ambiguous; forced-ID 0; synthetic only | **No** |
 
 The synthetic bundle proves the data path and logic, not robot accuracy. See
 [`docs/EVIDENCE.md`](../docs/EVIDENCE.md) for the full narrative and the list of

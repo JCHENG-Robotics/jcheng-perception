@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jcheng-robotics.github.io/schemas/jcheng.scene_association.v1.schema.json",
+  "title": "JCHENG offline dual-view association record v1",
+  "description": "Internal offline association output for one synchronized dual-view scene. Not a cross-repo contract; no runtime consumer.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "scene_id",
+    "first_view",
+    "second_view",
+    "params",
+    "clusters",
+    "singletons"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "jcheng.scene_association.v1"
+    },
+    "scene_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "first_view": {
+      "enum": [
+        "ext",
+        "wrist"
+      ]
+    },
+    "second_view": {
+      "enum": [
+        "ext",
+        "wrist"
+      ]
+    },
+    "params": {
+      "type": "object"
+    },
+    "clusters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "status",
+          "global_id",
+          "members"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "associated",
+              "ambiguous"
+            ]
+          },
+          "global_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "members": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "object",
+              "required": [
+                "view_id",
+                "instance_id"
+              ],
+              "properties": {
+                "view_id": {
+                  "enum": [
+                    "ext",
+                    "wrist"
+                  ]
+                },
+                "instance_id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "confidence": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "confidence_kind": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "candidates": {
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "unmatched_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "singletons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "view_id",
+          "instance_id",
+          "reason"
+        ],
+        "properties": {
+          "view_id": {
+            "enum": [
+              "ext",
+              "wrist"
+            ]
+          },
+          "instance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

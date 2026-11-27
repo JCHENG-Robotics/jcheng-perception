@@ -359,6 +359,8 @@ def _scene_rng(seed, index):
 
 def _generate_ellipsoids(rng, count, scene_radius_m=0.18):
     """Place ``count`` ellipsoids on the z=0 plane inside a disk."""
+    if scene_radius_m <= 0:
+        raise ValueError('scene_radius_m must be positive')
     ellipsoids = []
     for index in range(int(count)):
         radius = math.sqrt(float(rng.random())) * scene_radius_m
@@ -409,7 +411,7 @@ def _visible_record(label, full_silhouette_px, instance_index,
 
 def generate_dual_view_scene(scene_id, seed, index, width, height,
                              instance_count, cameras=None, created_at=None,
-                             with_renders=False):
+                             with_renders=False, scene_radius_m=0.18):
     """Generate one scene and return its records.
 
     Returns ``(scene_record, pair_record)`` by default, or
@@ -417,7 +419,7 @@ def generate_dual_view_scene(scene_id, seed, index, width, height,
     """
     cameras = cameras or default_cameras(width, height)
     rng = _scene_rng(seed, index)
-    ellipsoids = _generate_ellipsoids(rng, instance_count)
+    ellipsoids = _generate_ellipsoids(rng, instance_count, scene_radius_m)
     renders = {
         view_id: render_view(ellipsoids, cameras[view_id])
         for view_id in VIEW_IDS
@@ -498,7 +500,7 @@ def generate_dual_view_scene(scene_id, seed, index, width, height,
 def generate_dual_view_dataset(out_dir, scene_count=6, empty_count=1,
                                seed=20261127, width=480, height=360,
                                min_instances=8, max_instances=18,
-                               created_at=None):
+                               scene_radius_m=0.18, created_at=None):
     """Generate a deterministic dual-view dataset; return the manifest path."""
     scene_count = int(scene_count)
     empty_count = int(empty_count)
@@ -510,6 +512,8 @@ def generate_dual_view_dataset(out_dir, scene_count=6, empty_count=1,
         raise ValueError('image dimensions must be at least 64 pixels')
     if min_instances < 0 or max_instances < min_instances:
         raise ValueError('invalid instance-count range')
+    if scene_radius_m <= 0:
+        raise ValueError('scene_radius_m must be positive')
     cameras = default_cameras(int(width), int(height))
     for directory in ('images', 'masks', 'depth'):
         os.makedirs(os.path.join(out_dir, directory), exist_ok=True)
@@ -529,7 +533,8 @@ def generate_dual_view_dataset(out_dir, scene_count=6, empty_count=1,
             count = 0
         scene, pair_record, renders = generate_dual_view_scene(
             scene_id, seed, index, int(width), int(height), count,
-            cameras=cameras, created_at=created_at, with_renders=True)
+            cameras=cameras, created_at=created_at, with_renders=True,
+            scene_radius_m=scene_radius_m)
         for view_id, render in renders.items():
             image_path = os.path.join(
                 out_dir, 'images', '%s_%s.png' % (scene_id, view_id))
@@ -571,6 +576,7 @@ def generate_dual_view_dataset(out_dir, scene_count=6, empty_count=1,
             'height': int(height),
             'min_instances': min_instances,
             'max_instances': max_instances,
+            'scene_radius_m': float(scene_radius_m),
         },
         'cameras': {
             view_id: camera.as_dict()

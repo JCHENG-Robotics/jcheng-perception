@@ -14,7 +14,11 @@ import json
 import os
 import tempfile
 
-from .backends.classical import build_backend
+from .association import (
+    AssociationParams,
+    evaluate_association,
+    load_dual_view_dataset,
+)
 from .config import load_config, validate_config
 from .dataset import (
     import_coco_dataset,
@@ -136,16 +140,60 @@ def _command_generate_dual_view(args):
     manifest_path = generate_dual_view_dataset(
         args.out, scene_count=args.scenes, empty_count=args.empty_scenes,
         seed=args.seed, width=args.width, height=args.height,
-        min_instances=args.min_instances, max_instances=args.max_instances)
+        min_instances=args.min_instances, max_instances=args.max_instances,
+        scene_radius_m=args.scene_radius)
     _print_json({
         'dataset_manifest': manifest_path,
         'scenes': args.scenes,
         'empty_scenes': args.empty_scenes,
         'seed': args.seed,
         'instances': [args.min_instances, args.max_instances],
+        'scene_radius_m': args.scene_radius,
         'views': ['ext', 'wrist'],
         'source': 'synthetic',
         'license': 'CC0-1.0',
+        'hardware_validation': False,
+    })
+    return EXIT_OK
+
+
+def _command_evaluate_association(args):
+    dataset = load_dual_view_dataset(args.dataset, max_points=args.max_points)
+    params = AssociationParams(
+        strategy=args.strategy,
+        ambiguity_margin=args.ambiguity_margin,
+        min_mutual_support=args.min_support,
+        depth_tolerance_m=args.depth_tolerance,
+        max_points=args.max_points,
+    )
+    result = evaluate_association(
+        dataset, params, first_view=args.first_view)
+    out_path = os.path.abspath(args.out)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    with open(out_path, 'w', encoding='utf-8') as handle:
+        json.dump(result, handle, indent=2, sort_keys=True)
+        handle.write('\n')
+    associations_path = os.path.join(
+        os.path.dirname(out_path), 'associations.jsonl')
+    with open(associations_path, 'w', encoding='utf-8') as handle:
+        for record in result['scenes']:
+            handle.write(json.dumps(record, sort_keys=True))
+            handle.write('\n')
+    metrics = result['results']
+    _print_json({
+        'metrics': out_path,
+        'associations': associations_path,
+        'strategy': args.strategy,
+        'truth_pairs': metrics['truth_pairs'],
+        'predicted_pairs': metrics['predicted_pairs'],
+        'correct_pairs': metrics['correct_pairs'],
+        'precision': metrics['precision'],
+        'recall': metrics['recall'],
+        'f1': metrics['f1'],
+        'ambiguous_clusters': metrics['ambiguous_clusters'],
+        'forced_id_errors': metrics['forced_id_errors'],
+        'singleton_reason_counts': metrics['singleton_reason_counts'],
+        'data_source': 'synthetic',
         'hardware_validation': False,
     })
     return EXIT_OK
@@ -461,7 +509,24 @@ def build_parser():
     dual.add_argument('--height', type=int, default=360)
     dual.add_argument('--min-instances', type=int, default=8)
     dual.add_argument('--max-instances', type=int, default=18)
+    dual.add_argument('--scene-radius', type=float, default=0.18)
     dual.set_defaults(func=_command_generate_dual_view)
+
+    association = subparsers.add_parser(
+        'evaluate-association',
+        help='associate dual-view scenes and score known pairs')
+    association.add_argument('--dataset', required=True)
+    association.add_argument('--out', required=True)
+    association.add_argument(
+        '--strategy', choices=('mutual_projection', 'centroid'),
+        default='mutual_projection')
+    association.add_argument(
+        '--first-view', choices=('ext', 'wrist'), default='ext')
+    association.add_argument('--ambiguity-margin', type=float, default=0.05)
+    association.add_argument('--min-support', type=float, default=0.15)
+    association.add_argument('--depth-tolerance', type=float, default=0.01)
+    association.add_argument('--max-points', type=int, default=300)
+    association.set_defaults(func=_command_evaluate_association)
 
     coco = subparsers.add_parser(
         'import-coco',

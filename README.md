@@ -135,7 +135,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 110 ROS-free tests (77 existing + 33 ore scene/S2/S3/S4)
+├── tests/                        # 114 ROS-free tests (77 existing + 37 ore scene/S2/S3/S4)
 └── capability.yaml
 ```
 
@@ -376,8 +376,10 @@ public `40_70mm` set (9,208 GT instances) a bbox/local-mask relation graph
 scales to dense scenes: classical match 10.4% gives P/R/F1
 0.787/0.015/0.030, SAM2.1 match 59.1% gives 0.957/0.394/0.558. The S4.1
 offline dual-view generator is implemented (RGB + z-depth + labels + known
-pairs); the association matcher is still planned, so there are no association
-metrics yet.
+pairs), and the S4.2 matcher runs on it: on 8 dense synthetic scenes (125
+constructed pairs) mutual-projection + Hungarian gives P/R/F1
+1.000/0.944/0.971, versus 0.973/0.872/0.920 for a visible-centroid baseline.
+Association accuracy on real ore is Unverified.
 
 Design and evidence:
 
@@ -387,6 +389,7 @@ Design and evidence:
 - [S3 relation graph MVE](docs/ORE_SCENE_S3.md)
 - [S4 multi-view association design](docs/ORE_SCENE_S4.md) (design)
 - [S4.1 dual-view generator](docs/ORE_SCENE_S4_1.md) (offline synthetic data only)
+- [S4.2 association matcher](docs/ORE_SCENE_S4_2.md) (synthetic dense scenes only)
 - [Research](docs/ORE_SCENE_RESEARCH.md) ·
   [Architecture](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [Roadmap](docs/ORE_SCENE_ROADMAP.md) ·

@@ -1,0 +1,4563 @@
+{
+  "dataset": {
+    "dataset_id": "dual_view_20261127",
+    "root": "dataset",
+    "scenes": 9
+  },
+  "first_view": "ext",
+  "hardware_claimed": false,
+  "params": {
+    "ambiguity_margin": 0.05,
+    "association_margin_m": 0.02,
+    "depth_tolerance_m": 0.01,
+    "max_candidates": 512,
+    "max_chamfer_ratio": 1.0,
+    "max_points": 300,
+    "min_mutual_support": 0.15,
+    "min_support_pixels": 8,
+    "size_ratio_max": 2.5,
+    "strategy": "mutual_projection",
+    "weight_chamfer": 0.35,
+    "weight_prior": 0.1,
+    "weight_size": 0.15,
+    "weight_support": 1.0
+  },
+  "real_ore_validation": false,
+  "results": {
+    "ambiguous_clusters": 0,
+    "correct_pairs": 118,
+    "f1": 0.971193,
+    "forced_id_errors": 0,
+    "latency_ms": {
+      "max": 430.001,
+      "p50": 384.986,
+      "p95": 424.22
+    },
+    "per_density": {
+      "dense": {
+        "correct": 118,
+        "f1": 0.971193,
+        "precision": 1.0,
+        "predicted": 118,
+        "recall": 0.944,
+        "scenes": 8,
+        "truth": 125
+      },
+      "empty": {
+        "correct": 0,
+        "f1": 0.0,
+        "precision": 0.0,
+        "predicted": 0,
+        "recall": 0.0,
+        "scenes": 1,
+        "truth": 0
+      }
+    },
+    "precision": 1.0,
+    "predicted_pairs": 118,
+    "recall": 0.944,
+    "singleton_reason_counts": {
+      "matched_elsewhere": 22,
+      "no_candidate": 1
+    },
+    "truth_pairs": 125
+  },
+  "scenes": [
+    {
+      "candidate_pairs": 116,
+      "candidate_truncated": false,
+      "clusters": [
+        {
+          "confidence": 0.52124,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.014724,
+            "chamfer_m": 0.002356,
+            "chamfer_ratio": 0.027618,
+            "mahalanobis_ratio": 8.171332,
+            "matches_first_to_second": 263,
+            "matches_second_to_first": 276,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.075223,
+            "support_first_to_second": 0.91958,
+            "support_pixels_first_to_second": 286,
+            "support_pixels_second_to_first": 287,
+            "support_second_to_first": 0.961672,
+            "symmetric_support": 0.91958,
+            "visible_pixels_first": 935,
+            "visible_pixels_second": 1281
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0001",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0001",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0001",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.528496,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.013035,
+            "chamfer_m": 0.002476,
+            "chamfer_ratio": 0.03135,
+            "mahalanobis_ratio": 8.351979,
+            "matches_first_to_second": 266,
+            "matches_second_to_first": 237,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.115358,
+            "support_first_to_second": 0.988848,
+            "support_pixels_first_to_second": 269,
+            "support_pixels_second_to_first": 244,
+            "support_second_to_first": 0.971311,
+            "symmetric_support": 0.971311,
+            "visible_pixels_first": 379,
+            "visible_pixels_second": 1135
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0003",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0003",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0003",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.536152,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.021432,
+            "chamfer_m": 0.004759,
+            "chamfer_ratio": 0.044861,
+            "mahalanobis_ratio": 8.063301,
+            "matches_first_to_second": 292,
+            "matches_second_to_first": 213,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.164533,
+            "support_first_to_second": 0.983165,
+            "support_pixels_first_to_second": 297,
+            "support_pixels_second_to_first": 217,
+            "support_second_to_first": 0.981567,
+            "symmetric_support": 0.981567,
+            "visible_pixels_first": 948,
+            "visible_pixels_second": 3692
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0004",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0004",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0004",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.499944,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.012646,
+            "chamfer_m": 0.002833,
+            "chamfer_ratio": 0.032695,
+            "mahalanobis_ratio": 9.187096,
+            "matches_first_to_second": 259,
+            "matches_second_to_first": 272,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.011504,
+            "support_first_to_second": 0.931655,
+            "support_pixels_first_to_second": 278,
+            "support_pixels_second_to_first": 278,
+            "support_second_to_first": 0.978417,
+            "symmetric_support": 0.931655,
+            "visible_pixels_first": 916,
+            "visible_pixels_second": 1539
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0005",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0005",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0005",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.427402,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.012684,
+            "chamfer_m": 0.002256,
+            "chamfer_ratio": 0.034801,
+            "mahalanobis_ratio": 12.129226,
+            "matches_first_to_second": 226,
+            "matches_second_to_first": 263,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.148294,
+            "support_first_to_second": 0.907631,
+            "support_pixels_first_to_second": 249,
+            "support_pixels_second_to_first": 272,
+            "support_second_to_first": 0.966912,
+            "symmetric_support": 0.907631,
+            "visible_pixels_first": 430,
+            "visible_pixels_second": 353
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0006",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0006",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0006",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.462452,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.018242,
+            "chamfer_m": 0.003921,
+            "chamfer_ratio": 0.047703,
+            "mahalanobis_ratio": 11.213082,
+            "matches_first_to_second": 151,
+            "matches_second_to_first": 236,
+            "projected_inside_pixels_first_to_second": 274,
+            "projected_inside_pixels_second_to_first": 275,
+            "size_ratio": 1.075417,
+            "support_first_to_second": 0.986928,
+            "support_pixels_first_to_second": 153,
+            "support_pixels_second_to_first": 236,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 0.986928,
+            "visible_pixels_first": 274,
+            "visible_pixels_second": 275
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0007",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0007",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0007",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.551409,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.021784,
+            "chamfer_m": 0.003675,
+            "chamfer_ratio": 0.030698,
+            "mahalanobis_ratio": 7.045024,
+            "matches_first_to_second": 268,
+            "matches_second_to_first": 258,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.087883,
+            "support_first_to_second": 0.953737,
+            "support_pixels_first_to_second": 281,
+            "support_pixels_second_to_first": 282,
+            "support_second_to_first": 0.914894,
+            "symmetric_support": 0.914894,
+            "visible_pixels_first": 1693,
+            "visible_pixels_second": 2884
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0008",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0008",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0008",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.354436,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.021825,
+            "chamfer_m": 0.005049,
+            "chamfer_ratio": 0.064235,
+            "mahalanobis_ratio": 15.707966,
+            "matches_first_to_second": 210,
+            "matches_second_to_first": 189,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.082245,
+            "support_first_to_second": 0.929204,
+            "support_pixels_first_to_second": 226,
+            "support_pixels_second_to_first": 241,
+            "support_second_to_first": 0.784232,
+            "symmetric_support": 0.784232,
+            "visible_pixels_first": 431,
+            "visible_pixels_second": 1057
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0009",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0009",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0009",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.289319,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.046008,
+            "chamfer_m": 0.024309,
+            "chamfer_ratio": 0.334871,
+            "mahalanobis_ratio": 21.349753,
+            "matches_first_to_second": 8,
+            "matches_second_to_first": 67,
+            "projected_inside_pixels_first_to_second": 17,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.89848,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 8,
+            "support_pixels_second_to_first": 72,
+            "support_second_to_first": 0.930556,
+            "symmetric_support": 0.930556,
+            "visible_pixels_first": 17,
+            "visible_pixels_second": 377
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0011",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0011",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0011",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.426358,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.007992,
+            "chamfer_m": 0.001442,
+            "chamfer_ratio": 0.030023,
+            "mahalanobis_ratio": 12.759103,
+            "matches_first_to_second": 92,
+            "matches_second_to_first": 208,
+            "projected_inside_pixels_first_to_second": 112,
+            "projected_inside_pixels_second_to_first": 243,
+            "size_ratio": 1.04989,
+            "support_first_to_second": 0.948454,
+            "support_pixels_first_to_second": 97,
+            "support_pixels_second_to_first": 219,
+            "support_second_to_first": 0.949772,
+            "symmetric_support": 0.948454,
+            "visible_pixels_first": 112,
+            "visible_pixels_second": 243
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0013",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0013",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0013",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.465885,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.010425,
+            "chamfer_m": 0.002176,
+            "chamfer_ratio": 0.032368,
+            "mahalanobis_ratio": 10.673423,
+            "matches_first_to_second": 218,
+            "matches_second_to_first": 283,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 291,
+            "size_ratio": 1.104036,
+            "support_first_to_second": 0.947826,
+            "support_pixels_first_to_second": 230,
+            "support_pixels_second_to_first": 288,
+            "support_second_to_first": 0.982639,
+            "symmetric_support": 0.947826,
+            "visible_pixels_first": 681,
+            "visible_pixels_second": 291
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0014",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0014",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0014",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.169807,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.023286,
+            "chamfer_m": 0.010395,
+            "chamfer_ratio": 0.252865,
+            "mahalanobis_ratio": 44.409964,
+            "matches_first_to_second": 11,
+            "matches_second_to_first": 15,
+            "projected_inside_pixels_first_to_second": 46,
+            "projected_inside_pixels_second_to_first": 42,
+            "size_ratio": 1.078204,
+            "support_first_to_second": 0.785714,
+            "support_pixels_first_to_second": 14,
+            "support_pixels_second_to_first": 23,
+            "support_second_to_first": 0.652174,
+            "symmetric_support": 0.652174,
+            "visible_pixels_first": 46,
+            "visible_pixels_second": 42
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0017",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0017",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0017",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.506964,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.015341,
+            "chamfer_m": 0.003024,
+            "chamfer_ratio": 0.034917,
+            "mahalanobis_ratio": 9.210185,
+            "matches_first_to_second": 214,
+            "matches_second_to_first": 298,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.217472,
+            "support_first_to_second": 0.995349,
+            "support_pixels_first_to_second": 215,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.993333,
+            "symmetric_support": 0.993333,
+            "visible_pixels_first": 1380,
+            "visible_pixels_second": 591
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0019",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0019",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0019",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.369615,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.023999,
+            "chamfer_m": 0.006494,
+            "chamfer_ratio": 0.08208,
+            "mahalanobis_ratio": 15.74795,
+            "matches_first_to_second": 116,
+            "matches_second_to_first": 287,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.412405,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 116,
+            "support_pixels_second_to_first": 299,
+            "support_second_to_first": 0.959866,
+            "symmetric_support": 0.959866,
+            "visible_pixels_first": 837,
+            "visible_pixels_second": 321
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0020",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0020",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0020",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.523749,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.007617,
+            "chamfer_m": 0.001364,
+            "chamfer_ratio": 0.018485,
+            "mahalanobis_ratio": 7.319752,
+            "matches_first_to_second": 243,
+            "matches_second_to_first": 223,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 232,
+            "size_ratio": 1.097432,
+            "support_first_to_second": 0.84375,
+            "support_pixels_first_to_second": 288,
+            "support_pixels_second_to_first": 232,
+            "support_second_to_first": 0.961207,
+            "symmetric_support": 0.84375,
+            "visible_pixels_first": 528,
+            "visible_pixels_second": 232
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0021",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0021",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0021",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.369941,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.014279,
+            "chamfer_m": 0.004218,
+            "chamfer_ratio": 0.066452,
+            "mahalanobis_ratio": 15.66439,
+            "matches_first_to_second": 103,
+            "matches_second_to_first": 152,
+            "projected_inside_pixels_first_to_second": 105,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.629278,
+            "support_first_to_second": 0.980952,
+            "support_pixels_first_to_second": 105,
+            "support_pixels_second_to_first": 154,
+            "support_second_to_first": 0.987013,
+            "symmetric_support": 0.980952,
+            "visible_pixels_first": 105,
+            "visible_pixels_second": 912
+          },
+          "global_id": "assoc:dualsyn-20261127-000:dualsyn-20261127-000:ext:0023",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-000:ext:0023",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-000:wrist:0023",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        }
+      ],
+      "first_view": "ext",
+      "params": {
+        "ambiguity_margin": 0.05,
+        "association_margin_m": 0.02,
+        "depth_tolerance_m": 0.01,
+        "max_candidates": 512,
+        "max_chamfer_ratio": 1.0,
+        "max_points": 300,
+        "min_mutual_support": 0.15,
+        "min_support_pixels": 8,
+        "size_ratio_max": 2.5,
+        "strategy": "mutual_projection",
+        "weight_chamfer": 0.35,
+        "weight_prior": 0.1,
+        "weight_size": 0.15,
+        "weight_support": 1.0
+      },
+      "scene_id": "dualsyn-20261127-000",
+      "schema_version": "jcheng.scene_association.v1",
+      "second_view": "wrist",
+      "singletons": [
+        {
+          "instance_id": "dualsyn-20261127-000:ext:0002",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        },
+        {
+          "instance_id": "dualsyn-20261127-000:ext:0010",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        },
+        {
+          "instance_id": "dualsyn-20261127-000:ext:0012",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        },
+        {
+          "instance_id": "dualsyn-20261127-000:ext:0016",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        },
+        {
+          "instance_id": "dualsyn-20261127-000:wrist:0002",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        },
+        {
+          "instance_id": "dualsyn-20261127-000:wrist:0012",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        },
+        {
+          "instance_id": "dualsyn-20261127-000:wrist:0016",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        },
+        {
+          "instance_id": "dualsyn-20261127-000:wrist:0022",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        }
+      ]
+    },
+    {
+      "candidate_pairs": 125,
+      "candidate_truncated": false,
+      "clusters": [
+        {
+          "confidence": 0.51745,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.025751,
+            "chamfer_m": 0.006225,
+            "chamfer_ratio": 0.052386,
+            "mahalanobis_ratio": 8.533193,
+            "matches_first_to_second": 185,
+            "matches_second_to_first": 289,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.161545,
+            "support_first_to_second": 0.984043,
+            "support_pixels_first_to_second": 188,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.963333,
+            "symmetric_support": 0.963333,
+            "visible_pixels_first": 3125,
+            "visible_pixels_second": 1516
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0001",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0001",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0001",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.379713,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.028464,
+            "chamfer_m": 0.007263,
+            "chamfer_ratio": 0.087333,
+            "mahalanobis_ratio": 14.685151,
+            "matches_first_to_second": 134,
+            "matches_second_to_first": 279,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.471507,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 134,
+            "support_pixels_second_to_first": 298,
+            "support_second_to_first": 0.936242,
+            "symmetric_support": 0.936242,
+            "visible_pixels_first": 661,
+            "visible_pixels_second": 400
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0002",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0002",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0002",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.510711,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.023155,
+            "chamfer_m": 0.005562,
+            "chamfer_ratio": 0.050638,
+            "mahalanobis_ratio": 9.201635,
+            "matches_first_to_second": 247,
+            "matches_second_to_first": 211,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.040988,
+            "support_first_to_second": 0.991968,
+            "support_pixels_first_to_second": 249,
+            "support_pixels_second_to_first": 214,
+            "support_second_to_first": 0.985981,
+            "symmetric_support": 0.985981,
+            "visible_pixels_first": 660,
+            "visible_pixels_second": 1485
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0003",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0003",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0003",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.496332,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.009402,
+            "chamfer_m": 0.001529,
+            "chamfer_ratio": 0.022642,
+            "mahalanobis_ratio": 9.196587,
+            "matches_first_to_second": 267,
+            "matches_second_to_first": 290,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.010531,
+            "support_first_to_second": 0.914384,
+            "support_pixels_first_to_second": 292,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.966667,
+            "symmetric_support": 0.914384,
+            "visible_pixels_first": 435,
+            "visible_pixels_second": 650
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0004",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0004",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0004",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.467732,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.027074,
+            "chamfer_m": 0.008106,
+            "chamfer_ratio": 0.068027,
+            "mahalanobis_ratio": 10.467539,
+            "matches_first_to_second": 248,
+            "matches_second_to_first": 180,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.065465,
+            "support_first_to_second": 0.946565,
+            "support_pixels_first_to_second": 262,
+            "support_pixels_second_to_first": 191,
+            "support_second_to_first": 0.942408,
+            "symmetric_support": 0.942408,
+            "visible_pixels_first": 1579,
+            "visible_pixels_second": 4441
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0005",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0005",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0005",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.673116,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.002731,
+            "chamfer_m": 0.001,
+            "chamfer_ratio": 0.018948,
+            "mahalanobis_ratio": 4.359075,
+            "matches_first_to_second": 206,
+            "matches_second_to_first": 288,
+            "projected_inside_pixels_first_to_second": 216,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.020591,
+            "support_first_to_second": 0.971698,
+            "support_pixels_first_to_second": 212,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.96,
+            "symmetric_support": 0.96,
+            "visible_pixels_first": 216,
+            "visible_pixels_second": 416
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0006",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0006",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0006",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.50128,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.020293,
+            "chamfer_m": 0.004507,
+            "chamfer_ratio": 0.045004,
+            "mahalanobis_ratio": 9.330875,
+            "matches_first_to_second": 281,
+            "matches_second_to_first": 192,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.040372,
+            "support_first_to_second": 0.972318,
+            "support_pixels_first_to_second": 289,
+            "support_pixels_second_to_first": 200,
+            "support_second_to_first": 0.96,
+            "symmetric_support": 0.96,
+            "visible_pixels_first": 656,
+            "visible_pixels_second": 2241
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0007",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0007",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0007",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.423849,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.005908,
+            "chamfer_m": 0.001059,
+            "chamfer_ratio": 0.02072,
+            "mahalanobis_ratio": 12.287309,
+            "matches_first_to_second": 263,
+            "matches_second_to_first": 287,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.00009,
+            "support_first_to_second": 0.876667,
+            "support_pixels_first_to_second": 300,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.956667,
+            "symmetric_support": 0.876667,
+            "visible_pixels_first": 346,
+            "visible_pixels_second": 322
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0008",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0008",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0008",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.579649,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.004982,
+            "chamfer_m": 0.001318,
+            "chamfer_ratio": 0.020208,
+            "mahalanobis_ratio": 5.887695,
+            "matches_first_to_second": 255,
+            "matches_second_to_first": 198,
+            "projected_inside_pixels_first_to_second": 296,
+            "projected_inside_pixels_second_to_first": 204,
+            "size_ratio": 1.422706,
+            "support_first_to_second": 0.934066,
+            "support_pixels_first_to_second": 273,
+            "support_pixels_second_to_first": 204,
+            "support_second_to_first": 0.970588,
+            "symmetric_support": 0.934066,
+            "visible_pixels_first": 296,
+            "visible_pixels_second": 204
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0011",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0011",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0011",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.293776,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.009197,
+            "chamfer_m": 0.001784,
+            "chamfer_ratio": 0.043549,
+            "mahalanobis_ratio": 21.923843,
+            "matches_first_to_second": 112,
+            "matches_second_to_first": 127,
+            "projected_inside_pixels_first_to_second": 176,
+            "projected_inside_pixels_second_to_first": 139,
+            "size_ratio": 1.214357,
+            "support_first_to_second": 0.835821,
+            "support_pixels_first_to_second": 134,
+            "support_pixels_second_to_first": 139,
+            "support_second_to_first": 0.913669,
+            "symmetric_support": 0.835821,
+            "visible_pixels_first": 176,
+            "visible_pixels_second": 139
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0012",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0012",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0012",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.319904,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.01961,
+            "chamfer_m": 0.007836,
+            "chamfer_ratio": 0.120924,
+            "mahalanobis_ratio": 18.765285,
+            "matches_first_to_second": 62,
+            "matches_second_to_first": 64,
+            "projected_inside_pixels_first_to_second": 63,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 2.27477,
+            "support_first_to_second": 0.984127,
+            "support_pixels_first_to_second": 63,
+            "support_pixels_second_to_first": 64,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 0.984127,
+            "visible_pixels_first": 63,
+            "visible_pixels_second": 1357
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0014",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0014",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0014",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.571021,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.018816,
+            "chamfer_m": 0.003114,
+            "chamfer_ratio": 0.028169,
+            "mahalanobis_ratio": 6.849036,
+            "matches_first_to_second": 248,
+            "matches_second_to_first": 271,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.004906,
+            "support_first_to_second": 0.953846,
+            "support_pixels_first_to_second": 260,
+            "support_pixels_second_to_first": 287,
+            "support_second_to_first": 0.944251,
+            "symmetric_support": 0.944251,
+            "visible_pixels_first": 1179,
+            "visible_pixels_second": 1258
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0016",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0016",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0016",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.534049,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.004271,
+            "chamfer_m": 0.000925,
+            "chamfer_ratio": 0.020918,
+            "mahalanobis_ratio": 7.506072,
+            "matches_first_to_second": 61,
+            "matches_second_to_first": 177,
+            "projected_inside_pixels_first_to_second": 66,
+            "projected_inside_pixels_second_to_first": 205,
+            "size_ratio": 1.179524,
+            "support_first_to_second": 0.924242,
+            "support_pixels_first_to_second": 66,
+            "support_pixels_second_to_first": 194,
+            "support_second_to_first": 0.912371,
+            "symmetric_support": 0.912371,
+            "visible_pixels_first": 66,
+            "visible_pixels_second": 205
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0017",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0017",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0017",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.476209,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.023916,
+            "chamfer_m": 0.006218,
+            "chamfer_ratio": 0.061557,
+            "mahalanobis_ratio": 9.759635,
+            "matches_first_to_second": 263,
+            "matches_second_to_first": 126,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.2557,
+            "support_first_to_second": 0.935943,
+            "support_pixels_first_to_second": 281,
+            "support_pixels_second_to_first": 126,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 0.935943,
+            "visible_pixels_first": 361,
+            "visible_pixels_second": 3067
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0018",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0018",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0018",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.547632,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.007561,
+            "chamfer_m": 0.001097,
+            "chamfer_ratio": 0.019297,
+            "mahalanobis_ratio": 7.036495,
+            "matches_first_to_second": 68,
+            "matches_second_to_first": 132,
+            "projected_inside_pixels_first_to_second": 84,
+            "projected_inside_pixels_second_to_first": 149,
+            "size_ratio": 1.010309,
+            "support_first_to_second": 0.906667,
+            "support_pixels_first_to_second": 75,
+            "support_pixels_second_to_first": 149,
+            "support_second_to_first": 0.885906,
+            "symmetric_support": 0.885906,
+            "visible_pixels_first": 84,
+            "visible_pixels_second": 149
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0019",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0019",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0019",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.205869,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.038582,
+            "chamfer_m": 0.013006,
+            "chamfer_ratio": 0.200197,
+            "mahalanobis_ratio": 34.697358,
+            "matches_first_to_second": 47,
+            "matches_second_to_first": 35,
+            "projected_inside_pixels_first_to_second": 80,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.853351,
+            "support_first_to_second": 0.810345,
+            "support_pixels_first_to_second": 58,
+            "support_pixels_second_to_first": 40,
+            "support_second_to_first": 0.875,
+            "symmetric_support": 0.810345,
+            "visible_pixels_first": 80,
+            "visible_pixels_second": 661
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0020",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0020",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0020",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.346334,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.023852,
+            "chamfer_m": 0.006088,
+            "chamfer_ratio": 0.081139,
+            "mahalanobis_ratio": 16.621852,
+            "matches_first_to_second": 123,
+            "matches_second_to_first": 236,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 262,
+            "size_ratio": 1.719975,
+            "support_first_to_second": 0.991935,
+            "support_pixels_first_to_second": 124,
+            "support_pixels_second_to_first": 259,
+            "support_second_to_first": 0.911197,
+            "symmetric_support": 0.911197,
+            "visible_pixels_first": 1061,
+            "visible_pixels_second": 262
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0022",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0022",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0022",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.486573,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.024485,
+            "chamfer_m": 0.004882,
+            "chamfer_ratio": 0.049679,
+            "mahalanobis_ratio": 9.692419,
+            "matches_first_to_second": 191,
+            "matches_second_to_first": 278,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.225586,
+            "support_first_to_second": 0.984536,
+            "support_pixels_first_to_second": 194,
+            "support_pixels_second_to_first": 288,
+            "support_second_to_first": 0.965278,
+            "symmetric_support": 0.965278,
+            "visible_pixels_first": 1003,
+            "visible_pixels_second": 659
+          },
+          "global_id": "assoc:dualsyn-20261127-001:dualsyn-20261127-001:ext:0024",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-001:ext:0024",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-001:wrist:0024",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        }
+      ],
+      "first_view": "ext",
+      "params": {
+        "ambiguity_margin": 0.05,
+        "association_margin_m": 0.02,
+        "depth_tolerance_m": 0.01,
+        "max_candidates": 512,
+        "max_chamfer_ratio": 1.0,
+        "max_points": 300,
+        "min_mutual_support": 0.15,
+        "min_support_pixels": 8,
+        "size_ratio_max": 2.5,
+        "strategy": "mutual_projection",
+        "weight_chamfer": 0.35,
+        "weight_prior": 0.1,
+        "weight_size": 0.15,
+        "weight_support": 1.0
+      },
+      "scene_id": "dualsyn-20261127-001",
+      "schema_version": "jcheng.scene_association.v1",
+      "second_view": "wrist",
+      "singletons": [
+        {
+          "instance_id": "dualsyn-20261127-001:ext:0010",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        },
+        {
+          "instance_id": "dualsyn-20261127-001:ext:0023",
+          "reason": "no_candidate",
+          "view_id": "ext"
+        }
+      ]
+    },
+    {
+      "candidate_pairs": 104,
+      "candidate_truncated": false,
+      "clusters": [
+        {
+          "confidence": 0.622452,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.005243,
+            "chamfer_m": 0.001478,
+            "chamfer_ratio": 0.018792,
+            "mahalanobis_ratio": 5.296244,
+            "matches_first_to_second": 231,
+            "matches_second_to_first": 290,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.192356,
+            "support_first_to_second": 0.958506,
+            "support_pixels_first_to_second": 241,
+            "support_pixels_second_to_first": 297,
+            "support_second_to_first": 0.976431,
+            "symmetric_support": 0.958506,
+            "visible_pixels_first": 437,
+            "visible_pixels_second": 532
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0002",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0002",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0002",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.338418,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.008104,
+            "chamfer_m": 0.002845,
+            "chamfer_ratio": 0.062302,
+            "mahalanobis_ratio": 18.823482,
+            "matches_first_to_second": 28,
+            "matches_second_to_first": 70,
+            "projected_inside_pixels_first_to_second": 39,
+            "projected_inside_pixels_second_to_first": 162,
+            "size_ratio": 1.108616,
+            "support_first_to_second": 0.965517,
+            "support_pixels_first_to_second": 29,
+            "support_pixels_second_to_first": 71,
+            "support_second_to_first": 0.985915,
+            "symmetric_support": 0.965517,
+            "visible_pixels_first": 39,
+            "visible_pixels_second": 162
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0003",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0003",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0003",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.565639,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.009979,
+            "chamfer_m": 0.002398,
+            "chamfer_ratio": 0.030092,
+            "mahalanobis_ratio": 7.090832,
+            "matches_first_to_second": 298,
+            "matches_second_to_first": 212,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.290673,
+            "support_first_to_second": 0.996656,
+            "support_pixels_first_to_second": 299,
+            "support_pixels_second_to_first": 213,
+            "support_second_to_first": 0.995305,
+            "symmetric_support": 0.995305,
+            "visible_pixels_first": 314,
+            "visible_pixels_second": 1881
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0004",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0004",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0004",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.544993,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.013655,
+            "chamfer_m": 0.003793,
+            "chamfer_ratio": 0.038265,
+            "mahalanobis_ratio": 7.726199,
+            "matches_first_to_second": 181,
+            "matches_second_to_first": 299,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.289191,
+            "support_first_to_second": 0.994505,
+            "support_pixels_first_to_second": 182,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.996667,
+            "symmetric_support": 0.994505,
+            "visible_pixels_first": 1881,
+            "visible_pixels_second": 641
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0006",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0006",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0006",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.611039,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.026989,
+            "chamfer_m": 0.003423,
+            "chamfer_ratio": 0.027383,
+            "mahalanobis_ratio": 5.740974,
+            "matches_first_to_second": 276,
+            "matches_second_to_first": 254,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.074728,
+            "support_first_to_second": 0.958333,
+            "support_pixels_first_to_second": 288,
+            "support_pixels_second_to_first": 257,
+            "support_second_to_first": 0.988327,
+            "symmetric_support": 0.958333,
+            "visible_pixels_first": 1218,
+            "visible_pixels_second": 3275
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0007",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0007",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0007",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.403237,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.015298,
+            "chamfer_m": 0.003365,
+            "chamfer_ratio": 0.048258,
+            "mahalanobis_ratio": 13.489726,
+            "matches_first_to_second": 235,
+            "matches_second_to_first": 247,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.005741,
+            "support_first_to_second": 0.886792,
+            "support_pixels_first_to_second": 265,
+            "support_pixels_second_to_first": 252,
+            "support_second_to_first": 0.980159,
+            "symmetric_support": 0.886792,
+            "visible_pixels_first": 430,
+            "visible_pixels_second": 813
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0009",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0009",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0009",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.588479,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.017407,
+            "chamfer_m": 0.003651,
+            "chamfer_ratio": 0.033393,
+            "mahalanobis_ratio": 6.522821,
+            "matches_first_to_second": 237,
+            "matches_second_to_first": 293,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.079952,
+            "support_first_to_second": 0.9875,
+            "support_pixels_first_to_second": 240,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.976667,
+            "symmetric_support": 0.976667,
+            "visible_pixels_first": 1599,
+            "visible_pixels_second": 1373
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0010",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0010",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0010",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.315716,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.024415,
+            "chamfer_m": 0.007435,
+            "chamfer_ratio": 0.094748,
+            "mahalanobis_ratio": 19.37998,
+            "matches_first_to_second": 121,
+            "matches_second_to_first": 204,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.23832,
+            "support_first_to_second": 0.991803,
+            "support_pixels_first_to_second": 122,
+            "support_pixels_second_to_first": 243,
+            "support_second_to_first": 0.839506,
+            "symmetric_support": 0.839506,
+            "visible_pixels_first": 539,
+            "visible_pixels_second": 397
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0011",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0011",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0011",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.522991,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.017917,
+            "chamfer_m": 0.004054,
+            "chamfer_ratio": 0.04454,
+            "mahalanobis_ratio": 8.818504,
+            "matches_first_to_second": 253,
+            "matches_second_to_first": 237,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.041809,
+            "support_first_to_second": 0.996063,
+            "support_pixels_first_to_second": 254,
+            "support_pixels_second_to_first": 239,
+            "support_second_to_first": 0.991632,
+            "symmetric_support": 0.991632,
+            "visible_pixels_first": 645,
+            "visible_pixels_second": 1114
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0012",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0012",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0012",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.492908,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.027625,
+            "chamfer_m": 0.005572,
+            "chamfer_ratio": 0.050679,
+            "mahalanobis_ratio": 9.511078,
+            "matches_first_to_second": 298,
+            "matches_second_to_first": 140,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.35226,
+            "support_first_to_second": 0.993333,
+            "support_pixels_first_to_second": 300,
+            "support_pixels_second_to_first": 141,
+            "support_second_to_first": 0.992908,
+            "symmetric_support": 0.992908,
+            "visible_pixels_first": 426,
+            "visible_pixels_second": 2879
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0014",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0014",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0014",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.536514,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.007306,
+            "chamfer_m": 0.001814,
+            "chamfer_ratio": 0.024489,
+            "mahalanobis_ratio": 7.470751,
+            "matches_first_to_second": 297,
+            "matches_second_to_first": 251,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.0741,
+            "support_first_to_second": 0.99,
+            "support_pixels_first_to_second": 300,
+            "support_pixels_second_to_first": 278,
+            "support_second_to_first": 0.902878,
+            "symmetric_support": 0.902878,
+            "visible_pixels_first": 405,
+            "visible_pixels_second": 818
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0015",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0015",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0015",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.501349,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.02177,
+            "chamfer_m": 0.005789,
+            "chamfer_ratio": 0.05009,
+            "mahalanobis_ratio": 9.247361,
+            "matches_first_to_second": 193,
+            "matches_second_to_first": 270,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.020378,
+            "support_first_to_second": 0.950739,
+            "support_pixels_first_to_second": 203,
+            "support_pixels_second_to_first": 284,
+            "support_second_to_first": 0.950704,
+            "symmetric_support": 0.950704,
+            "visible_pixels_first": 1975,
+            "visible_pixels_second": 1884
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0016",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0016",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0016",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.695322,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.001505,
+            "chamfer_m": 0.001474,
+            "chamfer_ratio": 0.035737,
+            "mahalanobis_ratio": 3.726888,
+            "matches_first_to_second": 112,
+            "matches_second_to_first": 150,
+            "projected_inside_pixels_first_to_second": 146,
+            "projected_inside_pixels_second_to_first": 181,
+            "size_ratio": 1.123358,
+            "support_first_to_second": 0.965517,
+            "support_pixels_first_to_second": 116,
+            "support_pixels_second_to_first": 153,
+            "support_second_to_first": 0.980392,
+            "symmetric_support": 0.965517,
+            "visible_pixels_first": 146,
+            "visible_pixels_second": 181
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0017",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0017",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0017",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.51656,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.020895,
+            "chamfer_m": 0.00398,
+            "chamfer_ratio": 0.03737,
+            "mahalanobis_ratio": 8.345387,
+            "matches_first_to_second": 268,
+            "matches_second_to_first": 230,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.006433,
+            "support_first_to_second": 0.964029,
+            "support_pixels_first_to_second": 278,
+            "support_pixels_second_to_first": 252,
+            "support_second_to_first": 0.912698,
+            "symmetric_support": 0.912698,
+            "visible_pixels_first": 1366,
+            "visible_pixels_second": 3160
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0018",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0018",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0018",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.416738,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.011992,
+            "chamfer_m": 0.002838,
+            "chamfer_ratio": 0.033829,
+            "mahalanobis_ratio": 11.900223,
+            "matches_first_to_second": 257,
+            "matches_second_to_first": 216,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.065041,
+            "support_first_to_second": 0.980916,
+            "support_pixels_first_to_second": 262,
+            "support_pixels_second_to_first": 266,
+            "support_second_to_first": 0.81203,
+            "symmetric_support": 0.81203,
+            "visible_pixels_first": 325,
+            "visible_pixels_second": 963
+          },
+          "global_id": "assoc:dualsyn-20261127-002:dualsyn-20261127-002:ext:0019",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-002:ext:0019",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-002:wrist:0019",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        }
+      ],
+      "first_view": "ext",
+      "params": {
+        "ambiguity_margin": 0.05,
+        "association_margin_m": 0.02,
+        "depth_tolerance_m": 0.01,
+        "max_candidates": 512,
+        "max_chamfer_ratio": 1.0,
+        "max_points": 300,
+        "min_mutual_support": 0.15,
+        "min_support_pixels": 8,
+        "size_ratio_max": 2.5,
+        "strategy": "mutual_projection",
+        "weight_chamfer": 0.35,
+        "weight_prior": 0.1,
+        "weight_size": 0.15,
+        "weight_support": 1.0
+      },
+      "scene_id": "dualsyn-20261127-002",
+      "schema_version": "jcheng.scene_association.v1",
+      "second_view": "wrist",
+      "singletons": [
+        {
+          "instance_id": "dualsyn-20261127-002:ext:0008",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        },
+        {
+          "instance_id": "dualsyn-20261127-002:wrist:0008",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        }
+      ]
+    },
+    {
+      "candidate_pairs": 94,
+      "candidate_truncated": false,
+      "clusters": [
+        {
+          "confidence": 0.518278,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.02123,
+            "chamfer_m": 0.004758,
+            "chamfer_ratio": 0.044042,
+            "mahalanobis_ratio": 8.723704,
+            "matches_first_to_second": 291,
+            "matches_second_to_first": 204,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.077886,
+            "support_first_to_second": 0.97,
+            "support_pixels_first_to_second": 300,
+            "support_pixels_second_to_first": 208,
+            "support_second_to_first": 0.980769,
+            "symmetric_support": 0.97,
+            "visible_pixels_first": 945,
+            "visible_pixels_second": 3543
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0003",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0003",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0003",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.433423,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.009904,
+            "chamfer_m": 0.002309,
+            "chamfer_ratio": 0.036114,
+            "mahalanobis_ratio": 11.689146,
+            "matches_first_to_second": 234,
+            "matches_second_to_first": 282,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.102613,
+            "support_first_to_second": 0.889734,
+            "support_pixels_first_to_second": 263,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.94,
+            "symmetric_support": 0.889734,
+            "visible_pixels_first": 450,
+            "visible_pixels_second": 301
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0006",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0006",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0006",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.502368,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.013789,
+            "chamfer_m": 0.00346,
+            "chamfer_ratio": 0.041578,
+            "mahalanobis_ratio": 9.388911,
+            "matches_first_to_second": 185,
+            "matches_second_to_first": 296,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.158644,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 185,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.986667,
+            "symmetric_support": 0.986667,
+            "visible_pixels_first": 1419,
+            "visible_pixels_second": 512
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0007",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0007",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0007",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.530395,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.014026,
+            "chamfer_m": 0.002623,
+            "chamfer_ratio": 0.026396,
+            "mahalanobis_ratio": 7.677769,
+            "matches_first_to_second": 263,
+            "matches_second_to_first": 267,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.101791,
+            "support_first_to_second": 0.906897,
+            "support_pixels_first_to_second": 290,
+            "support_pixels_second_to_first": 280,
+            "support_second_to_first": 0.953571,
+            "symmetric_support": 0.906897,
+            "visible_pixels_first": 812,
+            "visible_pixels_second": 1119
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0008",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0008",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0008",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.569855,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.02071,
+            "chamfer_m": 0.004207,
+            "chamfer_ratio": 0.034096,
+            "mahalanobis_ratio": 6.597388,
+            "matches_first_to_second": 238,
+            "matches_second_to_first": 290,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.085644,
+            "support_first_to_second": 0.929688,
+            "support_pixels_first_to_second": 256,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.966667,
+            "symmetric_support": 0.929688,
+            "visible_pixels_first": 2624,
+            "visible_pixels_second": 2536
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0009",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0009",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0009",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.476368,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.014774,
+            "chamfer_m": 0.00247,
+            "chamfer_ratio": 0.029317,
+            "mahalanobis_ratio": 9.250892,
+            "matches_first_to_second": 219,
+            "matches_second_to_first": 285,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.128911,
+            "support_first_to_second": 0.855469,
+            "support_pixels_first_to_second": 256,
+            "support_pixels_second_to_first": 291,
+            "support_second_to_first": 0.979381,
+            "symmetric_support": 0.855469,
+            "visible_pixels_first": 491,
+            "visible_pixels_second": 521
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0010",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0010",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0010",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.497144,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.021689,
+            "chamfer_m": 0.003613,
+            "chamfer_ratio": 0.039754,
+            "mahalanobis_ratio": 9.515375,
+            "matches_first_to_second": 292,
+            "matches_second_to_first": 185,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.172703,
+            "support_first_to_second": 0.979866,
+            "support_pixels_first_to_second": 298,
+            "support_pixels_second_to_first": 185,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 0.979866,
+            "visible_pixels_first": 511,
+            "visible_pixels_second": 1717
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0011",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0011",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0011",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.441297,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.025271,
+            "chamfer_m": 0.004772,
+            "chamfer_ratio": 0.054006,
+            "mahalanobis_ratio": 11.383542,
+            "matches_first_to_second": 292,
+            "matches_second_to_first": 157,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.402035,
+            "support_first_to_second": 0.973333,
+            "support_pixels_first_to_second": 300,
+            "support_pixels_second_to_first": 165,
+            "support_second_to_first": 0.951515,
+            "symmetric_support": 0.951515,
+            "visible_pixels_first": 309,
+            "visible_pixels_second": 1685
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0013",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0013",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0013",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.708724,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.0046,
+            "chamfer_m": 0.000855,
+            "chamfer_ratio": 0.012216,
+            "mahalanobis_ratio": 3.6279,
+            "matches_first_to_second": 266,
+            "matches_second_to_first": 287,
+            "projected_inside_pixels_first_to_second": 274,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.003913,
+            "support_first_to_second": 0.970803,
+            "support_pixels_first_to_second": 274,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.956667,
+            "symmetric_support": 0.956667,
+            "visible_pixels_first": 274,
+            "visible_pixels_second": 653
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0014",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0014",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0014",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.431218,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.012778,
+            "chamfer_m": 0.00161,
+            "chamfer_ratio": 0.024639,
+            "mahalanobis_ratio": 11.003948,
+            "matches_first_to_second": 217,
+            "matches_second_to_first": 219,
+            "projected_inside_pixels_first_to_second": 296,
+            "projected_inside_pixels_second_to_first": 228,
+            "size_ratio": 1.192405,
+            "support_first_to_second": 0.818868,
+            "support_pixels_first_to_second": 265,
+            "support_pixels_second_to_first": 228,
+            "support_second_to_first": 0.960526,
+            "symmetric_support": 0.818868,
+            "visible_pixels_first": 296,
+            "visible_pixels_second": 228
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0015",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0015",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0015",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.309876,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.008772,
+            "chamfer_m": 0.002729,
+            "chamfer_ratio": 0.067832,
+            "mahalanobis_ratio": 19.458819,
+            "matches_first_to_second": 47,
+            "matches_second_to_first": 164,
+            "projected_inside_pixels_first_to_second": 48,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.834683,
+            "support_first_to_second": 0.979167,
+            "support_pixels_first_to_second": 48,
+            "support_pixels_second_to_first": 189,
+            "support_second_to_first": 0.867725,
+            "symmetric_support": 0.867725,
+            "visible_pixels_first": 48,
+            "visible_pixels_second": 450
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0016",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0016",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0016",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.53908,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.007263,
+            "chamfer_m": 0.001736,
+            "chamfer_ratio": 0.024083,
+            "mahalanobis_ratio": 7.899173,
+            "matches_first_to_second": 292,
+            "matches_second_to_first": 264,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.064894,
+            "support_first_to_second": 0.986486,
+            "support_pixels_first_to_second": 296,
+            "support_pixels_second_to_first": 277,
+            "support_second_to_first": 0.953069,
+            "symmetric_support": 0.953069,
+            "visible_pixels_first": 374,
+            "visible_pixels_second": 1177
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0017",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0017",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0017",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.51143,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.025218,
+            "chamfer_m": 0.005809,
+            "chamfer_ratio": 0.054658,
+            "mahalanobis_ratio": 8.970674,
+            "matches_first_to_second": 189,
+            "matches_second_to_first": 264,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.185783,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 189,
+            "support_pixels_second_to_first": 267,
+            "support_second_to_first": 0.988764,
+            "symmetric_support": 0.988764,
+            "visible_pixels_first": 1490,
+            "visible_pixels_second": 1198
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0018",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0018",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0018",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.432673,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.018822,
+            "chamfer_m": 0.004147,
+            "chamfer_ratio": 0.047553,
+            "mahalanobis_ratio": 12.315612,
+            "matches_first_to_second": 197,
+            "matches_second_to_first": 277,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.099334,
+            "support_first_to_second": 0.98995,
+            "support_pixels_first_to_second": 199,
+            "support_pixels_second_to_first": 291,
+            "support_second_to_first": 0.95189,
+            "symmetric_support": 0.95189,
+            "visible_pixels_first": 936,
+            "visible_pixels_second": 651
+          },
+          "global_id": "assoc:dualsyn-20261127-003:dualsyn-20261127-003:ext:0021",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-003:ext:0021",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-003:wrist:0021",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        }
+      ],
+      "first_view": "ext",
+      "params": {
+        "ambiguity_margin": 0.05,
+        "association_margin_m": 0.02,
+        "depth_tolerance_m": 0.01,
+        "max_candidates": 512,
+        "max_chamfer_ratio": 1.0,
+        "max_points": 300,
+        "min_mutual_support": 0.15,
+        "min_support_pixels": 8,
+        "size_ratio_max": 2.5,
+        "strategy": "mutual_projection",
+        "weight_chamfer": 0.35,
+        "weight_prior": 0.1,
+        "weight_size": 0.15,
+        "weight_support": 1.0
+      },
+      "scene_id": "dualsyn-20261127-003",
+      "schema_version": "jcheng.scene_association.v1",
+      "second_view": "wrist",
+      "singletons": [
+        {
+          "instance_id": "dualsyn-20261127-003:ext:0002",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        },
+        {
+          "instance_id": "dualsyn-20261127-003:wrist:0001",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        },
+        {
+          "instance_id": "dualsyn-20261127-003:wrist:0002",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        }
+      ]
+    },
+    {
+      "candidate_pairs": 106,
+      "candidate_truncated": false,
+      "clusters": [
+        {
+          "confidence": 0.465713,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.016333,
+            "chamfer_m": 0.002534,
+            "chamfer_ratio": 0.034536,
+            "mahalanobis_ratio": 10.598029,
+            "matches_first_to_second": 282,
+            "matches_second_to_first": 240,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.102367,
+            "support_first_to_second": 0.94,
+            "support_pixels_first_to_second": 300,
+            "support_pixels_second_to_first": 243,
+            "support_second_to_first": 0.987654,
+            "symmetric_support": 0.94,
+            "visible_pixels_first": 442,
+            "visible_pixels_second": 1157
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0003",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0003",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0003",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.404654,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.025724,
+            "chamfer_m": 0.004609,
+            "chamfer_ratio": 0.057696,
+            "mahalanobis_ratio": 13.837707,
+            "matches_first_to_second": 253,
+            "matches_second_to_first": 190,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.195046,
+            "support_first_to_second": 0.961977,
+            "support_pixels_first_to_second": 263,
+            "support_pixels_second_to_first": 191,
+            "support_second_to_first": 0.994764,
+            "symmetric_support": 0.961977,
+            "visible_pixels_first": 383,
+            "visible_pixels_second": 965
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0004",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0004",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0004",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.43319,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.008295,
+            "chamfer_m": 0.00167,
+            "chamfer_ratio": 0.032406,
+            "mahalanobis_ratio": 11.917653,
+            "matches_first_to_second": 149,
+            "matches_second_to_first": 227,
+            "projected_inside_pixels_first_to_second": 150,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.263377,
+            "support_first_to_second": 0.993333,
+            "support_pixels_first_to_second": 150,
+            "support_pixels_second_to_first": 243,
+            "support_second_to_first": 0.934156,
+            "symmetric_support": 0.934156,
+            "visible_pixels_first": 150,
+            "visible_pixels_second": 434
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0005",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0005",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0005",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.36974,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.011836,
+            "chamfer_m": 0.003492,
+            "chamfer_ratio": 0.053524,
+            "mahalanobis_ratio": 14.931591,
+            "matches_first_to_second": 169,
+            "matches_second_to_first": 246,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 249,
+            "size_ratio": 1.223354,
+            "support_first_to_second": 0.840796,
+            "support_pixels_first_to_second": 201,
+            "support_pixels_second_to_first": 249,
+            "support_second_to_first": 0.987952,
+            "symmetric_support": 0.840796,
+            "visible_pixels_first": 769,
+            "visible_pixels_second": 249
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0006",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0006",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0006",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.539731,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.025397,
+            "chamfer_m": 0.004612,
+            "chamfer_ratio": 0.038638,
+            "mahalanobis_ratio": 7.355227,
+            "matches_first_to_second": 227,
+            "matches_second_to_first": 261,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.054082,
+            "support_first_to_second": 0.904382,
+            "support_pixels_first_to_second": 251,
+            "support_pixels_second_to_first": 275,
+            "support_second_to_first": 0.949091,
+            "symmetric_support": 0.904382,
+            "visible_pixels_first": 1773,
+            "visible_pixels_second": 2826
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0007",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0007",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0007",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.486462,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.02081,
+            "chamfer_m": 0.003292,
+            "chamfer_ratio": 0.031765,
+            "mahalanobis_ratio": 8.836046,
+            "matches_first_to_second": 294,
+            "matches_second_to_first": 208,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.184028,
+            "support_first_to_second": 0.98,
+            "support_pixels_first_to_second": 300,
+            "support_pixels_second_to_first": 240,
+            "support_second_to_first": 0.866667,
+            "symmetric_support": 0.866667,
+            "visible_pixels_first": 422,
+            "visible_pixels_second": 2279
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0008",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0008",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0008",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.467463,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.004081,
+            "chamfer_m": 0.001324,
+            "chamfer_ratio": 0.031907,
+            "mahalanobis_ratio": 10.148521,
+            "matches_first_to_second": 67,
+            "matches_second_to_first": 159,
+            "projected_inside_pixels_first_to_second": 72,
+            "projected_inside_pixels_second_to_first": 194,
+            "size_ratio": 1.009695,
+            "support_first_to_second": 0.957143,
+            "support_pixels_first_to_second": 70,
+            "support_pixels_second_to_first": 179,
+            "support_second_to_first": 0.888268,
+            "symmetric_support": 0.888268,
+            "visible_pixels_first": 72,
+            "visible_pixels_second": 194
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0010",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0010",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0010",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.478065,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.020392,
+            "chamfer_m": 0.003675,
+            "chamfer_ratio": 0.037889,
+            "mahalanobis_ratio": 9.673854,
+            "matches_first_to_second": 167,
+            "matches_second_to_first": 283,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.293873,
+            "support_first_to_second": 0.932961,
+            "support_pixels_first_to_second": 179,
+            "support_pixels_second_to_first": 298,
+            "support_second_to_first": 0.949664,
+            "symmetric_support": 0.932961,
+            "visible_pixels_first": 858,
+            "visible_pixels_second": 487
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0011",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0011",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0011",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.461957,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.023599,
+            "chamfer_m": 0.004874,
+            "chamfer_ratio": 0.053777,
+            "mahalanobis_ratio": 10.668558,
+            "matches_first_to_second": 264,
+            "matches_second_to_first": 157,
+            "projected_inside_pixels_first_to_second": 269,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.501693,
+            "support_first_to_second": 0.996226,
+            "support_pixels_first_to_second": 265,
+            "support_pixels_second_to_first": 157,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 0.996226,
+            "visible_pixels_first": 269,
+            "visible_pixels_second": 1256
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0015",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0015",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0015",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.559073,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.022357,
+            "chamfer_m": 0.004958,
+            "chamfer_ratio": 0.042914,
+            "mahalanobis_ratio": 7.016499,
+            "matches_first_to_second": 299,
+            "matches_second_to_first": 196,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.412691,
+            "support_first_to_second": 0.996667,
+            "support_pixels_first_to_second": 300,
+            "support_pixels_second_to_first": 198,
+            "support_second_to_first": 0.989899,
+            "symmetric_support": 0.989899,
+            "visible_pixels_first": 738,
+            "visible_pixels_second": 4051
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0016",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0016",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0016",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.389129,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.006847,
+            "chamfer_m": 0.002006,
+            "chamfer_ratio": 0.038985,
+            "mahalanobis_ratio": 14.076174,
+            "matches_first_to_second": 145,
+            "matches_second_to_first": 143,
+            "projected_inside_pixels_first_to_second": 172,
+            "projected_inside_pixels_second_to_first": 212,
+            "size_ratio": 1.112298,
+            "support_first_to_second": 0.868263,
+            "support_pixels_first_to_second": 167,
+            "support_pixels_second_to_first": 148,
+            "support_second_to_first": 0.966216,
+            "symmetric_support": 0.868263,
+            "visible_pixels_first": 172,
+            "visible_pixels_second": 212
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0018",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0018",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0018",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.49912,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.028122,
+            "chamfer_m": 0.005721,
+            "chamfer_ratio": 0.050612,
+            "mahalanobis_ratio": 9.282529,
+            "matches_first_to_second": 195,
+            "matches_second_to_first": 262,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.089594,
+            "support_first_to_second": 0.955882,
+            "support_pixels_first_to_second": 204,
+            "support_pixels_second_to_first": 273,
+            "support_second_to_first": 0.959707,
+            "symmetric_support": 0.955882,
+            "visible_pixels_first": 1742,
+            "visible_pixels_second": 1602
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0020",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0020",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0020",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.62266,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.015208,
+            "chamfer_m": 0.003999,
+            "chamfer_ratio": 0.034406,
+            "mahalanobis_ratio": 5.756769,
+            "matches_first_to_second": 206,
+            "matches_second_to_first": 300,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.121968,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 206,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 1.0,
+            "visible_pixels_first": 2466,
+            "visible_pixels_second": 1377
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0021",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0021",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0021",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.271996,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.015525,
+            "chamfer_m": 0.003318,
+            "chamfer_ratio": 0.069635,
+            "mahalanobis_ratio": 24.480722,
+            "matches_first_to_second": 74,
+            "matches_second_to_first": 157,
+            "projected_inside_pixels_first_to_second": 95,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.231795,
+            "support_first_to_second": 0.973684,
+            "support_pixels_first_to_second": 76,
+            "support_pixels_second_to_first": 189,
+            "support_second_to_first": 0.830688,
+            "symmetric_support": 0.830688,
+            "visible_pixels_first": 95,
+            "visible_pixels_second": 305
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0023",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0023",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0023",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.371965,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.010481,
+            "chamfer_m": 0.002068,
+            "chamfer_ratio": 0.037744,
+            "mahalanobis_ratio": 14.707461,
+            "matches_first_to_second": 111,
+            "matches_second_to_first": 214,
+            "projected_inside_pixels_first_to_second": 114,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.335443,
+            "support_first_to_second": 0.973684,
+            "support_pixels_first_to_second": 114,
+            "support_pixels_second_to_first": 253,
+            "support_second_to_first": 0.84585,
+            "symmetric_support": 0.84585,
+            "visible_pixels_first": 114,
+            "visible_pixels_second": 600
+          },
+          "global_id": "assoc:dualsyn-20261127-004:dualsyn-20261127-004:ext:0024",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-004:ext:0024",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-004:wrist:0024",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        }
+      ],
+      "first_view": "ext",
+      "params": {
+        "ambiguity_margin": 0.05,
+        "association_margin_m": 0.02,
+        "depth_tolerance_m": 0.01,
+        "max_candidates": 512,
+        "max_chamfer_ratio": 1.0,
+        "max_points": 300,
+        "min_mutual_support": 0.15,
+        "min_support_pixels": 8,
+        "size_ratio_max": 2.5,
+        "strategy": "mutual_projection",
+        "weight_chamfer": 0.35,
+        "weight_prior": 0.1,
+        "weight_size": 0.15,
+        "weight_support": 1.0
+      },
+      "scene_id": "dualsyn-20261127-004",
+      "schema_version": "jcheng.scene_association.v1",
+      "second_view": "wrist",
+      "singletons": [
+        {
+          "instance_id": "dualsyn-20261127-004:ext:0014",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        },
+        {
+          "instance_id": "dualsyn-20261127-004:ext:0019",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        },
+        {
+          "instance_id": "dualsyn-20261127-004:wrist:0014",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        },
+        {
+          "instance_id": "dualsyn-20261127-004:wrist:0019",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        }
+      ]
+    },
+    {
+      "candidate_pairs": 57,
+      "candidate_truncated": false,
+      "clusters": [
+        {
+          "confidence": 0.621211,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.019043,
+            "chamfer_m": 0.004006,
+            "chamfer_ratio": 0.030565,
+            "mahalanobis_ratio": 5.669904,
+            "matches_first_to_second": 287,
+            "matches_second_to_first": 227,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.055065,
+            "support_first_to_second": 0.97619,
+            "support_pixels_first_to_second": 294,
+            "support_pixels_second_to_first": 228,
+            "support_second_to_first": 0.995614,
+            "symmetric_support": 0.97619,
+            "visible_pixels_first": 1112,
+            "visible_pixels_second": 4403
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0001",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0001",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0001",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.342972,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.043065,
+            "chamfer_m": 0.010912,
+            "chamfer_ratio": 0.11007,
+            "mahalanobis_ratio": 16.830518,
+            "matches_first_to_second": 137,
+            "matches_second_to_first": 154,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.096457,
+            "support_first_to_second": 0.820359,
+            "support_pixels_first_to_second": 167,
+            "support_pixels_second_to_first": 173,
+            "support_second_to_first": 0.890173,
+            "symmetric_support": 0.820359,
+            "visible_pixels_first": 678,
+            "visible_pixels_second": 1055
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0003",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0003",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0003",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.509191,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.0431,
+            "chamfer_m": 0.007965,
+            "chamfer_ratio": 0.055629,
+            "mahalanobis_ratio": 8.663264,
+            "matches_first_to_second": 199,
+            "matches_second_to_first": 223,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.02276,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 199,
+            "support_pixels_second_to_first": 241,
+            "support_second_to_first": 0.925311,
+            "symmetric_support": 0.925311,
+            "visible_pixels_first": 2492,
+            "visible_pixels_second": 3825
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0005",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0005",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0005",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.533806,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.009589,
+            "chamfer_m": 0.002159,
+            "chamfer_ratio": 0.024843,
+            "mahalanobis_ratio": 7.742705,
+            "matches_first_to_second": 262,
+            "matches_second_to_first": 259,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.037122,
+            "support_first_to_second": 0.973978,
+            "support_pixels_first_to_second": 269,
+            "support_pixels_second_to_first": 283,
+            "support_second_to_first": 0.915194,
+            "symmetric_support": 0.915194,
+            "visible_pixels_first": 448,
+            "visible_pixels_second": 478
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0006",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0006",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0006",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.505627,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.012364,
+            "chamfer_m": 0.002383,
+            "chamfer_ratio": 0.028753,
+            "mahalanobis_ratio": 8.769044,
+            "matches_first_to_second": 262,
+            "matches_second_to_first": 286,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.198943,
+            "support_first_to_second": 0.939068,
+            "support_pixels_first_to_second": 279,
+            "support_pixels_second_to_first": 299,
+            "support_second_to_first": 0.956522,
+            "symmetric_support": 0.939068,
+            "visible_pixels_first": 884,
+            "visible_pixels_second": 1274
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0008",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0008",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0008",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.422761,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.022071,
+            "chamfer_m": 0.006075,
+            "chamfer_ratio": 0.067825,
+            "mahalanobis_ratio": 13.06465,
+            "matches_first_to_second": 199,
+            "matches_second_to_first": 236,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.096352,
+            "support_first_to_second": 0.980296,
+            "support_pixels_first_to_second": 203,
+            "support_pixels_second_to_first": 241,
+            "support_second_to_first": 0.979253,
+            "symmetric_support": 0.979253,
+            "visible_pixels_first": 1401,
+            "visible_pixels_second": 1492
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0009",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0009",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0009",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.364093,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.004621,
+            "chamfer_m": 0.002829,
+            "chamfer_ratio": 0.069038,
+            "mahalanobis_ratio": 16.372224,
+            "matches_first_to_second": 39,
+            "matches_second_to_first": 117,
+            "projected_inside_pixels_first_to_second": 47,
+            "projected_inside_pixels_second_to_first": 245,
+            "size_ratio": 1.401122,
+            "support_first_to_second": 0.975,
+            "support_pixels_first_to_second": 40,
+            "support_pixels_second_to_first": 119,
+            "support_second_to_first": 0.983193,
+            "symmetric_support": 0.975,
+            "visible_pixels_first": 47,
+            "visible_pixels_second": 245
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0011",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0011",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0011",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.517767,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.026073,
+            "chamfer_m": 0.005858,
+            "chamfer_ratio": 0.050078,
+            "mahalanobis_ratio": 8.644191,
+            "matches_first_to_second": 164,
+            "matches_second_to_first": 288,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.238174,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 164,
+            "support_pixels_second_to_first": 292,
+            "support_second_to_first": 0.986301,
+            "symmetric_support": 0.986301,
+            "visible_pixels_first": 2181,
+            "visible_pixels_second": 978
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0012",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0012",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0012",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.301683,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.021855,
+            "chamfer_m": 0.006613,
+            "chamfer_ratio": 0.113492,
+            "mahalanobis_ratio": 21.527421,
+            "matches_first_to_second": 66,
+            "matches_second_to_first": 109,
+            "projected_inside_pixels_first_to_second": 76,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.715626,
+            "support_first_to_second": 0.985075,
+            "support_pixels_first_to_second": 67,
+            "support_pixels_second_to_first": 109,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 0.985075,
+            "visible_pixels_first": 76,
+            "visible_pixels_second": 402
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0013",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0013",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0013",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.342898,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.007748,
+            "chamfer_m": 0.001863,
+            "chamfer_ratio": 0.046556,
+            "mahalanobis_ratio": 18.369622,
+            "matches_first_to_second": 88,
+            "matches_second_to_first": 131,
+            "projected_inside_pixels_first_to_second": 113,
+            "projected_inside_pixels_second_to_first": 150,
+            "size_ratio": 1.128441,
+            "support_first_to_second": 0.967033,
+            "support_pixels_first_to_second": 91,
+            "support_pixels_second_to_first": 137,
+            "support_second_to_first": 0.956204,
+            "symmetric_support": 0.956204,
+            "visible_pixels_first": 113,
+            "visible_pixels_second": 150
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0015",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0015",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0015",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.629779,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.018356,
+            "chamfer_m": 0.002978,
+            "chamfer_ratio": 0.027087,
+            "mahalanobis_ratio": 5.499985,
+            "matches_first_to_second": 296,
+            "matches_second_to_first": 212,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.100317,
+            "support_first_to_second": 0.986667,
+            "support_pixels_first_to_second": 300,
+            "support_pixels_second_to_first": 212,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 0.986667,
+            "visible_pixels_first": 748,
+            "visible_pixels_second": 2438
+          },
+          "global_id": "assoc:dualsyn-20261127-005:dualsyn-20261127-005:ext:0016",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-005:ext:0016",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-005:wrist:0016",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        }
+      ],
+      "first_view": "ext",
+      "params": {
+        "ambiguity_margin": 0.05,
+        "association_margin_m": 0.02,
+        "depth_tolerance_m": 0.01,
+        "max_candidates": 512,
+        "max_chamfer_ratio": 1.0,
+        "max_points": 300,
+        "min_mutual_support": 0.15,
+        "min_support_pixels": 8,
+        "size_ratio_max": 2.5,
+        "strategy": "mutual_projection",
+        "weight_chamfer": 0.35,
+        "weight_prior": 0.1,
+        "weight_size": 0.15,
+        "weight_support": 1.0
+      },
+      "scene_id": "dualsyn-20261127-005",
+      "schema_version": "jcheng.scene_association.v1",
+      "second_view": "wrist",
+      "singletons": [
+        {
+          "instance_id": "dualsyn-20261127-005:wrist:0002",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        },
+        {
+          "instance_id": "dualsyn-20261127-005:wrist:0010",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        }
+      ]
+    },
+    {
+      "candidate_pairs": 108,
+      "candidate_truncated": false,
+      "clusters": [
+        {
+          "confidence": 0.481218,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.012908,
+            "chamfer_m": 0.001895,
+            "chamfer_ratio": 0.02776,
+            "mahalanobis_ratio": 9.814968,
+            "matches_first_to_second": 254,
+            "matches_second_to_first": 287,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.290094,
+            "support_first_to_second": 0.976923,
+            "support_pixels_first_to_second": 260,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.956667,
+            "symmetric_support": 0.956667,
+            "visible_pixels_first": 378,
+            "visible_pixels_second": 585
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0001",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0001",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0001",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.518742,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.007779,
+            "chamfer_m": 0.001701,
+            "chamfer_ratio": 0.025807,
+            "mahalanobis_ratio": 7.765654,
+            "matches_first_to_second": 248,
+            "matches_second_to_first": 282,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 292,
+            "size_ratio": 1.06183,
+            "support_first_to_second": 0.867133,
+            "support_pixels_first_to_second": 286,
+            "support_pixels_second_to_first": 286,
+            "support_second_to_first": 0.986014,
+            "symmetric_support": 0.867133,
+            "visible_pixels_first": 338,
+            "visible_pixels_second": 292
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0004",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0004",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0004",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.46785,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.018502,
+            "chamfer_m": 0.003442,
+            "chamfer_ratio": 0.040262,
+            "mahalanobis_ratio": 10.726995,
+            "matches_first_to_second": 245,
+            "matches_second_to_first": 218,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.051191,
+            "support_first_to_second": 0.957031,
+            "support_pixels_first_to_second": 256,
+            "support_pixels_second_to_first": 218,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 0.957031,
+            "visible_pixels_first": 469,
+            "visible_pixels_second": 977
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0005",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0005",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0005",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.465589,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.035286,
+            "chamfer_m": 0.005755,
+            "chamfer_ratio": 0.052357,
+            "mahalanobis_ratio": 10.164454,
+            "matches_first_to_second": 171,
+            "matches_second_to_first": 267,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.310761,
+            "support_first_to_second": 0.994186,
+            "support_pixels_first_to_second": 172,
+            "support_pixels_second_to_first": 286,
+            "support_second_to_first": 0.933566,
+            "symmetric_support": 0.933566,
+            "visible_pixels_first": 1364,
+            "visible_pixels_second": 974
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0007",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0007",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0007",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.442712,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.026618,
+            "chamfer_m": 0.004435,
+            "chamfer_ratio": 0.050429,
+            "mahalanobis_ratio": 11.719746,
+            "matches_first_to_second": 186,
+            "matches_second_to_first": 264,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.194527,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 186,
+            "support_pixels_second_to_first": 275,
+            "support_second_to_first": 0.96,
+            "symmetric_support": 0.96,
+            "visible_pixels_first": 976,
+            "visible_pixels_second": 1018
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0008",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0008",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0008",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.606902,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.022523,
+            "chamfer_m": 0.004136,
+            "chamfer_ratio": 0.034372,
+            "mahalanobis_ratio": 6.190487,
+            "matches_first_to_second": 214,
+            "matches_second_to_first": 285,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.041449,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 214,
+            "support_pixels_second_to_first": 288,
+            "support_second_to_first": 0.989583,
+            "symmetric_support": 0.989583,
+            "visible_pixels_first": 1829,
+            "visible_pixels_second": 1734
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0009",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0009",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0009",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.596758,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.019287,
+            "chamfer_m": 0.0053,
+            "chamfer_ratio": 0.039247,
+            "mahalanobis_ratio": 6.304452,
+            "matches_first_to_second": 280,
+            "matches_second_to_first": 189,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.002659,
+            "support_first_to_second": 0.968858,
+            "support_pixels_first_to_second": 289,
+            "support_pixels_second_to_first": 192,
+            "support_second_to_first": 0.984375,
+            "symmetric_support": 0.968858,
+            "visible_pixels_first": 691,
+            "visible_pixels_second": 4516
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0010",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0010",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0010",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.598624,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.009046,
+            "chamfer_m": 0.001493,
+            "chamfer_ratio": 0.018393,
+            "mahalanobis_ratio": 6.169727,
+            "matches_first_to_second": 287,
+            "matches_second_to_first": 292,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.089442,
+            "support_first_to_second": 0.96633,
+            "support_pixels_first_to_second": 297,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.973333,
+            "symmetric_support": 0.96633,
+            "visible_pixels_first": 642,
+            "visible_pixels_second": 1120
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0011",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0011",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0011",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.38917,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.03,
+            "chamfer_m": 0.007704,
+            "chamfer_ratio": 0.082457,
+            "mahalanobis_ratio": 14.532587,
+            "matches_first_to_second": 201,
+            "matches_second_to_first": 166,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.148907,
+            "support_first_to_second": 0.934884,
+            "support_pixels_first_to_second": 215,
+            "support_pixels_second_to_first": 167,
+            "support_second_to_first": 0.994012,
+            "symmetric_support": 0.934884,
+            "visible_pixels_first": 632,
+            "visible_pixels_second": 1503
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0012",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0012",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0012",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.414295,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.01585,
+            "chamfer_m": 0.003804,
+            "chamfer_ratio": 0.051518,
+            "mahalanobis_ratio": 13.342241,
+            "matches_first_to_second": 199,
+            "matches_second_to_first": 290,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.187656,
+            "support_first_to_second": 0.985149,
+            "support_pixels_first_to_second": 202,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.966667,
+            "symmetric_support": 0.966667,
+            "visible_pixels_first": 960,
+            "visible_pixels_second": 574
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0013",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0013",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0013",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.350448,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.024939,
+            "chamfer_m": 0.005092,
+            "chamfer_ratio": 0.069035,
+            "mahalanobis_ratio": 16.261184,
+            "matches_first_to_second": 163,
+            "matches_second_to_first": 228,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.347789,
+            "support_first_to_second": 0.848958,
+            "support_pixels_first_to_second": 192,
+            "support_pixels_second_to_first": 248,
+            "support_second_to_first": 0.919355,
+            "symmetric_support": 0.848958,
+            "visible_pixels_first": 352,
+            "visible_pixels_second": 408
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0014",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0014",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0014",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.401256,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.019402,
+            "chamfer_m": 0.004704,
+            "chamfer_ratio": 0.059056,
+            "mahalanobis_ratio": 12.986083,
+            "matches_first_to_second": 155,
+            "matches_second_to_first": 260,
+            "projected_inside_pixels_first_to_second": 269,
+            "projected_inside_pixels_second_to_first": 299,
+            "size_ratio": 1.258794,
+            "support_first_to_second": 0.865922,
+            "support_pixels_first_to_second": 179,
+            "support_pixels_second_to_first": 275,
+            "support_second_to_first": 0.945455,
+            "symmetric_support": 0.865922,
+            "visible_pixels_first": 269,
+            "visible_pixels_second": 299
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0015",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0015",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0015",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.703571,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.00045,
+            "chamfer_m": 0.000559,
+            "chamfer_ratio": 0.027353,
+            "mahalanobis_ratio": 2.932118,
+            "matches_first_to_second": 24,
+            "matches_second_to_first": 44,
+            "projected_inside_pixels_first_to_second": 27,
+            "projected_inside_pixels_second_to_first": 49,
+            "size_ratio": 1.0495,
+            "support_first_to_second": 0.888889,
+            "support_pixels_first_to_second": 27,
+            "support_pixels_second_to_first": 49,
+            "support_second_to_first": 0.897959,
+            "symmetric_support": 0.888889,
+            "visible_pixels_first": 27,
+            "visible_pixels_second": 49
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0016",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0016",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0016",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.34552,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.001059,
+            "chamfer_m": 0.001971,
+            "chamfer_ratio": 0.054232,
+            "mahalanobis_ratio": 17.249536,
+            "matches_first_to_second": 60,
+            "matches_second_to_first": 58,
+            "projected_inside_pixels_first_to_second": 102,
+            "projected_inside_pixels_second_to_first": 59,
+            "size_ratio": 1.395635,
+            "support_first_to_second": 0.909091,
+            "support_pixels_first_to_second": 66,
+            "support_pixels_second_to_first": 59,
+            "support_second_to_first": 0.983051,
+            "symmetric_support": 0.909091,
+            "visible_pixels_first": 102,
+            "visible_pixels_second": 59
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0019",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0019",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0019",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.611766,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.021369,
+            "chamfer_m": 0.003974,
+            "chamfer_ratio": 0.030805,
+            "mahalanobis_ratio": 5.788493,
+            "matches_first_to_second": 276,
+            "matches_second_to_first": 259,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.022092,
+            "support_first_to_second": 0.958333,
+            "support_pixels_first_to_second": 288,
+            "support_pixels_second_to_first": 269,
+            "support_second_to_first": 0.962825,
+            "symmetric_support": 0.958333,
+            "visible_pixels_first": 2083,
+            "visible_pixels_second": 4013
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0020",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0020",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0020",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.285021,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.006752,
+            "chamfer_m": 0.002596,
+            "chamfer_ratio": 0.08195,
+            "mahalanobis_ratio": 22.555116,
+            "matches_first_to_second": 15,
+            "matches_second_to_first": 59,
+            "projected_inside_pixels_first_to_second": 22,
+            "projected_inside_pixels_second_to_first": 85,
+            "size_ratio": 1.529272,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 15,
+            "support_pixels_second_to_first": 69,
+            "support_second_to_first": 0.855072,
+            "symmetric_support": 0.855072,
+            "visible_pixels_first": 22,
+            "visible_pixels_second": 85
+          },
+          "global_id": "assoc:dualsyn-20261127-006:dualsyn-20261127-006:ext:0021",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-006:ext:0021",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-006:wrist:0021",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        }
+      ],
+      "first_view": "ext",
+      "params": {
+        "ambiguity_margin": 0.05,
+        "association_margin_m": 0.02,
+        "depth_tolerance_m": 0.01,
+        "max_candidates": 512,
+        "max_chamfer_ratio": 1.0,
+        "max_points": 300,
+        "min_mutual_support": 0.15,
+        "min_support_pixels": 8,
+        "size_ratio_max": 2.5,
+        "strategy": "mutual_projection",
+        "weight_chamfer": 0.35,
+        "weight_prior": 0.1,
+        "weight_size": 0.15,
+        "weight_support": 1.0
+      },
+      "scene_id": "dualsyn-20261127-006",
+      "schema_version": "jcheng.scene_association.v1",
+      "second_view": "wrist",
+      "singletons": [
+        {
+          "instance_id": "dualsyn-20261127-006:wrist:0002",
+          "reason": "matched_elsewhere",
+          "view_id": "wrist"
+        }
+      ]
+    },
+    {
+      "candidate_pairs": 86,
+      "candidate_truncated": false,
+      "clusters": [
+        {
+          "confidence": 0.388898,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.030755,
+            "chamfer_m": 0.006605,
+            "chamfer_ratio": 0.073445,
+            "mahalanobis_ratio": 14.104485,
+            "matches_first_to_second": 141,
+            "matches_second_to_first": 273,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.489071,
+            "support_first_to_second": 0.979167,
+            "support_pixels_first_to_second": 144,
+            "support_pixels_second_to_first": 291,
+            "support_second_to_first": 0.938144,
+            "symmetric_support": 0.938144,
+            "visible_pixels_first": 1143,
+            "visible_pixels_second": 510
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0001",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0001",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0001",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.457831,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.019074,
+            "chamfer_m": 0.00606,
+            "chamfer_ratio": 0.057931,
+            "mahalanobis_ratio": 10.680268,
+            "matches_first_to_second": 193,
+            "matches_second_to_first": 264,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.041895,
+            "support_first_to_second": 0.910377,
+            "support_pixels_first_to_second": 212,
+            "support_pixels_second_to_first": 277,
+            "support_second_to_first": 0.953069,
+            "symmetric_support": 0.910377,
+            "visible_pixels_first": 1750,
+            "visible_pixels_second": 1720
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0002",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0002",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0002",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.566778,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.021084,
+            "chamfer_m": 0.005578,
+            "chamfer_ratio": 0.044419,
+            "mahalanobis_ratio": 7.367954,
+            "matches_first_to_second": 285,
+            "matches_second_to_first": 169,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.033646,
+            "support_first_to_second": 0.993031,
+            "support_pixels_first_to_second": 287,
+            "support_pixels_second_to_first": 170,
+            "support_second_to_first": 0.994118,
+            "symmetric_support": 0.993031,
+            "visible_pixels_first": 690,
+            "visible_pixels_second": 3940
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0003",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0003",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0003",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.696116,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.004091,
+            "chamfer_m": 0.001174,
+            "chamfer_ratio": 0.017175,
+            "mahalanobis_ratio": 3.913905,
+            "matches_first_to_second": 271,
+            "matches_second_to_first": 285,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.10112,
+            "support_first_to_second": 0.996324,
+            "support_pixels_first_to_second": 272,
+            "support_pixels_second_to_first": 292,
+            "support_second_to_first": 0.976027,
+            "symmetric_support": 0.976027,
+            "visible_pixels_first": 327,
+            "visible_pixels_second": 576
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0004",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0004",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0004",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.40955,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.039444,
+            "chamfer_m": 0.008601,
+            "chamfer_ratio": 0.077461,
+            "mahalanobis_ratio": 12.618032,
+            "matches_first_to_second": 137,
+            "matches_second_to_first": 250,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.368791,
+            "support_first_to_second": 0.985612,
+            "support_pixels_first_to_second": 139,
+            "support_pixels_second_to_first": 277,
+            "support_second_to_first": 0.902527,
+            "symmetric_support": 0.902527,
+            "visible_pixels_first": 1694,
+            "visible_pixels_second": 948
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0005",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0005",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0005",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.562397,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.003249,
+            "chamfer_m": 0.001568,
+            "chamfer_ratio": 0.026323,
+            "mahalanobis_ratio": 6.634776,
+            "matches_first_to_second": 165,
+            "matches_second_to_first": 234,
+            "projected_inside_pixels_first_to_second": 165,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.251229,
+            "support_first_to_second": 1.0,
+            "support_pixels_first_to_second": 165,
+            "support_pixels_second_to_first": 251,
+            "support_second_to_first": 0.932271,
+            "symmetric_support": 0.932271,
+            "visible_pixels_first": 165,
+            "visible_pixels_second": 411
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0006",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0006",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0006",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.629288,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.008607,
+            "chamfer_m": 0.002773,
+            "chamfer_ratio": 0.034041,
+            "mahalanobis_ratio": 4.935513,
+            "matches_first_to_second": 201,
+            "matches_second_to_first": 269,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.009594,
+            "support_first_to_second": 0.917808,
+            "support_pixels_first_to_second": 219,
+            "support_pixels_second_to_first": 273,
+            "support_second_to_first": 0.985348,
+            "symmetric_support": 0.917808,
+            "visible_pixels_first": 457,
+            "visible_pixels_second": 392
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0008",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0008",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0008",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.526524,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.017437,
+            "chamfer_m": 0.00396,
+            "chamfer_ratio": 0.039168,
+            "mahalanobis_ratio": 8.296184,
+            "matches_first_to_second": 286,
+            "matches_second_to_first": 226,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.063384,
+            "support_first_to_second": 0.976109,
+            "support_pixels_first_to_second": 293,
+            "support_pixels_second_to_first": 237,
+            "support_second_to_first": 0.953586,
+            "symmetric_support": 0.953586,
+            "visible_pixels_first": 915,
+            "visible_pixels_second": 2912
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0009",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0009",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0009",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.605331,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.022449,
+            "chamfer_m": 0.004102,
+            "chamfer_ratio": 0.034583,
+            "mahalanobis_ratio": 6.250916,
+            "matches_first_to_second": 275,
+            "matches_second_to_first": 225,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.074463,
+            "support_first_to_second": 0.996377,
+            "support_pixels_first_to_second": 276,
+            "support_pixels_second_to_first": 225,
+            "support_second_to_first": 1.0,
+            "symmetric_support": 0.996377,
+            "visible_pixels_first": 1148,
+            "visible_pixels_second": 2254
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0010",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0010",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0010",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.481532,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.018239,
+            "chamfer_m": 0.004625,
+            "chamfer_ratio": 0.049045,
+            "mahalanobis_ratio": 10.140288,
+            "matches_first_to_second": 186,
+            "matches_second_to_first": 292,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.125619,
+            "support_first_to_second": 0.984127,
+            "support_pixels_first_to_second": 189,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.973333,
+            "symmetric_support": 0.973333,
+            "visible_pixels_first": 1613,
+            "visible_pixels_second": 1088
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0011",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0011",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0011",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.588159,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.007213,
+            "chamfer_m": 0.001001,
+            "chamfer_ratio": 0.01585,
+            "mahalanobis_ratio": 6.412702,
+            "matches_first_to_second": 177,
+            "matches_second_to_first": 278,
+            "projected_inside_pixels_first_to_second": 182,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.014717,
+            "support_first_to_second": 0.983333,
+            "support_pixels_first_to_second": 180,
+            "support_pixels_second_to_first": 293,
+            "support_second_to_first": 0.948805,
+            "symmetric_support": 0.948805,
+            "visible_pixels_first": 182,
+            "visible_pixels_second": 366
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0013",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0013",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0013",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.515635,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.021382,
+            "chamfer_m": 0.003627,
+            "chamfer_ratio": 0.037815,
+            "mahalanobis_ratio": 8.637203,
+            "matches_first_to_second": 200,
+            "matches_second_to_first": 291,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.216006,
+            "support_first_to_second": 0.97561,
+            "support_pixels_first_to_second": 205,
+            "support_pixels_second_to_first": 300,
+            "support_second_to_first": 0.97,
+            "symmetric_support": 0.97,
+            "visible_pixels_first": 555,
+            "visible_pixels_second": 397
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0014",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0014",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0014",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        },
+        {
+          "confidence": 0.463632,
+          "confidence_kind": "heuristic_uncalibrated",
+          "evidence": {
+            "centroid_distance_m": 0.017682,
+            "chamfer_m": 0.003415,
+            "chamfer_ratio": 0.040565,
+            "mahalanobis_ratio": 10.501995,
+            "matches_first_to_second": 230,
+            "matches_second_to_first": 272,
+            "projected_inside_pixels_first_to_second": 300,
+            "projected_inside_pixels_second_to_first": 300,
+            "size_ratio": 1.083227,
+            "support_first_to_second": 0.92,
+            "support_pixels_first_to_second": 250,
+            "support_pixels_second_to_first": 284,
+            "support_second_to_first": 0.957746,
+            "symmetric_support": 0.92,
+            "visible_pixels_first": 864,
+            "visible_pixels_second": 1040
+          },
+          "global_id": "assoc:dualsyn-20261127-007:dualsyn-20261127-007:ext:0017",
+          "members": [
+            {
+              "instance_id": "dualsyn-20261127-007:ext:0017",
+              "view_id": "ext"
+            },
+            {
+              "instance_id": "dualsyn-20261127-007:wrist:0017",
+              "view_id": "wrist"
+            }
+          ],
+          "status": "associated",
+          "unmatched_reason": null
+        }
+      ],
+      "first_view": "ext",
+      "params": {
+        "ambiguity_margin": 0.05,
+        "association_margin_m": 0.02,
+        "depth_tolerance_m": 0.01,
+        "max_candidates": 512,
+        "max_chamfer_ratio": 1.0,
+        "max_points": 300,
+        "min_mutual_support": 0.15,
+        "min_support_pixels": 8,
+        "size_ratio_max": 2.5,
+        "strategy": "mutual_projection",
+        "weight_chamfer": 0.35,
+        "weight_prior": 0.1,
+        "weight_size": 0.15,
+        "weight_support": 1.0
+      },
+      "scene_id": "dualsyn-20261127-007",
+      "schema_version": "jcheng.scene_association.v1",
+      "second_view": "wrist",
+      "singletons": [
+        {
+          "instance_id": "dualsyn-20261127-007:ext:0015",
+          "reason": "matched_elsewhere",
+          "view_id": "ext"
+        }
+      ]
+    },
+    {
+      "candidate_pairs": 0,
+      "candidate_truncated": false,
+      "clusters": [],
+      "first_view": "ext",
+      "params": {
+        "ambiguity_margin": 0.05,
+        "association_margin_m": 0.02,
+        "depth_tolerance_m": 0.01,
+        "max_candidates": 512,
+        "max_chamfer_ratio": 1.0,
+        "max_points": 300,
+        "min_mutual_support": 0.15,
+        "min_support_pixels": 8,
+        "size_ratio_max": 2.5,
+        "strategy": "mutual_projection",
+        "weight_chamfer": 0.35,
+        "weight_prior": 0.1,
+        "weight_size": 0.15,
+        "weight_support": 1.0
+      },
+      "scene_id": "dualsyn-20261127-008",
+      "schema_version": "jcheng.scene_association.v1",
+      "second_view": "wrist",
+      "singletons": []
+    }
+  ],
+  "schema_version": "jcheng.ore_association_eval.v1"
+}

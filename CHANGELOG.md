@@ -8,6 +8,14 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S4.2 dual-view association matcher (2026-11-27): ROS-free `association.py`
+  loads S4.1 scenes, gates candidates by AABB/size/mutual-projection support,
+  scores Chamfer + visible-centroid Mahalanobis, and runs Hungarian matching
+  with an ambiguity margin. On 8 dense synthetic scenes (125 constructed pairs)
+  mutual projection gives P/R/F1 **1.000/0.944/0.971** vs the visible-centroid
+  baseline 0.973/0.872/0.920; 0 vs 10 ambiguous clusters; forced-ID errors 0.
+  Four new tests (114 total). Synthetic only; no real-ore/hardware/runtime
+  validation and no interfaces change.
 - S4.1 synthetic dual-view generator (2026-11-27): renders ellipsoid ore
   proxies from two calibrated pinhole cameras with RGB, metric z-depth, uint16
   instance labels and z-buffer occlusion; writes `dataset.json`, `pairs.jsonl`

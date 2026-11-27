@@ -118,7 +118,7 @@ from jcheng_perception_scene.synthetic_dual import (
 
 ## 5. 测试
 
-新增 5 个测试（总计 **110 passed**）：
+新增 5 个测试（S4.1 结束时总计 110；加入 S4.2 后当前 **114 passed**）：
 
 1. `test_dual_view_dataset_ground_truth`：manifest/label/depth/bbox/pair/
    singleton 一致；空场景全零；
@@ -143,9 +143,9 @@ from jcheng_perception_scene.synthetic_dual import (
    **Unverified**。
 6. 无 DDS/设备/运动/`jcheng-interfaces` 改动。
 
-## 7. 下一步（S4.2，待 Board/owner 确认）
+## 7. 下一步
 
-1. 在生成器上实现候选门控 + 互相投影支持 + 匈牙利匹配；
-2. 输出 `associated`/`ambiguous`/`singleton` 与证据；
-3. 先跑合成 easy/dense/occluded 分层与消融，再决定是否进入真实静态采集；
-4. 任何运行时/契约暴露都留到 S4.4 证据之后另案评审。
+S4.2 匹配器已实现，见 [`ORE_SCENE_S4_2.md`](ORE_SCENE_S4_2.md)：候选门控 +
+互相投影支持 + 匈牙利 + `ambiguous`，在 8 个稠密合成场景（125 对）上
+P/R/F1 1.000/0.944/0.971。下一步是 S4.3 融合/序列化与 S4.4 敏感性/消融；
+任何运行时/契约暴露都留到 S4.4 证据之后另案评审。

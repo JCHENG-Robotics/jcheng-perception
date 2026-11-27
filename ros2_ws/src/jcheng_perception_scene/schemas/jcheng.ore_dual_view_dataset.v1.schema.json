@@ -30,7 +30,8 @@
         "width": {"type": "integer", "minimum": 64},
         "height": {"type": "integer", "minimum": 64},
         "min_instances": {"type": "integer", "minimum": 0},
-        "max_instances": {"type": "integer", "minimum": 0}
+        "max_instances": {"type": "integer", "minimum": 0},
+        "scene_radius_m": {"type": "number", "exclusiveMinimum": 0}
       }
     },
     "cameras": {
