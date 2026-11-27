@@ -65,6 +65,7 @@
 | 30-minute stability, CPU/temperature/memory | Not run | Long-run stability is unknown |
 | Domain isolation and telemetry mirroring | Not integrated with `jcheng-system` | Perception must not join the control domain |
 | Motion integration | Not started | Poses are advisory only |
+| Interface contract adoption | No runtime imports of `jcheng_interfaces`; the message package is provisional | Not part of the v0.2.0 contract; the pin is added at promotion |
 
 ## 4. Limitations
 
@@ -75,6 +76,8 @@
   reader can still wedge, so a repeatable full window is not established.
 - The current poses must not be used for motion; integration must pass
   `jcheng_safety` and `jcheng_motion`.
+- The repository does not consume the v0.2.0 interface contract at runtime; this
+  is an explicit waiver recorded in the ecosystem acceptance, not an adoption.
 - A container restart can leave the D435i depth unit closed; the recovered
   procedure restarts `armpi-rs-depth` and the ingress.
 - Model weights and third-party runtimes carry their own licenses.
