@@ -1001,6 +1001,72 @@ def test_association_ambiguous_does_not_force_ids():
     assert validate_association_record(fused, scene)
 
 
+def test_effective_depth_tolerance_and_validation():
+    assert AssociationParams().effective_depth_tolerance_m == 0.01
+    widened = AssociationParams(
+        extrinsic_depth_sigma_m=0.010, depth_sigma_multiplier=2.0)
+    assert abs(widened.effective_depth_tolerance_m - 0.03) < 1e-12
+    for kwargs in ({'extrinsic_depth_sigma_m': -0.001},
+                   {'depth_sigma_multiplier': -1.0}):
+        with pytest.raises(ValueError):
+            AssociationParams(**kwargs)
+
+
+def test_support_depth_gate_widens_with_calibration_sigma():
+    from jcheng_perception_scene.association import _support_points
+
+    camera = look_at_camera(
+        'ext', (0.0, 0.0, 0.0), (0.0, 0.0, 1.0), 64, 64)
+    rows, columns = np.mgrid[0:4, 0:4]
+    points = np.column_stack([
+        (columns.ravel() - 1.5) * 0.005,
+        (rows.ravel() - 1.5) * 0.005,
+        np.full(16, 0.5),
+    ])
+    centroid = points.mean(axis=0)
+    covariance = np.cov(points.T, bias=True) + np.eye(3) * 1e-8
+
+    def instance(view_id, instance_id):
+        return AssociationInstance(
+            view_id=view_id,
+            instance_id=instance_id,
+            mask_index=1,
+            bbox_xyxy=(0, 0, 63, 63),
+            points_base=points,
+            centroid_base=centroid,
+            covariance_base=covariance,
+            aabb_min=points.min(axis=0),
+            aabb_max=points.max(axis=0),
+            visible_area_px=len(points),
+            occlusion_ratio=0.0,
+        )
+
+    # The source points are 15 mm behind the target-view surface, i.e. more
+    # than the 10 mm measurement tolerance but inside a 2-sigma 10 mm
+    # calibration envelope.
+    depth = np.full((64, 64), 0.485)
+    label = np.ones((64, 64), np.uint16)
+    target_frame = ViewFrame(
+        'ext', camera, label, depth, [instance('ext', 'ext:1')])
+    source = instance('wrist', 'wrist:1')
+    target = target_frame.instances[0]
+
+    support, matches, denominator, inside = _support_points(
+        source, target_frame, target, AssociationParams())
+    assert inside > 0
+    assert denominator == 0
+    assert support == 0.0 and matches == 0
+
+    widened = AssociationParams(
+        extrinsic_depth_sigma_m=0.010, depth_sigma_multiplier=2.0)
+    support, matches, denominator, inside = _support_points(
+        source, target_frame, target, widened)
+    assert inside > 0
+    assert denominator == inside
+    assert matches == denominator
+    assert support == 1.0
+
+
 def test_association_permutation_and_empty(tmp_path):
     root = str(tmp_path / 'assoc-permute')
     generate_dual_view_dataset(

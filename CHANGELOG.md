@@ -8,6 +8,22 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S4.4b calibration-aware depth gate (2026-11-27): added
+  `extrinsic_depth_sigma_m` (default `0.0`, so previous behaviour is unchanged)
+  and `depth_sigma_multiplier` (default `2.0`) to `AssociationParams`, and
+  widened the mutual-projection depth gate by the declared calibration sigma.
+  Diagnosis of the S4.4 failure: a 10 mm depth-axis extrinsic shift makes the
+  one-sided depth test reject every projected point, so `symmetric_support`
+  collapses to zero. A pre-registered config
+  (`config/association_sensitivity_calibrated.yaml`, SHA-256 `71ad904a…bd575`)
+  was frozen before generating an independent held-out synthetic seed
+  `20261128`: P/R/F1 **1.000/0.952/0.976** on 126 constructed pairs, worst
+  10 mm translation ΔF1 0.060, all six 1-degree rotation axes pass, and a
+  100 ms timestamp offset fails closed. Post-hoc diagnostic on the same
+  held-out data shows the uninformed matcher at 0.875/0.880 for ext/wrist tz
+  10 mm versus 0.946/0.950 with the declared sigma. Two new tests (122 total).
+  Synthetic only; the original S4.4 failure is retained and `1σ = 10 mm` is a
+  test assumption, not a measured calibration.
 - S4.4 pre-registered sensitivity/ablation (2026-11-27): added
   `association_sensitivity.py`, `config/association_sensitivity.yaml` and the
   `evaluate-association-sensitivity` CLI (baseline, ablations, extrinsic

@@ -38,6 +38,8 @@ class AssociationParams:
     min_mutual_support: float = 0.15
     min_support_pixels: int = 8
     depth_tolerance_m: float = 0.01
+    extrinsic_depth_sigma_m: float = 0.0
+    depth_sigma_multiplier: float = 2.0
     max_chamfer_ratio: float = 1.0
     size_ratio_max: float = 2.5
     ambiguity_margin: float = 0.05
@@ -62,6 +64,10 @@ class AssociationParams:
             raise ValueError('min_support_pixels must be positive')
         if self.depth_tolerance_m < 0:
             raise ValueError('depth_tolerance_m must be non-negative')
+        if self.extrinsic_depth_sigma_m < 0:
+            raise ValueError('extrinsic_depth_sigma_m must be non-negative')
+        if self.depth_sigma_multiplier < 0:
+            raise ValueError('depth_sigma_multiplier must be non-negative')
         if self.max_chamfer_ratio <= 0 or self.size_ratio_max < 1.0:
             raise ValueError('invalid chamfer/size limits')
         if not 0.0 <= self.ambiguity_margin <= 10.0:
@@ -70,6 +76,19 @@ class AssociationParams:
             raise ValueError('max_points/max_candidates too small')
         if self.sync_window_ns < 0:
             raise ValueError('sync_window_ns must be non-negative')
+
+    @property
+    def effective_depth_tolerance_m(self):
+        """Return the depth gate widened by the declared calibration sigma.
+
+        The mutual-projection support test compares a projected depth against
+        the target-view depth map. A per-view depth-axis extrinsic uncertainty
+        biases that comparison one-sidedly, so the declared sigma is folded
+        into the gate. With the default ``extrinsic_depth_sigma_m=0`` the gate
+        is exactly ``depth_tolerance_m`` and previous results are unchanged.
+        """
+        return (self.depth_tolerance_m +
+                self.depth_sigma_multiplier * self.extrinsic_depth_sigma_m)
 
     def to_dict(self):
         """Return a JSON-serialisable parameter record."""
@@ -421,7 +440,10 @@ def _support_points(source, target_frame, target_instance,
     z = z[inside]
     target_depth = target_frame.depth_m[rows, columns]
     target_label = target_frame.label[rows, columns]
-    visible = (target_depth > 0) & (z <= target_depth + params.depth_tolerance_m)
+    visible = (
+        (target_depth > 0) &
+        (z <= target_depth + params.effective_depth_tolerance_m)
+    )
     denominator = int(np.count_nonzero(visible))
     if denominator == 0:
         return 0.0, 0, 0, int(np.count_nonzero(inside))
@@ -477,6 +499,8 @@ def _candidate_evidence(first, second, first_frame, second_frame, params):
         'size_ratio': round(float(size_ratio), 6),
         'chamfer_m': round(float(chamfer), 6),
         'chamfer_ratio': round(float(chamfer_ratio), 6),
+        'depth_tolerance_m_effective': round(
+            float(params.effective_depth_tolerance_m), 6),
         'centroid_distance_m': round(float(np.linalg.norm(
             first.centroid_base - second.centroid_base)), 6),
         'mahalanobis_ratio': round(float(mahalanobis), 6),

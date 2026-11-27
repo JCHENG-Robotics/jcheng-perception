@@ -383,9 +383,12 @@ S4.3 fuses visible-only geometry (information-weighted visible centroids,
 AABB/OBB, retained per-view members) and validates `jcheng.scene_association.v1`:
 118/118 associated clusters fused, no true-centroid fields. S4.4 pre-registered
 sensitivity on a mixed synthetic set: baseline P/R/F1 1.000/0.934/0.966;
-10 mm depth-axis extrinsic error drops F1 to 0.827/0.876 (acceptance failed),
-while a 100 ms timestamp offset fails closed. Real-ore
-association/geometry accuracy is Unverified.
+10 mm depth-axis extrinsic error drops F1 to 0.827/0.876 (uninformed acceptance
+failed), while a 100 ms timestamp offset fails closed. S4.4b folds a declared
+10 mm depth-axis calibration sigma into the mutual-projection depth gate
+(default-off; 2-sigma envelope) and, on an independent held-out synthetic seed,
+reaches P/R/F1 1.000/0.952/0.976 with all pre-registered 10 mm and 1-degree
+checks passing. Real-ore association/geometry accuracy is Unverified.
 
 Design and evidence:
 
@@ -398,6 +401,7 @@ Design and evidence:
 - [S4.2 association matcher](docs/ORE_SCENE_S4_2.md) (synthetic dense scenes only)
 - [S4.3 fusion & association validation](docs/ORE_SCENE_S4_3.md) (visible-only geometry)
 - [S4.4 sensitivity & ablation](docs/ORE_SCENE_S4_4.md) (pre-registered, synthetic)
+- [S4.4b calibration-aware depth gate](docs/ORE_SCENE_S4_4B.md) (held-out synthetic, default-off)
 - [Research](docs/ORE_SCENE_RESEARCH.md) ·
   [Architecture](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [Roadmap](docs/ORE_SCENE_ROADMAP.md) ·

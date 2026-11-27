@@ -1,0 +1,81 @@
+{
+  "baseline_f1_sigma10_mult2": 0.97561,
+  "cases": [
+    {
+      "f1_sigma0": 0.958678,
+      "f1_sigma10_mult2": 0.958678,
+      "name": "ext_tx_10mm",
+      "recovery_f1": 0.0,
+      "translation_m": [
+        0.01,
+        0,
+        0
+      ],
+      "view_id": "ext"
+    },
+    {
+      "f1_sigma0": 0.967213,
+      "f1_sigma10_mult2": 0.971429,
+      "name": "ext_ty_10mm",
+      "recovery_f1": 0.004216,
+      "translation_m": [
+        0,
+        0.01,
+        0
+      ],
+      "view_id": "ext"
+    },
+    {
+      "f1_sigma0": 0.875,
+      "f1_sigma10_mult2": 0.945607,
+      "name": "ext_tz_10mm",
+      "recovery_f1": 0.070607,
+      "translation_m": [
+        0,
+        0,
+        0.01
+      ],
+      "view_id": "ext"
+    },
+    {
+      "f1_sigma0": 0.967213,
+      "f1_sigma10_mult2": 0.967213,
+      "name": "wrist_tx_10mm",
+      "recovery_f1": 0.0,
+      "translation_m": [
+        0.01,
+        0,
+        0
+      ],
+      "view_id": "wrist"
+    },
+    {
+      "f1_sigma0": 0.915966,
+      "f1_sigma10_mult2": 0.915966,
+      "name": "wrist_ty_10mm",
+      "recovery_f1": 0.0,
+      "translation_m": [
+        0,
+        0.01,
+        0
+      ],
+      "view_id": "wrist"
+    },
+    {
+      "f1_sigma0": 0.88,
+      "f1_sigma10_mult2": 0.95,
+      "name": "wrist_tz_10mm",
+      "recovery_f1": 0.07,
+      "translation_m": [
+        0,
+        0,
+        0.01
+      ],
+      "view_id": "wrist"
+    }
+  ],
+  "created_at": "2026-11-27T03:43:33+00:00",
+  "dataset_id": "dual_view_20261128",
+  "note": "Post-hoc diagnostic run after the pre-registered held-out acceptance run. It quantifies the calibration-sigma effect on the same perturbed held-out data; it does not change or retroactively satisfy any acceptance result.",
+  "schema_version": "jcheng.ore_s4_4b_posthoc.v1"
+}

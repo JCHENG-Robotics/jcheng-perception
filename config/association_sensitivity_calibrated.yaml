@@ -1,0 +1,105 @@
+# Pre-registered S4.4b calibration-aware sensitivity configuration.
+#
+# Frozen before generating the independent held-out seed 20261128. The
+# matcher folds a declared 10 mm (1 sigma) depth-axis extrinsic uncertainty
+# into the mutual-projection depth gate (2 sigma envelope, 30 mm effective
+# tolerance). The S4.4 uninformed run (extrinsic_depth_sigma_m=0) remains a
+# recorded failure; this configuration does not retroactively reinterpret it.
+#
+# Do not tune after seeing the held-out result.
+schema_version: jcheng.association_sensitivity.v1
+baseline:
+  strategy: mutual_projection
+  ambiguity_margin: 0.05
+  min_mutual_support: 0.15
+  depth_tolerance_m: 0.01
+  extrinsic_depth_sigma_m: 0.010
+  depth_sigma_multiplier: 2.0
+  max_points: 300
+  sync_window_ns: 50000000
+ablations:
+  - name: full
+  - name: no_sigma
+    extrinsic_depth_sigma_m: 0.0
+  - name: no_size
+    weight_size: 0.0
+    size_ratio_max: 1000000000.0
+  - name: centroid
+    strategy: centroid
+perturbations:
+  - name: ext_tx_5mm
+    view_id: ext
+    translation_m: [0.005, 0.0, 0.0]
+    rotation_deg: 0.0
+    axis: z
+  - name: ext_tx_10mm
+    view_id: ext
+    translation_m: [0.010, 0.0, 0.0]
+    rotation_deg: 0.0
+    axis: z
+  - name: ext_ty_10mm
+    view_id: ext
+    translation_m: [0.0, 0.010, 0.0]
+    rotation_deg: 0.0
+    axis: z
+  - name: ext_tz_5mm
+    view_id: ext
+    translation_m: [0.0, 0.0, 0.005]
+    rotation_deg: 0.0
+    axis: z
+  - name: ext_tz_10mm
+    view_id: ext
+    translation_m: [0.0, 0.0, 0.010]
+    rotation_deg: 0.0
+    axis: z
+  - name: ext_rx_1p0deg
+    view_id: ext
+    translation_m: [0.0, 0.0, 0.0]
+    rotation_deg: 1.0
+    axis: x
+  - name: ext_ry_1p0deg
+    view_id: ext
+    translation_m: [0.0, 0.0, 0.0]
+    rotation_deg: 1.0
+    axis: y
+  - name: ext_rz_1p0deg
+    view_id: ext
+    translation_m: [0.0, 0.0, 0.0]
+    rotation_deg: 1.0
+    axis: z
+  - name: wrist_tx_10mm
+    view_id: wrist
+    translation_m: [0.010, 0.0, 0.0]
+    rotation_deg: 0.0
+    axis: z
+  - name: wrist_ty_10mm
+    view_id: wrist
+    translation_m: [0.0, 0.010, 0.0]
+    rotation_deg: 0.0
+    axis: z
+  - name: wrist_tz_10mm
+    view_id: wrist
+    translation_m: [0.0, 0.0, 0.010]
+    rotation_deg: 0.0
+    axis: z
+  - name: wrist_rx_1p0deg
+    view_id: wrist
+    translation_m: [0.0, 0.0, 0.0]
+    rotation_deg: 1.0
+    axis: x
+  - name: wrist_ry_1p0deg
+    view_id: wrist
+    translation_m: [0.0, 0.0, 0.0]
+    rotation_deg: 1.0
+    axis: y
+  - name: wrist_rz_1p0deg
+    view_id: wrist
+    translation_m: [0.0, 0.0, 0.0]
+    rotation_deg: 1.0
+    axis: z
+time_offsets_ns: [0, 25000000, 100000000]
+acceptance:
+  baseline_f1_min: 0.90
+  max_translation_10mm_f1_drop: 0.10
+  max_rotation_1deg_f1_drop: 0.10
+  time_offset_outside_window_f1_max: 0.0

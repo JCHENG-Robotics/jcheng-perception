@@ -21,6 +21,7 @@
 | `ore_scene_s4_2_20261127/` | 2026-11-27 | Offline S4.2 matcher on 8 dense synthetic scenes / 125 pairs: mutual projection P/R/F1 1.000/0.944/0.971 vs centroid baseline 0.973/0.872/0.920; 0 vs 10 ambiguous; forced-ID 0; synthetic only | **No** |
 | `ore_scene_s4_3_20261127/` | 2026-11-27 | Offline S4.3 visible-geometry fusion: 118/118 associated clusters fused, 0 ambiguous, 23 singletons; info-weighted visible centroids, AABB/OBB, per-view members; `jcheng.scene_association.v1` validation + JSONL round-trip pass; synthetic only | **No** |
 | `ore_scene_s4_4_20261127/` | 2026-11-27 | Offline S4.4 pre-registered sensitivity: mixed synthetic 8+1 scenes / 122 pairs, baseline P/R/F1 1.000/0.934/0.966; tz 10 mm extrinsic error drops F1 to 0.827/0.876 (10 mm acceptance failed); 100 ms offset fails closed; ablations exploratory; synthetic only | **No** |
+| `ore_scene_s4_4b_20261127/` | 2026-11-27 | Offline S4.4b calibration-aware depth gate, pre-registered config frozen before an independent held-out synthetic seed `20261128`: baseline P/R/F1 1.000/0.952/0.976 (126 pairs), all 10 mm and six 1-degree checks pass, 100 ms offset fails closed; post-hoc uninformed tz 10 mm 0.875/0.880 vs 0.946/0.950 informed; synthetic only, `1σ=10 mm` is an assumption | **No** |
 
 The synthetic bundle proves the data path and logic, not robot accuracy. See
 [`docs/EVIDENCE.md`](../docs/EVIDENCE.md) for the full narrative and the list of

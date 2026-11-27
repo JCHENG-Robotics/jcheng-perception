@@ -338,7 +338,10 @@ S4.3 融合仅可见几何（信息加权可见质心、AABB/OBB、保留单视�
 `jcheng.scene_association.v1`：118/118 个 associated cluster 完成融合，
 不含真实质心字段。S4.4 在混合合成集上做预注册敏感性：baseline
 P/R/F1 1.000/0.934/0.966；深度方向 10 mm 外参误差使 F1 降至
-0.827/0.876（预注册验收未通过）；100 ms 时间偏移 fail-closed。真实矿石
+0.827/0.876（未声明不确定度的验收未通过）；100 ms 时间偏移 fail-closed。
+S4.4b 把已声明的 10 mm 深度方向标定 sigma 传播到互相投影深度门控
+（默认关闭；2σ 包络），并在独立 held-out 合成 seed 上达到
+P/R/F1 1.000/0.952/0.976，预注册的 10 mm 与 1° 检查全部通过。真实矿石
 关联/几何精度 **Unverified**。
 
 设计与证据：
@@ -352,6 +355,7 @@ P/R/F1 1.000/0.934/0.966；深度方向 10 mm 外参误差使 F1 降至
 - [S4.2 关联匹配器](docs/ORE_SCENE_S4_2.md)（仅合成稠密场景）
 - [S4.3 可见几何融合与校验](docs/ORE_SCENE_S4_3.md)（仅可见几何）
 - [S4.4 敏感性与消融](docs/ORE_SCENE_S4_4.md)（预注册，合成数据）
+- [S4.4b 校准感知深度门控](docs/ORE_SCENE_S4_4B.md)（held-out 合成，默认关闭）
 - [调研](docs/ORE_SCENE_RESEARCH.md) ·
   [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [路线图](docs/ORE_SCENE_ROADMAP.md) ·

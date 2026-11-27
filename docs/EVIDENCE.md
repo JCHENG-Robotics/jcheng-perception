@@ -707,3 +707,31 @@ PCA OBB、保留两份 `member_geometry`。字段名为
 限制：椭球代理/固定相机、单一 seed/数据集；只测绕 z 旋转；无真实矿石/
 硬件/运行时验证。证据：`evidence/ore_scene_s4_4_20261127/`；设计/复现：
 `docs/ORE_SCENE_S4_4.md`。
+
+## S4.4b 校准感知深度门控（2026-11-27）
+
+S4.4 的 tz 10 mm 失败机制是深度一致性门控把整片投影点判为遮挡、分母归零。
+S4.4b 新增默认关闭的 `extrinsic_depth_sigma_m`（默认 0）与
+`depth_sigma_multiplier`（默认 2），把声明的标定 sigma 传播到
+`effective_depth_tolerance_m`；默认值与旧行为完全一致。
+
+预注册配置 `config/association_sensitivity_calibrated.yaml`（SHA256
+`71ad904a7e42f7687e09d5d442921ca05ff9797d9fa59438224a56a4414bd575`）在
+生成独立 held-out seed `20261128` **之前**冻结。该集 8 非空 + 1 空场景、
+128 实例、126 条构造对：
+
+- baseline（`sigma=10 mm`、2σ 包络）P/R/F1 **1.000/0.952/0.976**；
+- 10 mm 平移最差 `wrist_ty` ΔF1 0.060（ext tz 0.030、wrist tz 0.026）；
+- 六个 1° 旋转轴（x/y/z × ext/wrist）ΔF1 ≤0.004；
+- 100 ms 时间偏移 F1 0、253 个 `temporal_mismatch`（fail-closed）；
+- 预注册四项检查全部 PASS。
+
+事后诊断（不参与验收）：同 held-out 数据上 `sigma=0` 时 ext/wrist tz 10 mm
+F1 为 0.875/0.880，`sigma=10 mm/2σ` 时为 0.946/0.950，复现深度门控机制；
+`wrist_ty` 不受 sigma 影响，残余 0.060 来自横向像素/证据项。
+
+限制：合成椭球/固定相机、单一 held-out seed；`1σ=10 mm` 是测试包络假设，
+不是实测标定协方差；只验证深度门控传播。真实矿石关联/几何精度仍
+**Unverified**；无运行时/契约改动。证据：
+`evidence/ore_scene_s4_4b_20261127/`；设计与复现：
+`docs/ORE_SCENE_S4_4B.md`。测试总计 **122 passed**（新增 2 个）。
