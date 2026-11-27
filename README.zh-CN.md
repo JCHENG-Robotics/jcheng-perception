@@ -119,7 +119,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 114 项 ROS-free 测试（77 原有 + 37 矿石场景/S2/S3/S4）
+├── tests/                        # 117 项 ROS-free 测试（77 原有 + 40 矿石场景/S2/S3/S4）
 └── capability.yaml
 ```
 
@@ -334,7 +334,9 @@ P/R/F1 0.787/0.015/0.030；SAM2.1 匹配 59.1%，P/R/F1 0.957/0.394/0.558。
 S4.1 离线双视角生成器已实现（RGB + z-depth + 实例 label + 构造真值对）；
 S4.2 匹配器在 8 个稠密合成场景（125 条构造对）上：互相投影 + 匈牙利
 P/R/F1 = 1.000/0.944/0.971，仅可见质心 baseline 为 0.973/0.872/0.920。
-真实矿石关联精度 **Unverified**。
+S4.3 融合仅可见几何（信息加权可见质心、AABB/OBB、保留单视角成员）并校验
+`jcheng.scene_association.v1`：118/118 个 associated cluster 完成融合，
+不含真实质心字段。真实矿石关联/几何精度 **Unverified**。
 
 设计与证据：
 
@@ -345,6 +347,7 @@ P/R/F1 = 1.000/0.944/0.971，仅可见质心 baseline 为 0.973/0.872/0.920。
 - [S4 多视角关联设计稿](docs/ORE_SCENE_S4.md)（设计）
 - [S4.1 双视角生成器](docs/ORE_SCENE_S4_1.md)（仅离线合成数据）
 - [S4.2 关联匹配器](docs/ORE_SCENE_S4_2.md)（仅合成稠密场景）
+- [S4.3 可见几何融合与校验](docs/ORE_SCENE_S4_3.md)（仅可见几何）
 - [调研](docs/ORE_SCENE_RESEARCH.md) ·
   [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [路线图](docs/ORE_SCENE_ROADMAP.md) ·

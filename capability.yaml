@@ -75,7 +75,7 @@ safety:
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 114
+  unit_tests: 117
   ore_scene_s1:
     passed: 2026-11-26 (offline only; no DDS/device/depth/motion)
     evidence: evidence/ore_scene_s1_20261126/
@@ -125,7 +125,7 @@ verification:
       0.960/0.437/0.600; segmentation/matching is the bottleneck. A bbox/local-
       mask graph scales the same evaluation to the dense 8-image public 40_70mm
       set (9,208 GT instances): classical match 10.4% / F1 0.030, SAM2.1 match
-      59.1% / F1 0.558. Six tests; 114 total pass.
+      59.1% / F1 0.558. Six tests; 117 total pass.
     caveats: >-
       No occludes/support relations from a single RGB view; benchmark is
       synthetic and GT-mask derived, not independent human relation labels;
@@ -140,7 +140,7 @@ verification:
       labels and z-buffer occlusion. 4 scenes + 1 empty produce 61 constructed
       cross-view pairs and 2 singletons; checks cover deterministic
       regeneration, empty scenes, mask/manifest agreement, depth validity and
-      pair references. Five tests; 114 total pass.
+      pair references. Five tests; 117 total pass.
     caveats: >-
       Ellipsoid proxies and fixed synthetic cameras only; generator evidence
       only, association metrics are in ore_scene_s4_2. No real-ore/hardware
@@ -154,10 +154,24 @@ verification:
       matching with an ambiguity margin. On 8 dense synthetic scenes (125
       constructed pairs, 165 instances), mutual projection gives P/R/F1
       1.000/0.944/0.971 vs the visible-centroid baseline 0.973/0.872/0.920;
-      ambiguous clusters 0 vs 10; forced-ID errors 0. Four tests; 114 total.
+      ambiguous clusters 0 vs 10; forced-ID errors 0. Four tests; 117 total.
     caveats: >-
       Ellipsoid proxies and fixed synthetic extrinsics only; recall 0.944, not
       complete; no real-ore/hardware/runtime validation; no interfaces change.
+  ore_scene_s4_3:
+    passed: 2026-11-27 (offline synthetic dense scenes only)
+    evidence: evidence/ore_scene_s4_3_20261127/
+    result: >-
+      Information-weighted fusion of visible centroids/covariances plus visible
+      AABB and PCA OBB union; retains per-view member geometry; validates
+      jcheng.scene_association.v1 (references, ambiguity, forbidden true
+      fields, PSD covariance, AABB) and JSONL round-trip. 118/118 associated
+      S4.2 clusters fused, 0 ambiguous, 23 singletons; all checks pass. Three
+      tests; 117 total.
+    caveats: >-
+      Visible-only geometry, not true centroid/full extent/volume/mass;
+      inherits S4.2 matching errors; ellipsoid proxies/fixed synthetic cameras;
+      no real-ore/hardware/runtime validation; no interfaces change.
   reference_point_backend:
     passed: 2026-11-24 (unit test + real hardware static run)
     config: config/gpu_tag.yaml (AprilTag 36h11, 60 mm, id 0)

@@ -104,6 +104,13 @@
               "null"
             ]
           },
+          "fused_visible_geometry": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Visible-only fusion for associated clusters; never true centroid/full extent."
+          },
           "unmatched_reason": {
             "type": [
               "string",

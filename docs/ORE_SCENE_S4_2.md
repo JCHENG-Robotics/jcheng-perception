@@ -84,7 +84,7 @@ python3 scripts/ore_scene.py evaluate-association \
 
 ## 5. 测试
 
-新增 4 个测试（总计 **114 passed**）：
+新增 4 个测试（S4.2 结束时总计 114；S4.3 后当前 **117 passed**）：
 
 1. 合成稠密数据上恢复构造对，检查 P/R/F1 下限、无 forced-ID；
 2. 对称双实例构造 → 两个 cluster 都是 `ambiguous`，`global_id=null`；
@@ -105,7 +105,8 @@ python3 scripts/ore_scene.py evaluate-association \
 
 ## 7. 下一步
 
-1. S4.3：可见几何融合 + `jcheng.scene_association.v1` 校验/序列化；
+1. S4.3：可见几何融合 + `jcheng.scene_association.v1` 校验/序列化（已完成，
+   见 [`ORE_SCENE_S4_3.md`](ORE_SCENE_S4_3.md)）；
 2. S4.4：评测 CLI 的敏感性/消融（外参扰动、时间偏移、遮挡分层）与
    预注册配置；
 3. 在 S4.4 证据通过前，不接真实双摄、不暴露运行时。

@@ -8,6 +8,14 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S4.3 visible-geometry fusion and association validation (2026-11-27): added
+  information-weighted fusion of visible centroids/covariances, visible
+  AABB/OBB union, retained per-view member geometry, `jcheng.scene_association.v1`
+  validation (references, ambiguity, forbidden true fields, PSD covariance,
+  AABB) and JSONL read/write. On 118 associated S4.2 clusters: 118/118 fused,
+  0 ambiguous, 23 singletons; all validation and round-trip checks pass. Three
+  new tests (117 total). Visible-only geometry; no real-ore/hardware/runtime
+  validation and no interfaces change.
 - S4.2 dual-view association matcher (2026-11-27): ROS-free `association.py`
   loads S4.1 scenes, gates candidates by AABB/size/mutual-projection support,
   scores Chamfer + visible-centroid Mahalanobis, and runs Hungarian matching

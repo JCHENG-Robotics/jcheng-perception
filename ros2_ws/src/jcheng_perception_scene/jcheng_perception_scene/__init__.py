@@ -11,7 +11,11 @@ from .association import (
     AssociationParams,
     associate_scene,
     evaluate_association,
+    fuse_association,
     load_dual_view_dataset,
+    read_association_jsonl,
+    validate_association_record,
+    write_association_jsonl,
 )
 from .config import DEFAULT_CONFIG, config_sha256, load_config, validate_config
 from .dataset import import_coco_dataset, load_dataset, read_predictions
@@ -95,6 +99,7 @@ __all__ = [
     'evaluate_association',
     'evaluate_predicted_relations',
     'evaluate_relation_benchmark',
+    'fuse_association',
     'generate_dual_view_dataset',
     'generate_dual_view_scene',
     'generate_relation_benchmark',
@@ -105,11 +110,14 @@ __all__ = [
     'load_dual_view_dataset',
     'load_tiles_config',
     'read_predictions',
+    'read_association_jsonl',
     'render_view',
     'run_dataset',
     'run_sam2_tiles',
     'run_unlabelled',
     'validate_config',
+    'validate_association_record',
     'validate_scene_v2',
     'visible_geometry',
+    'write_association_jsonl',
 ]

@@ -16,8 +16,12 @@ import tempfile
 
 from .association import (
     AssociationParams,
+    associate_scene,
     evaluate_association,
+    fuse_association,
     load_dual_view_dataset,
+    validate_association_record,
+    write_association_jsonl,
 )
 from .config import load_config, validate_config
 from .dataset import (
@@ -193,6 +197,46 @@ def _command_evaluate_association(args):
         'ambiguous_clusters': metrics['ambiguous_clusters'],
         'forced_id_errors': metrics['forced_id_errors'],
         'singleton_reason_counts': metrics['singleton_reason_counts'],
+        'data_source': 'synthetic',
+        'hardware_validation': False,
+    })
+    return EXIT_OK
+
+
+def _command_fuse_association(args):
+    dataset = load_dual_view_dataset(args.dataset, max_points=args.max_points)
+    params = AssociationParams(
+        strategy=args.strategy,
+        ambiguity_margin=args.ambiguity_margin,
+        min_mutual_support=args.min_support,
+        depth_tolerance_m=args.depth_tolerance,
+        max_points=args.max_points,
+    )
+    records = []
+    associated = 0
+    ambiguous = 0
+    singletons = 0
+    for scene in dataset.scenes:
+        record = associate_scene(scene, params, first_view=args.first_view)
+        fused = fuse_association(scene, record)
+        validate_association_record(fused, scene, require_fused=True)
+        associated += sum(
+            1 for cluster in fused['clusters']
+            if cluster['status'] == 'associated')
+        ambiguous += sum(
+            1 for cluster in fused['clusters']
+            if cluster['status'] == 'ambiguous')
+        singletons += len(fused['singletons'])
+        records.append(fused)
+    write_association_jsonl(args.out, records)
+    _print_json({
+        'associations': os.path.abspath(args.out),
+        'scenes': len(records),
+        'associated_clusters': associated,
+        'ambiguous_clusters': ambiguous,
+        'singletons': singletons,
+        'strategy': args.strategy,
+        'validated': True,
         'data_source': 'synthetic',
         'hardware_validation': False,
     })
@@ -527,6 +571,22 @@ def build_parser():
     association.add_argument('--depth-tolerance', type=float, default=0.01)
     association.add_argument('--max-points', type=int, default=300)
     association.set_defaults(func=_command_evaluate_association)
+
+    fuse = subparsers.add_parser(
+        'fuse-association',
+        help='associate dual-view scenes and write fused visible geometry')
+    fuse.add_argument('--dataset', required=True)
+    fuse.add_argument('--out', required=True)
+    fuse.add_argument(
+        '--strategy', choices=('mutual_projection', 'centroid'),
+        default='mutual_projection')
+    fuse.add_argument(
+        '--first-view', choices=('ext', 'wrist'), default='ext')
+    fuse.add_argument('--ambiguity-margin', type=float, default=0.05)
+    fuse.add_argument('--min-support', type=float, default=0.15)
+    fuse.add_argument('--depth-tolerance', type=float, default=0.01)
+    fuse.add_argument('--max-points', type=int, default=300)
+    fuse.set_defaults(func=_command_fuse_association)
 
     coco = subparsers.add_parser(
         'import-coco',

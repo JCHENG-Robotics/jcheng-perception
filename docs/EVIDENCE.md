@@ -658,8 +658,29 @@ cluster 计为预测对；真值来自 `pairs.jsonl`。
 `no_candidate` 1）。质心 baseline 有 3 个错误合并、10 个 ambiguous；说明
 稠密场景中可见质心不是可靠主证据。延迟 p50 约 0.38 s / p95 约 0.42 s（Python，
 480×360，非实时结论）。视角顺序置换一致、重复运行一致、空场景无输出。
-总计 **114 passed**（新增 4 个 S4.2 测试）。
+总计 **114 passed**（新增 4 个 S4.2 测试；S4.3 后当前 117）。
 
 限制：椭球代理/固定合成外参；无外参/时间偏移敏感性、无真实矿石；召回
 0.944 不是完整关联；真实矿石关联精度 **Unverified**。证据：
 `evidence/ore_scene_s4_2_20261127/`；设计与复现：`docs/ORE_SCENE_S4_2.md`。
+
+## S4.3 可见几何融合与关联校验（2026-11-27）
+
+对 S4.2 的 118 个 `associated` cluster 做信息加权可见几何融合：
+`Λ=ΣΣ_i^{-1}`、`Σ_f=Λ^{-1}`、`c_f=Σ_fΣΣ_i^{-1}c_i`；输出可见 AABB、
+PCA OBB、保留两份 `member_geometry`。字段名为
+`fused_visible_centroid_base_m`，不输出 `true_centroid`/完整尺寸/体积/质量。
+
+| 项 | 结果 |
+|---|---|
+| associated / ambiguous cluster | 118 / 0 |
+| 已融合 cluster | **118/118** |
+| singleton | 23 |
+| 结构/引用/PSD/AABB/禁止字段校验 | 全部通过 |
+| JSONL round-trip | 完全相等 |
+| 测试 | **117 passed**（新增 3 个 S4.3 测试） |
+
+限制：融合只描述可见表面，不是完整物体；继承 S4.2 匹配误差（7 条漏关联
+不会被修复，错误合并会传播）；真实矿石几何/关联精度 **Unverified**。
+证据：`evidence/ore_scene_s4_3_20261127/`；设计与复现：
+`docs/ORE_SCENE_S4_3.md`。

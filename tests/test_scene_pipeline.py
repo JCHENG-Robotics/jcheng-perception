@@ -20,7 +20,11 @@ from jcheng_perception_scene.association import (
     ViewFrame,
     associate_scene,
     evaluate_association,
+    fuse_association,
     load_dual_view_dataset,
+    read_association_jsonl,
+    validate_association_record,
+    write_association_jsonl,
 )
 from jcheng_perception_scene.backends.classical import (
     ClassicalWatershedBackend,
@@ -985,6 +989,10 @@ def test_association_ambiguous_does_not_force_ids():
     assert all(cluster['global_id'] is None
                for cluster in record['clusters'])
     assert not record['singletons']
+    fused = fuse_association(scene, record)
+    for cluster in fused['clusters']:
+        assert cluster['fused_visible_geometry'] is None
+    assert validate_association_record(fused, scene)
 
 
 def test_association_permutation_and_empty(tmp_path):
@@ -1023,3 +1031,73 @@ def test_association_cli(tmp_path):
     assert os.path.isfile(out)
     assert os.path.isfile(
         os.path.join(os.path.dirname(out), 'associations.jsonl'))
+
+
+def test_association_fusion_and_validation(tmp_path):
+    root = str(tmp_path / 'assoc-fusion')
+    generate_dual_view_dataset(
+        root, scene_count=2, empty_count=1, seed=20261127,
+        width=128, height=96, min_instances=4, max_instances=6,
+        created_at=CREATED_AT)
+    dataset = load_dual_view_dataset(root)
+    result = evaluate_association(dataset)
+    fused_count = 0
+    for scene, record in zip(dataset.scenes, result['scenes']):
+        fused = fuse_association(scene, record)
+        validate_association_record(fused, scene, require_fused=True)
+        for cluster in fused['clusters']:
+            if cluster['status'] == 'associated':
+                fused_count += 1
+                geometry = cluster['fused_visible_geometry']
+                assert len(geometry['member_geometry']) == 2
+                assert geometry['field_status'] == 'algorithm_estimate'
+                assert geometry['visible_aabb']['min_base_m'] <= \
+                    geometry['visible_aabb']['max_base_m']
+                covariance = np.asarray(geometry['covariance_m2'])
+                assert covariance.shape == (3, 3)
+                assert np.all(np.isfinite(covariance))
+            else:
+                assert cluster['fused_visible_geometry'] is None
+    assert fused_count > 0
+    bad = json.loads(json.dumps(result['scenes'][0]))
+    for cluster in bad['clusters']:
+        if cluster['status'] == 'associated':
+            cluster['fused_visible_geometry'] = {
+                'true_centroid': [0.0, 0.0, 0.0],
+            }
+            break
+    with pytest.raises(ValueError):
+        validate_association_record(bad)
+
+
+def test_association_jsonl_roundtrip(tmp_path):
+    root = str(tmp_path / 'assoc-jsonl')
+    generate_dual_view_dataset(
+        root, scene_count=1, empty_count=1, seed=20261127,
+        width=128, height=96, min_instances=4, max_instances=4,
+        created_at=CREATED_AT)
+    dataset = load_dual_view_dataset(root)
+    result = evaluate_association(dataset)
+    path = str(tmp_path / 'assoc.jsonl')
+    write_association_jsonl(path, result['scenes'])
+    records = read_association_jsonl(path, validate=True)
+    assert records == result['scenes']
+    assert len(records) == 2
+
+
+def test_fuse_association_cli(tmp_path):
+    root = str(tmp_path / 'fuse-cli-data')
+    generate_dual_view_dataset(
+        root, scene_count=1, empty_count=0, seed=20261127,
+        width=128, height=96, min_instances=4, max_instances=4,
+        created_at=CREATED_AT)
+    out = str(tmp_path / 'fuse-cli' / 'fused.jsonl')
+    code = main([
+        'fuse-association', '--dataset', root, '--out', out,
+    ])
+    assert code == 0
+    records = read_association_jsonl(out, validate=True)
+    assert records
+    assert any(
+        cluster['fused_visible_geometry'] is not None
+        for record in records for cluster in record['clusters'])

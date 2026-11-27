@@ -1,0 +1,70 @@
+{
+  "checks": {
+    "aabb_min_le_max": true,
+    "all_associated_clusters_fused": true,
+    "all_records_validate_with_scene": true,
+    "ambiguous_has_no_global_id_or_fusion": true,
+    "covariance_symmetric_psd": true,
+    "forbidden_true_fields_absent": true,
+    "jsonl_roundtrip_equal": true,
+    "two_member_geometries_retained": true
+  },
+  "counts": {
+    "ambiguous_clusters": 0,
+    "associated_clusters": 118,
+    "fused_clusters": 118,
+    "singletons": 23
+  },
+  "created_at": "2026-11-27T01:28:17+00:00",
+  "dataset": {
+    "dataset_id": "dual_view_20261127",
+    "empty_scenes": 1,
+    "generator": {
+      "empty_count": 1,
+      "height": 360,
+      "max_instances": 24,
+      "min_instances": 16,
+      "name": "jcheng_perception_scene.synthetic_dual",
+      "scene_count": 8,
+      "scene_radius_m": 0.1,
+      "seed": 20261127,
+      "version": "1.0.0",
+      "width": 480
+    },
+    "scenes": 9
+  },
+  "geometry_statistics": {
+    "fused_covariance_trace_m2": {
+      "max": 0.000476327,
+      "median": 0.00014848,
+      "min": 1.667e-05
+    },
+    "visible_aabb_diagonal_m": {
+      "max": 0.152059,
+      "median": 0.091147,
+      "min": 0.020939
+    },
+    "visible_points": {
+      "max": 600,
+      "median": 600.0,
+      "min": 76
+    }
+  },
+  "hardware_claimed": false,
+  "limitations": [
+    "Fused geometry is visible-only; not a true centroid/full extent/volume/mass.",
+    "Ellipsoid proxies and fixed synthetic cameras; no real depth noise or calibration error.",
+    "No real-ore/hardware/runtime validation; association is still the S4.2 synthetic result.",
+    "Fusion assumes the S4.2 associated clusters are correct; matched-elsewhere errors propagate.",
+    "No interfaces change; not a cross-repo contract."
+  ],
+  "real_ore_validation": false,
+  "schema_version": "jcheng.ore_s4_3_mve.v1",
+  "scope": "S4.3 visible-only geometry fusion on associated dual-view clusters",
+  "tests": {
+    "command": "python3 -m pytest tests -q",
+    "failed": 0,
+    "passed": 117,
+    "s4_3_tests": 3
+  }
+}

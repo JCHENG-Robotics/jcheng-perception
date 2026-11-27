@@ -11,6 +11,7 @@ This is a prototype, not a runtime capability: no DDS, device access or motion.
 """
 
 import dataclasses
+import copy
 import json
 import math
 import os
@@ -833,3 +834,325 @@ def _density_bucket(scene):
     if count <= 14:
         return 'medium'
     return 'dense'
+
+
+_FORBIDDEN_FUSED_KEYS = {
+    'true_centroid', 'true_center', 'full_extent', 'volume', 'mass',
+    'material_composition', 'ore_grade', 'economic_value',
+}
+
+
+def _quaternion_from_axes(axes):
+    """Return ``[x, y, z, w]`` for a rotation matrix whose columns are axes."""
+    matrix = np.asarray(axes, dtype=np.float64)
+    trace = float(np.trace(matrix))
+    if trace > 0.0:
+        scale = math.sqrt(trace + 1.0) * 2.0
+        w = 0.25 * scale
+        x = (matrix[2, 1] - matrix[1, 2]) / scale
+        y = (matrix[0, 2] - matrix[2, 0]) / scale
+        z = (matrix[1, 0] - matrix[0, 1]) / scale
+    elif matrix[0, 0] > matrix[1, 1] and matrix[0, 0] > matrix[2, 2]:
+        scale = math.sqrt(
+            1.0 + matrix[0, 0] - matrix[1, 1] - matrix[2, 2]) * 2.0
+        w = (matrix[2, 1] - matrix[1, 2]) / scale
+        x = 0.25 * scale
+        y = (matrix[0, 1] + matrix[1, 0]) / scale
+        z = (matrix[0, 2] + matrix[2, 0]) / scale
+    elif matrix[1, 1] > matrix[2, 2]:
+        scale = math.sqrt(
+            1.0 + matrix[1, 1] - matrix[0, 0] - matrix[2, 2]) * 2.0
+        w = (matrix[0, 2] - matrix[2, 0]) / scale
+        x = (matrix[0, 1] + matrix[1, 0]) / scale
+        y = 0.25 * scale
+        z = (matrix[1, 2] + matrix[2, 1]) / scale
+    else:
+        scale = math.sqrt(
+            1.0 + matrix[2, 2] - matrix[0, 0] - matrix[1, 1]) * 2.0
+        w = (matrix[1, 0] - matrix[0, 1]) / scale
+        x = (matrix[0, 2] + matrix[2, 0]) / scale
+        y = (matrix[1, 2] + matrix[2, 1]) / scale
+        z = 0.25 * scale
+    quaternion = np.asarray([x, y, z, w], dtype=np.float64)
+    norm = float(np.linalg.norm(quaternion))
+    if norm <= 1e-12:
+        return [0.0, 0.0, 0.0, 1.0]
+    return [round(float(value / norm), 9) for value in quaternion]
+
+
+def _visible_obb(points):
+    """Return a PCA oriented box for the visible point union."""
+    points = np.asarray(points, dtype=np.float64)
+    centroid = points.mean(axis=0)
+    centered = points - centroid
+    if points.shape[0] < 3:
+        axes = np.eye(3)
+    else:
+        covariance = np.cov(centered.T, bias=True)
+        values, vectors = np.linalg.eigh(covariance)
+        order = np.argsort(values)[::-1]
+        axes = vectors[:, order]
+        if np.linalg.det(axes) < 0:
+            axes[:, 2] *= -1.0
+    projected = centered @ axes
+    minimum = projected.min(axis=0)
+    maximum = projected.max(axis=0)
+    center = centroid + axes @ ((minimum + maximum) / 2.0)
+    extent = maximum - minimum
+    return {
+        'center_base_m': [round(float(value), 6) for value in center],
+        'quaternion_xyzw': _quaternion_from_axes(axes),
+        'extent_m': [round(float(value), 6) for value in extent],
+        'frame_id': 'base_link',
+        'field_status': 'algorithm_estimate',
+    }
+
+
+def _fused_visible_geometry(scene, cluster):
+    members = cluster['members']
+    member_geometry = []
+    centroids = []
+    covariances = []
+    point_sets = []
+    for member in members:
+        view_id = member['view_id']
+        instance_id = member['instance_id']
+        frame = scene.frames[view_id]
+        instance = next(
+            (item for item in frame.instances
+             if item.instance_id == instance_id), None)
+        if instance is None:
+            raise ValueError('association member not found: %s/%s' % (
+                view_id, instance_id))
+        centroids.append(instance.centroid_base)
+        covariances.append(instance.covariance_base)
+        point_sets.append(instance.points_base)
+        member_geometry.append({
+            'view_id': view_id,
+            'instance_id': instance_id,
+            'visible_centroid_base_m': [
+                round(float(value), 6)
+                for value in instance.centroid_base],
+            'visible_points': int(instance.points_base.shape[0]),
+            'covariance_m2': [
+                [round(float(value), 9) for value in row]
+                for row in instance.covariance_base],
+            'occlusion_ratio': round(float(instance.occlusion_ratio), 6),
+        })
+    information = np.zeros((3, 3), dtype=np.float64)
+    weighted = np.zeros(3, dtype=np.float64)
+    for centroid, covariance in zip(centroids, covariances):
+        try:
+            precision = np.linalg.inv(covariance)
+        except np.linalg.LinAlgError:
+            precision = np.linalg.pinv(covariance)
+        information += precision
+        weighted += precision @ centroid
+    try:
+        fused_covariance = np.linalg.inv(information)
+    except np.linalg.LinAlgError:
+        fused_covariance = np.linalg.pinv(information)
+    fused_covariance = 0.5 * (fused_covariance + fused_covariance.T)
+    fused_centroid = fused_covariance @ weighted
+    points = np.vstack(point_sets)
+    aabb_min = points.min(axis=0)
+    aabb_max = points.max(axis=0)
+    return {
+        'frame_id': 'base_link',
+        'method': 'information_weighted_visible_centroids',
+        'fused_visible_centroid_base_m': [
+            round(float(value), 6) for value in fused_centroid],
+        'covariance_m2': [
+            [round(float(value), 9) for value in row]
+            for row in fused_covariance],
+        'visible_aabb': {
+            'min_base_m': [round(float(value), 6) for value in aabb_min],
+            'max_base_m': [round(float(value), 6) for value in aabb_max],
+            'frame_id': 'base_link',
+            'field_status': 'algorithm_estimate',
+        },
+        'visible_obb': _visible_obb(points),
+        'visible_points': int(points.shape[0]),
+        'member_geometry': member_geometry,
+        'field_status': 'algorithm_estimate',
+        'unknowns': [
+            'true_centroid', 'full_extent', 'volume', 'mass', 'ore_grade',
+            'economic_value',
+        ],
+        'note': 'visible surfaces only; not a complete object or true centroid',
+    }
+
+
+def fuse_association(scene, record):
+    """Attach visible-only fused geometry to associated clusters."""
+    fused = copy.deepcopy(record)
+    for cluster in fused.get('clusters', []):
+        if cluster.get('status') == 'associated':
+            cluster['fused_visible_geometry'] = _fused_visible_geometry(
+                scene, cluster)
+        else:
+            cluster['fused_visible_geometry'] = None
+    return fused
+
+
+def _walk_forbidden_keys(value, path=''):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_path = '%s.%s' % (path, key) if path else str(key)
+            if key in _FORBIDDEN_FUSED_KEYS:
+                yield child_path
+            for found in _walk_forbidden_keys(child, child_path):
+                yield found
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            for found in _walk_forbidden_keys(
+                    child, '%s[%d]' % (path, index)):
+                yield found
+
+
+def validate_association_record(record, scene=None, require_fused=False):
+    """Validate a ``jcheng.scene_association.v1`` record; raise on failure."""
+    if not isinstance(record, dict):
+        raise ValueError('association record must be an object')
+    if record.get('schema_version') != ASSOCIATION_SCHEMA_VERSION:
+        raise ValueError('association schema must be %s' %
+                         ASSOCIATION_SCHEMA_VERSION)
+    if not record.get('scene_id'):
+        raise ValueError('association record needs scene_id')
+    first_view = record.get('first_view')
+    second_view = record.get('second_view')
+    if first_view not in _VIEW_IDS or second_view not in _VIEW_IDS or \
+            first_view == second_view:
+        raise ValueError('association views are invalid')
+    seen_global_ids = set()
+    for index, cluster in enumerate(record.get('clusters', [])):
+        status = cluster.get('status')
+        if status not in ('associated', 'ambiguous'):
+            raise ValueError('cluster %d has invalid status' % index)
+        members = cluster.get('members')
+        if not isinstance(members, list) or len(members) != 2:
+            raise ValueError('cluster %d must have two members' % index)
+        views = {member.get('view_id') for member in members}
+        if views != {first_view, second_view}:
+            raise ValueError('cluster %d members must cover both views' % index)
+        for member in members:
+            if not member.get('instance_id'):
+                raise ValueError('cluster %d has empty instance_id' % index)
+            if scene is not None:
+                frame = scene.frames.get(member['view_id'])
+                if frame is None or not any(
+                        item.instance_id == member['instance_id']
+                        for item in frame.instances):
+                    raise ValueError('cluster %d references unknown instance' %
+                                     index)
+        global_id = cluster.get('global_id')
+        if status == 'associated':
+            if not global_id:
+                raise ValueError('associated cluster %d needs global_id' %
+                                 index)
+            if global_id in seen_global_ids:
+                raise ValueError('duplicate global_id: %s' % global_id)
+            seen_global_ids.add(global_id)
+            if require_fused and not cluster.get('fused_visible_geometry'):
+                raise ValueError('associated cluster %d is not fused' % index)
+        else:
+            if global_id is not None:
+                raise ValueError('ambiguous cluster %d has global_id' % index)
+            candidates = cluster.get('candidates') or []
+            if len(candidates) < 2:
+                raise ValueError('ambiguous cluster %d needs two candidates' %
+                                 index)
+        fused = cluster.get('fused_visible_geometry')
+        if fused is not None:
+            if status != 'associated':
+                raise ValueError('only associated clusters may be fused')
+            forbidden = sorted(set(_walk_forbidden_keys(fused)))
+            if forbidden:
+                raise ValueError('fused geometry has forbidden fields: %s' %
+                                 ', '.join(forbidden))
+            if fused.get('frame_id') != 'base_link':
+                raise ValueError('fused geometry must be in base_link')
+            if fused.get('field_status') != 'algorithm_estimate':
+                raise ValueError('fused geometry must be an algorithm estimate')
+            centroid = np.asarray(
+                fused.get('fused_visible_centroid_base_m'), dtype=np.float64)
+            if centroid.shape != (3,) or not np.all(np.isfinite(centroid)):
+                raise ValueError('fused visible centroid is invalid')
+            covariance = np.asarray(
+                fused.get('covariance_m2'), dtype=np.float64)
+            if covariance.shape != (3, 3) or \
+                    not np.all(np.isfinite(covariance)):
+                raise ValueError('fused covariance is invalid')
+            if not np.allclose(covariance, covariance.T, atol=1e-9):
+                raise ValueError('fused covariance is not symmetric')
+            if float(np.linalg.eigvalsh(covariance).min()) < -1e-9:
+                raise ValueError('fused covariance is not PSD')
+            aabb = fused.get('visible_aabb') or {}
+            aabb_min = np.asarray(aabb.get('min_base_m'), dtype=np.float64)
+            aabb_max = np.asarray(aabb.get('max_base_m'), dtype=np.float64)
+            if aabb_min.shape != (3,) or aabb_max.shape != (3,) or \
+                    np.any(aabb_min > aabb_max):
+                raise ValueError('fused visible AABB is invalid')
+            if np.any(centroid < aabb_min - 1e-9) or \
+                    np.any(centroid > aabb_max + 1e-9):
+                raise ValueError('fused visible centroid is outside AABB')
+            members_geometry = fused.get('member_geometry') or []
+            if len(members_geometry) != 2:
+                raise ValueError('fused geometry must retain two members')
+            if int(fused.get('visible_points', 0)) <= 0:
+                raise ValueError('fused geometry has no visible points')
+            obb = fused.get('visible_obb') or {}
+            obb_center = np.asarray(
+                obb.get('center_base_m'), dtype=np.float64)
+            obb_extent = np.asarray(obb.get('extent_m'), dtype=np.float64)
+            obb_quaternion = np.asarray(
+                obb.get('quaternion_xyzw'), dtype=np.float64)
+            if obb_center.shape != (3,) or obb_extent.shape != (3,) or \
+                    obb_quaternion.shape != (4,) or \
+                    not np.all(np.isfinite(obb_center)) or \
+                    not np.all(np.isfinite(obb_extent)) or \
+                    not np.all(np.isfinite(obb_quaternion)):
+                raise ValueError('fused visible OBB is invalid')
+            if np.any(obb_extent < 0):
+                raise ValueError('fused visible OBB extent is negative')
+            if abs(float(np.linalg.norm(obb_quaternion)) - 1.0) > 1e-6:
+                raise ValueError('fused visible OBB quaternion is not unit')
+    for singleton in record.get('singletons', []):
+        if not singleton.get('instance_id') or not singleton.get('reason'):
+            raise ValueError('singleton needs instance_id and reason')
+        if scene is not None:
+            view_id = singleton.get('view_id')
+            frame = scene.frames.get(view_id)
+            if frame is None or not any(
+                    item.instance_id == singleton['instance_id']
+                    for item in frame.instances):
+                raise ValueError('singleton references unknown instance')
+    return True
+
+
+def write_association_jsonl(path, records):
+    """Write association records as UTF-8 JSON Lines."""
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as handle:
+        for record in records:
+            handle.write(json.dumps(record, sort_keys=True))
+            handle.write('\n')
+
+
+def read_association_jsonl(path, validate=False):
+    """Read association JSONL; optionally validate each record's structure."""
+    records = []
+    with open(path, 'r', encoding='utf-8') as handle:
+        for line_number, line in enumerate(handle, start=1):
+            line = line.strip()
+            if not line:
+                continue
+            record = json.loads(line)
+            if validate:
+                try:
+                    validate_association_record(record)
+                except ValueError as error:
+                    raise ValueError('line %d: %s' % (line_number, error))
+            records.append(record)
+    return records

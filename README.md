@@ -135,7 +135,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 114 ROS-free tests (77 existing + 37 ore scene/S2/S3/S4)
+├── tests/                        # 117 ROS-free tests (77 existing + 40 ore scene/S2/S3/S4)
 └── capability.yaml
 ```
 
@@ -379,7 +379,10 @@ offline dual-view generator is implemented (RGB + z-depth + labels + known
 pairs), and the S4.2 matcher runs on it: on 8 dense synthetic scenes (125
 constructed pairs) mutual-projection + Hungarian gives P/R/F1
 1.000/0.944/0.971, versus 0.973/0.872/0.920 for a visible-centroid baseline.
-Association accuracy on real ore is Unverified.
+S4.3 fuses visible-only geometry (information-weighted visible centroids,
+AABB/OBB, retained per-view members) and validates `jcheng.scene_association.v1`:
+118/118 associated clusters fused, no true-centroid fields. Real-ore
+association/geometry accuracy is Unverified.
 
 Design and evidence:
 
@@ -390,6 +393,7 @@ Design and evidence:
 - [S4 multi-view association design](docs/ORE_SCENE_S4.md) (design)
 - [S4.1 dual-view generator](docs/ORE_SCENE_S4_1.md) (offline synthetic data only)
 - [S4.2 association matcher](docs/ORE_SCENE_S4_2.md) (synthetic dense scenes only)
+- [S4.3 fusion & association validation](docs/ORE_SCENE_S4_3.md) (visible-only geometry)
 - [Research](docs/ORE_SCENE_RESEARCH.md) ·
   [Architecture](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [Roadmap](docs/ORE_SCENE_ROADMAP.md) ·
