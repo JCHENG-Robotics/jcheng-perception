@@ -82,8 +82,10 @@ Start here: [`docs/ORE_SCENE_S1.md`](docs/ORE_SCENE_S1.md), then
 
 ## Dependencies
 
-- `jcheng-interfaces` `>=0.1,<0.2`; the perception message package is
-  provisional and will be promoted to the contract repository.
+- `jcheng-interfaces`: **not consumed at runtime yet** (explicit waiver,
+  2026-11-27). The repository imports no `jcheng_interfaces` types; the
+  perception message package is provisional and will be promoted to the contract
+  repository. Add the pin when that promotion happens.
 - `jcheng-system` for domain isolation, telemetry mirroring and the planner
   interface.
 - Every hardware run requires separate, explicit operator authorization.
