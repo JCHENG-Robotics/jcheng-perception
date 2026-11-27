@@ -68,6 +68,25 @@ cameras:
   once, one request waits for the other; the frame queue, not the network,
   absorbs the backlog.
 
+## Capacity (measured 2026-11-27)
+
+A two-camera run with the real `AdvisorDetector` (front + wrist each offered
+1 Hz for 60 s, queue depth 2, drop-oldest) gave:
+
+| Metric | front | wrist |
+|---|---|---|
+| offered / processed / dropped | 60 / 18 / 42 | 60 / 18 / 42 |
+| processed share | 30% | 30% |
+| p50 / p95 / max | 4.44 / 4.50 / 4.53 s | 4.43 / 4.52 / 4.58 s |
+| errors | 0 | 0 |
+
+Total throughput was **0.519 requests/s** (36 processed of 120 offered), with
+30 JUDGE / 1 SKIP / 5 NO_MASK. One service cannot sustain two cameras at 1 Hz;
+each camera effectively gets ~0.3 Hz and a ~4.4 s old advisory. Plan
+**≤0.2–0.3 Hz per camera** (or connect one camera only) unless a second service
+or GPU is added. Offering 1–2 Hz is harmless because the queue drops, but it
+does not increase the processed rate.
+
 ## Boundaries
 
 - Advisory only: no `ExecuteMotion`, no lease, no vendor topic, no device
@@ -75,8 +94,9 @@ cameras:
 - The Orin is on `192.168.5.x`; the robot is on `10.42.0.x`. The laptop relays;
   a direct Orin -> robot connection is not assumed.
 - The prototype was validated with a fake transport in
-  `tests/test_detectors.py` (`test_advisor_*`). A live smoke test needs the
-  Orin service, a camera stream and a separately authorized hardware session.
+  `tests/test_detectors.py` (`test_advisor_*`) and a live HTTP smoke. Remaining
+  validation needs a camera stream and a separately authorized hardware
+  session.
 
 ## Validation record
 
@@ -90,9 +110,13 @@ cameras:
     bbox (28, 151, 117, 326), **3.39 s**.
   - wrist frame, prompt `bottle`: one box, score **0.973**, bbox
     (150, 66, 215, 280), **2.24 s**.
+- Capacity, 2026-11-27: two cameras offered 1 Hz each for 60 s with queue
+  depth 2; only 36/120 frames were processed (30%), total 0.519 req/s, and
+  per-camera p50 was 4.44 s with 0 errors. See `Capacity` above.
 - Not yet validated: camera/DDS integration in the running perception stack,
-  two-camera concurrency in the production launch, failure injection against a
-  stopped service, and any hardware session. Deployment is **Unverified**.
+  two-camera behaviour inside the production launch (the offline capacity test
+  exists), failure injection against a stopped service, and any hardware
+  session. Deployment is **Unverified**.
 
 Research measurements, dataset and service soak results live outside this
 repository (workspace `jcheng-research`, report
