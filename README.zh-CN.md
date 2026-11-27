@@ -119,7 +119,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 105 项 ROS-free 测试（77 原有 + 28 矿石场景/S2/S3）
+├── tests/                        # 110 项 ROS-free 测试（77 原有 + 33 矿石场景/S2/S3/S4）
 └── capability.yaml
 ```
 
@@ -331,7 +331,8 @@ AABB 与 PCA OBB；已测 1 m 合成平面、平移、零深度和空 mask。尚
 0.960/0.437/0.600；瓶颈是分割/匹配。在公开 8 图 `40_70mm` 集（9,208 个 GT
 实例）上，bbox + 局部 mask 关系图可扩展到稠密场景：经典匹配 10.4%，
 P/R/F1 0.787/0.015/0.030；SAM2.1 匹配 59.1%，P/R/F1 0.957/0.394/0.558。
-多视角身份目前只有 S4 设计稿（未实现），运行时集成仍待做。
+S4.1 离线双视角生成器已实现（RGB + z-depth + 实例 label + 构造真值对）；
+关联匹配器仍未实现，因此暂无 association 指标。
 
 设计与证据：
 
@@ -339,7 +340,8 @@ P/R/F1 0.787/0.015/0.030；SAM2.1 匹配 59.1%，P/R/F1 0.957/0.394/0.558。
 - [S1.5 SAM 2.1 离线 MVE](docs/ORE_SCENE_S1_5.md)
 - [S2 可见几何 MVE](docs/ORE_SCENE_S2.md)
 - [S3 关系图 MVE](docs/ORE_SCENE_S3.md)
-- [S4 多视角关联设计稿](docs/ORE_SCENE_S4.md)（仅设计，未实现）
+- [S4 多视角关联设计稿](docs/ORE_SCENE_S4.md)（设计）
+- [S4.1 双视角生成器](docs/ORE_SCENE_S4_1.md)（仅离线合成数据）
 - [调研](docs/ORE_SCENE_RESEARCH.md) ·
   [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [路线图](docs/ORE_SCENE_ROADMAP.md) ·

@@ -17,7 +17,7 @@
 | S1.5 | 深度分割后端对照（SAM 2.1） | In progress（离线 MVE，2026-11-26） | Partially verified（40–70 mm）；UAV 负迁移 | 无（远端 Orin） | `evidence/ore_scene_sam2_20261126/` |
 | S2 | 实例级 3D 可见几何 | In progress（离线合成 MVE，2026-11-26） | Partially verified（仅公式/失败路径） | 中（离线录制/仿真；真机只读） | `docs/ORE_SCENE_S2.md`；2 个几何测试 |
 | S3 | 结构化 Scene Graph / Scene State | In progress（schema v2 几何+关系原型，2026-11-26） | Partially verified（受控合成 + 公开 8 图稠密评测） | 无（离线） | 18 场景受控基准 P/R/F1 1.0；e2e relation F1 0.067（经典）→0.600（SAM2）；公开 40_70mm 8 图（9,208 GT）F1 0.030→0.558；无真实/独立关系标注 |
-| S4 | 多视角实例关联与场景融合 | Design drafted（2026-11-26，未实现） | Unverified（设计稿） | 中（双摄录制/静态真机，只读） | `docs/ORE_SCENE_S4.md` |
+| S4 | 多视角实例关联与场景融合 | In progress（S4.1 合成双视角生成器已实现，2026-11-27；匹配器未实现） | Partially verified（仅生成器机制，合成） | 中（双摄录制/静态真机，只读） | `docs/ORE_SCENE_S4_1.md`；4 场景 + 1 空场景、61 对、110 tests；无 association 指标 |
 | S5 | 主动感知 / NBV | Planned | Unverified | 高（仿真先行，真机需授权） | 待立 |
 | S6 | 抓取可操作性评估 | Planned | Unverified | 高（仿真/离线，真机需授权） | 待立 |
 | S7 | Applications/Learning/Benchmark 集成 | Planned | Unverified | 无（契约/离线） | 待立 |
@@ -269,13 +269,15 @@ round-trip；大场景性能基准。
 
 **实机依赖**：无（离线）；S4 才需要多视角。
 
-## 8. S4 — 多视角实例关联与场景融合（Design drafted，未实现）
+## 8. S4 — 多视角实例关联与场景融合（S4.1 生成器已实现；匹配器未实现）
 
 **目标**：把外机位/腕部同一物理实例关联起来，形成跨视角一致的场景状态；输出
 关联置信度与证据，不把关联 ID 当客观真值。
 
-**详细设计**：[`ORE_SCENE_S4.md`](ORE_SCENE_S4.md)（2026-11-26，Design only）。
-本节只是摘要；门控、数据模型、评测协议与待 Board 决策以该文为准。
+**详细设计**：[`ORE_SCENE_S4.md`](ORE_SCENE_S4.md)（2026-11-26，Design）。
+**S4.1 已完成**：[`ORE_SCENE_S4_1.md`](ORE_SCENE_S4_1.md)（2026-11-27，
+离线合成双视角生成器；只有数据与真值，没有关联匹配器/指标）。本节只是摘要；
+门控、数据模型、评测协议与待 Board 决策以设计稿为准。
 
 **前置**：S2 几何可用；S3 schema v2 稳定；双摄时间同步/标定可用。
 

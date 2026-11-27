@@ -75,7 +75,7 @@ safety:
   - The planner must treat an empty target array as "no target", not as "hold".
 
 verification:
-  unit_tests: 105
+  unit_tests: 110
   ore_scene_s1:
     passed: 2026-11-26 (offline only; no DDS/device/depth/motion)
     evidence: evidence/ore_scene_s1_20261126/
@@ -125,11 +125,25 @@ verification:
       0.960/0.437/0.600; segmentation/matching is the bottleneck. A bbox/local-
       mask graph scales the same evaluation to the dense 8-image public 40_70mm
       set (9,208 GT instances): classical match 10.4% / F1 0.030, SAM2.1 match
-      59.1% / F1 0.558. Six tests; 105 total pass.
+      59.1% / F1 0.558. Six tests; 110 total pass.
     caveats: >-
       No occludes/support relations from a single RGB view; benchmark is
       synthetic and GT-mask derived, not independent human relation labels;
       multi-view identity and real-depth validation still planned. No
+      runtime/interfaces change.
+  ore_scene_s4_1:
+    passed: 2026-11-27 (offline synthetic generator only; no matcher)
+    evidence: evidence/ore_scene_s4_1_20261127/
+    result: >-
+      Deterministic dual-view generator renders ellipsoid ore proxies from two
+      calibrated pinhole cameras with RGB, metric z-depth, uint16 instance
+      labels and z-buffer occlusion. 4 scenes + 1 empty produce 61 constructed
+      cross-view pairs and 2 singletons; checks cover deterministic
+      regeneration, empty scenes, mask/manifest agreement, depth validity and
+      pair references. Five tests; 110 total pass.
+    caveats: >-
+      Ellipsoid proxies and fixed synthetic cameras only; no association
+      matcher, no association P/R/F1, no real-ore/hardware validation. No
       runtime/interfaces change.
   reference_point_backend:
     passed: 2026-11-24 (unit test + real hardware static run)

@@ -8,6 +8,13 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S4.1 synthetic dual-view generator (2026-11-27): renders ellipsoid ore
+  proxies from two calibrated pinhole cameras with RGB, metric z-depth, uint16
+  instance labels and z-buffer occlusion; writes `dataset.json`, `pairs.jsonl`
+  and per-view images/masks/depth. On 4 scenes + 1 empty: 61 constructed pairs,
+  2 singletons, deterministic regeneration and mask/depth/pair consistency
+  checks pass. Five new tests (110 total). No association matcher and no
+  association P/R/F1; no DDS/device/motion/interfaces change.
 - S4 multi-view association design draft (2026-11-26): defines per-view
   `SceneState` inputs, mutual-projection support as the primary evidence (visible
   centroids differ by view), Hungarian matching with an ambiguity margin,

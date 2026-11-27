@@ -1,0 +1,82 @@
+{
+  "checks": {
+    "depth_positive_under_mask_zero_background": true,
+    "deterministic_regeneration": true,
+    "empty_scene_zero_masks_and_depth": true,
+    "mask_labels_match_manifest": true,
+    "pair_references_consistent": true,
+    "reported_areas_match_masks": true
+  },
+  "created_at": "2026-11-27T01:13:11+00:00",
+  "dataset": {
+    "dataset_id": "dual_view_20261127",
+    "empty_scenes": 1,
+    "instances_total": 63,
+    "manifest_sha256": "ea7f30993be32ef7ca38a79addb49bce47976f161332997fbfad330021e7300f",
+    "pairs": 61,
+    "pairs_sha256": "0b08156787b0a405ce2e43f1d183bcc281123b8eddaccff88ab741cd9ab14e53",
+    "scenes": 5,
+    "singletons": 2,
+    "visible_instances_per_view": {
+      "ext": 62,
+      "wrist": 62
+    }
+  },
+  "generator": {
+    "empty_count": 1,
+    "height": 360,
+    "max_instances": 18,
+    "min_instances": 10,
+    "name": "jcheng_perception_scene.synthetic_dual",
+    "scene_count": 4,
+    "seed": 20261127,
+    "version": "1.0.0",
+    "width": 480
+  },
+  "hardware_claimed": false,
+  "limitations": [
+    "Ellipsoid proxies, not real ore geometry or texture.",
+    "Synthetic fixed camera poses; no real calibration error or arm occlusion.",
+    "Generator mechanics only; no association matcher, no association accuracy claim.",
+    "No real-ore, hardware or runtime validation."
+  ],
+  "real_ore_validation": false,
+  "schema_version": "jcheng.ore_s4_1_mve.v1",
+  "scope": "S4.1 synthetic dual-view generator: RGB + z-depth + instance labels + known cross-view pairs",
+  "statistics": {
+    "depth_m": {
+      "ext": {
+        "max": 0.8942,
+        "median": 0.6812,
+        "min": 0.5671
+      },
+      "wrist": {
+        "max": 0.739,
+        "median": 0.5404,
+        "min": 0.4206
+      }
+    },
+    "occluded_instances_gt_0_15": {
+      "ext": 54,
+      "wrist": 52
+    },
+    "occlusion_ratio": {
+      "ext": {
+        "max": 0.986096,
+        "median": 0.358096,
+        "min": 0.0
+      },
+      "wrist": {
+        "max": 0.995958,
+        "median": 0.371916,
+        "min": 0.0
+      }
+    }
+  },
+  "tests": {
+    "command": "python3 -m pytest tests -q",
+    "failed": 0,
+    "passed": 110,
+    "s4_1_tests": 5
+  }
+}

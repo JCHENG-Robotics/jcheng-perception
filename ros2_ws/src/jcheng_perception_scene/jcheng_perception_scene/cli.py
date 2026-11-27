@@ -32,6 +32,7 @@ from .relation_eval import RelationEvalParams, evaluate_predicted_relations
 from .relations import RelationParams
 from .sam2_tiles import load_tiles_config, run_sam2_tiles
 from .synthetic import generate_dataset
+from .synthetic_dual import generate_dual_view_dataset
 from .types import (
     EVALUATION_SCHEMA_VERSION,
     SCENE_SCHEMA_VERSION,
@@ -127,6 +128,25 @@ def _command_generate(args):
         'seed': args.seed,
         'source': 'synthetic',
         'license': 'CC0-1.0',
+    })
+    return EXIT_OK
+
+
+def _command_generate_dual_view(args):
+    manifest_path = generate_dual_view_dataset(
+        args.out, scene_count=args.scenes, empty_count=args.empty_scenes,
+        seed=args.seed, width=args.width, height=args.height,
+        min_instances=args.min_instances, max_instances=args.max_instances)
+    _print_json({
+        'dataset_manifest': manifest_path,
+        'scenes': args.scenes,
+        'empty_scenes': args.empty_scenes,
+        'seed': args.seed,
+        'instances': [args.min_instances, args.max_instances],
+        'views': ['ext', 'wrist'],
+        'source': 'synthetic',
+        'license': 'CC0-1.0',
+        'hardware_validation': False,
     })
     return EXIT_OK
 
@@ -429,6 +449,19 @@ def build_parser():
     generate.add_argument('--width', type=int, default=640)
     generate.add_argument('--height', type=int, default=480)
     generate.set_defaults(func=_command_generate)
+
+    dual = subparsers.add_parser(
+        'generate-dual-view',
+        help='generate synthetic dual-view ore scenes with known pairs')
+    dual.add_argument('--out', required=True)
+    dual.add_argument('--scenes', type=int, default=6)
+    dual.add_argument('--empty-scenes', type=int, default=1)
+    dual.add_argument('--seed', type=int, default=20261127)
+    dual.add_argument('--width', type=int, default=480)
+    dual.add_argument('--height', type=int, default=360)
+    dual.add_argument('--min-instances', type=int, default=8)
+    dual.add_argument('--max-instances', type=int, default=18)
+    dual.set_defaults(func=_command_generate_dual_view)
 
     coco = subparsers.add_parser(
         'import-coco',

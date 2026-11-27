@@ -59,6 +59,13 @@ from jcheng_perception_scene.scene_v2 import (
     validate_scene_v2,
 )
 from jcheng_perception_scene.synthetic import generate_dataset
+from jcheng_perception_scene.synthetic_dual import (
+    DUAL_VIEW_DATASET_SCHEMA_VERSION,
+    Ellipsoid,
+    generate_dual_view_dataset,
+    look_at_camera,
+    render_view,
+)
 from jcheng_perception_scene.types import (
     ERROR_MASK_OVERLAP,
     InstanceMask,
@@ -752,3 +759,141 @@ def test_backend_registry():
                       ClassicalWatershedBackend)
     with pytest.raises(ValueError):
         build_backend('mask_rcnn')
+
+
+def test_dual_view_dataset_ground_truth(tmp_path):
+    root = str(tmp_path / 'dual-view')
+    generate_dual_view_dataset(
+        root, scene_count=2, empty_count=1, seed=20261127,
+        width=192, height=144, min_instances=5, max_instances=8,
+        created_at=CREATED_AT)
+    manifest_path = os.path.join(root, 'dataset.json')
+    with open(manifest_path, 'r', encoding='utf-8') as handle:
+        manifest = json.load(handle)
+    assert manifest['schema_version'] == \
+        DUAL_VIEW_DATASET_SCHEMA_VERSION
+    assert set(manifest['cameras']) == {'ext', 'wrist'}
+    assert len(manifest['scenes']) == 3
+    with open(os.path.join(root, 'pairs.jsonl'), 'r',
+              encoding='utf-8') as handle:
+        pair_records = [json.loads(line) for line in handle if line.strip()]
+    assert len(pair_records) == 3
+    assert sum(len(record['pairs']) for record in pair_records) > 0
+    for scene, pair_record in zip(manifest['scenes'], pair_records):
+        assert scene['scene_id'] == pair_record['scene_id']
+        labels_by_view = {}
+        for view_id in ('ext', 'wrist'):
+            view = scene['views'][view_id]
+            label = cv2.imread(
+                os.path.join(root, view['mask']), cv2.IMREAD_UNCHANGED)
+            depth = np.load(os.path.join(root, view['depth']))
+            assert label.shape == (144, 192)
+            assert label.dtype == np.uint16
+            assert depth.shape == (144, 192)
+            assert depth.dtype == np.float32
+            labels_by_view[view_id] = set(
+                int(value) for value in np.unique(label) if int(value) != 0)
+            expected = set()
+            for instance in scene['instances']:
+                record = instance['views'].get(view_id)
+                if record is not None:
+                    expected.add(record['mask_index'])
+                    pixels = label == record['mask_index']
+                    assert int(np.count_nonzero(pixels)) == \
+                        record['visible_area_px']
+                    assert float(depth[pixels].min()) > 0.0
+                    assert int(np.count_nonzero(depth[label == 0])) == 0
+                    rows, columns = np.nonzero(pixels)
+                    assert record['bbox_xyxy'] == [
+                        int(columns.min()), int(rows.min()),
+                        int(columns.max()), int(rows.max())]
+            assert labels_by_view[view_id] == expected
+        pair_ids = set()
+        for pair in pair_record['pairs']:
+            assert pair['global_id'] not in pair_ids
+            pair_ids.add(pair['global_id'])
+            assert [member['view_id'] for member in pair['members']] == \
+                ['ext', 'wrist']
+            for member in pair['members']:
+                instance = next(
+                    item for item in scene['instances']
+                    if item['global_id'] == pair['global_id'])
+                record = instance['views'][member['view_id']]
+                assert record['instance_id'] == member['instance_id']
+                assert record['mask_index'] in labels_by_view[
+                    member['view_id']]
+        for singleton in pair_record['singletons']:
+            assert singleton['reason'].startswith('not_visible_in_')
+            assert singleton['instance_id']
+        if scene['attributes']['empty']:
+            assert not pair_record['pairs']
+            assert not pair_record['singletons']
+            for view_id in ('ext', 'wrist'):
+                assert labels_by_view[view_id] == set()
+
+
+def test_dual_view_render_occlusion_and_depth():
+    camera = look_at_camera(
+        'ext', (0.0, 0.0, 1.0), (0.0, 0.0, 0.0), 64, 64, fov_deg=55.0)
+    back = Ellipsoid(
+        'back', (0.0, 0.0, 0.0), (0.20, 0.20, 0.20), 0.0, (90, 90, 90))
+    front = Ellipsoid(
+        'front', (0.0, 0.0, 0.45), (0.08, 0.08, 0.08), 0.0, (120, 120, 120))
+    render = render_view([back, front], camera)
+    center = render.label[32, 32]
+    assert int(center) == 2
+    back_visible = int(np.count_nonzero(render.label == 1))
+    assert back_visible > 0
+    assert back_visible < int(render.full_silhouette_px[0])
+    assert float(render.depth_m[32, 32]) == pytest.approx(0.47, abs=0.02)
+    assert int(np.count_nonzero(render.depth_m[render.label == 0])) == 0
+
+
+def test_dual_view_dataset_is_deterministic(tmp_path):
+    first = generate_dual_view_dataset(
+        str(tmp_path / 'first'), scene_count=2, empty_count=0,
+        seed=20261127, width=128, height=96, min_instances=4,
+        max_instances=6, created_at=CREATED_AT)
+    second = generate_dual_view_dataset(
+        str(tmp_path / 'second'), scene_count=2, empty_count=0,
+        seed=20261127, width=128, height=96, min_instances=4,
+        max_instances=6, created_at=CREATED_AT)
+    with open(first, 'r', encoding='utf-8') as handle:
+        first_manifest = json.load(handle)
+    with open(second, 'r', encoding='utf-8') as handle:
+        second_manifest = json.load(handle)
+    assert first_manifest['scenes'] == second_manifest['scenes']
+    assert any(
+        record.get('occlusion_ratio', 0.0) > 0.15
+        for scene in first_manifest['scenes']
+        for instance in scene['instances']
+        for record in instance['views'].values())
+    for scene in first_manifest['scenes']:
+        for view in scene['views'].values():
+            assert view['image_sha256']
+            assert view['mask_sha256']
+            assert view['depth_sha256']
+
+
+def test_dual_view_cli(tmp_path):
+    out = str(tmp_path / 'cli-dual')
+    code = main([
+        'generate-dual-view', '--out', out, '--scenes', '1',
+        '--empty-scenes', '0', '--seed', '7', '--width', '128',
+        '--height', '96', '--min-instances', '3', '--max-instances', '3',
+    ])
+    assert code == 0
+    assert os.path.isfile(os.path.join(out, 'dataset.json'))
+    assert os.path.isfile(os.path.join(out, 'pairs.jsonl'))
+
+
+def test_dual_view_rejects_invalid_ranges(tmp_path):
+    with pytest.raises(ValueError):
+        generate_dual_view_dataset(
+            str(tmp_path / 'bad-range'), scene_count=1,
+            min_instances=5, max_instances=3)
+    with pytest.raises(ValueError):
+        generate_dual_view_dataset(
+            str(tmp_path / 'bad-size'), scene_count=1, width=32, height=32)
+    with pytest.raises(ValueError):
+        look_at_camera('ext', (0.0, 0.0, 0.0), (0.0, 0.0, 0.0), 64, 64)

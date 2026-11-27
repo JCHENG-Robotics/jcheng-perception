@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jcheng-robotics.github.io/schemas/jcheng.ore_dual_view_dataset.v1.schema.json",
+  "title": "JCHENG synthetic dual-view ore dataset v1",
+  "description": "Internal offline dual-view dataset with per-view RGB, z-depth, instance labels and known cross-view pairs. Synthetic only; not a cross-repo contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "dataset_id", "source", "annotation_method",
+    "license", "created_at", "generator", "cameras", "pairs_path", "scenes"
+  ],
+  "properties": {
+    "schema_version": {"const": "jcheng.ore_dual_view_dataset.v1"},
+    "dataset_id": {"type": "string", "minLength": 1},
+    "source": {"const": "synthetic"},
+    "annotation_method": {"const": "procedural_ground_truth"},
+    "license": {"type": "string", "minLength": 1},
+    "citation": {"type": ["string", "null"]},
+    "created_at": {"type": "string", "minLength": 1},
+    "generator": {
+      "type": "object",
+      "required": ["name", "version", "seed", "scene_count",
+                   "empty_count", "width", "height"],
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": "string"},
+        "seed": {"type": "integer"},
+        "scene_count": {"type": "integer", "minimum": 0},
+        "empty_count": {"type": "integer", "minimum": 0},
+        "width": {"type": "integer", "minimum": 64},
+        "height": {"type": "integer", "minimum": 64},
+        "min_instances": {"type": "integer", "minimum": 0},
+        "max_instances": {"type": "integer", "minimum": 0}
+      }
+    },
+    "cameras": {
+      "type": "object",
+      "required": ["ext", "wrist"],
+      "additionalProperties": false,
+      "properties": {
+        "ext": {"$ref": "#/$defs/camera"},
+        "wrist": {"$ref": "#/$defs/camera"}
+      }
+    },
+    "pairs_path": {"const": "pairs.jsonl"},
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scene_id", "views", "instances", "attributes"],
+        "properties": {
+          "schema_version": {"type": "string"},
+          "scene_id": {"type": "string", "minLength": 1},
+          "created_at": {"type": ["string", "null"]},
+          "timestamp_ns": {"type": "integer"},
+          "frame_id": {"const": "base_link"},
+          "views": {"type": "object"},
+          "instances": {"type": "array"},
+          "attributes": {"type": "object"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "camera": {
+      "type": "object",
+      "required": ["view_id", "width", "height", "fx", "fy", "cx", "cy",
+                   "camera_to_base"],
+      "properties": {
+        "view_id": {"enum": ["ext", "wrist"]},
+        "width": {"type": "integer", "minimum": 32},
+        "height": {"type": "integer", "minimum": 32},
+        "fx": {"type": "number", "exclusiveMinimum": 0},
+        "fy": {"type": "number", "exclusiveMinimum": 0},
+        "cx": {"type": "number"},
+        "cy": {"type": "number"},
+        "fov_deg": {"type": "number", "exclusiveMinimum": 0},
+        "frame_id": {"const": "base_link"},
+        "camera_to_base": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {"type": "number"}
+          }
+        }
+      }
+    }
+  }
+}

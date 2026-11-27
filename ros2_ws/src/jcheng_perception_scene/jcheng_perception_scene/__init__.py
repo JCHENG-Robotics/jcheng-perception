@@ -21,6 +21,14 @@ from .relations import (
     build_relation_graph,
     compare_relation_sets,
 )
+from .synthetic_dual import (
+    DUAL_VIEW_DATASET_SCHEMA_VERSION,
+    Camera,
+    Ellipsoid,
+    generate_dual_view_dataset,
+    generate_dual_view_scene,
+    render_view,
+)
 from .pipeline import run_dataset, run_unlabelled
 from .sam2_tiles import (
     TileSet,
@@ -52,8 +60,11 @@ __version__ = '0.1.0'
 __all__ = [
     'DATASET_SCHEMA_VERSION',
     'DEFAULT_CONFIG',
+    'DUAL_VIEW_DATASET_SCHEMA_VERSION',
     'EVALUATION_SCHEMA_VERSION',
     'GeometryParams',
+    'Camera',
+    'Ellipsoid',
     'InstanceMask',
     'PREDICTION_SCHEMA_VERSION',
     'Relation',
@@ -75,6 +86,8 @@ __all__ = [
     'evaluate',
     'evaluate_predicted_relations',
     'evaluate_relation_benchmark',
+    'generate_dual_view_dataset',
+    'generate_dual_view_scene',
     'generate_relation_benchmark',
     'geometry_for_mask',
     'import_coco_dataset',
@@ -82,6 +95,7 @@ __all__ = [
     'load_dataset',
     'load_tiles_config',
     'read_predictions',
+    'render_view',
     'run_dataset',
     'run_sam2_tiles',
     'run_unlabelled',
