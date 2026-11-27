@@ -22,9 +22,15 @@ from jcheng_perception_scene.association import (
     evaluate_association,
     fuse_association,
     load_dual_view_dataset,
+    perturb_dataset_extrinsics,
     read_association_jsonl,
+    shift_dataset_timestamps,
     validate_association_record,
     write_association_jsonl,
+)
+from jcheng_perception_scene.association_sensitivity import (
+    load_sensitivity_config,
+    run_sensitivity,
 )
 from jcheng_perception_scene.backends.classical import (
     ClassicalWatershedBackend,
@@ -1101,3 +1107,100 @@ def test_fuse_association_cli(tmp_path):
     assert any(
         cluster['fused_visible_geometry'] is not None
         for record in records for cluster in record['clusters'])
+
+
+def test_extrinsic_perturbation_and_timestamp_gate(tmp_path):
+    root = str(tmp_path / 'sensitivity-data')
+    generate_dual_view_dataset(
+        root, scene_count=1, empty_count=0, seed=20261127,
+        width=128, height=96, min_instances=4, max_instances=4,
+        created_at=CREATED_AT)
+    dataset = load_dual_view_dataset(root)
+    scene = dataset.scenes[0]
+    before = scene.frames['ext'].instances[0]
+    before_camera = scene.frames['ext'].camera.position_base.copy()
+    perturbed = perturb_dataset_extrinsics(
+        dataset, 'ext', (0.010, 0.0, 0.0), 0.0, 'z')
+    after = perturbed.scenes[0].frames['ext'].instances[0]
+    after_camera = perturbed.scenes[0].frames['ext'].camera.position_base
+    shift = after.centroid_base - before.centroid_base
+    assert np.linalg.norm(shift - np.asarray([0.010, 0.0, 0.0])) < 1e-6
+    assert np.linalg.norm(
+        after_camera - before_camera - np.asarray([0.010, 0.0, 0.0])) < 1e-6
+    assert associate_scene(perturbed.scenes[0])['clusters']
+    shifted = shift_dataset_timestamps(dataset, 'wrist', 100_000_000)
+    record = associate_scene(shifted.scenes[0])
+    assert not record['clusters']
+    assert record['singletons']
+    assert all(item['reason'] == 'temporal_mismatch'
+               for item in record['singletons'])
+
+
+def _write_sensitivity_config(path):
+    path.write_text(
+        'schema_version: jcheng.association_sensitivity.v1\n'
+        'baseline:\n'
+        '  strategy: mutual_projection\n'
+        '  ambiguity_margin: 0.05\n'
+        '  min_mutual_support: 0.15\n'
+        '  depth_tolerance_m: 0.01\n'
+        '  max_points: 300\n'
+        '  sync_window_ns: 50000000\n'
+        'ablations:\n'
+        '  - name: full\n'
+        '  - name: centroid\n'
+        '    strategy: centroid\n'
+        'perturbations:\n'
+        '  - name: ext_tx_5mm\n'
+        '    view_id: ext\n'
+        '    translation_m: [0.005, 0.0, 0.0]\n'
+        '    rotation_deg: 0.0\n'
+        '    axis: z\n'
+        'time_offsets_ns: [0, 100000000]\n'
+        'acceptance:\n'
+        '  baseline_f1_min: 0.5\n'
+        '  time_offset_outside_window_f1_max: 0.0\n',
+        encoding='utf-8')
+
+
+def test_sensitivity_config_and_run(tmp_path):
+    root = str(tmp_path / 'sensitivity-run')
+    generate_dual_view_dataset(
+        root, scene_count=1, empty_count=0, seed=20261127,
+        width=128, height=96, min_instances=4, max_instances=4,
+        created_at=CREATED_AT)
+    dataset = load_dual_view_dataset(root)
+    config_path = tmp_path / 'sensitivity.yaml'
+    _write_sensitivity_config(config_path)
+    config = load_sensitivity_config(str(config_path))
+    result = run_sensitivity(dataset, config, config_path=str(config_path))
+    assert result['baseline']['truth_pairs'] > 0
+    assert len(result['ablations']) == 2
+    assert len(result['perturbations']) == 1
+    assert len(result['time_offsets']) == 2
+    assert result['time_offsets'][-1]['f1'] == 0.0
+    assert result['time_offsets'][-1]['singleton_reason_counts'][
+        'temporal_mismatch'] > 0
+    assert result['checks']['baseline_f1_min'] is True
+    assert result['checks']['time_offset_outside_window_f1_max'] is True
+    assert result['config_sha256']
+
+
+def test_sensitivity_cli(tmp_path):
+    root = str(tmp_path / 'sensitivity-cli-data')
+    generate_dual_view_dataset(
+        root, scene_count=1, empty_count=0, seed=20261127,
+        width=128, height=96, min_instances=4, max_instances=4,
+        created_at=CREATED_AT)
+    config_path = tmp_path / 'sensitivity.yaml'
+    _write_sensitivity_config(config_path)
+    out = str(tmp_path / 'sensitivity-cli' / 'metrics.json')
+    code = main([
+        'evaluate-association-sensitivity', '--dataset', root,
+        '--config', str(config_path), '--out', out,
+    ])
+    assert code == 0
+    with open(out, 'r', encoding='utf-8') as handle:
+        result = json.load(handle)
+    assert result['schema_version'] == 'jcheng.ore_association_sensitivity.v1'
+    assert result['baseline']['truth_pairs'] > 0

@@ -1,0 +1,1681 @@
+{
+  "ablations": [
+    {
+      "ambiguous_clusters": 0,
+      "correct_pairs": 114,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 454.685,
+        "p50": 323.326,
+        "p95": 425.67
+      },
+      "name": "full",
+      "overrides": {},
+      "per_density": {
+        "dense": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 12,
+          "f1": 0.96,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 0.923077,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 16,
+          "f1": 0.941176,
+          "precision": 1.0,
+          "predicted": 16,
+          "recall": 0.888889,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 114,
+      "recall": 0.934426,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 17
+      },
+      "strategy": "mutual_projection",
+      "truth_pairs": 122
+    },
+    {
+      "ambiguous_clusters": 0,
+      "correct_pairs": 114,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 465.011,
+        "p50": 321.658,
+        "p95": 430.788
+      },
+      "name": "no_chamfer",
+      "overrides": {
+        "max_chamfer_ratio": 1000000000.0,
+        "weight_chamfer": 0.0
+      },
+      "per_density": {
+        "dense": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 12,
+          "f1": 0.96,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 0.923077,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 16,
+          "f1": 0.941176,
+          "precision": 1.0,
+          "predicted": 16,
+          "recall": 0.888889,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 114,
+      "recall": 0.934426,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 17
+      },
+      "strategy": "mutual_projection",
+      "truth_pairs": 122
+    },
+    {
+      "ambiguous_clusters": 0,
+      "correct_pairs": 116,
+      "delta_f1": 0.008688,
+      "f1": 0.97479,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 466.241,
+        "p50": 321.579,
+        "p95": 440.021
+      },
+      "name": "no_size",
+      "overrides": {
+        "size_ratio_max": 1000000000.0,
+        "weight_size": 0.0
+      },
+      "per_density": {
+        "dense": {
+          "correct": 92,
+          "f1": 0.973545,
+          "precision": 1.0,
+          "predicted": 92,
+          "recall": 0.948454,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 13,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 13,
+          "recall": 1.0,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 92,
+          "f1": 0.973545,
+          "precision": 1.0,
+          "predicted": 92,
+          "recall": 0.948454,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 17,
+          "f1": 0.971429,
+          "precision": 1.0,
+          "predicted": 17,
+          "recall": 0.944444,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 116,
+      "recall": 0.95082,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 13
+      },
+      "strategy": "mutual_projection",
+      "truth_pairs": 122
+    },
+    {
+      "ambiguous_clusters": 0,
+      "correct_pairs": 114,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 445.564,
+        "p50": 319.51,
+        "p95": 417.675
+      },
+      "name": "no_prior",
+      "overrides": {
+        "weight_prior": 0.0
+      },
+      "per_density": {
+        "dense": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 12,
+          "f1": 0.96,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 0.923077,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 16,
+          "f1": 0.941176,
+          "precision": 1.0,
+          "predicted": 16,
+          "recall": 0.888889,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 114,
+      "recall": 0.934426,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 17
+      },
+      "strategy": "mutual_projection",
+      "truth_pairs": 122
+    },
+    {
+      "ambiguous_clusters": 3,
+      "correct_pairs": 116,
+      "delta_f1": 0.008688,
+      "f1": 0.97479,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 423.793,
+        "p50": 304.064,
+        "p95": 399.564
+      },
+      "name": "centroid",
+      "overrides": {
+        "strategy": "centroid"
+      },
+      "per_density": {
+        "dense": {
+          "correct": 93,
+          "f1": 0.978947,
+          "precision": 1.0,
+          "predicted": 93,
+          "recall": 0.958763,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 12,
+          "f1": 0.96,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 0.923077,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 93,
+          "f1": 0.978947,
+          "precision": 1.0,
+          "predicted": 93,
+          "recall": 0.958763,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 16,
+          "f1": 0.941176,
+          "precision": 1.0,
+          "predicted": 16,
+          "recall": 0.888889,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 116,
+      "recall": 0.95082,
+      "singleton_reason_counts": {
+        "ambiguous_elsewhere": 1,
+        "matched_elsewhere": 9
+      },
+      "strategy": "centroid",
+      "truth_pairs": 122
+    }
+  ],
+  "acceptance": {
+    "baseline_f1_min": 0.9,
+    "max_rotation_1deg_f1_drop": 0.1,
+    "max_translation_10mm_f1_drop": 0.1,
+    "time_offset_outside_window_f1_max": 0.0
+  },
+  "baseline": {
+    "ambiguous_clusters": 0,
+    "correct_pairs": 114,
+    "f1": 0.966102,
+    "forced_id_errors": 0,
+    "latency_ms": {
+      "max": 467.592,
+      "p50": 329.434,
+      "p95": 433.686
+    },
+    "params": {
+      "ambiguity_margin": 0.05,
+      "association_margin_m": 0.02,
+      "depth_tolerance_m": 0.01,
+      "max_candidates": 512,
+      "max_chamfer_ratio": 1.0,
+      "max_points": 300,
+      "min_mutual_support": 0.15,
+      "min_support_pixels": 8,
+      "size_ratio_max": 2.5,
+      "strategy": "mutual_projection",
+      "sync_window_ns": 50000000,
+      "weight_chamfer": 0.35,
+      "weight_prior": 0.1,
+      "weight_size": 0.15,
+      "weight_support": 1.0
+    },
+    "per_density": {
+      "dense": {
+        "correct": 91,
+        "f1": 0.968085,
+        "precision": 1.0,
+        "predicted": 91,
+        "recall": 0.938144,
+        "scenes": 5,
+        "truth": 97
+      },
+      "empty": {
+        "correct": 0,
+        "f1": 0.0,
+        "precision": 0.0,
+        "predicted": 0,
+        "recall": 0.0,
+        "scenes": 1,
+        "truth": 0
+      },
+      "medium": {
+        "correct": 11,
+        "f1": 0.956522,
+        "precision": 1.0,
+        "predicted": 11,
+        "recall": 0.916667,
+        "scenes": 1,
+        "truth": 12
+      },
+      "sparse": {
+        "correct": 12,
+        "f1": 0.96,
+        "precision": 1.0,
+        "predicted": 12,
+        "recall": 0.923077,
+        "scenes": 2,
+        "truth": 13
+      }
+    },
+    "per_occlusion": {
+      "empty": {
+        "correct": 0,
+        "f1": 0.0,
+        "precision": 0.0,
+        "predicted": 0,
+        "recall": 0.0,
+        "scenes": 1,
+        "truth": 0
+      },
+      "high": {
+        "correct": 91,
+        "f1": 0.968085,
+        "precision": 1.0,
+        "predicted": 91,
+        "recall": 0.938144,
+        "scenes": 5,
+        "truth": 97
+      },
+      "low": {
+        "correct": 7,
+        "f1": 1.0,
+        "precision": 1.0,
+        "predicted": 7,
+        "recall": 1.0,
+        "scenes": 1,
+        "truth": 7
+      },
+      "medium": {
+        "correct": 16,
+        "f1": 0.941176,
+        "precision": 1.0,
+        "predicted": 16,
+        "recall": 0.888889,
+        "scenes": 2,
+        "truth": 18
+      }
+    },
+    "precision": 1.0,
+    "predicted_pairs": 114,
+    "recall": 0.934426,
+    "singleton_reason_counts": {
+      "insufficient_visible": 3,
+      "matched_elsewhere": 17
+    },
+    "truth_pairs": 122
+  },
+  "checks": {
+    "baseline_f1_min": true,
+    "max_rotation_1deg_f1_drop": true,
+    "max_translation_10mm_f1_drop": false,
+    "time_offset_outside_window_f1_max": true
+  },
+  "config_path": "/home/jerichocheng/jcheng/jcheng-perception/config/association_sensitivity.yaml",
+  "config_sha256": "765244867ed717d0596ab5b2e4b918d44bc171d45f5f5db94f38b18f7c79d794",
+  "created_at": "2026-11-27T01:50:00+00:00",
+  "hardware_claimed": false,
+  "perturbations": [
+    {
+      "ambiguous_clusters": 0,
+      "axis": "z",
+      "correct_pairs": 112,
+      "delta_f1": -0.008837,
+      "f1": 0.957265,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 494.038,
+        "p50": 341.201,
+        "p95": 460.042
+      },
+      "name": "ext_tx_5mm",
+      "per_density": {
+        "dense": {
+          "correct": 90,
+          "f1": 0.962567,
+          "precision": 1.0,
+          "predicted": 90,
+          "recall": 0.927835,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 11,
+          "f1": 0.916667,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.846154,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 90,
+          "f1": 0.962567,
+          "precision": 1.0,
+          "predicted": 90,
+          "recall": 0.927835,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 15,
+          "f1": 0.909091,
+          "precision": 1.0,
+          "predicted": 15,
+          "recall": 0.833333,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 112,
+      "recall": 0.918033,
+      "rotation_deg": 0.0,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 21
+      },
+      "translation_m": [
+        0.005,
+        0.0,
+        0.0
+      ],
+      "translation_norm_mm": 5.0,
+      "truth_pairs": 122,
+      "view_id": "ext"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "axis": "z",
+      "correct_pairs": 110,
+      "delta_f1": -0.017826,
+      "f1": 0.948276,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 531.167,
+        "p50": 354.209,
+        "p95": 491.554
+      },
+      "name": "ext_tx_10mm",
+      "per_density": {
+        "dense": {
+          "correct": 88,
+          "f1": 0.951351,
+          "precision": 1.0,
+          "predicted": 88,
+          "recall": 0.907216,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 11,
+          "f1": 0.916667,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.846154,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 88,
+          "f1": 0.951351,
+          "precision": 1.0,
+          "predicted": 88,
+          "recall": 0.907216,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 15,
+          "f1": 0.909091,
+          "precision": 1.0,
+          "predicted": 15,
+          "recall": 0.833333,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 110,
+      "recall": 0.901639,
+      "rotation_deg": 0.0,
+      "singleton_reason_counts": {
+        "chamfer_gate": 2,
+        "matched_elsewhere": 26
+      },
+      "translation_m": [
+        0.01,
+        0.0,
+        0.0
+      ],
+      "translation_norm_mm": 10.0,
+      "truth_pairs": 122,
+      "view_id": "ext"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "axis": "z",
+      "correct_pairs": 86,
+      "delta_f1": -0.139179,
+      "f1": 0.826923,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 473.548,
+        "p50": 341.701,
+        "p95": 443.393
+      },
+      "name": "ext_tz_10mm",
+      "per_density": {
+        "dense": {
+          "correct": 65,
+          "f1": 0.802469,
+          "precision": 1.0,
+          "predicted": 65,
+          "recall": 0.670103,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 10,
+          "f1": 0.909091,
+          "precision": 1.0,
+          "predicted": 10,
+          "recall": 0.833333,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 11,
+          "f1": 0.916667,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.846154,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 65,
+          "f1": 0.802469,
+          "precision": 1.0,
+          "predicted": 65,
+          "recall": 0.670103,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 14,
+          "f1": 0.875,
+          "precision": 1.0,
+          "predicted": 14,
+          "recall": 0.777778,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 86,
+      "recall": 0.704918,
+      "rotation_deg": 0.0,
+      "singleton_reason_counts": {
+        "chamfer_gate": 3,
+        "insufficient_visible": 2,
+        "matched_elsewhere": 71
+      },
+      "translation_m": [
+        0.0,
+        0.0,
+        0.01
+      ],
+      "translation_norm_mm": 10.0,
+      "truth_pairs": 122,
+      "view_id": "ext"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "axis": "z",
+      "correct_pairs": 114,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 511.974,
+        "p50": 344.096,
+        "p95": 468.703
+      },
+      "name": "ext_rz_0p5deg",
+      "per_density": {
+        "dense": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 12,
+          "f1": 0.96,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 0.923077,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 16,
+          "f1": 0.941176,
+          "precision": 1.0,
+          "predicted": 16,
+          "recall": 0.888889,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 114,
+      "recall": 0.934426,
+      "rotation_deg": 0.5,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 17
+      },
+      "translation_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "translation_norm_mm": 0.0,
+      "truth_pairs": 122,
+      "view_id": "ext"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "axis": "z",
+      "correct_pairs": 114,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 509.009,
+        "p50": 328.16,
+        "p95": 460.85
+      },
+      "name": "ext_rz_1p0deg",
+      "per_density": {
+        "dense": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 12,
+          "f1": 0.96,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 0.923077,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 16,
+          "f1": 0.941176,
+          "precision": 1.0,
+          "predicted": 16,
+          "recall": 0.888889,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 114,
+      "recall": 0.934426,
+      "rotation_deg": 1.0,
+      "singleton_reason_counts": {
+        "chamfer_gate": 1,
+        "insufficient_visible": 2,
+        "matched_elsewhere": 17
+      },
+      "translation_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "translation_norm_mm": 0.0,
+      "truth_pairs": 122,
+      "view_id": "ext"
+    },
+    {
+      "ambiguous_clusters": 1,
+      "axis": "z",
+      "correct_pairs": 114,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 491.798,
+        "p50": 338.959,
+        "p95": 458.088
+      },
+      "name": "wrist_tx_5mm",
+      "per_density": {
+        "dense": {
+          "correct": 92,
+          "f1": 0.973545,
+          "precision": 1.0,
+          "predicted": 92,
+          "recall": 0.948454,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 11,
+          "f1": 0.916667,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.846154,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 92,
+          "f1": 0.973545,
+          "precision": 1.0,
+          "predicted": 92,
+          "recall": 0.948454,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 15,
+          "f1": 0.909091,
+          "precision": 1.0,
+          "predicted": 15,
+          "recall": 0.833333,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 114,
+      "recall": 0.934426,
+      "rotation_deg": 0.0,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 15
+      },
+      "translation_m": [
+        0.005,
+        0.0,
+        0.0
+      ],
+      "translation_norm_mm": 5.0,
+      "truth_pairs": 122,
+      "view_id": "wrist"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "axis": "z",
+      "correct_pairs": 95,
+      "delta_f1": -0.090526,
+      "f1": 0.875576,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 483.114,
+        "p50": 335.959,
+        "p95": 457.297
+      },
+      "name": "wrist_tz_10mm",
+      "per_density": {
+        "dense": {
+          "correct": 72,
+          "f1": 0.852071,
+          "precision": 1.0,
+          "predicted": 72,
+          "recall": 0.742268,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 12,
+          "f1": 0.96,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 0.923077,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 72,
+          "f1": 0.852071,
+          "precision": 1.0,
+          "predicted": 72,
+          "recall": 0.742268,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 16,
+          "f1": 0.941176,
+          "precision": 1.0,
+          "predicted": 16,
+          "recall": 0.888889,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 95,
+      "recall": 0.778689,
+      "rotation_deg": 0.0,
+      "singleton_reason_counts": {
+        "chamfer_gate": 1,
+        "insufficient_visible": 3,
+        "matched_elsewhere": 54
+      },
+      "translation_m": [
+        0.0,
+        0.0,
+        0.01
+      ],
+      "translation_norm_mm": 10.0,
+      "truth_pairs": 122,
+      "view_id": "wrist"
+    }
+  ],
+  "real_ore_validation": false,
+  "schema_version": "jcheng.ore_association_sensitivity.v1",
+  "time_offsets": [
+    {
+      "ambiguous_clusters": 0,
+      "correct_pairs": 114,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 489.823,
+        "p50": 330.938,
+        "p95": 449.983
+      },
+      "offset_ns": 0,
+      "per_density": {
+        "dense": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 12,
+          "f1": 0.96,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 0.923077,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 16,
+          "f1": 0.941176,
+          "precision": 1.0,
+          "predicted": 16,
+          "recall": 0.888889,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 114,
+      "recall": 0.934426,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 17
+      },
+      "truth_pairs": 122,
+      "view_id": "wrist"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "correct_pairs": 114,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 485.36,
+        "p50": 351.063,
+        "p95": 452.365
+      },
+      "offset_ns": 25000000,
+      "per_density": {
+        "dense": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 11,
+          "f1": 0.956522,
+          "precision": 1.0,
+          "predicted": 11,
+          "recall": 0.916667,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 12,
+          "f1": 0.96,
+          "precision": 1.0,
+          "predicted": 12,
+          "recall": 0.923077,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 91,
+          "f1": 0.968085,
+          "precision": 1.0,
+          "predicted": 91,
+          "recall": 0.938144,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 7,
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 1.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 16,
+          "f1": 0.941176,
+          "precision": 1.0,
+          "predicted": 16,
+          "recall": 0.888889,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 1.0,
+      "predicted_pairs": 114,
+      "recall": 0.934426,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 17
+      },
+      "truth_pairs": 122,
+      "view_id": "wrist"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "correct_pairs": 0,
+      "delta_f1": -0.966102,
+      "f1": 0.0,
+      "forced_id_errors": 0,
+      "latency_ms": {
+        "max": 0.023,
+        "p50": 0.01,
+        "p95": 0.021
+      },
+      "offset_ns": 100000000,
+      "per_density": {
+        "dense": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 5,
+          "truth": 97
+        },
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "medium": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 12
+        },
+        "sparse": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 2,
+          "truth": 13
+        }
+      },
+      "per_occlusion": {
+        "empty": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 0
+        },
+        "high": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 5,
+          "truth": 97
+        },
+        "low": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 1,
+          "truth": 7
+        },
+        "medium": {
+          "correct": 0,
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "scenes": 2,
+          "truth": 18
+        }
+      },
+      "precision": 0.0,
+      "predicted_pairs": 0,
+      "recall": 0.0,
+      "singleton_reason_counts": {
+        "temporal_mismatch": 248
+      },
+      "truth_pairs": 122,
+      "view_id": "wrist"
+    }
+  ]
+}

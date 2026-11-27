@@ -17,6 +17,10 @@ from .association import (
     validate_association_record,
     write_association_jsonl,
 )
+from .association_sensitivity import (
+    load_sensitivity_config,
+    run_sensitivity,
+)
 from .config import DEFAULT_CONFIG, config_sha256, load_config, validate_config
 from .dataset import import_coco_dataset, load_dataset, read_predictions
 from .geometry import GeometryParams, visible_geometry
@@ -108,12 +112,14 @@ __all__ = [
     'load_config',
     'load_dataset',
     'load_dual_view_dataset',
+    'load_sensitivity_config',
     'load_tiles_config',
     'read_predictions',
     'read_association_jsonl',
     'render_view',
     'run_dataset',
     'run_sam2_tiles',
+    'run_sensitivity',
     'run_unlabelled',
     'validate_config',
     'validate_association_record',

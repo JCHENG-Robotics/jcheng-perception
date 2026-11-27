@@ -119,7 +119,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # 离线矿石 S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 117 项 ROS-free 测试（77 原有 + 40 矿石场景/S2/S3/S4）
+├── tests/                        # 120 项 ROS-free 测试（77 原有 + 43 矿石场景/S2/S3/S4）
 └── capability.yaml
 ```
 
@@ -336,7 +336,10 @@ S4.2 匹配器在 8 个稠密合成场景（125 条构造对）上：互相投�
 P/R/F1 = 1.000/0.944/0.971，仅可见质心 baseline 为 0.973/0.872/0.920。
 S4.3 融合仅可见几何（信息加权可见质心、AABB/OBB、保留单视角成员）并校验
 `jcheng.scene_association.v1`：118/118 个 associated cluster 完成融合，
-不含真实质心字段。真实矿石关联/几何精度 **Unverified**。
+不含真实质心字段。S4.4 在混合合成集上做预注册敏感性：baseline
+P/R/F1 1.000/0.934/0.966；深度方向 10 mm 外参误差使 F1 降至
+0.827/0.876（预注册验收未通过）；100 ms 时间偏移 fail-closed。真实矿石
+关联/几何精度 **Unverified**。
 
 设计与证据：
 
@@ -348,6 +351,7 @@ S4.3 融合仅可见几何（信息加权可见质心、AABB/OBB、保留单视�
 - [S4.1 双视角生成器](docs/ORE_SCENE_S4_1.md)（仅离线合成数据）
 - [S4.2 关联匹配器](docs/ORE_SCENE_S4_2.md)（仅合成稠密场景）
 - [S4.3 可见几何融合与校验](docs/ORE_SCENE_S4_3.md)（仅可见几何）
+- [S4.4 敏感性与消融](docs/ORE_SCENE_S4_4.md)（预注册，合成数据）
 - [调研](docs/ORE_SCENE_RESEARCH.md) ·
   [架构](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [路线图](docs/ORE_SCENE_ROADMAP.md) ·

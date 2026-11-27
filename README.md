@@ -135,7 +135,7 @@ jcheng-perception/
 │   ├── ore_scene.py              # offline ore S1 CLI
 │   ├── run_core_tests.sh
 │   └── check_repo.sh
-├── tests/                        # 117 ROS-free tests (77 existing + 40 ore scene/S2/S3/S4)
+├── tests/                        # 120 ROS-free tests (77 existing + 43 ore scene/S2/S3/S4)
 └── capability.yaml
 ```
 
@@ -381,7 +381,10 @@ constructed pairs) mutual-projection + Hungarian gives P/R/F1
 1.000/0.944/0.971, versus 0.973/0.872/0.920 for a visible-centroid baseline.
 S4.3 fuses visible-only geometry (information-weighted visible centroids,
 AABB/OBB, retained per-view members) and validates `jcheng.scene_association.v1`:
-118/118 associated clusters fused, no true-centroid fields. Real-ore
+118/118 associated clusters fused, no true-centroid fields. S4.4 pre-registered
+sensitivity on a mixed synthetic set: baseline P/R/F1 1.000/0.934/0.966;
+10 mm depth-axis extrinsic error drops F1 to 0.827/0.876 (acceptance failed),
+while a 100 ms timestamp offset fails closed. Real-ore
 association/geometry accuracy is Unverified.
 
 Design and evidence:
@@ -394,6 +397,7 @@ Design and evidence:
 - [S4.1 dual-view generator](docs/ORE_SCENE_S4_1.md) (offline synthetic data only)
 - [S4.2 association matcher](docs/ORE_SCENE_S4_2.md) (synthetic dense scenes only)
 - [S4.3 fusion & association validation](docs/ORE_SCENE_S4_3.md) (visible-only geometry)
+- [S4.4 sensitivity & ablation](docs/ORE_SCENE_S4_4.md) (pre-registered, synthetic)
 - [Research](docs/ORE_SCENE_RESEARCH.md) ·
   [Architecture](docs/ORE_SCENE_UNDERSTANDING.md) ·
   [Roadmap](docs/ORE_SCENE_ROADMAP.md) ·

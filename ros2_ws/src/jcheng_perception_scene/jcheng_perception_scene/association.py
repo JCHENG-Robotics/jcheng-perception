@@ -43,6 +43,7 @@ class AssociationParams:
     ambiguity_margin: float = 0.05
     max_points: int = 300
     max_candidates: int = 512
+    sync_window_ns: int = 50_000_000
     weight_support: float = 1.0
     weight_chamfer: float = 0.35
     weight_size: float = 0.15
@@ -67,6 +68,8 @@ class AssociationParams:
             raise ValueError('ambiguity_margin out of range')
         if self.max_points < 8 or self.max_candidates < 1:
             raise ValueError('max_points/max_candidates too small')
+        if self.sync_window_ns < 0:
+            raise ValueError('sync_window_ns must be non-negative')
 
     def to_dict(self):
         """Return a JSON-serialisable parameter record."""
@@ -126,6 +129,7 @@ class ViewFrame:
     label: np.ndarray
     depth_m: np.ndarray
     instances: List[AssociationInstance]
+    timestamp_ns: int = 0
 
 
 @dataclasses.dataclass
@@ -218,7 +222,7 @@ def _subsample(points, max_points):
     return points[np.unique(indices)]
 
 
-def load_dual_view_dataset(root, max_points=1000):
+def load_dual_view_dataset(root, max_points=300):
     """Load a S4.1 dual-view dataset for association."""
     manifest_path = os.path.join(root, 'dataset.json')
     with open(manifest_path, 'r', encoding='utf-8') as handle:
@@ -284,6 +288,7 @@ def load_dual_view_dataset(root, max_points=1000):
                 label=label,
                 depth_m=depth.astype(np.float64),
                 instances=instances,
+                timestamp_ns=int(view_record.get('timestamp_ns', 0)),
             )
         scenes.append(AssociationScene(
             scene_id=str(scene_record['scene_id']),
@@ -298,6 +303,98 @@ def load_dual_view_dataset(root, max_points=1000):
         pairs=pairs,
         singletons=singletons,
     )
+
+
+def _rotation_matrix(axis, angle_deg):
+    angle = math.radians(float(angle_deg))
+    cosine = math.cos(angle)
+    sine = math.sin(angle)
+    if axis == 'x':
+        return np.asarray([
+            [1.0, 0.0, 0.0],
+            [0.0, cosine, -sine],
+            [0.0, sine, cosine],
+        ])
+    if axis == 'y':
+        return np.asarray([
+            [cosine, 0.0, sine],
+            [0.0, 1.0, 0.0],
+            [-sine, 0.0, cosine],
+        ])
+    if axis == 'z':
+        return np.asarray([
+            [cosine, -sine, 0.0],
+            [sine, cosine, 0.0],
+            [0.0, 0.0, 1.0],
+        ])
+    raise ValueError('unsupported rotation axis: %s' % axis)
+
+
+def perturb_scene_extrinsics(scene, view_id, translation_m=(0, 0, 0),
+                             rotation_deg=0.0, axis='z'):
+    """Apply an extrinsic error to one view's points and camera.
+
+    The label/depth arrays stay at their original rendering; this deliberately
+    simulates a wrong calibration estimate, not a new observation.
+    """
+    if view_id not in _VIEW_IDS:
+        raise ValueError('unsupported view_id: %s' % view_id)
+    translation = np.asarray(translation_m, dtype=np.float64).reshape(3)
+    if not np.all(np.isfinite(translation)):
+        raise ValueError('translation_m must be finite')
+    rotation = _rotation_matrix(axis, rotation_deg)
+    delta = np.eye(4, dtype=np.float64)
+    delta[:3, :3] = rotation
+    delta[:3, 3] = translation
+    frames = dict(scene.frames)
+    frame = frames[view_id]
+    instances = []
+    for instance in frame.instances:
+        points = instance.points_base @ rotation.T + translation
+        centroid = instance.centroid_base @ rotation.T + translation
+        covariance = rotation @ instance.covariance_base @ rotation.T
+        instances.append(dataclasses.replace(
+            instance,
+            points_base=points,
+            centroid_base=centroid,
+            covariance_base=covariance,
+            aabb_min=points.min(axis=0),
+            aabb_max=points.max(axis=0),
+        ))
+    camera = frame.camera
+    camera_to_base = delta @ camera.camera_to_base
+    frames[view_id] = dataclasses.replace(
+        frame,
+        camera=dataclasses.replace(camera, camera_to_base=camera_to_base),
+        instances=instances,
+    )
+    return dataclasses.replace(scene, frames=frames)
+
+
+def perturb_dataset_extrinsics(dataset, view_id, translation_m=(0, 0, 0),
+                               rotation_deg=0.0, axis='z'):
+    """Return a dataset copy with one view's extrinsic calibration perturbed."""
+    scenes = [
+        perturb_scene_extrinsics(
+            scene, view_id, translation_m, rotation_deg, axis)
+        for scene in dataset.scenes
+    ]
+    return dataclasses.replace(dataset, scenes=scenes)
+
+
+def shift_dataset_timestamps(dataset, view_id, offset_ns):
+    """Return a dataset copy with one view's timestamps shifted."""
+    if view_id not in _VIEW_IDS:
+        raise ValueError('unsupported view_id: %s' % view_id)
+    offset_ns = int(offset_ns)
+    scenes = []
+    for scene in dataset.scenes:
+        frames = dict(scene.frames)
+        frame = frames[view_id]
+        frames[view_id] = dataclasses.replace(
+            frame, timestamp_ns=frame.timestamp_ns + offset_ns)
+        scenes.append(dataclasses.replace(scene, frames=frames))
+    return dataclasses.replace(dataset, scenes=scenes)
 
 
 def _support_points(source, target_frame, target_instance,
@@ -520,6 +617,26 @@ def associate_scene(scene, params=None, first_view='ext'):
     second_frame = scene.frames[second_view]
     first_instances = first_frame.instances
     second_instances = second_frame.instances
+    if abs(first_frame.timestamp_ns - second_frame.timestamp_ns) > \
+            params.sync_window_ns:
+        return {
+            'schema_version': ASSOCIATION_SCHEMA_VERSION,
+            'scene_id': scene.scene_id,
+            'first_view': first_view,
+            'second_view': second_view,
+            'params': params.to_dict(),
+            'candidate_pairs': 0,
+            'candidate_truncated': False,
+            'clusters': [],
+            'singletons': [
+                {
+                    'view_id': instance.view_id,
+                    'instance_id': instance.instance_id,
+                    'reason': 'temporal_mismatch',
+                }
+                for instance in list(first_instances) + list(second_instances)
+            ],
+        }
     if not first_instances or not second_instances:
         return {
             'schema_version': ASSOCIATION_SCHEMA_VERSION,
@@ -742,6 +859,7 @@ def evaluate_association(dataset, params=None, first_view='ext'):
     forced_errors = 0
     latency_ms = []
     per_density = {}
+    per_occlusion = {}
     for scene in dataset.scenes:
         started = time.perf_counter()
         record = associate_scene(scene, params, first_view=first_view)
@@ -781,10 +899,28 @@ def evaluate_association(dataset, params=None, first_view='ext'):
         bucket['truth'] += len(truth)
         bucket['predicted'] += len(predicted)
         bucket['correct'] += correct
+        occlusion = _occlusion_bucket(scene)
+        occl_bucket = per_occlusion.setdefault(occlusion, {
+            'scenes': 0, 'truth': 0, 'predicted': 0, 'correct': 0,
+        })
+        occl_bucket['scenes'] += 1
+        occl_bucket['truth'] += len(truth)
+        occl_bucket['predicted'] += len(predicted)
+        occl_bucket['correct'] += correct
     overall = _primitive_metrics(correct_count, predicted_count, gt_count)
     density_metrics = {}
     for density, bucket in sorted(per_density.items()):
         density_metrics[density] = {
+            'scenes': bucket['scenes'],
+            'truth': bucket['truth'],
+            'predicted': bucket['predicted'],
+            'correct': bucket['correct'],
+            **_primitive_metrics(
+                bucket['correct'], bucket['predicted'], bucket['truth']),
+        }
+    occlusion_metrics = {}
+    for occlusion, bucket in sorted(per_occlusion.items()):
+        occlusion_metrics[occlusion] = {
             'scenes': bucket['scenes'],
             'truth': bucket['truth'],
             'predicted': bucket['predicted'],
@@ -813,6 +949,7 @@ def evaluate_association(dataset, params=None, first_view='ext'):
             'singleton_reason_counts': dict(sorted(
                 singleton_reasons.items())),
             'per_density': density_metrics,
+            'per_occlusion': occlusion_metrics,
             'latency_ms': {
                 'p50': round(float(np.percentile(latencies, 50)), 3),
                 'p95': round(float(np.percentile(latencies, 95)), 3),
@@ -834,6 +971,22 @@ def _density_bucket(scene):
     if count <= 14:
         return 'medium'
     return 'dense'
+
+
+def _occlusion_bucket(scene):
+    ratios = [
+        instance.occlusion_ratio
+        for frame in scene.frames.values()
+        for instance in frame.instances
+    ]
+    if not ratios:
+        return 'empty'
+    typical = float(np.median(ratios))
+    if typical < 0.15:
+        return 'low'
+    if typical < 0.40:
+        return 'medium'
+    return 'high'
 
 
 _FORBIDDEN_FUSED_KEYS = {

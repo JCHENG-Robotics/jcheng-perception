@@ -1,0 +1,212 @@
+{
+  "ablations": [
+    {
+      "ambiguous_clusters": 0,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "name": "full"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "name": "no_chamfer"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "delta_f1": 0.008688,
+      "f1": 0.97479,
+      "name": "no_size"
+    },
+    {
+      "ambiguous_clusters": 0,
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "name": "no_prior"
+    },
+    {
+      "ambiguous_clusters": 3,
+      "delta_f1": 0.008688,
+      "f1": 0.97479,
+      "name": "centroid"
+    }
+  ],
+  "acceptance": {
+    "baseline_f1_min": 0.9,
+    "max_rotation_1deg_f1_drop": 0.1,
+    "max_translation_10mm_f1_drop": 0.1,
+    "time_offset_outside_window_f1_max": 0.0
+  },
+  "baseline": {
+    "f1": 0.966102,
+    "per_occlusion": {
+      "empty": {
+        "correct": 0,
+        "f1": 0.0,
+        "precision": 0.0,
+        "predicted": 0,
+        "recall": 0.0,
+        "scenes": 1,
+        "truth": 0
+      },
+      "high": {
+        "correct": 91,
+        "f1": 0.968085,
+        "precision": 1.0,
+        "predicted": 91,
+        "recall": 0.938144,
+        "scenes": 5,
+        "truth": 97
+      },
+      "low": {
+        "correct": 7,
+        "f1": 1.0,
+        "precision": 1.0,
+        "predicted": 7,
+        "recall": 1.0,
+        "scenes": 1,
+        "truth": 7
+      },
+      "medium": {
+        "correct": 16,
+        "f1": 0.941176,
+        "precision": 1.0,
+        "predicted": 16,
+        "recall": 0.888889,
+        "scenes": 2,
+        "truth": 18
+      }
+    },
+    "precision": 1.0,
+    "predicted_pairs": 114,
+    "recall": 0.934426,
+    "truth_pairs": 122
+  },
+  "checks": {
+    "baseline_f1_min": true,
+    "max_rotation_1deg_f1_drop": true,
+    "max_translation_10mm_f1_drop": false,
+    "time_offset_outside_window_f1_max": true
+  },
+  "config": {
+    "path": "config/association_sensitivity.yaml",
+    "sha256": "765244867ed717d0596ab5b2e4b918d44bc171d45f5f5db94f38b18f7c79d794"
+  },
+  "created_at": "2026-11-27T01:50:00+00:00",
+  "dataset": {
+    "dataset_id": "dual_view_20261127",
+    "empty_scenes": 1,
+    "generator": {
+      "empty_count": 1,
+      "height": 360,
+      "max_instances": 24,
+      "min_instances": 6,
+      "name": "jcheng_perception_scene.synthetic_dual",
+      "scene_count": 8,
+      "scene_radius_m": 0.18,
+      "seed": 20261127,
+      "version": "1.0.0",
+      "width": 480
+    },
+    "instances_total": 130,
+    "scenes": 9,
+    "source": "synthetic",
+    "truth_pairs": 122
+  },
+  "hardware_claimed": false,
+  "limitations": [
+    "Synthetic ellipsoid proxies and fixed cameras; no real calibration error.",
+    "The mixed dataset uses one fixed seed; results are not a population estimate.",
+    "Ablations were not used to re-tune the default; no_size/centroid tie or slightly exceed full on this set and are only exploratory.",
+    "No real-ore/hardware/runtime validation; no interfaces change.",
+    "Time offset 100 ms exercises the fail-closed gate, not motion-induced association degradation."
+  ],
+  "perturbations": [
+    {
+      "delta_f1": -0.008837,
+      "f1": 0.957265,
+      "name": "ext_tx_5mm",
+      "precision": 1.0,
+      "recall": 0.918033
+    },
+    {
+      "delta_f1": -0.017826,
+      "f1": 0.948276,
+      "name": "ext_tx_10mm",
+      "precision": 1.0,
+      "recall": 0.901639
+    },
+    {
+      "delta_f1": -0.139179,
+      "f1": 0.826923,
+      "name": "ext_tz_10mm",
+      "precision": 1.0,
+      "recall": 0.704918
+    },
+    {
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "name": "ext_rz_0p5deg",
+      "precision": 1.0,
+      "recall": 0.934426
+    },
+    {
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "name": "ext_rz_1p0deg",
+      "precision": 1.0,
+      "recall": 0.934426
+    },
+    {
+      "delta_f1": 0.0,
+      "f1": 0.966102,
+      "name": "wrist_tx_5mm",
+      "precision": 1.0,
+      "recall": 0.934426
+    },
+    {
+      "delta_f1": -0.090526,
+      "f1": 0.875576,
+      "name": "wrist_tz_10mm",
+      "precision": 1.0,
+      "recall": 0.778689
+    }
+  ],
+  "real_ore_validation": false,
+  "schema_version": "jcheng.ore_s4_4_mve.v1",
+  "scope": "S4.4 pre-registered ablation, extrinsic perturbation and timestamp sensitivity on the synthetic mixed dataset",
+  "tests": {
+    "command": "python3 -m pytest tests -q",
+    "failed": 0,
+    "passed": 120,
+    "s4_4_tests": 3
+  },
+  "time_offsets": [
+    {
+      "f1": 0.966102,
+      "offset_ns": 0,
+      "predicted_pairs": 114,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 17
+      }
+    },
+    {
+      "f1": 0.966102,
+      "offset_ns": 25000000,
+      "predicted_pairs": 114,
+      "singleton_reason_counts": {
+        "insufficient_visible": 3,
+        "matched_elsewhere": 17
+      }
+    },
+    {
+      "f1": 0.0,
+      "offset_ns": 100000000,
+      "predicted_pairs": 0,
+      "singleton_reason_counts": {
+        "temporal_mismatch": 248
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+# Pre-registered S4.4 sensitivity/ablation configuration (2026-11-27).
+# Run on the S4.2 dense synthetic dataset; do not tune on the evaluation split.
+schema_version: jcheng.association_sensitivity.v1
+baseline:
+  strategy: mutual_projection
+  ambiguity_margin: 0.05
+  min_mutual_support: 0.15
+  depth_tolerance_m: 0.01
+  max_points: 300
+  sync_window_ns: 50000000
+ablations:
+  - name: full
+  - name: no_chamfer
+    weight_chamfer: 0.0
+    max_chamfer_ratio: 1000000000.0
+  - name: no_size
+    weight_size: 0.0
+    size_ratio_max: 1000000000.0
+  - name: no_prior
+    weight_prior: 0.0
+  - name: centroid
+    strategy: centroid
+perturbations:
+  - name: ext_tx_5mm
+    view_id: ext
+    translation_m: [0.005, 0.0, 0.0]
+    rotation_deg: 0.0
+    axis: z
+  - name: ext_tx_10mm
+    view_id: ext
+    translation_m: [0.010, 0.0, 0.0]
+    rotation_deg: 0.0
+    axis: z
+  - name: ext_tz_10mm
+    view_id: ext
+    translation_m: [0.0, 0.0, 0.010]
+    rotation_deg: 0.0
+    axis: z
+  - name: ext_rz_0p5deg
+    view_id: ext
+    translation_m: [0.0, 0.0, 0.0]
+    rotation_deg: 0.5
+    axis: z
+  - name: ext_rz_1p0deg
+    view_id: ext
+    translation_m: [0.0, 0.0, 0.0]
+    rotation_deg: 1.0
+    axis: z
+  - name: wrist_tx_5mm
+    view_id: wrist
+    translation_m: [0.005, 0.0, 0.0]
+    rotation_deg: 0.0
+    axis: z
+  - name: wrist_tz_10mm
+    view_id: wrist
+    translation_m: [0.0, 0.0, 0.010]
+    rotation_deg: 0.0
+    axis: z
+time_offsets_ns: [0, 25000000, 100000000]
+acceptance:
+  baseline_f1_min: 0.90
+  max_translation_10mm_f1_drop: 0.10
+  max_rotation_1deg_f1_drop: 0.10
+  time_offset_outside_window_f1_max: 0.0

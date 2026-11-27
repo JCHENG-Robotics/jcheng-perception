@@ -684,3 +684,26 @@ PCA OBB、保留两份 `member_geometry`。字段名为
 不会被修复，错误合并会传播）；真实矿石几何/关联精度 **Unverified**。
 证据：`evidence/ore_scene_s4_3_20261127/`；设计与复现：
 `docs/ORE_SCENE_S4_3.md`。
+
+## S4.4 敏感性/消融（2026-11-27）
+
+预注册配置 `config/association_sensitivity.yaml`（SHA256
+`765244867ed717d0596ab5b2e4b918d44bc171d45f5f5db94f38b18f7c79d794`）在
+混合合成集（8 场景 + 1 空场景、130 实例、122 对）上运行：
+
+- baseline P/R/F1 **1.000/0.934/0.966**；
+- 消融：no_size 0.975、centroid 0.975（ambiguous 3）、full/no_chamfer/
+  no_prior 0.966；仅探索性，未改默认；
+- 外参：tx 10 mm F1 0.948；**tz 10 mm F1 0.827（ext）/ 0.876（wrist）**；
+  rz 1° 无变化（只测 z 轴）；
+- 时间偏移：25 ms（窗内）不变；100 ms（窗外）F1 0、预测对 0、全部
+  `temporal_mismatch`（fail-closed）。
+
+预注册检查：baseline≥0.90 PASS、rotation 1° ΔF1≤0.10 PASS、
+**translation 10 mm ΔF1≤0.10 FAIL**（tz 项）、时间窗外 F1=0 PASS。失败项
+保留，不调参掩盖。按遮挡分层 baseline：低 1.000 / 中 0.941 / 高 0.968。
+总计 **120 passed**（新增 3 个 S4.4 测试）。
+
+限制：椭球代理/固定相机、单一 seed/数据集；只测绕 z 旋转；无真实矿石/
+硬件/运行时验证。证据：`evidence/ore_scene_s4_4_20261127/`；设计/复现：
+`docs/ORE_SCENE_S4_4.md`。

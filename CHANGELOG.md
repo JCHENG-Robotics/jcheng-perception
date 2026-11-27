@@ -8,6 +8,16 @@ their original narrative order.
 
 ## [Unreleased]
 
+- S4.4 pre-registered sensitivity/ablation (2026-11-27): added
+  `association_sensitivity.py`, `config/association_sensitivity.yaml` and the
+  `evaluate-association-sensitivity` CLI (baseline, ablations, extrinsic
+  perturbations, timestamp offsets). On a mixed synthetic set (8 scenes + 1
+  empty, 122 pairs): baseline P/R/F1 1.000/0.934/0.966; 10 mm depth-axis
+  extrinsic error drops F1 to 0.827 (ext) / 0.876 (wrist), so the
+  pre-registered 10 mm acceptance fails; a 100 ms timestamp offset fails
+  closed. Exploratory ablations show no_size/centroid tie or slightly exceed
+  full on this set; defaults were not re-tuned. Three new tests (120 total).
+  Synthetic only; no real-ore/hardware/runtime validation.
 - S4.3 visible-geometry fusion and association validation (2026-11-27): added
   information-weighted fusion of visible centroids/covariances, visible
   AABB/OBB union, retained per-view member geometry, `jcheng.scene_association.v1`

@@ -23,6 +23,10 @@ from .association import (
     validate_association_record,
     write_association_jsonl,
 )
+from .association_sensitivity import (
+    load_sensitivity_config,
+    run_sensitivity,
+)
 from .config import load_config, validate_config
 from .dataset import (
     import_coco_dataset,
@@ -238,6 +242,33 @@ def _command_fuse_association(args):
         'strategy': args.strategy,
         'validated': True,
         'data_source': 'synthetic',
+        'hardware_validation': False,
+    })
+    return EXIT_OK
+
+
+def _command_evaluate_association_sensitivity(args):
+    dataset = load_dual_view_dataset(args.dataset)
+    config = load_sensitivity_config(args.config)
+    result = run_sensitivity(dataset, config, config_path=args.config)
+    out_path = os.path.abspath(args.out)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    with open(out_path, 'w', encoding='utf-8') as handle:
+        json.dump(result, handle, indent=2, sort_keys=True)
+        handle.write('\n')
+    _print_json({
+        'metrics': out_path,
+        'baseline_f1': result['baseline']['f1'],
+        'ablations': [
+            {'name': item['name'], 'f1': item['f1']}
+            for item in result['ablations']],
+        'perturbations': [
+            {'name': item['name'], 'f1': item['f1']}
+            for item in result['perturbations']],
+        'time_offsets': [
+            {'offset_ns': item['offset_ns'], 'f1': item['f1']}
+            for item in result['time_offsets']],
+        'checks': result['checks'],
         'hardware_validation': False,
     })
     return EXIT_OK
@@ -587,6 +618,14 @@ def build_parser():
     fuse.add_argument('--depth-tolerance', type=float, default=0.01)
     fuse.add_argument('--max-points', type=int, default=300)
     fuse.set_defaults(func=_command_fuse_association)
+
+    sensitivity = subparsers.add_parser(
+        'evaluate-association-sensitivity',
+        help='run pre-registered ablation/extrinsic/time sensitivity')
+    sensitivity.add_argument('--dataset', required=True)
+    sensitivity.add_argument('--config', required=True)
+    sensitivity.add_argument('--out', required=True)
+    sensitivity.set_defaults(func=_command_evaluate_association_sensitivity)
 
     coco = subparsers.add_parser(
         'import-coco',
