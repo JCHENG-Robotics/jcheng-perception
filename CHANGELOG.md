@@ -8,6 +8,11 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Ore-scene platform pivot (2026-11-28): the ore-scene documents record that the
+  ArmPi Ultra platform is `Frozen`; S2, S4, S5, S6 and S8 are re-scoped to the
+  PiPER X fixed cell, while S0, S1, S1.5, S3 and S7 stay platform-agnostic. The
+  5-DoF S6 assumption is marked ArmPi-specific and must be re-derived for six
+  joints. No code, experiment, evidence or claim changes.
 - Jazzy default for the host/GPU path (2026-11-28): CI builds all packages in
   `ros:jazzy-ros-base` and keeps a separate Humble build for the Pi edge;
   `deploy/Dockerfile.gpu` now uses the Jazzy base. The Pi 5 edge remains Humble.

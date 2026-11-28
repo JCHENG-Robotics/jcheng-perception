@@ -7,6 +7,14 @@
 > 本轮授权：**S0 + 不影响运行时的 S1 离线技术验证**。S2–S8 只做设计，不提前
 > 大规模实现。任何真机运动都需要逐次、明确的操作员授权，且只能经
 > `jcheng-system` 的 `ExecuteMotion`。
+>
+> **平台转向（2026-11-28）**：ArmPi Ultra 平台已 `Frozen`，本路线不再以它为
+> 硬件目标。S0、S1、S1.5、S3、S7 的离线工作与平台无关，继续有效；S2、S4、
+> S5、S6、S8 的平台相关假设改在 PiPER X 固定单元重做。ArmPi 的 `Verified`
+> 不迁移到新平台（D6）。依据：`jcheng-design` checkout
+> `docs/ecosystem/17-platform-pivot.md`、
+> `docs/ecosystem/adr/0007-fixed-cell-piper-first.md` 与冻结记录
+> `docs/ecosystem/evidence/armpi-freeze-20261128/README.md`。
 
 ## 1. 阶段总览
 
@@ -22,6 +30,23 @@
 | S6 | 抓取可操作性评估 | Planned | Unverified | 高（仿真/离线，真机需授权） | 待立 |
 | S7 | Applications/Learning/Benchmark 集成 | Planned | Unverified | 无（契约/离线） | 待立 |
 | S8 | 真实矿石分拣闭环 | Not started | Unverified | 极高（整机、安全评审、操作员） | 待立 |
+
+### 1.1 平台处置（2026-11-28）
+
+本节只限定后续工作的平台，不改写上表的阶段状态或既有证据。
+
+| 阶段 | 平台耦合 | 处置 |
+|---|---|---|
+| S0 | 无 | 沿用 |
+| S1 | 无（离线、无设备） | 沿用；真实矿石精度仍 `Unverified` |
+| S1.5 | 无（笔记本 GPU） | 沿用 |
+| S2 | 相机内外参、深度标定 | 在 PiPER X 固定单元重做；固定基座省去底盘复标，新安装仍需标定 |
+| S3 | 无（离线 schema） | 沿用；跨仓库契约仍需 `jcheng-interfaces` 提案 |
+| S4 | 外部 + 腕部相机、单腕假设 | 按固定外部相机 + 可选腕部相机重新设计；腕部路径后置 |
+| S5 | 臂模型、仿真 | 在 PiPER X 仿真中重做；运动仍属 `jcheng-system` |
+| S6 | **5-DoF ArmPi 假设** | 按 6-DoF + 平行棱柱夹爪重新推导；旧评分不是新平台结果 |
+| S7 | 仅契约 | 沿用 |
+| S8 | 整机、受监督执行 | 阻塞于 P2/P3/P6；ArmPi 结果不迁移 |
 
 ## 2. 依赖关系与并行
 
@@ -343,6 +368,10 @@ round-trip；大场景性能基准。
 **实机依赖**：高。仿真先行；真机需安全评审与授权。
 
 ## 10. S6 — 抓取可操作性评估（Planned）
+
+> **平台修订（2026-11-28）**：ArmPi Ultra 已 `Frozen`。本节写的 5-DoF 约束是
+> ArmPi 的研究假设，不是 PiPER X 的设计。后续 S6 需按 6-DoF + 平行棱柱夹爪
+> 重新推导；旧评分不得作为新平台结果。
 
 **目标**：在实例可见几何/关系基础上，输出候选抓取区域与可操作性评分，明确
 5-DoF + 夹爪约束、碰撞/可达性/不确定性；不输出“可抓取”布尔真值，不直接运动。
