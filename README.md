@@ -151,13 +151,17 @@ latency, TF interpolation, two-view fusion and `DROP_RECHECK`.
 
 ```bash
 cd ros2_ws
-source /opt/ros/humble/setup.bash      # robot; a Jazzy host also builds
+source /opt/ros/jazzy/setup.bash     # host default; the Pi edge still builds on Humble
 colcon build --packages-select \
   jcheng_perception_msgs jcheng_perception_core \
   jcheng_perception_edge jcheng_perception_gpu \
   jcheng_perception_scene          # offline ore S1 only; omit for runtime-only builds
 source install/setup.bash
 ```
+
+On the Pi edge (vendor Humble container), source `/opt/ros/humble/setup.bash`
+and build only `jcheng_perception_msgs jcheng_perception_core
+jcheng_perception_edge`; the GPU node is Jazzy-only.
 
 ### 5.3 Single-host synthetic demo (no model, no GPU)
 

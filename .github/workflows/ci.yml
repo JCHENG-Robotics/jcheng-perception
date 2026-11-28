@@ -42,10 +42,40 @@ jobs:
       - name: Run simulation
         run: python scripts/simulate_pipeline.py
 
-  ros-build:
-    name: ros build (humble, robot target)
+  ros-build-jazzy:
+    name: ros build (jazzy, host + GPU)
     runs-on: ubuntu-latest
-    container: ros:humble
+    container:
+      # ros:jazzy-ros-base, multi-arch index digest (Docker Hub, 2026-11-28)
+      image: ros:jazzy-ros-base@sha256:5147d3ae250ce754afd399f6bfec15b33dd4e473ca357e30432a3182031bfad6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            python3-colcon-common-extensions \
+            python3-numpy python3-yaml python3-opencv \
+            ros-jazzy-cv-bridge ros-jazzy-tf2-ros
+      - name: Build packages
+        shell: bash
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          colcon build --packages-select \
+            jcheng_perception_msgs \
+            jcheng_perception_core \
+            jcheng_perception_edge \
+            jcheng_perception_gpu \
+            jcheng_perception_scene
+
+  # Robot-bound: the Pi 5 edge runs inside the vendor ROS 2 Humble container.
+  # Build only the packages deployed there; the GPU node is Jazzy-only.
+  ros-build-humble-edge:
+    name: ros build (humble, Pi edge)
+    runs-on: ubuntu-latest
+    container:
+      # ros:humble-ros-base, multi-arch index digest (Docker Hub)
+      image: ros:humble-ros-base@sha256:dfc94c85d8e01f230951b2a85ca5576e08473081c3da5fbbe8f3ab844703b9ba
     steps:
       - uses: actions/checkout@v4
       - name: Install build dependencies
@@ -62,14 +92,12 @@ jobs:
           colcon build --packages-select \
             jcheng_perception_msgs \
             jcheng_perception_core \
-            jcheng_perception_edge \
-            jcheng_perception_gpu \
-            jcheng_perception_scene
+            jcheng_perception_edge
 
   m1-gate:
     name: m1-gate
     runs-on: ubuntu-latest
-    needs: [core-tests, simulation, ros-build]
+    needs: [core-tests, simulation, ros-build-jazzy, ros-build-humble-edge]
     steps:
       - uses: actions/checkout@v4
       - name: Documentation set
@@ -78,4 +106,4 @@ jobs:
             test -f "$f" || { echo "missing $f"; exit 1; }
           done
       - name: Gate
-        run: echo "docs, core tests, simulation and ROS build passed"
+        run: echo "docs, core tests, simulation, Jazzy host build and Humble edge build passed"

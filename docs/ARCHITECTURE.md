@@ -3,7 +3,7 @@
 ## 1. 拓扑
 
 ```text
-robot (Pi 5, ROS 2 Humble)                         laptop GPU (ROS 2 Humble/Jazzy)
+robot (Pi 5, ROS 2 Humble)                         laptop/Orin GPU (ROS 2 Jazzy)
 ┌─────────────────────────────────────────┐        ┌─────────────────────────────┐
 │ vendor camera drivers                   │        │ jcheng_perception_gpu       │
 │  D435i: /camera/...                     │        │  worker[d435i_ext]  YOLO    │
