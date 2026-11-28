@@ -1,18 +1,19 @@
-# Perception GPU node in Docker (laptop)
+# Perception GPU node in Docker (laptop / Orin)
 
-> Status: **image prepared, not built or GPU-verified.** The host has driver
-> 595.99.02 but no `nvidia-container-toolkit`, so `docker run --gpus all` is
-> unavailable and installing the toolkit needs the user's sudo password. The
-> tag/ArUco path continues to run in `armpi-humble-moveit`; this image is for
-> the `ultralytics` (YOLO) backend.
+> Status: **Jazzy Dockerfile prepared, not rebuilt or GPU-verified.** The host
+> has driver 595.99.02 but no `nvidia-container-toolkit`, so
+> `docker run --gpus all` is unavailable and installing the toolkit needs the
+> user's sudo password. The local `jcheng-perception-gpu:latest` image is still
+> the old Humble build; rebuild it from this Dockerfile before use.
 
 ## Why
 
 The production GPU config (`config/gpu.yaml`) uses `backend: ultralytics`.
-Until now that node ran from the host `~/.venvs/jcheng-perception-gpu` under
-Jazzy, so the laptop and the Pi edge were on different ROS 2 distributions.
-The 2026-11-24 same-distro runs moved the ArUco/tag path into Humble and
-removed that cross-distro link; this image does the same for YOLO.
+The GPU node runs on the laptop/Orin with ROS 2 Jazzy, matching the host
+toolchain, so this image is Jazzy and no longer needs a separate host venv.
+The Pi 5 edge remains ROS 2 Humble inside the vendor container, so the
+edge↔GPU link is cross-distro again; see `docs/FAILURE_MODES.md` for the
+CycloneDDS caveat.
 
 ## Host prerequisite (once, needs sudo)
 
@@ -28,7 +29,7 @@ sudo systemctl restart docker
 Verify before building anything:
 
 ```bash
-docker run --rm --gpus all nvidia/cuda:12.8.0-base-ubuntu22.04 nvidia-smi
+docker run --rm --gpus all nvidia/cuda:12.8.0-base-ubuntu24.04 nvidia-smi
 ```
 
 Driver 595.99.02 supports the CUDA 12.8 wheels this image installs.
@@ -43,10 +44,10 @@ docker build -f deploy/Dockerfile.gpu -t jcheng-perception-gpu:latest deploy
 
 The first build downloads several GB (torch + CUDA wheels); the verified host
 venv is 6.8 GB. The image does **not** install `opencv-python` — the apt
-`python3-opencv` 4.5.4 build carries ArUco, and both the tag and YOLO backends
+`python3-opencv` build carries ArUco, and both the tag and YOLO backends
 must use it.
 
-## Build the Humble workspace
+## Build the Jazzy workspace
 
 The same workspace layout as the tag run:
 
@@ -62,7 +63,7 @@ docker run -d --name jcheng-perception-gpu --network host --gpus all \
 
 # symlink the three packages into /workspace/tag_ws/src, then:
 docker exec jcheng-perception-gpu bash -lc \
-  'source /opt/ros/humble/setup.bash && cd /workspace/tag_ws && \
+  'source /opt/ros/jazzy/setup.bash && cd /workspace/tag_ws && \
    colcon build --symlink-install \
      --packages-select jcheng_perception_msgs jcheng_perception_core jcheng_perception_gpu'
 ```
@@ -71,7 +72,7 @@ docker exec jcheng-perception-gpu bash -lc \
 
 ```bash
 docker exec jcheng-perception-gpu bash -lc \
-  'source /opt/ros/humble/setup.bash && source /workspace/tag_ws/install/setup.bash && \
+  'source /opt/ros/jazzy/setup.bash && source /workspace/tag_ws/install/setup.bash && \
    ros2 launch jcheng_perception_gpu laptop_gpu.launch.py \
      gpu_config:=/repo/ros2_ws/src/jcheng_perception_gpu/config/gpu.yaml \
      python_executable:=/opt/jcheng/venv/bin/python'
@@ -100,10 +101,13 @@ docker exec jcheng-perception-gpu bash -lc \
 
 ## Limits
 
-- Nothing here has been run on hardware yet; the `armpi-humble-moveit` tag path
-  remains the verified Humble route.
-- The image inherits the plain `ros:humble-ros-base` tools; it does not include
+- Nothing here has been run on hardware yet; the Jazzy image has not been
+  rebuilt or GPU-verified.
+- The image inherits the plain `ros:jazzy-ros-base` tools; it does not include
   MoveIt, so it cannot replace `armpi-humble-moveit` for the arm.
+- The Pi 5 edge is still Humble. Cross-distro CycloneDDS (`invalid data size`
+  warnings, reader wedge) is a known risk; prefer keeping both ends on the same
+  distro where possible.
 - `--network host` is required for the wired CycloneDDS configuration; the
   container must not be started while another GPU node is publishing the same
   detection topics.

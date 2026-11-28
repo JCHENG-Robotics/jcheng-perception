@@ -135,13 +135,17 @@ python3 scripts/simulate_pipeline.py
 
 ```bash
 cd ros2_ws
-source /opt/ros/humble/setup.bash      # 机器人；本机 Jazzy 也可构建
+source /opt/ros/jazzy/setup.bash     # 主机默认；Pi edge 仍用 Humble 构建
 colcon build --packages-select \
   jcheng_perception_msgs jcheng_perception_core \
   jcheng_perception_edge jcheng_perception_gpu \
   jcheng_perception_scene          # 仅离线矿石 S1；纯运行时构建可省略
 source install/setup.bash
 ```
+
+Pi edge（厂商 Humble 容器）请 source `/opt/ros/humble/setup.bash`，只构建
+`jcheng_perception_msgs jcheng_perception_core jcheng_perception_edge`；
+GPU 节点仅支持 Jazzy。
 
 ### 5.3 单机合成端到端演示（无模型、无 GPU）
 

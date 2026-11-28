@@ -44,7 +44,7 @@
 
 ### 笔记本 GPU
 
-- ROS 2 Humble（与机器人一致最稳）或 Jazzy（本仓库构建验证版本）。
+- ROS 2 Jazzy（GPU 主机默认，本仓库构建验证版本）；Pi edge 仍为 Humble。
 - 推理运行时，按任务选择：
   - `ultralytics`（torch）：detect/pose/obb，GPU 主机首选；
   - `onnxruntime`：detect，CPU 或 ORT-GPU（本机已装 1.32.0）；

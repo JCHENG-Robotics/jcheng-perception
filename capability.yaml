@@ -21,7 +21,7 @@ runtime_roles:
       - serial, CAN, servo or chassis access
       - publishing motion commands
   gpu-detector:
-    host: laptop with GPU, ROS 2 Humble/Jazzy
+    host: laptop/Orin with GPU, ROS 2 Jazzy
     responsibilities:
       - decode the two compressed streams
       - run one asynchronous detector per camera

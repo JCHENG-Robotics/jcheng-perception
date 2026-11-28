@@ -8,6 +8,10 @@ their original narrative order.
 
 ## [Unreleased]
 
+- Jazzy default for the host/GPU path (2026-11-28): CI builds all packages in
+  `ros:jazzy-ros-base` and keeps a separate Humble build for the Pi edge;
+  `deploy/Dockerfile.gpu` now uses the Jazzy base. The Pi 5 edge remains Humble.
+  The Jazzy GPU image has not been rebuilt or GPU-verified.
 - SAM3 + Qwen advisory detector client (2026-11-26): new `sam3_advisor`
   backend in `jcheng_perception_gpu` that sends a captured frame as base64
   JPEG to the Orin advisory HTTP service and turns only a `JUDGE` reply into a

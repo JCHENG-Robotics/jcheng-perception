@@ -1,17 +1,20 @@
-# Perception GPU host image (laptop).
+# Perception GPU host image (laptop / Orin).
 #
-# The tag/ArUco path already runs in `armpi-humble-moveit`; this image adds the
-# YOLO runtime so the production `ultralytics` backend is also ROS 2 Humble and
-# no longer needs the host Jazzy venv. Build it once:
+# The production `ultralytics` backend runs ROS 2 Jazzy here, matching the
+# Jazzy host toolchain, so it no longer needs a separate host venv. Build it
+# once:
 #
 #   docker build -f deploy/Dockerfile.gpu -t jcheng-perception-gpu:latest deploy
 #
-# Running it with --gpus all requires nvidia-container-toolkit on the host; see
-# deploy/README.md for the one-time host step and the verification commands.
+# Status: the Jazzy variant has not been rebuilt or GPU-verified yet; the
+# existing local `jcheng-perception-gpu:latest` image was built from the Humble
+# base. Running it with --gpus all requires nvidia-container-toolkit on the
+# host; see deploy/README.md for the one-time host step and verification
+# commands.
 #
 # The build downloads several GB of CUDA wheels (the verified host venv is
 # 6.8 GB), so it is network-bound.
-ARG ROS_BASE_IMAGE=ros:humble-ros-base@sha256:dfc94c85d8e01f230951b2a85ca5576e08473081c3da5fbbe8f3ab844703b9ba
+ARG ROS_BASE_IMAGE=ros:jazzy-ros-base@sha256:5147d3ae250ce754afd399f6bfec15b33dd4e473ca357e30432a3182031bfad6
 FROM ${ROS_BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -35,24 +38,24 @@ RUN set -eux; \
         python3-setuptools \
         python3-venv \
         python3-yaml \
-        ros-humble-ament-cmake \
-        ros-humble-geometry-msgs \
-        ros-humble-rmw-cyclonedds-cpp \
-        ros-humble-rosidl-default-generators \
-        ros-humble-rosidl-default-runtime \
-        ros-humble-sensor-msgs \
-        ros-humble-std-msgs; \
+        ros-jazzy-ament-cmake \
+        ros-jazzy-geometry-msgs \
+        ros-jazzy-rmw-cyclonedds-cpp \
+        ros-jazzy-rosidl-default-generators \
+        ros-jazzy-rosidl-default-runtime \
+        ros-jazzy-sensor-msgs \
+        ros-jazzy-std-msgs; \
     rm -rf /var/lib/apt/lists/*
 
-# Python 3.10 venv with system site packages, so rclpy and the message packages
+# Python 3.12 venv with system site packages, so rclpy and the message packages
 # remain visible. Versions match the verified host venv
 # (~/.venvs/jcheng-perception-gpu, 2026-11-24): torch 2.9.1+cu128,
 # ultralytics 8.4.216, onnxruntime 1.32.0, openvino 2026.4.1, numpy 1.26.4.
 #
 # `opencv-python` is deliberately NOT installed and `ultralytics` is installed
 # with --no-deps after its dependency list: the PyPI wheel would shadow the apt
-# `python3-opencv` 4.5.4 build, which is the one that carries ArUco. The tag
-# backend and the YOLO backend must share the same cv2.
+# `python3-opencv` build, which is the one that carries ArUco. The tag backend
+# and the YOLO backend must share the same cv2.
 RUN python3 -m venv --system-site-packages /opt/jcheng/venv && \
     /opt/jcheng/venv/bin/pip install --no-cache-dir --upgrade pip && \
     /opt/jcheng/venv/bin/pip install --no-cache-dir \
