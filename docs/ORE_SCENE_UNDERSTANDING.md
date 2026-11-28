@@ -3,6 +3,11 @@
 > 状态：S0 设计已落地为仓库内 `jcheng_perception_scene` 离线子模块；S1 只做
 > RGB 离线实例分割与评测。**没有** DDS、设备、运动、深度、3D 几何或真实机器人
 > 连接。本文与 `SCENE_REPRESENTATION.md` 是设计基线，不代表已实现全部阶段。
+>
+> **平台转向（2026-11-28）**：ArmPi Ultra 已 `Frozen`。本文的架构、模块边界
+> 和离线子模块边界继续有效；S2 标定、S4 双摄/腕部、S5、S6 可操作性和 S8
+> 实机闭环的平台假设改按 PiPER X 固定单元重做。阶段处置见
+> [ORE_SCENE_ROADMAP.md](ORE_SCENE_ROADMAP.md) §1.1。
 
 ## 1. 目标与非目标
 
